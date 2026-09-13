@@ -221,3 +221,11 @@ __marimo__/
 # Enterprise env file (secrets) and generated run reports
 .env.enterprise
 reports/
+
+# Devin bridge: local runtime artifacts and generated results
+/tmp/tradingagents-devin-*
+/tmp/tradingagents-results/
+/tmp/tradingagents-cache/
+/tmp/tradingagents-memory/
+/tmp/devin-bridge-test-runtime/
+tradingagents-devin-bridge-*/
