@@ -3,7 +3,7 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-02T11:31:14Z
+Last updated: 2026-10-02T12:10:00Z
 
 ---
 
@@ -40,12 +40,12 @@ Last updated: 2026-10-02T11:31:14Z
   `exp/expert-rnd-v2`
 - Owning session: this session (EXPERT_RND)
 - Production impact: none — analysis-only track
-- Current gate: `EXPERT_RND_X1_REASONING_DISCRIMINATOR_AUDIT` (complete)
-- Last accepted result: X1 classification **X1-B — PLAUSIBLE BUT ENTANGLED**;
-  see `tracks/EXPERT_RND.md`
-- Next action: `EXPERT_RND_X2_LADDER_FILL_COUNTERFACTUAL` — deterministic
-  counterfactual scoring of the PM's own published pullback-ladder zones on
-  already-consumed E/W/L artifacts (no new inference)
+- Current gate: `EXPERT_RND_X2_LADDER_FILL_COUNTERFACTUAL` (complete)
+- Last accepted result: X1-B (entangled); X2-B — published entry zones are
+  NON-DISCRIMINATIVE on trigger rate (losers trigger at the same rate), but
+  post-fill outcomes diverge; see `tracks/EXPERT_RND.md`
+- Next action: `EXPERT_RND_X3_PUBLISHED_STOP_DISCIPLINE` — apply the PM's
+  own published invalidation levels to X2 fills on the same consumed data
 - Blockers: none
 - Reference baseline for all v0.5.0 behavior questions: tag `v0.5.0`,
   SHA `2d17df8da1536c121e4d7395ac5a5dcec9e96d6f`

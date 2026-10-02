@@ -1,7 +1,7 @@
 # Track: EXPERT_RND
 
 Status: ACTIVE
-Last updated: 2026-10-02T11:31:14Z
+Last updated: 2026-10-02T12:10:00Z
 Worktree: `/home/udi/udi_provate/TradingAgents-expert-rnd`
 Branch: `exp/expert-rnd-v2` (based on freshly fetched `origin/main` @ v0.5.2;
 all v0.5.0 behavior references use tag `v0.5.0` =
@@ -289,3 +289,78 @@ X2 gate as specified above.
 None for X2. Long-run blocker: the expert sample contains no losers, so no
 historical analysis can fully answer "is the expert's edge real" — that
 requires prospective expert recommendations including failures.
+
+## X2 gate — LADDER_FILL_COUNTERFACTUAL (complete)
+
+Protocol: frozen extraction `x2_frozen_entry_conditions.json`
+(sha256 90a65958696e221dd27e52207c39c6aceaa34b42faada1d7b36a77e68c5fa10f),
+committed in `TradingAgents-expert-rnd` (exp/expert-rnd-v2) under
+`evaluations/expert_rnd_x2/` before any outcome computation. Engine:
+`x2_engine.py`; results: `x2_results.json` (sha256 8462c00a...). 20-session
+trigger window; 20/60-session horizons; SPY-relative via consumed
+b1_2_2 adjusted SPY cache. No new inference, no bridge, no production change.
+
+### Results
+
+| cohort | n | eligible | filled | trigger% | med days | rel20 med | rel60 med | rel60 pos |
+|---|---|---|---|---|---|---|---|---|
+| E (expert, rejected) | 12 | 10 | 7 | 70% | 5 | +6.9% | -15.3% | 43% |
+| W missed | 10 | 9 | 6 | 67% | 8 | +11.2% | +10.4% | 100% |
+| L rejected | 9 | 8 | 6 | 75% | 6 | -6.7% | -9.0% | 17% |
+| RECOVERABLE_WINNERS (E+W-miss) | 22 | 19 | 13 | 68% | 5 | +7.6% | +8.4% | 67% |
+| W entered (reference) | 7 | 7 | 6 | 86% | 6.5 | +4.1% | +16.5% | 83% |
+
+Ineligible: ASYS (PM disarmed tape reclaim — catalyst required),
+KEEL (dip-buy explicitly forbidden; non-price re-eval), HPE (levels deferred
+to post-print), NKE (filed-fundamentals gate only).
+
+### Promotion criteria
+
+1. >=8 RW eligible: PASS (19)
+2. RW trigger >=50%: PASS (68.4%)
+3. triggered RW median rel60 >0 AND pos-rate >=55%: PASS (+8.4%, 66.7%)
+4. L trigger <=25%: FAIL (75%)
+5. triggered losers <=2: FAIL (6)
+6. winner-minus-loser trigger gap >=25pp: FAIL (-6.6pp)
+
+### Classification: X2-B — ENTRY ZONES NON-DISCRIMINATIVE
+
+Published zones trigger on losers at the same rate as winners. However the
+conditional outcomes diverge sharply (triggered winners rel60 med +8-10%,
+triggered losers -9%) — the zone is not the discriminator; what happens
+AFTER the fill is. Two further honest findings:
+
+- Expert entries sit at or below the published conditions in 9/10 eligible E
+  cases (e.g., UAMY expert $6.65 vs momentum-reclaim fill $7.64; ZETA $17.7
+  vs $18.81-reclaim fill $20.42). The expert buys earlier and cheaper than
+  the system's own confirmation triggers; executing the system's triggers
+  pays a confirmation premium.
+- E-cohort rel60 is negative (-15.3% median) despite expert realized gains:
+  the expert exits into strength within ~2-4 weeks; a fixed 60-session
+  horizon rides through the post-spike collapse (DGXX +69% realized but
+  -26% rel60 from trigger fill). X2 measures delayed-entry quality, not
+  expert round-trip replication.
+
+### Does X2 solve the M2/M4 problem?
+
+Partially, for entry timing only: it mechanically recovers 13/19
+recoverable-winner setups without any reasoning-layer change (the M2/M4
+prompt modifications were unnecessary for this dimension). But it fails the
+false-positive side by itself: 6/8 eligible losers also triggered, and their
+fills went on to lose (ABBV -14% rel60, CRWD -12.6%, CMG -21%). The zones
+are honest levels — losers simply reach them too, and what separates the
+cohorts is post-fill behavior relative to the PM's own published
+invalidations, not the trigger.
+
+## Next action (exactly one)
+
+EXPERT_RND_X3_PUBLISHED_STOP_DISCIPLINE — deterministic second-stage
+counterfactual on the SAME frozen extraction and caches: for each X2 fill,
+apply the PM's own published stop/invalidation level (already present in the
+frozen texts) and re-score outcomes at stop-exit or horizon. Hypothesis:
+loser fills hit their published invalidations quickly while winner fills do
+not — i.e., the discriminator may live in published-invalidations adherence
+rather than in the entry zone. If triggered-loser outcomes after
+stop-discipline are cut to <=2 adverse entries while winner returns hold,
+that would isolate an execution-layer discriminator; otherwise the
+historical expert-mimic question is closed (X1-C conclusion path).
