@@ -3,11 +3,29 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-02T11:58:00Z
+Last updated: 2026-10-02T12:50:00Z
 
 ---
 
 ## ACTIVE
+
+### ALPHA_RND
+
+- Status: ACTIVE
+- Objective: Continuously search for stocks/trades worth acting on now;
+  improve discovery + decision + execution; build live/paper evidence.
+  Exploratory R&D — no profitability claim. C12 stays the frozen control.
+- Worktree/branch: `/home/udi/udi_provate/TradingAgents-alpha-rnd` /
+  `exp/alpha-rnd-v1` (from freshly fetched `origin/main`; v0.5.0 ref SHA
+  `2d17df8da1536c121e4d7395ac5a5dcec9e96d6f`)
+- Owning session: this session (ALPHA_RND)
+- Production impact: none until separately promoted
+- Isolation: C12 untouched; EXPERT_RND untouched; LOCKBOX untouched;
+  HOLDOUT unused; separate ALPHA_RND paper ledger
+- Current gate: ALPHA_RND_V1_CURRENT_OPPORTUNITY_DISCOVERY
+- Next action: freeze candidate pool, run full TA on top-10, open proposed
+  paper orders
+- Details: `tracks/ALPHA_RND.md`
 
 ### C12_PROSPECTIVE
 
