@@ -1,0 +1,6 @@
+market_cache_*.pkl
+cache/
+results/
+memory/
+*.db-wal
+*.db-shm
