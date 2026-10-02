@@ -1,7 +1,7 @@
 # Track: EXPERT_RND
 
 Status: ACTIVE
-Last updated: 2026-10-02T12:10:00Z
+Last updated: 2026-10-02T12:40:00Z
 Worktree: `/home/udi/udi_provate/TradingAgents-expert-rnd`
 Branch: `exp/expert-rnd-v2` (based on freshly fetched `origin/main` @ v0.5.2;
 all v0.5.0 behavior references use tag `v0.5.0` =
@@ -364,3 +364,70 @@ rather than in the entry zone. If triggered-loser outcomes after
 stop-discipline are cut to <=2 adverse entries while winner returns hold,
 that would isolate an execution-layer discriminator; otherwise the
 historical expert-mimic question is closed (X1-C conclusion path).
+
+## X3 gate — PUBLISHED_STOP_DISCIPLINE (complete)
+
+Protocol: frozen invalidation extraction
+`evaluations/expert_rnd_x3/x3_frozen_invalidation_conditions.json`
+(sha256 251ec31b7c34987510972465c8bd46647c56b464d55309c1c8bbd115f15c996a),
+committed on exp/expert-rnd-v2 before stop-outcome computation. Engine:
+`x3_engine.py`; results `x3_results.json` (sha256 ec0e745d...). Same
+consumed caches and SPY convention as X2.
+
+### Survival results
+
+| cohort | triggered | scoreable | stopped | stop rate | med sess | surv20 | surv60 |
+|---|---|---|---|---|---|---|---|
+| E | 7 | 6 | 4 | 67% | 19 | 4 | 2 |
+| W-missed | 6 | 6 | 3 | 50% | 2 | 4 | 3 |
+| L-rejected | 6 | 6 | 6 | 100% | 6 | 0 | 0 |
+| RECOVERABLE_WINNERS | 13 | 12 | 7 | 58% | 16 | 8 | 5 |
+| W-entered ref | 6 | 6 | 2 | 33% | 2.5 | 4 | 4 |
+
+SAME_DAY_ORDER_AMBIGUOUS: 0. UAMY had NO_EXPLICIT_INVALIDATION (unscoreable).
+
+### Promotion criteria
+
+1. >=8 RW scoreable: PASS (12)
+2. >=5 L scoreable: PASS (6)
+3. L stop rate >=60%: PASS (100%)
+4. RW stop rate <=35%: FAIL (58.3%)
+5. stop-rate gap >=30pp: PASS (41.7pp)
+6. RW median policy return >0 AND pos >=55%: FAIL (med -0.9% abs, pos 50%)
+7. improves L median without RW median <0: FAIL (L improved -7.0% vs -9.0%
+   rel60, but RW policy median went below zero)
+
+### Classification: X3-B — PUBLISHED INVALIDATION NON-DISCRIMINATIVE
+
+Stops separate on RATE (losers stopped 100%, winners 58%, entered-ref 33%)
+but fail on selective removal: published invalidations were calibrated to the
+spot-price entry and bite too early on cheaper zone fills — FIVE stopped at
++0.8% at session 3 vs +33% at fixed-60; MPWR/FICO stopped at ~-3% vs +1% /
++21% held. Applying them converts more winner fills into scratches/small
+losses than it removes losers. Net STOP_POLICY_RETURN for recoverable
+winners is ~flat/negative, worse than the X2 fixed-60 result.
+
+## HISTORICAL_EXPERT_MIMIC = CLOSED
+
+X1-B -> X2-B -> X3-B exhausts the executable discriminations recoverable
+from consumed artifacts:
+
+- Reasoning-layer permissiveness (M2) and explicit entry gates (M4): rejected.
+- Published delayed-entry zones: trigger non-discriminatively (X2-B).
+- Published invalidations: discriminate on stop rate but destroy winner
+  economics when enforced (X3-B).
+
+What X1-X3 did establish: the expert buys earlier than the system's
+confirmation triggers (9/10 eligible cases at/below the zone), realizes
+gains inside ~2-4 weeks, and exits before the 60-session deterioration the
+frozen labels measure. The residual untested hypothesis is profit-taking /
+exit-into-strength (exit policy), which cannot be validated on consumed
+data — the expert sample contains no losers, so no negative examples exist
+to test it against.
+
+## Next action
+
+None on historical artifacts. Future expert research requires prospective
+real-time expert recommendations including losing trades. If pursued, open a
+new gate only when a prospective expert sample with both winners AND losers
+exists.

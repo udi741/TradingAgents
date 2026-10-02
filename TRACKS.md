@@ -3,7 +3,7 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-02T12:10:00Z
+Last updated: 2026-10-02T12:40:00Z
 
 ---
 
@@ -40,12 +40,14 @@ Last updated: 2026-10-02T12:10:00Z
   `exp/expert-rnd-v2`
 - Owning session: this session (EXPERT_RND)
 - Production impact: none — analysis-only track
-- Current gate: `EXPERT_RND_X2_LADDER_FILL_COUNTERFACTUAL` (complete)
-- Last accepted result: X1-B (entangled); X2-B — published entry zones are
-  NON-DISCRIMINATIVE on trigger rate (losers trigger at the same rate), but
-  post-fill outcomes diverge; see `tracks/EXPERT_RND.md`
-- Next action: `EXPERT_RND_X3_PUBLISHED_STOP_DISCIPLINE` — apply the PM's
-  own published invalidation levels to X2 fills on the same consumed data
+- Status note: historical expert-mimic research CLOSED (X3-B)
+- Current gate: `EXPERT_RND_X3_PUBLISHED_STOP_DISCIPLINE` (complete)
+- Last accepted result: X3-B — published invalidations stop out 100% of
+  losers but also 58% of recoverable winners; execution-layer policies
+  tested on consumed artifacts are non-discriminative; HISTORICAL_EXPERT_MIMIC
+  = CLOSED; see `tracks/EXPERT_RND.md`
+- Next action: none on historical data; requires prospective expert
+  recommendations including losers
 - Blockers: none
 - Reference baseline for all v0.5.0 behavior questions: tag `v0.5.0`,
   SHA `2d17df8da1536c121e4d7395ac5a5dcec9e96d6f`
