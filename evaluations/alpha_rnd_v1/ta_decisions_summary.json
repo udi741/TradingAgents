@@ -1,0 +1,157 @@
+{
+ "session": "2026-10-01",
+ "decisions": [
+  {
+   "ticker": "ACN",
+   "price": 212.3,
+   "labels": [
+    "MULTI_SIGNAL",
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Overweight",
+   "trader": "Buy",
+   "pm": "Overweight",
+   "signal": "Overweight",
+   "duration_s": 377.6
+  },
+  {
+   "ticker": "APPS",
+   "price": 11.55,
+   "labels": [
+    "MULTI_SIGNAL",
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "QUALITY_PULLBACK"
+   ],
+   "rm": "Hold",
+   "trader": "Hold",
+   "pm": "Hold",
+   "signal": "Hold",
+   "duration_s": 391.4
+  },
+  {
+   "ticker": "AVTR",
+   "price": 15.03,
+   "labels": [
+    "MULTI_SIGNAL",
+    "MOMENTUM",
+    "QUALITY_PULLBACK",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Underweight",
+   "trader": "Sell",
+   "pm": "Sell",
+   "signal": "Sell",
+   "duration_s": 479.8
+  },
+  {
+   "ticker": "BMNR",
+   "price": 26.73,
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Underweight",
+   "trader": "Sell",
+   "pm": "Sell",
+   "signal": "Sell",
+   "duration_s": 372.5
+  },
+  {
+   "ticker": "CDNA",
+   "price": 66.23,
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Underweight",
+   "trader": "Sell",
+   "pm": "Sell",
+   "signal": "Sell",
+   "duration_s": 382.2
+  },
+  {
+   "ticker": "IOVA",
+   "price": 14.23,
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Underweight",
+   "trader": "Sell",
+   "pm": "Sell",
+   "signal": "Sell",
+   "duration_s": 377.3
+  },
+  {
+   "ticker": "MRNA",
+   "price": 188.94,
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Underweight",
+   "trader": "Sell",
+   "pm": "Sell",
+   "signal": "Sell",
+   "duration_s": 399.7
+  },
+  {
+   "ticker": "PBF",
+   "price": 82.34,
+   "labels": [
+    "MULTI_SIGNAL",
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Overweight",
+   "trader": "Buy",
+   "pm": "Overweight",
+   "signal": "Overweight",
+   "duration_s": 366.8
+  },
+  {
+   "ticker": "QMCO",
+   "price": 31.89,
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Sell",
+   "trader": "Sell",
+   "pm": "Sell",
+   "signal": "Sell",
+   "duration_s": 436.4
+  },
+  {
+   "ticker": "SDGR",
+   "price": 30.46,
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "rm": "Underweight",
+   "trader": "Sell",
+   "pm": "Sell",
+   "signal": "Sell",
+   "duration_s": 369.5
+  }
+ ]
+}
