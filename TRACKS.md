@@ -3,7 +3,7 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-02T12:50:00Z
+Last updated: 2026-10-02T16:10:00Z
 
 ---
 
@@ -22,9 +22,11 @@ Last updated: 2026-10-02T12:50:00Z
 - Production impact: none until separately promoted
 - Isolation: C12 untouched; EXPERT_RND untouched; LOCKBOX untouched;
   HOLDOUT unused; separate ALPHA_RND paper ledger
-- Current gate: ALPHA_RND_V1_CURRENT_OPPORTUNITY_DISCOVERY
-- Next action: freeze candidate pool, run full TA on top-10, open proposed
-  paper orders
+- Current gate: ALPHA_RND_V1_CURRENT_OPPORTUNITY_DISCOVERY = COMPLETE
+- Last accepted result: 28-name pool (session 2026-10-01), 10 deep TA runs,
+  0 ACTIONABLE_NOW, 6 WATCH_FOR_ENTRY triggers frozen, 4 REJECT; zero orders
+- Next action: monitor frozen watch triggers; run E1 shadow counterfactual
+  (market-open entry vs staged triggers) on PBF/ACN
 - Details: `tracks/ALPHA_RND.md`
 
 ### C12_PROSPECTIVE
