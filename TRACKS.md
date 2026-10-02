@@ -3,7 +3,7 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-02T12:40:00Z
+Last updated: 2026-10-02T11:54:02Z
 
 ---
 
@@ -32,7 +32,7 @@ Last updated: 2026-10-02T12:40:00Z
 
 ### EXPERT_RND
 
-- Status: ACTIVE
+- Status: WAITING_FOR_PROSPECTIVE_EXPERT_SIGNALS (historical mimic CLOSED)
 - Objective: Understand the expert's decision style and determine whether any
   of it can improve TradingAgents without repeating the failed M2/M4
   overfitting.
@@ -40,14 +40,17 @@ Last updated: 2026-10-02T12:40:00Z
   `exp/expert-rnd-v2`
 - Owning session: this session (EXPERT_RND)
 - Production impact: none — analysis-only track
-- Status note: historical expert-mimic research CLOSED (X3-B)
-- Current gate: `EXPERT_RND_X3_PUBLISHED_STOP_DISCIPLINE` (complete)
+- Protocol: `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`; append-only store
+  `expert_prospective/`
+- Current gate: `EXPERT_PROSPECTIVE_CAPTURE_SETUP` (complete); X3-B closed
 - Last accepted result: X3-B — published invalidations stop out 100% of
   losers but also 58% of recoverable winners; execution-layer policies
   tested on consumed artifacts are non-discriminative; HISTORICAL_EXPERT_MIMIC
   = CLOSED; see `tracks/EXPERT_RND.md`
-- Next action: none on historical data; requires prospective expert
-  recommendations including losers
+- Next action: on next expert message — freeze signal record, run same-time
+  v0.5.0 TA comparison, freeze artifact (see operator procedure);
+  minimum reopen threshold: 20 BUY/ADD signals, >=5 losers or >=25% loser
+  rate, >=15 explicit exits
 - Blockers: none
 - Reference baseline for all v0.5.0 behavior questions: tag `v0.5.0`,
   SHA `2d17df8da1536c121e4d7395ac5a5dcec9e96d6f`

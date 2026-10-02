@@ -1,7 +1,7 @@
 # Track: EXPERT_RND
 
 Status: ACTIVE
-Last updated: 2026-10-02T12:40:00Z
+Last updated: 2026-10-02T11:54:02Z
 Worktree: `/home/udi/udi_provate/TradingAgents-expert-rnd`
 Branch: `exp/expert-rnd-v2` (based on freshly fetched `origin/main` @ v0.5.2;
 all v0.5.0 behavior references use tag `v0.5.0` =
@@ -431,3 +431,23 @@ None on historical artifacts. Future expert research requires prospective
 real-time expert recommendations including losing trades. If pursued, open a
 new gate only when a prospective expert sample with both winners AND losers
 exists.
+
+## State change — 2026-10-02
+
+Status: **WAITING_FOR_PROSPECTIVE_EXPERT_SIGNALS**
+
+X3-B accepted; `HISTORICAL_EXPERT_MIMIC = CLOSED` accepted. No further
+historical mimic experiments will run on consumed artifacts.
+
+Capture protocol: see `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md` and the
+append-only store `expert_prospective/` (signals + same-time TA comparisons).
+
+## Operator action when the next expert recommendation arrives
+
+1. Paste the expert's exact message (verbatim) to Devin.
+2. Devin freezes `signal.json` + `raw_message.txt` under
+   `expert_prospective/signals/SIG-<date>-<seq>/`.
+3. Devin runs the frozen v0.5.0 TA comparison (flat book) and freezes it
+   under `expert_prospective/ta_comparisons/<signal_id>/`.
+4. Later expert updates/exits are pasted verbatim and appended to
+   `events.jsonl` — never edit the original signal.
