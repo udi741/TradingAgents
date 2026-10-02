@@ -35,6 +35,7 @@ expert-vs-system comparison can never again be contaminated by hindsight.
   "expert_thesis_catalyst": "verbatim summary or null",
   "stated_horizon": "text or null",
   "source_id": "channel/message id or null",
+  "strategy_regime": "NORMAL|RISKIER_PATH_1|<exact user/expert-supplied name>|NOT_STATED",
   "explicit_or_inferred": "EXPLICIT|INFERRED",
   "captured_by": "operator/devin",
   "frozen_at_utc": "ISO-8601"
@@ -77,6 +78,29 @@ Once signal + TA comparison are frozen: do not change interpretation,
 classification, entry condition, horizon, or success definition after seeing
 future prices. Clerical corrections are append-only and documented.
 
+## Strategy regimes and historical disclosures
+
+Each signal records `strategy_regime` when stated by the user/expert; never
+infer it. Regimes are never pooled automatically. "Riskier strategy/path"
+is the user's characterization, not ours; `RISKIER_PATH_1` is our neutral
+internal identifier for it.
+
+Retrospectively disclosed trades (outcomes already known when told to us)
+live in `expert_prospective/historical_disclosures/`, carry
+`"NOT_PROSPECTIVE": true` and `entry_known_before_outcome: false`, and count
+**0** toward the prospective minimum-sample thresholds. They may be used
+later only as clearly labeled diagnostics.
+
+Captured so far (addendum 1, 2026-10-02):
+- HD-001 IREN — NORMAL — buy 2026-08-14 $45, sell 2026-08-28, LOSS (sell
+  price not supplied; not inferred). First disclosed normal-strategy loser.
+- HD-002 PANW — RISKIER_PATH_1 — buy 2026-09-08 $329, sell 2026-09-22 $329,
+  FLAT_BEFORE_COSTS.
+- HD-003 FTNT — RISKIER_PATH_1 — buy 2026-09-08 $153, sell 2026-09-22 $153,
+  FLAT_BEFORE_COSTS.
+- HD-004 AMAT — RISKIER_PATH_1 — buy 2026-09-08 $462, sell 2026-10-01 $524,
+  WIN.
+
 ## Outcome fields (`outcome.json`, define now — compute later)
 
 `expert_realized_return` (only when an explicit expert exit exists — primary
@@ -113,7 +137,9 @@ Below threshold: keep collecting. No tuning.
 ## WHEN THE EXPERT SENDS A NEW PICK
 
 1. Paste the expert's exact message to Devin immediately (verbatim — do not
-   paraphrase; include timestamp if the source has one).
+   paraphrase; include timestamp if the source has one), and say which
+   strategy regime it belongs to when known (NORMAL / RISKIER_PATH_1 / exact
+   name). If unstated, regime stays NOT_STATED — never inferred.
 2. Devin creates `expert_prospective/signals/SIG-<date>-<seq>/`, writes
    `raw_message.txt` + `signal.json`, commits (append-only).
 3. Devin runs the frozen v0.5.0 TA comparison on that ticker with a flat

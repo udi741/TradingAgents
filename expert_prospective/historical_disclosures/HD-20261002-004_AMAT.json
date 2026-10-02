@@ -1,0 +1,16 @@
+{
+  "record_id": "HD-20261002-004",
+  "NOT_PROSPECTIVE": true,
+  "disclosed_to_project_utc": "2026-10-02",
+  "source": "USER_REPORTED_EXPERT_TRADE",
+  "entry_known_before_outcome": false,
+  "strategy_regime": "RISKIER_PATH_1",
+  "ticker": "AMAT",
+  "buy_date": "2026-09-08",
+  "buy_price": 462,
+  "sell_date": "2026-10-01",
+  "sell_price": 524,
+  "qualitative_outcome_user_supplied": "WIN",
+  "counts_toward_prospective_threshold": 0,
+  "note": "Retrospectively disclosed trade from a separate, riskier strategy regime ('riskier strategy/path' is the user's characterization). Regime never pooled with NORMAL. Outcome is flat/win before costs; fees/slippage not inferred."
+}

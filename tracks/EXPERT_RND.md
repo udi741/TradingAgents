@@ -1,7 +1,7 @@
 # Track: EXPERT_RND
 
 Status: ACTIVE
-Last updated: 2026-10-02T11:54:02Z
+Last updated: 2026-10-02T11:58:00Z
 Worktree: `/home/udi/udi_provate/TradingAgents-expert-rnd`
 Branch: `exp/expert-rnd-v2` (based on freshly fetched `origin/main` @ v0.5.2;
 all v0.5.0 behavior references use tag `v0.5.0` =
@@ -14,10 +14,14 @@ improve TradingAgents without repeating the failed M2/M4 overfitting.
 
 ## Important limitation
 
-The expert sample is mostly/entirely successful recommendations. It is NOT a
-complete record of everything the expert considered or bought. It can be used
-to study decision behavior; it cannot prove the expert strategy is profitable.
-Do not optimize directly to reproducing every expert winner.
+The historical dataset is heavily selected toward successful expert trades,
+but as of addendum 1 (2026-10-02) includes at least one explicitly disclosed
+losing normal-strategy trade (IREN, -unspecified, 2026-08-14→28), plus three
+retrospectively disclosed trades from a separate riskier strategy regime
+(RISKIER_PATH_1: PANW flat, FTNT flat, AMAT win). Selection bias is NOT
+solved — one known loser is not enough to reopen historical tuning. It can
+be used to study decision behavior; it cannot prove the expert strategy is
+profitable. Do not optimize directly to reproducing every expert winner.
 
 ## Prior history (complete)
 
@@ -451,3 +455,23 @@ append-only store `expert_prospective/` (signals + same-time TA comparisons).
    under `expert_prospective/ta_comparisons/<signal_id>/`.
 4. Later expert updates/exits are pasted verbatim and appended to
    `events.jsonl` — never edit the original signal.
+
+## Addendum 1 — historical disclosures (2026-10-02)
+
+Four user-reported expert trades recorded in
+`expert_prospective/historical_disclosures/` (all `NOT_PROSPECTIVE`,
+outcomes known before capture, count = 0 toward prospective thresholds):
+
+- HD-20261002-001 IREN — NORMAL — buy 2026-08-14 $45 → sell 2026-08-28
+  (price not supplied) — LOSS. First disclosed normal-strategy loser.
+- HD-20261002-002 PANW — RISKIER_PATH_1 — buy 2026-09-08 $329 → sell
+  2026-09-22 $329 — FLAT_BEFORE_COSTS.
+- HD-20261002-003 FTNT — RISKIER_PATH_1 — buy 2026-09-08 $153 → sell
+  2026-09-22 $153 — FLAT_BEFORE_COSTS.
+- HD-20261002-004 AMAT — RISKIER_PATH_1 — buy 2026-09-08 $462 → sell
+  2026-10-01 $524 — WIN.
+
+Regimes are never pooled. No new retrospective tuning triggered by these.
+Track state unchanged: WAITING_FOR_PROSPECTIVE_EXPERT_SIGNALS.
+HISTORICAL_EXPERT_MIMIC remains CLOSED; reconsider only if a materially
+larger set of previously undisclosed negative examples arrives.

@@ -3,7 +3,7 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-02T11:54:02Z
+Last updated: 2026-10-02T11:58:00Z
 
 ---
 
@@ -40,8 +40,11 @@ Last updated: 2026-10-02T11:54:02Z
   `exp/expert-rnd-v2`
 - Owning session: this session (EXPERT_RND)
 - Production impact: none — analysis-only track
-- Protocol: `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`; append-only store
-  `expert_prospective/`
+ - Protocol: `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`; append-only store
+  `expert_prospective/` (signals + historical_disclosures)
+- Latest: addendum 1 recorded 4 retrospective expert trades (IREN loss —
+  first disclosed normal-strategy loser; PANW/FTNT flat, AMAT win —
+  RISKIER_PATH_1); all NOT_PROSPECTIVE, count 0 toward thresholds
 - Current gate: `EXPERT_PROSPECTIVE_CAPTURE_SETUP` (complete); X3-B closed
 - Last accepted result: X3-B — published invalidations stop out 100% of
   losers but also 58% of recoverable winners; execution-layer policies
