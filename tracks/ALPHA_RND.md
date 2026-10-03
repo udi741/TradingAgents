@@ -229,3 +229,13 @@ Protocol addition (reporting layer only, no prompt change): every future
 full-TA artifact MUST be reported with trade_style, expected_hold,
 thesis_realization_window, reevaluation_event, invalidation, target —
 `NOT_STATED` when absent.
+
+### Horizon policy alignment (2026-10-03)
+
+Conflict found: ACN's frozen 6–12mo intended hold vs the universal 60-session
+max. Corrected: 60 sessions = standardized RESEARCH measurement point only.
+Exits follow frozen exit hierarchy (invalidation > event > time-box > target >
+reevaluation — never auto-sell). PBF: tactical, reevaluate at ~Oct-16 time-box.
+ACN: medium-term, 60s = checkpoint not exit. APPS: event-driven to ~Nov-3
+earnings. Change driven by frozen recommendation-time info, not returns.
+Historical V1 protocol text preserved above.
