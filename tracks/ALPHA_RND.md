@@ -469,3 +469,15 @@ computing it for pool rivals. Corrected symmetrically (all 25 pool members,
 companyfacts filed<=2025-09-29): UAMY deep score 44.628, rank **3 of 25**,
 inside the 10-slot quota — **DEEP_ALLOCATION_CONFIRMED** (would have been
 rank 3 even without FA). Prior aggregate unchanged otherwise.
+
+### Automatic daily discovery (2026-10-03)
+
+Routine ALPHA operation no longer requires resuming Devin after market close.
+`alpha_rnd/daily_scheduler.py` runs hourly via cron (`7 * * * *`). When the
+latest completed session is unprocessed it launches one full frozen cycle:
+monitor bookkeeping -> discovery.py -> deep-10 -> run_ta.py. Idempotent via
+completed_sessions markers + kernel flock; bridge-foreign busy ->
+ALPHA_DISCOVERY_BLOCKED_BRIDGE and retry. Per-minute monitor remains
+authoritative for intraday/pending-open execution. First real unattended run:
+session 2026-10-05 (AWAITING_FIRST_UNATTENDED_DISCOVERY_VERIFICATION).
+Disable: remove the daily_scheduler crontab line.
