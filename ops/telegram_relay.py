@@ -37,6 +37,7 @@ C12_ROOT = Path("/home/udi/udi_provate/TradingAgents-c12")
 EXPERT_ROOT = Path("/home/udi/udi_provate/TradingAgents-expert-rnd")
 
 ALPHA_EVENTS = ALPHA_ROOT / "alpha_rnd" / "trigger_events.jsonl"
+ALPHA_SCHED_EVENTS = ALPHA_ROOT / "alpha_rnd" / "scheduler_events.jsonl"
 ALPHA_STATE = ALPHA_ROOT / "alpha_rnd" / "monitor_state.json"
 ALPHA_WATCHLIST = ALPHA_ROOT / "alpha_rnd" / "live_watchlist.json"
 ALPHA_CRON_LOG = ALPHA_ROOT / "alpha_rnd" / "monitor_cron.log"
@@ -66,6 +67,12 @@ ALPHA_MAP = {
     "CONFIRMED": ("INFO", False),          # noisy; confirmation event follows
     "WATCH_EXPIRED": ("INFO", False),
     "monitor_error": ("ERROR", True),
+}
+ALPHA_SCHED_MAP = {
+    "ALPHA_DISCOVERY_STARTED": ("INFO", True),
+    "ALPHA_DISCOVERY_COMPLETE": ("SUCCESS", True),
+    "ALPHA_DISCOVERY_ERROR": ("ACTION_REQUIRED", True),
+    "ALPHA_DISCOVERY_BLOCKED_BRIDGE": ("WARNING", True),
 }
 C12_MAP = {
     "C12_CYCLE_STARTED": ("INFO", True),
@@ -175,6 +182,32 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
             "source_ref": str(ALPHA_EVENTS), "event_id": _event_id("ALPHA", raw),
             "send": send,
         }
+    if track == "ALPHA_SCHED":
+        kind = rec.get("kind", "")
+        sev, send = ALPHA_SCHED_MAP.get(kind, ("INFO", False))
+        fields = ", ".join(f"{k}={v}" for k, v in rec.items()
+                           if k not in ("ts", "kind") and v is not None)
+        action_required = sev == "ACTION_REQUIRED"
+        next_action = ""
+        if kind == "ALPHA_DISCOVERY_ERROR":
+            next_action = ("ALPHA full-cycle discovery did NOT complete "
+                           f"(stage: {rec.get('stage', '?')}). "
+                           "Resume feather-room; see alpha_rnd/scheduler.log.")
+            action_required = True
+        elif kind == "ALPHA_DISCOVERY_BLOCKED_BRIDGE":
+            next_action = ("Model bridge unreachable. The scheduler retries "
+                           "automatically on the next hourly tick — no action "
+                           "needed unless this persists.")
+        return {
+            "source_track": "ALPHA", "event_type": kind, "severity": sev,
+            "event_timestamp": rec.get("ts"), "ticker": None,
+            "summary": f"{kind} — {fields}" if fields else kind,
+            "action_required": action_required,
+            "recommended_next_action": next_action,
+            "source_ref": str(ALPHA_SCHED_EVENTS),
+            "event_id": _event_id("ALPHA_SCHED", raw),
+            "send": send,
+        }
     # C12
     kind = rec.get("kind", "")
     sev, send = C12_MAP.get(kind, ("INFO", False))
@@ -227,7 +260,9 @@ async def _send(bot, chat_id: str, text: str) -> None:
 def scan_sources(st: dict) -> list[dict]:
     """Advance cursors; return normalized events worth sending."""
     out = []
-    for track, path in (("ALPHA", ALPHA_EVENTS), ("C12", C12_NOTIF)):
+    for track, path in (("ALPHA", ALPHA_EVENTS),
+                        ("ALPHA_SCHED", ALPHA_SCHED_EVENTS),
+                        ("C12", C12_NOTIF)):
         cur = st["cursors"].get(str(path), 0)
         recs, new_cur = _tail_jsonl(path, cur)
         for rec, raw in recs:
