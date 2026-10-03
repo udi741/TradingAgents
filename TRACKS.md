@@ -91,7 +91,7 @@ Last updated: 2026-10-03T10:13:19Z
   NOT a per-experiment gatekeeper.
 - Worktree: `/home/udi/udi_provate/TradingAgents-tracks`
 - Branch: `project/tracks`
-- Devin session: whichever session is running a control task
+- Devin session: `nonchalant-citipati`
 - Current gate: V1 knowledge architecture initialized 2026-10-03
 - Next trigger/action: only when global doc structure needs changing
 - Detail: `state/PROJECT_CONTROL.yaml`, `docs/DOCUMENT_OWNERSHIP.md`

@@ -1,7 +1,7 @@
 track: PROJECT_CONTROL
 status: ACTIVE
 type: DOCUMENTATION_CONTROL
-owner_session: PROJECT_CONTROL (this initialization session; future sessions ad hoc)
+owner_session: nonchalant-citipati
 branch: project/tracks
 worktree: /home/udi/udi_provate/TradingAgents-tracks
 current_gate: PROJECT_CONTROL_V1_KNOWLEDGE_ARCHITECTURE
@@ -19,4 +19,4 @@ owns:
   - docs/DOCUMENT_OWNERSHIP.md
   - docs/GLOSSARY.md
   - ai/*
-last_updated_utc: '2026-10-03T10:13:19Z'
+last_updated_utc: '2026-10-03T00:00:00Z'

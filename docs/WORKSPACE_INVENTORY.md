@@ -76,6 +76,22 @@ history — backup consideration, not a deletion blocker).
 - `alpha_rnd/systemd/alpha-rnd-monitor.service` (in-repo alternative unit)
   references only the alpha worktree.
 
+## Wave-3 final retirement result (2026-10-03, PROJECT_CONTROL_V2C)
+
+TradingAgents-mimic: PHYSICAL_WORKTREE_RETIRED after EXPERT_RND repointed
+`x2_engine.py` to the permanent archive (EXPERT commit 0b342543; zero
+runtime refs — remaining string is a comment). Archived M5 content
+diff-verified equal to source before deletion; 242M re-derivable cache
+dropped per prior audit. Branch `exp/gate-m4-entry-quality` (2d05fd56)
+PRESERVED; wave-2 bundle re-verified.
+
+FINAL ACTIVE LAYOUT ACHIEVED — exactly five working directories:
+TradingAgents, TradingAgents-c12, TradingAgents-alpha-rnd,
+TradingAgents-expert-rnd, TradingAgents-tracks. No other physical
+TradingAgents-* experimental worktree exists. Archive root:
+/home/udi/udi_provate/archive/tradingagents/ (bundles + c7_full_fidelity +
+expert_mimic_m5 + gate_d_backup, all checksum-verified).
+
 ## Classification
 
 ## Wave-1 retirement result (2026-10-03, PROJECT_CONTROL_V2A)
