@@ -239,3 +239,50 @@ reevaluation — never auto-sell). PBF: tactical, reevaluate at ~Oct-16 time-box
 ACN: medium-term, 60s = checkpoint not exit. APPS: event-driven to ~Nov-3
 earnings. Change driven by frozen recommendation-time info, not returns.
 Historical V1 protocol text preserved above.
+
+---
+
+## FAST_TRIGGER_MONITOR_V1 (built 2026-10-03)
+
+### What runs
+
+`alpha_rnd/monitor.py` in the alpha worktree — pure market-data, no LLM/TA.
+
+- Cron (installed, user `udi`): every minute runs `--once`
+  `cd TradingAgents-alpha-rnd && PYTHONPATH=. python3 -m alpha_rnd.monitor --once`
+  → intraday-zone checks during US session (13:30-20:00Z weekdays),
+  close-pass once per newly completed session. Pre-freeze sessions
+  (<=2026-10-03) are never evaluated.
+- Start: already running via cron. Manual: `python3 -m alpha_rnd.monitor --loop`
+  or `--once`. Status: `python3 -m alpha_rnd.monitor --status`. Stop:
+  remove the cron line (`crontab -e`) or kill the --loop process.
+- Reboot: cron resumes automatically. Machine asleep/off: nothing runs and
+  nothing is claimed — missed close-passes are caught up on next run since
+  completed sessions are processed once via `processed_close_sessions`.
+- systemd user unit provided (`alpha_rnd/systemd/alpha-rnd-monitor.service`)
+  as an alternative; requires `loginctl enable-linger` (sudo) to survive logout.
+
+### Watch classes (live_watchlist.json, sha 01d2be80...)
+
+- AUTO_ENTRY: PGEN (limit 8.20).
+- DETERMINISTIC_CONFIRMATION: IOVA, CDNA, SDGR, ASST, TXG, TWST, PAYC, XNCR,
+  AXGN — mechanical close/volume/multi-session rules; fill = next-session open
+  (or zone-top limit where stated).
+- REANALYZE_ON_TRIGGER: SYNA (~112/<106/2nd bidder), KOD (priced offering
+  55-80 event — manual/event detection only), HHH (pullback needs catalyst
+  check; >74.88 leg flagged for review).
+- AMBIGUOUS: none.
+
+### Safeguards
+
+Fill only if: trigger after freeze, watch ACTIVE & unexpired (expiry
+2026-10-30), not already open, slot free, cash sufficient, no duplicate.
+$5k notional x size_frac, 10bps costs. Events immutable in
+`alpha_rnd/trigger_events.jsonl`; notifications in `alpha_rnd/NOTIFICATIONS.log`.
+
+### Single-ticker refresh (prepared, NOT run)
+
+`ALPHA_RND_SINGLE_TICKER_REFRESH`: inputs = ticker + frozen artifact + trigger
+event; refreshes that one ticker's market/filing/catalyst state; returns
+BUY_NOW / KEEP_WATCHING / REJECT with horizon + execution instruction. To be
+invoked manually or by a later session when a REANALYSIS_REQUIRED event exists.
