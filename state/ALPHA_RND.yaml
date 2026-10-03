@@ -58,3 +58,9 @@ monitor:
   events_log: alpha_rnd/trigger_events.jsonl (append-only)
 production_modification_permission: none without separate explicit promotion decision
 last_updated_utc: '2026-10-03T14:20:00Z'
+
+daily_discovery_scheduler:
+  installed: '2026-10-03'
+  cron: '7 * * * *'
+  status: AWAITING_FIRST_UNATTENDED_DISCOVERY_VERIFICATION
+  next_unattended_session: '2026-10-05'

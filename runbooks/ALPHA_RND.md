@@ -82,3 +82,13 @@ Each position's intended horizon comes from its frozen artifact (PBF ~2-3
 weeks reevaluate ~Oct-16; ACN 6-12 months reevaluate next earnings; APPS to
 ~Nov earnings). 5/20/60(/120/250)-session marks and vs-SPY are research
 measurement points, never automatic exits.
+
+## Automatic daily discovery (installed 2026-10-03)
+
+- Cron: `7 * * * * ... -m alpha_rnd.daily_scheduler --check` (hourly).
+- Cycle: monitor --once -> discovery.py <session> -> deep-10 -> run_ta.py.
+- Events: scheduler_events.jsonl -> notify-send; kinds
+  ALPHA_DISCOVERY_STARTED/COMPLETE/ERROR/BLOCKED_BRIDGE.
+- Locks: alpha_scheduler.lock (tick), alpha_cycle.lock (cycle), kernel flock.
+- Catch-up: unprocessed completed session runs once when machine returns.
+- Disable: remove the daily_scheduler crontab line.
