@@ -118,6 +118,11 @@ finalizes.
 - Epoch 2 created 2026-10: fundamentals provider policy tightened to
   SEC-pinned fail-closed statement tools.
 - EXPERT_RND session (2026-10-02) did not touch this track.
+- 2026-10-03: background automation V1 installed (hourly cron checker);
+  V1.1 fix — scheduler passed a Python `datetime` into a frozen gate helper
+  expecting `pd.Timestamp` (`.tz`), raising C12_AUTOMATION_ERROR once before
+  the fix landed; boundary normalized (Timestamp at the helper call), 16
+  regression tests added, cron-equivalent check verified clean.
 - 2026-10-03: first Epoch-2 cycle (session 2026-10-02) ran and froze
   SCOREABLE — 2 ENTRY (HPE, NTAP) pending the real 10-05 open.
   One transient: v0.5.0 SEC cache tmp-rename race on parallel statement
@@ -127,4 +132,4 @@ finalizes.
 
 # LAST UPDATED
 
-2026-10-03T11:30Z (kindly-nightshade — first scoreable Epoch-2 cycle)
+2026-10-03T15:20Z (kindly-nightshade — V1.1 cron runtime fix verified)
