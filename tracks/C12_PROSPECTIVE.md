@@ -1,52 +1,90 @@
 # Track: C12_PROSPECTIVE
 
-Status: ACTIVE (frozen — owned by a different Devin session)
-Last updated: 2026-10-02T11:31:14Z
+# PURPOSE
 
-## Objective
+Test the frozen official TradingAgents v0.5.0 pipeline prospectively as an
+honest control: S&P 500 discovery -> Lane-A screener -> top 10 -> full
+official v0.5.0 decision layer -> flat PortfolioContext -> paper portfolio
+external to TA. It exists to produce clean evidence, not to generate trades.
 
-Test the frozen current TradingAgents system on genuinely prospective weekly
-recommendations and paper trades.
+# STATUS
 
-## Isolation
+ACTIVE — Epoch 2 prospective paper trading. Scoreable observations: 0.
 
-- Worktree: `/home/udi/udi_provate/TradingAgents-c12`
-- Branch: `exp/gate-c12-prospective`
-- This is a VALIDATION TRACK — not the place for new strategy ideas.
-- Other sessions must NOT modify the C12 worktree, epoch files, ledger,
-  configuration, or artifacts.
+# OWNER
 
-## Accepted state (as handed over)
+Devin session `kindly-nightshade`. Worktree
+`/home/udi/udi_provate/TradingAgents-c12`, branch `exp/gate-c12-prospective`.
 
-- C12 Epoch 1 = operational dry run only; scoreable observations = 0.
+# WHAT THIS TRACK MAY MODIFY
+
+- Its own worktree, epochs, ledger, artifacts, config.
+- SEC statement-tool provider pins (already applied, fail-closed).
+- Its own docs: this file, `state/C12_PROSPECTIVE.yaml`,
+  `runbooks/C12_PROSPECTIVE.md`, C12 rows in `docs/EXPERIMENT_REGISTRY.md`,
+  and its own section of `CURRENT_STATE.md` / `TRACKS.md`.
+
+# WHAT THIS TRACK MUST NEVER MODIFY
+
+- The v0.5.0 decision layer (prompts, agents, graph) — must stay official.
+- ALPHA_RND, EXPERT_RND, PROJECT_CONTROL worktrees/artifacts.
+- LOCKBOX / HOLDOUT reserves.
+- Any strategy idea imported from ALPHA or EXPERT experimentation.
+
+# CURRENT STATE
+
+See `state/C12_PROSPECTIVE.yaml`. Epoch 2 running weekly cycles under the
+timing guard.
+
+# FROZEN RULES / PROTOCOL
+
+- Decision layer = official v0.5.0 (SHA
+  `2d17df8da1536c121e4d7395ac5a5dcec9e96d6f`), unmodified prompts.
+- Statement tools pinned fail-closed to SEC EDGAR (filing-date aware,
+  `filed <= decision_session`): `get_balance_sheet`, `get_income_statement`,
+  `get_cashflow`. No yfinance fallback for those three.
+- Timing guard: decisions created after the scheduled next-session open make
+  the cycle LATE_DECISION_NON_SCOREABLE — no executable paper orders, no
+  retroactive fills.
+- Append-only history; never rewrite an old result.
+
+# IMPORTANT ARTIFACTS
+
+C12 worktree internals (epochs, ledger). This control worktree holds only
+documentation.
+
+# ACCEPTED RESULTS
+
+- Epoch 1 = operational dry run only; 0 scoreable observations.
 - 2026-09-25 week = LATE_DECISION_NON_SCOREABLE; zero fills.
-- Epoch 2 created.
-- SEC statement tools pinned fail-closed:
-  - get_balance_sheet -> sec_edgar
-  - get_income_statement -> sec_edgar
-  - get_cashflow -> sec_edgar
-- Official v0.5.0 decision layer otherwise unchanged
-  (tag `v0.5.0` = `2d17df8da1536c121e4d7395ac5a5dcec9e96d6f`).
-- Lane A -> top10 -> full TradingAgents.
-- Timing guard prevents retroactive execution.
+- Timing guard accepted and installed.
+- Epoch 2 created after the SEC fail-closed pin policy change.
 
-## Production impact
+# REJECTED HYPOTHESES / DO NOT REPEAT
 
-Fail-closed SEC pins only; decision logic unchanged.
+- Never count a late-decision week as scoreable or fill orders retroactively.
+- Never treat C12 as a strategy playground.
 
-## Current gate
+# CURRENT OPEN QUESTIONS
 
-Epoch 2 prospective scoring.
+- Does frozen v0.5.0 produce actionable prospective recommendations, and do
+  they beat doing nothing? (This is what Epoch 2+ answers.)
 
-## Next action
+# EXACT NEXT ACTION / TRIGGER
 
-Execute Epoch 2 weekly recommendation cycle under the timing guard.
+Run the next Epoch 2 weekly recommendation cycle under the timing guard at
+the scheduled time; mark cycle scoreable/non-scoreable; record in ledger and
+update this doc + `state/C12_PROSPECTIVE.yaml`.
 
-## Blockers / waiting conditions
+# HISTORY
 
-Calendar-driven; waits on real market weeks.
+- Epoch 1: operational dry run; timing failure on 2026-09-25 (decisions
+  created after scheduled next-session open) -> LATE_DECISION_NON_SCOREABLE,
+  zero fills -> timing guard added.
+- Epoch 2 created 2026-10: fundamentals provider policy tightened to
+  SEC-pinned fail-closed statement tools.
+- EXPERT_RND session (2026-10-02) did not touch this track.
 
-## Session boundary note
+# LAST UPDATED
 
-The EXPERT_RND session (2026-10-02) did not touch this track; recorded here
-only for completeness.
+2026-10-03T10:13:19Z (normalized by PROJECT_CONTROL)

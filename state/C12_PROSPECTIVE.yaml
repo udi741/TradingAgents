@@ -1,0 +1,28 @@
+track: C12_PROSPECTIVE
+status: ACTIVE
+type: VALIDATION_CONTROL
+owner_session: kindly-nightshade
+branch: exp/gate-c12-prospective
+worktree: /home/udi/udi_provate/TradingAgents-c12
+current_gate: EPOCH_2_PROSPECTIVE_PAPER_TRADING
+last_accepted_result: >-
+  Epoch 1 = operational dry run only; 0 scoreable observations.
+  2026-09-25 week = LATE_DECISION_NON_SCOREABLE; zero fills.
+  Timing guard added: late cycles are non-scoreable and create no executable
+  paper orders. Epoch 2 created after SEC fail-closed pin of the three
+  financial statement tools.
+next_action: >-
+  Run Epoch 2 weekly recommendation cycles under the timing guard
+  (Lane A -> top 10 -> full official v0.5.0 decision layer, flat
+  PortfolioContext, external paper portfolio).
+blockers:
+  - calendar/market weeks only
+frozen_constraints:
+  - decision layer is official v0.5.0 (SHA 2d17df8da1536c121e4d7395ac5a5dcec9e96d6f)
+  - get_balance_sheet: sec_edgar (fail-closed, no yfinance fallback)
+  - get_income_statement: sec_edgar (fail-closed, no yfinance fallback)
+  - get_cashflow: sec_edgar (fail-closed, no yfinance fallback)
+  - SEC path is filing-date aware (filed <= decision_session)
+  - no ALPHA_RND or EXPERT_RND imports; C12 is validation, not R&D
+production_modification_permission: SEC statement-tool pins only; decision logic must stay official v0.5.0
+last_updated_utc: '2026-10-03T10:13:19Z'

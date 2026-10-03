@@ -1,5 +1,121 @@
 # Track: ALPHA_RND
 
+# PURPOSE
+
+Actively search for current trading/investment opportunities and improve the
+discovery + decision + execution process while C12 remains the frozen
+control. Paper trading only — exploratory R&D, no claim of proven alpha.
+
+# STATUS
+
+ACTIVE — V1 and V2 discovery gates complete; book monitoring/marking phase.
+
+# OWNER
+
+Devin session: UNKNOWN (not yet recorded — update this field when known).
+Worktree `/home/udi/udi_provate/TradingAgents-alpha-rnd`,
+branch `exp/alpha-rnd-v1`.
+
+# WHAT THIS TRACK MAY MODIFY
+
+- Its own worktree, paper ledger, monitor, watchlist, artifacts.
+- Its own docs: this file, `state/ALPHA_RND.yaml`, `runbooks/ALPHA_RND.md`,
+  ALPHA rows in `docs/EXPERIMENT_REGISTRY.md`, its own sections of
+  `CURRENT_STATE.md` / `TRACKS.md`.
+
+# WHAT THIS TRACK MUST NEVER MODIFY
+
+- C12 worktree/ledger/epochs/config/artifacts.
+- EXPERT_RND worktree or its prospective store.
+- LOCKBOX; HOLDOUT unused.
+- Production/promotion of anything without a separate explicit decision.
+- Real-money anything. Paper only.
+
+# CURRENT STATE
+
+Authoritative dynamic state: `state/ALPHA_RND.yaml` and the alpha worktree
+ledger (`alpha_paper_ledger.jsonl`, `alpha_rnd/`). Summary:
+
+- Open paper positions: PBF 62sh @80.00; ACN 24sh @205.00; APPS 442sh @11.30.
+- NAV $99,844.50 / cash $85,125.40 at 2026-10-02 close.
+- 13 frozen watch triggers (V1: IOVA, CDNA, SDGR; V2: PGEN, SYNA, ASST, KOD,
+  TXG, TWST, PAYC, XNCR, AXGN, HHH), expiry 2026-10-30.
+- Per-minute cron monitor runs `alpha_rnd.monitor --once` while machine is on.
+
+# FROZEN RULES / PROTOCOL
+
+- Fills only from triggers frozen before the price move (prospective only).
+- Intraday hard stops fill at stop level (or actual open if gapped through).
+- Completed-close conditions execute at the NEXT regular-session open
+  (PENDING_NEXT_OPEN); never at the confirming close.
+- If a required next-open execution was missed while the machine was off:
+  MISSED_EXECUTION_REVIEW_REQUIRED — never an invented later fill.
+- Watch zones never trail; expiry 2026-10-30; untriggered =
+  WATCH_EXPIRED_NO_ENTRY.
+- REANALYZE_ON_TRIGGER never auto-buys.
+- Exits follow frozen hierarchy: invalidation > event > time-box > target >
+  reevaluation — never auto-sell on a research checkpoint.
+- Research marks (5/20/60/120/250 sessions, vs SPY) are measurement points,
+  not exits. Intended holding horizon is a different quantity.
+- Events/logging append-only (`alpha_rnd/trigger_events.jsonl`).
+
+# IMPORTANT ARTIFACTS
+
+- `evaluations/alpha_rnd_v1/candidate_pool_frozen.json` (V1 pool)
+- `evaluations/alpha_rnd_v1/case_artifacts/*_2026-10-02.json` (V2 deep-run artifacts)
+- `evaluations/alpha_rnd_v1/alpha_paper_ledger.jsonl` (paper book)
+- `alpha_rnd/live_watchlist.json`, `alpha_rnd/monitor.py`,
+  `alpha_rnd/trigger_events.jsonl`, `alpha_rnd/NOTIFICATIONS.log`
+  (event/notification logs are created lazily on first events)
+- `intraday_trigger_evidence.json` (fill-timing audit)
+(all inside `/home/udi/udi_provate/TradingAgents-alpha-rnd`)
+
+# ACCEPTED RESULTS
+
+- V1 gate COMPLETE: 0 ACTIONABLE_NOW of 10 deep runs; 3 VALID_PROSPECTIVE
+  fills on frozen zones; E1 demoted to RETROSPECTIVE_SHADOW_DIAGNOSTIC for
+  Oct-2 marks, ACCUMULATING prospectively.
+- V2 gate COMPLETE: 0 ACTIONABLE_NOW, 10 new watches, 0 REJECT.
+- Fast trigger monitor built and verified; close-confirmation execution fix
+  applied (close -> next open).
+
+# REJECTED HYPOTHESES / DO NOT REPEAT
+
+- E1 Oct-2 marks must not be cited as prospective evidence (frozen post-open).
+- Never take discretionary profit outside frozen rules in V1.
+- Never invent stops for positions whose artifacts lack explicit invalidation.
+
+# CURRENT OPEN QUESTIONS
+
+- Does entry-zone staging add or cost vs buying at decision-time (E1)?
+- H1–H5 hypotheses under observation (see detailed record below).
+
+# EXACT NEXT ACTION / TRIGGER
+
+Mark book each completed session; let the cron monitor process triggers;
+act on REANALYSIS_REQUIRED / MISSED_EXECUTION_REVIEW_REQUIRED events per
+`runbooks/ALPHA_RND.md`. Run another discovery cycle only when justified
+(book slots, watchlist decay, or user request).
+
+# HISTORY
+
+Full pre-normalization detail is preserved verbatim below — it contains the
+complete gate-by-gate record and is authoritative for anything not summarized
+above.
+
+---
+
+# LAST UPDATED
+
+2026-10-03T10:13:19Z (normalized by PROJECT_CONTROL; see per-section dates in
+the detailed record)
+
+---
+
+## DETAILED RECORD (pre-normalization, verbatim)
+
+# Track: ALPHA_RND
+
 Status: ACTIVE
 Created: 2026-10-02
 Worktree: `/home/udi/udi_provate/TradingAgents-alpha-rnd`

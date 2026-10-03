@@ -1,5 +1,102 @@
 # Track: EXPERT_RND
 
+# PURPOSE
+
+Understand whether anything reproducible can be learned from the expert's
+decisions — without repeating the failed M2/M4 historical overfitting.
+
+# STATUS
+
+WAITING_FOR_PROSPECTIVE_EXPERT_SIGNALS. Historical mimic line is CLOSED.
+Prospective capture protocol is frozen and the append-only store is live.
+
+# OWNER
+
+Devin session `groovy-allspice`. Worktree
+`/home/udi/udi_provate/TradingAgents-expert-rnd`, branch `exp/expert-rnd-v2`.
+
+# WHAT THIS TRACK MAY MODIFY
+
+- Its own worktree, `expert_prospective/` store, analysis artifacts.
+- Its own docs: this file, `state/EXPERT_RND.yaml`,
+  `runbooks/EXPERT_NEW_SIGNAL.md`, `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`,
+  EXPERT rows in `docs/EXPERIMENT_REGISTRY.md`, its own sections of
+  `CURRENT_STATE.md` / `TRACKS.md`.
+
+# WHAT THIS TRACK MUST NEVER MODIFY
+
+- C12 worktree/artifacts — expert findings must not contaminate the control.
+- ALPHA_RND worktree/ledger.
+- LOCKBOX / HOLDOUT reserves.
+- Production code or decision layer (analysis-only track).
+
+# CURRENT STATE
+
+See `state/EXPERT_RND.yaml`. Prospective signal count: 0. Waiting on future
+expert messages. Reopen thresholds: ≥20 BUY/ADD, ≥5 losers or ≥25% loser
+rate, ≥15 explicit exits.
+
+# FROZEN RULES / PROTOCOL
+
+- Prospective capture protocol: `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`;
+  store `expert_prospective/` (signals/, historical_disclosures/,
+  ta_comparisons/) — append-only.
+- A signal counts only if captured BEFORE its outcome is known.
+- Retrospectively disclosed trades are recorded as historical_disclosures
+  and never count toward thresholds.
+- Production decision layer remains untouched official v0.5.0 (M5.1).
+
+# IMPORTANT ARTIFACTS
+
+- `expert_prospective/` store and `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`
+- `TradingAgents-mimic/evaluations/` (expert_mimic_benchmark_v1,
+  gate_m2_contextual_rm, gate_m4_entry_quality, gate_m5_fresh_disjoint)
+
+# ACCEPTED RESULTS
+
+- M5.1: production decision layer = untouched official v0.5.0.
+- X1-B: reasoning discriminator plausible but entangled.
+- X2-B: published entry zones non-discriminative (winners ~68% vs losers
+  ~75% zone trigger).
+- X3-B: published invalidation non-discriminative (losers stopped more, but
+  winner economics damaged).
+- HISTORICAL_EXPERT_MIMIC = CLOSED; prospective capture protocol frozen.
+
+# REJECTED HYPOTHESES / DO NOT REPEAT
+
+- M2 permissive/contextual RM — REJECTED.
+- M4 explicit entry-quality/asymmetry gate — REJECTED.
+- Any new tuning on the historical (winner-biased) dataset — do not reopen
+  without the prospective thresholds above.
+
+# CURRENT OPEN QUESTIONS
+
+- Is the expert's edge real? Cannot be answered historically — the dataset
+  lacks a representative loser sample. Only prospective capture can answer.
+
+# EXACT NEXT ACTION / TRIGGER
+
+On the next expert message: follow `runbooks/EXPERT_NEW_SIGNAL.md` — capture
+exact message pre-outcome, freeze signal record, run same-time v0.5.0 TA
+comparison, freeze artifact, update counts in `state/EXPERT_RND.yaml`.
+
+# HISTORY
+
+Full pre-normalization detail preserved verbatim below (cohorts, reasoning
+matrix, X1–X3 analyses, dataset inventory).
+
+---
+
+# LAST UPDATED
+
+2026-10-03T10:13:19Z (normalized by PROJECT_CONTROL)
+
+---
+
+## DETAILED RECORD (pre-normalization, verbatim)
+
+# Track: EXPERT_RND
+
 Status: ACTIVE
 Last updated: 2026-10-02T11:58:00Z
 Worktree: `/home/udi/udi_provate/TradingAgents-expert-rnd`

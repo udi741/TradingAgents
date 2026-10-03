@@ -1,0 +1,22 @@
+track: PROJECT_CONTROL
+status: ACTIVE
+type: DOCUMENTATION_CONTROL
+owner_session: PROJECT_CONTROL (this initialization session; future sessions ad hoc)
+branch: project/tracks
+worktree: /home/udi/udi_provate/TradingAgents-tracks
+current_gate: PROJECT_CONTROL_V1_KNOWLEDGE_ARCHITECTURE
+last_accepted_result: >-
+  V1 knowledge architecture initialized: START_HERE, CURRENT_STATE, TRACKS,
+  per-track docs, state YAMLs, docs/, runbooks/, ai/ context files.
+next_action: >-
+  Only major global documentation changes. Track agents maintain their own
+  docs; PROJECT_CONTROL must not become a per-experiment bottleneck.
+blockers: []
+owns:
+  - START_HERE.md
+  - docs/ARCHITECTURE.md
+  - docs/OPERATING_RULES.md
+  - docs/DOCUMENT_OWNERSHIP.md
+  - docs/GLOSSARY.md
+  - ai/*
+last_updated_utc: '2026-10-03T10:13:19Z'
