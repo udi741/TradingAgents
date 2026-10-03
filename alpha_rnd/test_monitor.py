@@ -102,9 +102,40 @@ def test_session_open():
     assert not m.session_open(datetime(2026, 10, 5, 21, 0, tzinfo=timezone.utc))
 
 
+def test_intraday_stop_exit():
+    st = fresh_state()
+    st["positions"]["PB"] = {"shares": 10, "fill": 80.0}
+    wl = {"watches": [], "open_positions": [
+        {"ticker": "PB", "invalidation": {"type": "intraday_stop", "level": 74.5, "label": "hard stop"},
+         "exit_rules": []}]}
+    import pandas as pd
+    df = pd.DataFrame({"Low": [79.0, 74.0], "Open": [80, 79], "High": [80, 79],
+                       "Close": [79.5, 74.2], "Volume": [1, 1]},
+                      index=pd.date_range("2026-10-05 14:00", periods=2, freq="min", tz="UTC"))
+    m.fetch_intraday = lambda tickers: {"PB": df}
+    m.intraday_pass(st, wl)
+    assert "PB" not in st["positions"], "stop must auto-exit"
+    assert abs(st["cash"] - (50000 + 10 * 74.5 * (1 - m.COST_BPS))) < 0.01
+
+
+def test_close_below_exit_and_no_dup():
+    st = fresh_state()
+    st["positions"]["AC"] = {"shares": 5, "fill": 205.0}
+    df = mk_df([200.0] * 30 + [190.0], [1_000_000] * 31)
+    wl = {"watches": [], "open_positions": [
+        {"ticker": "AC", "invalidation": {"type": "close_below", "level": 194.0, "label": "close<194"},
+         "exit_rules": [{"type": "close_below", "level": 194.00}]}]}
+    m.close_pass(st, wl, {"AC": df}, "2026-10-05")
+    assert "AC" not in st["positions"]
+    cash1 = st["cash"]
+    m.close_pass(st, wl, {"AC": df}, "2026-10-06")  # second eval -> no dup
+    assert st["cash"] == cash1 and "AC" not in st["positions"]
+
+
 if __name__ == "__main__":
     for f in [test_zone_fill_guards, test_close_breakout, test_no_close_breakout_on_touch,
-              test_reanalysis_emits_no_fill, test_expiry, test_session_open]:
+              test_reanalysis_emits_no_fill, test_expiry, test_session_open,
+              test_intraday_stop_exit, test_close_below_exit_and_no_dup]:
         f()
         print(f"PASS {f.__name__}")
     print("ALL TESTS PASS")

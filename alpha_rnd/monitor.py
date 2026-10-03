@@ -18,6 +18,7 @@ Notifications: alpha_rnd/NOTIFICATIONS.log (+ stdout)
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from datetime import datetime, timedelta, timezone
@@ -80,6 +81,26 @@ def notify(text: str) -> None:
     with open(NOTIFY, "a") as f:
         f.write(block)
     print(block)
+    desktop_notify("ALPHA_RND", text.split("\n", 1)[0] + " — " +
+                   " ".join(text.split())[:180])
+
+
+def desktop_notify(title: str, body: str) -> None:
+    """Best-effort visible local notification (libnotify). Works from cron
+    because DISPLAY/DBUS are set explicitly; silently no-ops if unavailable."""
+    import shutil
+    import subprocess
+    if not shutil.which("notify-send"):
+        return
+    env = dict(os.environ)
+    env.setdefault("DISPLAY", ":1")
+    env.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path=/run/user/{os.getuid()}/bus")
+    try:
+        subprocess.run(["notify-send", "-u", "critical", "-t", "0",
+                        title, body], env=env, timeout=10,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception:
+        pass
 
 
 def fetch_intraday(tickers: list[str]) -> dict[str, pd.DataFrame]:
@@ -174,9 +195,10 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
             if rule["type"] == "close_below" and c < rule["level"]:
                 px = c
                 st["cash"] += st["positions"][t]["shares"] * px * (1 - COST_BPS)
-                emit(st, {"ticker": t, "action": "PAPER_EXIT", "why": rule["label"],
+                lbl = rule.get("label", f"close<{rule['level']}")
+                emit(st, {"ticker": t, "action": "PAPER_EXIT", "why": lbl,
                           "price": px, "session": session})
-                notify(f"ALPHA_RND EXIT\n\n{t}\nInvalidation hit: {rule['label']}\nExit @ ${px:.2f} (close)")
+                notify(f"ALPHA_RND EXIT\n\n{t}\nInvalidation hit: {lbl}\nExit @ ${px:.2f} (close)")
                 del st["positions"][t]
 
     for w in wl["watches"]:
