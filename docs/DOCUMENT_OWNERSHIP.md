@@ -10,6 +10,8 @@ without explicit authorization.
 - `docs/OPERATING_RULES.md`
 - `docs/DOCUMENT_OWNERSHIP.md` (this file)
 - `docs/GLOSSARY.md`
+- `docs/WORKTREE_LIFECYCLE.md`
+- `docs/WORKSPACE_INVENTORY.md`
 - `ai/*` (`CHATGPT_CONTEXT.md`, `DEVIN_CONTEXT.md`, `HANDOFF_TEMPLATE.md`)
 - `state/PROJECT_CONTROL.yaml`
 

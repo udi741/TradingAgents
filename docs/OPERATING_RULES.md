@@ -62,9 +62,16 @@ A track task is **NOT COMPLETE** until:
 8. docs are committed;
 9. the returned report states exactly which documentation was updated.
 
+## Workspaces
+
+17. Worktree lifecycle and track-closure requirements are defined in
+    `docs/WORKTREE_LIFECYCLE.md`; the durable directory audit record is
+    `docs/WORKSPACE_INVENTORY.md`. Retiring a physical worktree is always a
+    separate approved cleanup gate, never part of closing an experiment.
+
 ## Honesty
 
-17. Do not invent missing facts. Use `UNKNOWN` when a fact cannot be
+18. Do not invent missing facts. Use `UNKNOWN` when a fact cannot be
     verified.
-18. Conflicts between sources are flagged, never silently resolved
+19. Conflicts between sources are flagged, never silently resolved
     (see source-of-truth order in `START_HERE.md`).

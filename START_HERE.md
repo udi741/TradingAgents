@@ -33,6 +33,9 @@ artifacts.
 5. `docs/OPERATING_RULES.md` — durable project rules
 6. `runbooks/<relevant>.md` — how to actually run/resume things
 
+Workspace layout and directory retirement rules:
+`docs/WORKSPACE_INVENTORY.md` + `docs/WORKTREE_LIFECYCLE.md`.
+
 ## Source-of-truth order (when facts conflict)
 
 1. Immutable artifact / ledger / committed experiment result
