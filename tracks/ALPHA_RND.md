@@ -481,3 +481,16 @@ ALPHA_DISCOVERY_BLOCKED_BRIDGE and retry. Per-minute monitor remains
 authoritative for intraday/pending-open execution. First real unattended run:
 session 2026-10-05 (AWAITING_FIRST_UNATTENDED_DISCOVERY_VERIFICATION).
 Disable: remove the daily_scheduler crontab line.
+
+### Scheduler hardening V1.1 (2026-10-03)
+
+- Telegram relay now tails `scheduler_events.jsonl`: STARTED=INFO,
+  COMPLETE=SUCCESS, ERROR=ACTION_REQUIRED (resume feather-room),
+  BLOCKED_BRIDGE=WARNING (auto-retry noted).
+- Deep selection canonicalized: `discovery.select_deep_candidates()` is the
+  single implementation; scheduler delegates. Verified identical on the frozen
+  2026-10-02 pool (IOVA QMCO MRNA CDNA SDGR PGEN SYNA ASST KOD TXG).
+- Crash idempotence: TA per-ticker artifacts are the resume checkpoint —
+  retries pass only missing tickers (no duplicate model calls); completed
+  marker written only after full success. Scheduler writes no orders/watches,
+  so a retry cannot duplicate economic side effects.

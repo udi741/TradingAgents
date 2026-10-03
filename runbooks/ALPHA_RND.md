@@ -92,3 +92,12 @@ measurement points, never automatic exits.
 - Locks: alpha_scheduler.lock (tick), alpha_cycle.lock (cycle), kernel flock.
 - Catch-up: unprocessed completed session runs once when machine returns.
 - Disable: remove the daily_scheduler crontab line.
+
+## Scheduler recovery semantics (V1.1)
+
+- Scheduler = orchestration only; deep selection lives solely in
+  `evaluations/alpha_rnd_v1/discovery.py::select_deep_candidates`.
+- Crash recovery: candidate_pool_frozen_<session>.json and
+  case_artifacts/<T>_<session>.json are checkpoints; retry skips completed
+  stages/cases. No orders or watches are created by the scheduler.
+- Telegram: scheduler_events.jsonl -> relay ALPHA_SCHED source.
