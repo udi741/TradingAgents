@@ -78,6 +78,27 @@ history — backup consideration, not a deletion blocker).
 
 ## Classification
 
+## Wave-1 retirement result (2026-10-03, PROJECT_CONTROL_V2A)
+
+Git bundle backup created BEFORE any removal:
+`/home/udi/udi_provate/archive/tradingagents/retired_worktrees_wave1_2026-10-03.bundle`
+SHA256 `1d394c4a8eebe0cd1656ece195081080a48cb8273f791b9099ea4fa82630a592`
+Refs: exp/gate-c9-fresh-dev-replication (93c3be3b),
+exp/gate-c10-fresh-dev-expansion (63ec1b99),
+exp/gate-c11-final-fresh-dev (7118fda5), exp/gate-d1-feasibility (49f8105a),
+exp/external-watchlist (aef48bb0). `git bundle verify`: OK, complete history.
+All five branches remain in the base repo — no branch deleted.
+
+| Directory | Wave-1 outcome |
+|---|---|
+| TradingAgents-c9 | PHYSICAL_WORKTREE_RETIRED / BRANCH_PRESERVED / GIT_BUNDLE_BACKUP_CREATED |
+| TradingAgents-c10 | PHYSICAL_WORKTREE_RETIRED / BRANCH_PRESERVED / GIT_BUNDLE_BACKUP_CREATED |
+| TradingAgents-c11 | PHYSICAL_WORKTREE_RETIRED / BRANCH_PRESERVED / GIT_BUNDLE_BACKUP_CREATED |
+| TradingAgents-ext | PHYSICAL_WORKTREE_RETIRED / BRANCH_PRESERVED / GIT_BUNDLE_BACKUP_CREATED |
+| TradingAgents-d1 | **RETIREMENT_BLOCKED** — `git worktree remove` refused: untracked files present (`gate_d1_feasibility/cache/`, `raw/company_tickers.json`, both re-derivable). Force NOT used per gate rules. Branch preserved; bundle includes it. Next gate: delete the two re-derivable items inside d1, then `git worktree remove` again — or explicit force authorization. |
+
+## Classification
+
 | Directory | Classification | Reason / precondition |
 |---|---|---|
 | TradingAgents | KEEP_ACTIVE | base repo + all branches' history; also hosts C6 work |
@@ -127,8 +148,10 @@ deletion of anything.
   (e.g. TradingAgents-archive/ or committed inside base repo)
 ```
 
-Retirable after preservation: c7, c9, c10, c11, d1, ext, mimic,
-gate_d_backup — pending the ARCHIVE items above and explicit approval.
+Retirable after preservation: c7, mimic, gate_d_backup — pending the
+ARCHIVE items above and explicit approval. Retired in wave 1: c9, c10, c11,
+ext. d1 remains pending deletion of its re-derivable untracked cache (or
+explicit force authorization) — see wave-1 table.
 
 ## Proposed cleanup commands (NOT EXECUTED — for a future approved gate)
 
