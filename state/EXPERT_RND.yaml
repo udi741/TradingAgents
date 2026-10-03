@@ -30,4 +30,12 @@ rejected_hypotheses: [M2, M4, X1-entangled, X2-zones-non-discriminative, X3-inva
 accepted_decisions:
   - M5.1 — production decision layer remains untouched official v0.5.0
 production_modification_permission: none — analysis-only track
-last_updated_utc: '2026-10-03T10:13:19Z'
+last_updated_utc: '2026-10-03T11:30:00Z'
+
+historical_artifact_root: /home/udi/udi_provate/archive/tradingagents/expert_mimic_m5/evaluations
+notes:
+  - X2/X3 loader repointed from retired TradingAgents-mimic worktree to the
+    permanent M5 archive (commit 0b342543 on exp/expert-rnd-v2).
+  - Vendor price caches were intentionally NOT archived (re-derivable);
+    replay requires re-fetching them. No runtime dependency on the old
+    mimic worktree remains.

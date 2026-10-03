@@ -95,7 +95,7 @@ matrix, X1–X3 analyses, dataset inventory).
 
 # LAST UPDATED
 
-2026-10-03T10:13:19Z (normalized by PROJECT_CONTROL)
+2026-10-03T11:30:00Z (EXPERT_RND_MIMIC_ARCHIVE_REPOINT)
 
 ---
 
@@ -578,3 +578,15 @@ Regimes are never pooled. No new retrospective tuning triggered by these.
 Track state unchanged: WAITING_FOR_PROSPECTIVE_EXPERT_SIGNALS.
 HISTORICAL_EXPERT_MIMIC remains CLOSED; reconsider only if a materially
 larger set of previously undisclosed negative examples arrives.
+
+## Infrastructure note — 2026-10-03 (MIMIC_ARCHIVE_REPOINT)
+
+`x2_engine.py` / `x3_engine.py` historical root repointed from the old
+`TradingAgents-mimic` worktree to the permanent archive above (commit
+0b342543). Read-only smoke check: m5_joined, selection/exclusion manifests,
+metrics, journal, lock all open; artifact+upstream JSON parse; archive
+SHA256SUMS verifies 102/102 files. Cache CSVs absent by design — needed only
+for optional future replay (re-derivable), not for normal operation.
+Remaining runtime dependency on the old mimic worktree: NONE. Historical
+conclusions unchanged; track state remains
+WAITING_FOR_PROSPECTIVE_EXPERT_SIGNALS.
