@@ -41,6 +41,15 @@ A track or experiment is CLOSED only after ALL of:
 8. if it does not stay, retirement happens as a separate approved cleanup
    gate — never silently inside the closing task.
 
+## Archive convention
+
+Permanent archives live under `/home/udi/udi_provate/archive/tradingagents/<name>/`
+and must contain `MANIFEST.md` (source worktree/branch/HEAD, preserved paths,
+why, exclusions) and `SHA256SUMS` covering every preserved file. Re-derivable
+vendor caches are not archived; record them as intentionally excluded.
+Existing archives: `c7_full_fidelity/`, `expert_mimic_m5/`, `gate_d_backup/`,
+plus branch bundles `retired_worktrees_wave{1,2}_2026-10-03.bundle`.
+
 ## Hard rules
 
 - **Active worktrees are never removed** during another track's gate.

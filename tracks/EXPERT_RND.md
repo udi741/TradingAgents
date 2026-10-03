@@ -49,6 +49,12 @@ rate, ≥15 explicit exits.
 # IMPORTANT ARTIFACTS
 
 - `expert_prospective/` store and `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`
+- `TradingAgents-mimic/evaluations/` — worktree still present (retired
+  pending x2_engine repoint). Permanent M5 archive prepared at
+  `/home/udi/udi_provate/archive/tradingagents/expert_mimic_m5/` — that is
+  the durable pointer for `gate_m5_fresh_disjoint` (non-cache data).
+  Historical path references in the DETAILED RECORD below remain as
+  originally written.
 - `TradingAgents-mimic/evaluations/` (expert_mimic_benchmark_v1,
   gate_m2_contextual_rm, gate_m4_entry_quality, gate_m5_fresh_disjoint)
 

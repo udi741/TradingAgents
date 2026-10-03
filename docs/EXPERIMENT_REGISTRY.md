@@ -11,7 +11,7 @@ WAITING.
 
 | Gate | Status | Result | Meaning | Artifact | Revisit policy |
 |---|---|---|---|---|---|
-| EXPERT_MIMIC_BENCHMARK_V1 | COMPLETE | 12 valid expert trades, all baseline NO_ENTRY | Historical sample exists but winner-biased | `TradingAgents-mimic/evaluations/expert_mimic_benchmark_v1/` | consumed data only |
+| EXPERT_MIMIC_BENCHMARK_V1 | COMPLETE | 12 valid expert trades, all baseline NO_ENTRY | Historical sample exists but winner-biased | `TradingAgents-mimic/evaluations/expert_mimic_benchmark_v1/` (worktree pending retirement; M5 data archived at `archive/tradingagents/expert_mimic_m5/`) | consumed data only |
 | M2 CONTEXTUAL_TECHNICAL_ENTRY_RM_V1 | REJECTED | expert 4/12 ENTRY but 5/12 loser entries | Relaxing a non-discriminative gate moves both distributions | `gate_m2_contextual_rm/` | do not retry permissive RM variants |
 | M3 DISCRIMINATOR_AUDIT | COMPLETE | read-only audit | informed M4 | — | — |
 | M4 ENTRY_LOCATION_ASYMMETRY_RM_V2 | REJECTED | CONTROL 7/17 winners / 1/10 losers; M4 3/17 / 1/10 | Lost winners without cutting losers; PM already prices location | `gate_m4_entry_quality/`, `gate_m5_fresh_disjoint/` | do not retry explicit entry gates |

@@ -97,6 +97,20 @@ All five branches remain in the base repo — no branch deleted.
 | TradingAgents-ext | PHYSICAL_WORKTREE_RETIRED / BRANCH_PRESERVED / GIT_BUNDLE_BACKUP_CREATED |
 | TradingAgents-d1 | **RETIREMENT_BLOCKED** — `git worktree remove` refused: untracked files present (`gate_d1_feasibility/cache/`, `raw/company_tickers.json`, both re-derivable). Force NOT used per gate rules. Branch preserved; bundle includes it. Next gate: delete the two re-derivable items inside d1, then `git worktree remove` again — or explicit force authorization. |
 
+## Wave-2 legacy preservation result (2026-10-03, PROJECT_CONTROL_V2B)
+
+Branch bundle: `/home/udi/udi_provate/archive/tradingagents/retired_worktrees_wave2_2026-10-03.bundle`
+SHA256 `d10baafde6068c9bb76c357d2ef40e1362b47327b5a242b34d86e4c84f59e6f3`,
+refs exp/gate-c8-full-stack-attribution (b6ff29d9) +
+exp/gate-m4-entry-quality (2d05fd56). `git bundle verify`: OK.
+
+| Directory | Wave-2 outcome |
+|---|---|
+| TradingAgents-d1 | PHYSICAL_WORKTREE_RETIRED — audit-identical re-derivable items (cache/, company_tickers.json) deleted, status clean, normal `git worktree remove`. BRANCH_PRESERVED |
+| TradingAgents-c7 | ARCHIVED_THEN_RETIRED — sole-copy results archived to `/home/udi/udi_provate/archive/tradingagents/c7_full_fidelity/` (6.1M, SHA256SUMS verified; 133M vendor cache not archived). Normal `git worktree remove`. BRANCH_PRESERVED |
+| tradingagents_gate_d_backup | ARCHIVED_THEN_REMOVED — wholesale copy verified byte-identical at `/home/udi/udi_provate/archive/tradingagents/gate_d_backup/` (30M, SHA256SUMS verified). Original deleted (not a git worktree). |
+| TradingAgents-mimic | ARCHIVE_PREPARED_NOT_REMOVED — valuable non-cache M5 data archived to `/home/udi/udi_provate/archive/tradingagents/expert_mimic_m5/` (6.4M, verified; 242M cache not archived). Physical worktree REMAINS: `x2_engine.py` hard-codes `MIMIC = ".../TradingAgents-mimic/evaluations"`. Repoint target: `/home/udi/udi_provate/archive/tradingagents/expert_mimic_m5/evaluations`. |
+
 ## Classification
 
 | Directory | Classification | Reason / precondition |
@@ -148,10 +162,11 @@ deletion of anything.
   (e.g. TradingAgents-archive/ or committed inside base repo)
 ```
 
-Retirable after preservation: c7, mimic, gate_d_backup — pending the
-ARCHIVE items above and explicit approval. Retired in wave 1: c9, c10, c11,
-ext. d1 remains pending deletion of its re-derivable untracked cache (or
-explicit force authorization) — see wave-1 table.
+Retired: c9, c10, c11, ext (wave 1); d1, c7, gate_d_backup (wave 2).
+Remaining retirable: TradingAgents-mimic — ONLY after EXPERT_RND repoints
+x2_engine.py's MIMIC path to the prepared archive; then normal
+`git worktree remove` (its untracked m5 dir must be deleted post-verify or
+removal will refuse again).
 
 ## Proposed cleanup commands (NOT EXECUTED — for a future approved gate)
 
