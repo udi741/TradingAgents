@@ -78,3 +78,14 @@ repo, not from scrollback.
 CONSEQUENCES: this document tree; per-track doc ownership; documentation
 definition-of-done for every task; chat history is last resort.
 TRACKS AFFECTED: all.
+
+**2026-10-03**
+DECISION: C12 weekly operation is background-automated by an hourly cron
+checker (ta_eval/c12_scheduler), not manually fired from chat.
+WHY: A control that only runs when someone remembers is not a control;
+missed weeks would silently break prospective coverage.
+CONSEQUENCES: deterministic due-cycle checks each tick; machine-off or
+missed-deadline cycles record LATE_DECISION_NON_SCOREABLE and are never
+backfilled; pending orders settle at real next-session opens without human
+prompting; a busy foreign bridge blocks rather than disturbs.
+TRACKS AFFECTED: C12.

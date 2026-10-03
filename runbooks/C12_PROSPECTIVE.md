@@ -8,7 +8,44 @@ Worktree: `/home/udi/udi_provate/TradingAgents-c12` (branch
 
 Run the frozen official v0.5.0 pipeline prospectively each weekly cycle and
 record honest, scoreable results. This is the control — not a place for new
-ideas.
+ideas. Historical evaluation explains the framework and generates hypotheses,
+but only never-observed future weeks can answer whether ENTRY decisions beat
+NO_ENTRY decisions without leakage or hindsight.
+
+## Automation (current mode)
+
+Cycles run in the background, not from a chat prompt. An **hourly cron
+checker** executes:
+
+```
+0 * * * * cd /home/udi/udi_provate/TradingAgents-c12 && PYTHONPATH=. \
+  /usr/bin/python3 -m ta_eval.c12_scheduler --check \
+  >> evaluations/gate_c12_prospective/scheduler.log 2>&1
+```
+
+Each tick the checker (deterministic, no LLM): finds the last completed
+weekly decision session; verifies it is post-activation, not already
+frozen/disposed, past the current-only rollover, and still before its
+next-session-open execution deadline; verifies the bridge is up with the
+accepted config (restarts it only when it is down or verifiably idle with a
+wrong timeout — a busy foreign bridge blocks the cycle with
+`C12_AUTOMATION_BLOCKED_BRIDGE`, never disturbs it); then invokes the frozen
+`--prepare-week` / `--run-week S` commands. Every tick also runs the frozen
+bookkeeping (`--settle-pending-fills`, `--score-matured`, `--update-marks`) so
+pending orders fill at their real next-session opens with no human prompt.
+
+Locks: the checker takes `c12_scheduler.lock` (flock, non-blocking); the gate
+itself holds `c12.lock` during a cycle — a tick while a cycle runs exits
+quietly. Nothing runs while the machine is off, and nothing is backfilled:
+a due session whose deadline passed unrun is recorded
+`LATE_DECISION_NON_SCOREABLE` (journal `week_missed`).
+
+Status: `python3 -m ta_eval.c12_scheduler --status` → "C12 BACKGROUND STATUS".
+Durable event log: `evaluations/gate_c12_prospective/c12_notifications.jsonl`
+(plus `notify-send` popups when available).
+Disable: `crontab -e`, remove the `ta_eval.c12_scheduler` line.
+
+## Manual fallback (if automation is disabled)
 
 ## When it runs
 

@@ -30,6 +30,7 @@ WAITING.
 | C12 Epoch 1 | COMPLETE (dry run) | 0 scoreable observations; 2026-09-25 week LATE_DECISION_NON_SCOREABLE | Timing failure -> timing guard | C12 worktree epochs/ledger | never count late weeks |
 | Timing guard | ACCEPTED | late cycles non-scoreable, no executable orders | Prospective integrity enforcement | C12 worktree | permanent |
 | C12 Epoch 2 | ACTIVE | activated 2026-09-29; first cycle 2026-10-02 SCOREABLE (2 ENTRY pending 10-05 open) | Prospective scoring under SEC fail-closed pins | C12 worktree | — |
+| C12 background automation | ACTIVE | hourly cron checker installed | due cycles + settlement run without chat prompts; missed deadlines = LATE, never backfilled | c12_scheduler.py + crontab | — |
 | H1/HOLDOUT integrity issue | CLOSED | reserve protections reaffirmed | LOCKBOX untouched, HOLDOUT unused | project record | permanent rule |
 
 ## ALPHA_RND

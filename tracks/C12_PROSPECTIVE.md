@@ -7,6 +7,35 @@ honest control: S&P 500 discovery -> Lane-A screener -> top 10 -> full
 official v0.5.0 decision layer -> flat PortfolioContext -> paper portfolio
 external to TA. It exists to produce clean evidence, not to generate trades.
 
+# WHY C12 EXISTS
+
+Historical evaluation is useful: it explains the framework, generates
+hypotheses, backtests, finds bugs, and tells us whether a strategy *looks*
+promising. But it cannot fully answer the narrower question C12 exists for:
+
+> "After the baseline is frozen and the future is genuinely unknown, do its
+> ENTRY decisions outperform its NO_ENTRY decisions?"
+
+No historical dataset can settle that cleanly: LLMs carry post-date knowledge;
+company facts and news are served at today's revised vintage; survivorship and
+selection effects bend the sample; and we ourselves have already seen the
+historical outcomes, so any selection tuned on them is contaminated. The
+future is the only dataset guaranteed never to have been observed.
+
+C12 being slow does NOT mean the project waits on it. It is a background
+control; ALPHA_RND runs its own active opportunity research independently.
+
+# OPERATION
+
+C12 weekly cycles are **background-automated** (hourly cron checker
+`ta_eval/c12_scheduler.py`), not manually fired from a chat prompt. The
+checker decides due/late/missed deterministically and invokes the frozen
+prepare/run/settle commands; it also settles pending orders at their real
+next-session opens and scores matured outcomes. If the machine is off,
+nothing runs and nothing is fabricated; a due cycle whose execution deadline
+passed is recorded LATE_DECISION_NON_SCOREABLE. See the runbook for the
+schedule, logs, and how to disable it.
+
 # STATUS
 
 ACTIVE — Epoch 2. First scoreable cycle COMPLETE: 2026-10-02 session,
