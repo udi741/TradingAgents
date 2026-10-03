@@ -23,7 +23,7 @@ Last updated: 2026-10-03 (by PROJECT_CONTROL initialization)
 - Nothing for the user to do; it advances with real market weeks.
 - Do not touch its worktree: `/home/udi/udi_provate/TradingAgents-c12`.
 
-## ALPHA — active opportunity R&D (paper only)
+## ALPHA — active opportunity R&D (paper only, session `feather-room`)
 
 - 3 open paper positions: **PBF** (short swing, stop 74.50 / close<78 exit,
   target ~90), **ACN** (medium term, close<194 exit, target ~250), **APPS**

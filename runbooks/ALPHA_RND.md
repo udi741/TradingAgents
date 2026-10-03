@@ -1,8 +1,7 @@
 # RUNBOOK: ALPHA_RND
 
 Worktree: `/home/udi/udi_provate/TradingAgents-alpha-rnd`
-(branch `exp/alpha-rnd-v1`). Devin session: UNKNOWN — record it in
-`state/ALPHA_RND.yaml` once known.
+(branch `exp/alpha-rnd-v1`). Devin session: `feather-room`.
 
 ## Opportunity discovery cycle
 

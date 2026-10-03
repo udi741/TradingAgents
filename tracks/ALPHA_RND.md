@@ -425,3 +425,13 @@ Pending orders whose target open fully passed while machine was off are marked
 `MISSED_EXECUTION_REVIEW_REQUIRED` — no retroactive/later-price substitution.
 Notifications: ENTRY/EXIT CONFIRMED — PENDING NEXT OPEN, then ENTRY/EXIT
 EXECUTED.
+
+### PROJECT_CONTROL_ADOPTION (2026-10-03)
+
+Session identity `feather-room` recorded in state/ALPHA_RND.yaml,
+runbooks/ALPHA_RND.md, CURRENT_STATE.md. Authoritative state reconciled
+against alpha worktree ledger + monitor_state.json — no conflicts found
+(3 positions, 13 watches, 0 pending executions, 0 reanalysis events, cron
+monitor live). Documentation definition-of-done adopted for all future
+ALPHA gates (artifacts -> track md -> yaml -> aggregates -> registry ->
+decision log -> runbook -> commit -> report).
