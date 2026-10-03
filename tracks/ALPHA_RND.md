@@ -217,3 +217,15 @@ untriggered, expiry 2026-10-30. NAV $99,844.50; cash $85,125.40; 7 open slots.
 
 Next action: session marking; monitor 13 active watch triggers; fill only on
 triggers occurring after freeze; E1 ACCUMULATING.
+
+### Holding-horizon audit (extraction only, 2026-10-03)
+
+All 16 frozen artifacts carry explicit horizon language — see ledger
+HOLDING_HORIZON_AUDIT record. Key distinction: EXPECTED_HOLDING_PERIOD is the
+TA-published intent (mostly 1-3 months / event-driven); RESEARCH_EVALUATION_
+HORIZON stays 60 sessions for measurement — they are different quantities.
+
+Protocol addition (reporting layer only, no prompt change): every future
+full-TA artifact MUST be reported with trade_style, expected_hold,
+thesis_realization_window, reevaluation_event, invalidation, target —
+`NOT_STATED` when absent.
