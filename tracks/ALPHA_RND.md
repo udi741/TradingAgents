@@ -129,3 +129,59 @@ staged trigger path to measure whether entry discipline adds or costs.
   delta so far: +1.66% (PBF), +2.70% (ACN) — entry staging ahead on both.
 - Invalidations: ACN close 198.90 still above 194 hard exit; all positions
   remain open. Next mark at next completed session.
+
+---
+
+## V1 PAPER-BOOK PROTOCOL (frozen 2026-10-03)
+
+### Provenance audit result
+
+Market-data blindness verified in code: `yahoo/snapshot.py::_verified_rows`
+filters `Date <= as_of_date` with `fill_gaps=False`; propagate decision_session
+= 2026-10-01; SEC facts filed<=session. Artifact content is blind to Oct-2
+prices. Wall-clock: pool frozen 13:18Z (pre-open); ACN artifact 13:27Z
+(pre-open); PBF 13:35Z / APPS 13:41Z (minutes post-open but data-blind);
+artifacts committed `307fc24b` 14:33Z; fills recorded 2026-10-03 post-close
+from frozen rules.
+
+- PBF: VALID_PROSPECTIVE_FILL @80.00
+- ACN: VALID_PROSPECTIVE_FILL @205.00
+- APPS: VALID_PROSPECTIVE_FILL @11.30 — **APPS-A EXPLICIT_CONDITIONAL_ENTRY**:
+  PM text "Deploy a half-position ... only on a pullback into the $11.0–$11.3
+  zone ... with a hard stop below $10.42" explicitly authorizes the zone entry.
+  Sizing divergence noted ($5k standard vs PM ~2% risk).
+
+### E1 provenance
+
+E1 shadow rule ("buy at 2026-10-02 open") first frozen in commit `60de5909` at
+14:33Z Oct-2 — AFTER the open. Oct-2 open marks are
+`RETROSPECTIVE_SHADOW_DIAGNOSTIC` — not prospective evidence. E1 remains frozen
+prospectively for future pairs. E1 STATUS = ACCUMULATING (needs ≥10 pairs,
+each ≥20 sessions matured).
+
+### Frozen exit policy
+
+- A: execute explicit frozen TA invalidation verbatim (PBF close<78/stop 74.50;
+  ACN close<194; APPS stop<10.42).
+- B: no explicit invalidation → no invented stop; hold to horizon.
+- C: max horizon = 60 trading sessions from fill (~2026-12-30); 20-session
+  secondary marks. No discretionary profit-taking in V1.
+
+### Watch policy
+
+max_wait = 20 trading sessions from recommendation freeze (2026-10-02) →
+expiry 2026-10-30; zones never trail; untriggered = WATCH_EXPIRED_NO_ENTRY.
+Active watches: IOVA (12.20–13.00 or wkly close>15.30), CDNA (60–62 declining
+vol), SDGR (close>32.45→retest 30–31 or orderly 24–26).
+
+### Metrics
+
+Per position: abs ret, ret vs SPY, 5/20/60-session marks, MFE, MAE,
+invalidation hit, days held. Portfolio: NAV, cash, invested, realized,
+unrealized, maxDD, SPY comparison. No strategy conclusions from daily moves.
+
+### Current authoritative book (post-audit)
+
+3 valid prospective fills; NAV $99,844.50 @ 2026-10-02 close; cash $85,125.40;
+invested $14,874.60; unrealized −$155.50. Next action: mark at each completed
+session; check watch zones and invalidations; no new inference.

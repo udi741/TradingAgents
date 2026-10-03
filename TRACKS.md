@@ -3,7 +3,7 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-03T07:25:00Z
+Last updated: 2026-10-03T07:40:00Z
 
 ---
 
@@ -25,8 +25,11 @@ Last updated: 2026-10-03T07:25:00Z
 - Current gate: ALPHA_RND_V1_CURRENT_OPPORTUNITY_DISCOVERY = COMPLETE
 - Last accepted result: 28-name pool (session 2026-10-01), 10 deep TA runs,
   0 ACTIONABLE_NOW, 6 WATCH_FOR_ENTRY triggers frozen, 4 REJECT; zero orders
-- Next action: mark open positions + remaining triggers each completed
-  session; continue E1 shadow comparison (early read: staging ahead)
+- Protocol: ALPHA_RND_V1_PAPER_BOOK_PROTOCOL_FREEZE complete — all 3 fills
+  VALID_PROSPECTIVE (APPS-A explicit conditional); E1 Oct-2 marks demoted to
+  RETROSPECTIVE_SHADOW_DIAGNOSTIC; exit/watch/horizon rules frozen
+- Next action: session marking only — positions, watch zones (expiry
+  2026-10-30), invalidations; E1 ACCUMULATING
 - Details: `tracks/ALPHA_RND.md`
 
 ### C12_PROSPECTIVE
