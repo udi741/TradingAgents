@@ -73,6 +73,10 @@ explicit promotion decision.
   and `devin-deep` (swe-2-high). No local models, ever.
 - **Track worktrees**: isolation boundary. A track may only modify its own
   worktree and its own docs.
+- **Telegram relay** (`ops/telegram_relay.py` in this worktree): tails the
+  ALPHA/C12 event logs and pushes prioritized alerts + read-only bot
+  commands to the user's phone. Delivery-only; trading never depends on it.
+  See `docs/TELEGRAM_NOTIFICATIONS.md`.
 - **Paper monitor** (`alpha_rnd/monitor.py` in the alpha worktree): pure
   market-data cron job; executes paper entries/exits strictly from
   pre-frozen trigger rules; append-only event log; `notify-send` desktop

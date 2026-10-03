@@ -13,6 +13,8 @@ without explicit authorization.
 - `docs/WORKTREE_LIFECYCLE.md`
 - `docs/WORKSPACE_INVENTORY.md`
 - `docs/BASE_REPOSITORY_ROLE.md`
+- `docs/TELEGRAM_NOTIFICATIONS.md`
+- `ops/` (telegram relay)
 - `ai/*` (`CHATGPT_CONTEXT.md`, `DEVIN_CONTEXT.md`, `HANDOFF_TEMPLATE.md`)
 - `state/PROJECT_CONTROL.yaml`
 
