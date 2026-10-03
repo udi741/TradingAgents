@@ -513,3 +513,24 @@ and NOT automatable without inventing classification logic. Fixed boundary:
 
 Equivalent to manual V2 path verified: build_doc() output identical to
 current live_watchlist.json modulo generated_at/sha256.
+
+### Automatic publication synthesis V1 (2026-10-03)
+
+`alpha_rnd/synthesize.py` translates frozen TA artifacts into strict
+PublicationIntent JSON via one bounded devin-deep call (temp 0), then a
+deterministic fail-closed validator (evidence binding: every number must
+appear in artifact text; scaled words 1.5M/million; word fractions
+quarter/third/half; news/catalyst/deal-gated triggers must be
+REANALYZE_ON_TRIGGER; auto-entry requires Buy/Overweight signal + explicit
+params + stop). Validated intents merge into live_watchlist via
+`alpha_rnd.publish` (atomic, idempotent). Ambiguous/unsupported cases emit
+ALPHA_PUBLICATION_REVIEW_REQUIRED (ACTION_REQUIRED, resume feather-room);
+the session still completes — validated watches publish, ambiguous stay
+pending review (tracked in last_cycle.pending_review).
+
+V2 equivalence run (frozen artifacts, no TA rerun): 4 SEMANTIC_MATCH
+(AXGN/PAYC/TWST/TXG — identical mode + levels), 6 REVIEW (ASST/KOD/PGEN
+genuine artifact-internal conflicts; HHH/SYNA wrong-mode output correctly
+refused; XNCR over-claimed AUTO_ENTRY vs Sell refused). V1 out-of-sample:
+1 validated (QMCO), 9 review — artifacts contain real sizing/stop
+contradictions Devin had resolved by judgment.

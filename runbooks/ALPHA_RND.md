@@ -108,3 +108,10 @@ After an unattended cycle's TA stage, the session is NOT complete until the
 canonical publish step runs: synthesize watch specs in gen_watchlist.py, then
 `python3 -m alpha_rnd.publish <session>`. The scheduler detects the marker and
 emits ALPHA_DISCOVERY_COMPLETE. PUBLICATION_REQUIRED notifies via Telegram.
+
+## Automatic publication synthesis (V1)
+
+Cycle tail is now fully automated: TA -> `alpha_rnd.synthesize` ->
+fail-closed validate -> `alpha_rnd.publish` -> monitor consumes.
+Ambiguous tickers -> ALPHA_PUBLICATION_REVIEW_REQUIRED (Telegram
+ACTION_REQUIRED); resume feather-room for those only.
