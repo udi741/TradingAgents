@@ -1,0 +1,52 @@
+{
+ "last_check_utc": "2026-10-03T09:32:02.217607+00:00",
+ "processed_close_sessions": [
+  "2026-10-02"
+ ],
+ "confirm": {
+  "IOVA": {
+   "consec_in_zone": 0
+  },
+  "CDNA": {},
+  "SDGR": {},
+  "PGEN": {},
+  "SYNA": {},
+  "ASST": {},
+  "KOD": {},
+  "TXG": {},
+  "TWST": {
+   "consec_in_zone": 0
+  },
+  "PAYC": {},
+  "XNCR": {},
+  "AXGN": {},
+  "HHH": {}
+ },
+ "pending_open_fills": [],
+ "positions": {
+  "PBF": {
+   "shares": 62,
+   "fill": 80.0,
+   "invalidation": "hard stop",
+   "horizon": "2-3wk time-box",
+   "seeded": true
+  },
+  "ACN": {
+   "shares": 24,
+   "fill": 205.0,
+   "invalidation": "daily close below 200 SMA",
+   "horizon": "6-12 months",
+   "seeded": true
+  },
+  "APPS": {
+   "shares": 442,
+   "fill": 11.3,
+   "invalidation": "hard stop",
+   "horizon": "through ~Nov-3 earnings",
+   "seeded": true
+  }
+ },
+ "cash": 85125.4,
+ "nav_last": 99844.5,
+ "watch_status": {}
+}

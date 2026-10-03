@@ -1,0 +1,15 @@
+[Unit]
+Description=ALPHA_RND fast trigger monitor (paper trading watches)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/udi/udi_provate/TradingAgents-alpha-rnd
+Environment=PYTHONPATH=/home/udi/udi_provate/TradingAgents-alpha-rnd
+ExecStart=/usr/bin/python3 -u -m alpha_rnd.monitor --loop
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=default.target
