@@ -24,8 +24,8 @@ Last updated: 2026-10-03T10:13:19Z
   observations; 2026-09-25 week LATE_DECISION_NON_SCOREABLE, zero fills;
   timing guard added; Lane A -> top10 -> full TA; SEC statement tools pinned
   fail-closed.
-- Next trigger/action: run the due 2026-10-02 cycle before its 2026-10-05
-  13:30 UTC deadline; resume `kindly-nightshade` (no runner is alive)
+- Next trigger/action: settle HPE/NTAP pending orders at the real
+  2026-10-05 open; next cycle due after 2026-10-09 finalizes
 - Blockers: none internal; calendar/market-week driven
 - Production modification permission: SEC statement-tool pins only; decision
   layer must remain untouched v0.5.0

@@ -17,13 +17,12 @@ Last updated: 2026-10-03 (by PROJECT_CONTROL initialization)
 
 ## C12 — validation control (session `kindly-nightshade`)
 
-- Status: ACTIVE, Epoch 2 frozen (activated 2026-09-29); no scoreable
-  observations yet (Epoch 1 was a dry run; the 2026-09-25 week was thrown
-  out as LATE_DECISION_NON_SCOREABLE).
-- Due now: the 2026-10-02 decision session is prepared/runnable until its
-  execution deadline 2026-10-05 13:30 UTC — resume `kindly-nightshade` to run
-  it. Nothing C12-related is running autonomously (the earlier armed sleeper
-  died with its session).
+- Status: ACTIVE, Epoch 2. First scoreable cycle complete (2026-10-02
+  session, frozen 2026-10-03T11:16Z before its deadline): 2 ENTRY signals
+  — HPE and NTAP — pending the real 2026-10-05 open; 8 NO_ENTRY.
+- Scoreable observations: 10 signals; fills: 0 (nothing executes before the
+  session occurs). Next: settle at Monday's real open, then the 2026-10-09
+  weekly cycle.
 - Do not touch its worktree: `/home/udi/udi_provate/TradingAgents-c12`.
 
 ## ALPHA — active opportunity R&D (paper only, session `feather-room`)

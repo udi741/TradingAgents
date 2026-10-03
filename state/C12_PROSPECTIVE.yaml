@@ -12,18 +12,16 @@ last_accepted_result: >-
   paper orders. Epoch 2 created after SEC fail-closed pin of the three
   financial statement tools.
 next_action: >-
-  Run the due 2026-10-02 Epoch 2 cycle before the 2026-10-05 13:30 UTC
-  execution deadline (screen + decision freeze must precede it). Rollover
-  passed at 2026-10-03 05:00 UTC so adapters are consistent. No runner is
-  currently alive — the earlier armed sleeper died with its session; run via
-  the owner session (--prepare-week then --run-week 2026-10-02).
+  Settle the two pending ENTRY orders (HPE, NTAP) at the real 2026-10-05
+  open once that session completes (--settle-pending-fills), then
+  --score-matured / --update-marks. Next weekly cycle becomes due after
+  the 2026-10-09 session finalizes.
 blockers:
   - calendar/market weeks only
 live_state: >-
-  scoreable_observations=0; open_positions=0; cash=100000; no active
-  runner/service for C12 (verified 2026-10-03T10:24Z); a bridge is up on
-  :8765 but at default 180s timeout — relaunch with --timeout 1200 before
-  deep calls
+  scoreable_cycles=1 (2026-10-02 SCOREABLE); scoreable_signals=10
+  (2 ENTRY pending: HPE Buy, NTAP Buy); open_positions=0; cash=100000;
+  bridge running with --timeout 1200; no cycle runner active
 frozen_constraints:
   - decision layer is official v0.5.0 (SHA 2d17df8da1536c121e4d7395ac5a5dcec9e96d6f)
   - get_balance_sheet: sec_edgar (fail-closed, no yfinance fallback)
@@ -32,4 +30,4 @@ frozen_constraints:
   - SEC path is filing-date aware (filed <= decision_session)
   - no ALPHA_RND or EXPERT_RND imports; C12 is validation, not R&D
 production_modification_permission: SEC statement-tool pins only; decision logic must stay official v0.5.0
-last_updated_utc: '2026-10-03T10:24:00Z'
+last_updated_utc: '2026-10-03T11:30:00Z'

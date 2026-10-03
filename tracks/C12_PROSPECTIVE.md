@@ -9,9 +9,10 @@ external to TA. It exists to produce clean evidence, not to generate trades.
 
 # STATUS
 
-ACTIVE — Epoch 2 activated 2026-09-29T06:48:31Z (epoch_hash 753e3021…).
-Scoreable observations: 0. First scoreable cycle (decision session
-2026-10-02) is due now; deadline 2026-10-05T13:30Z.
+ACTIVE — Epoch 2. First scoreable cycle COMPLETE: 2026-10-02 session,
+SCOREABLE (screen 10:29Z + freeze 11:16Z, both before 10-05 13:30Z
+deadline). 10 decisions: ENTRY = HPE (Buy), NTAP (Buy) — pending Monday
+open; 8 NO_ENTRY. Scoreable observations so far: 10 signals, 0 fills yet.
 
 # OWNER
 
@@ -35,9 +36,9 @@ Devin session `kindly-nightshade`. Worktree
 
 # CURRENT STATE
 
-See `state/C12_PROSPECTIVE.yaml`. Epoch 2 frozen; no cycle has run under it
-yet. No runner/service is currently alive — the earlier armed sleeper died
-with its session (never executed).
+See `state/C12_PROSPECTIVE.yaml`. First Epoch-2 cycle completed
+2026-10-03, SCOREABLE. Two ENTRY orders await the real 2026-10-05 open;
+no fills exist yet.
 
 # FROZEN RULES / PROTOCOL
 
@@ -75,10 +76,10 @@ documentation.
 
 # EXACT NEXT ACTION / TRIGGER
 
-Run the 2026-10-02 Epoch 2 cycle before the 2026-10-05T13:30Z execution
-deadline (`--prepare-week` then `--run-week 2026-10-02` in the C12 worktree;
-rollover already passed 2026-10-03T05:00Z). Mark scoreable/non-scoreable;
-record in ledger and update this doc + `state/C12_PROSPECTIVE.yaml`.
+After the 2026-10-05 session completes, run `--settle-pending-fills` to
+fill HPE/NTAP at the real open, then `--score-matured` and
+`--update-marks`. Next weekly cycle becomes due after 2026-10-09
+finalizes.
 
 # HISTORY
 
@@ -88,8 +89,13 @@ record in ledger and update this doc + `state/C12_PROSPECTIVE.yaml`.
 - Epoch 2 created 2026-10: fundamentals provider policy tightened to
   SEC-pinned fail-closed statement tools.
 - EXPERT_RND session (2026-10-02) did not touch this track.
+- 2026-10-03: first Epoch-2 cycle (session 2026-10-02) ran and froze
+  SCOREABLE — 2 ENTRY (HPE, NTAP) pending the real 10-05 open.
+  One transient: v0.5.0 SEC cache tmp-rename race on parallel statement
+  fetches caused 6 TERMINAL_INVALID on pass 1; warm-cache retries under the
+  frozen checkpoint policy resolved all 10 cases. Adoption-added armed
+  launcher was reverted before the run (runtime == c559dbfe).
 
 # LAST UPDATED
 
-2026-10-03T10:24Z (kindly-nightshade — adoption/reconciliation: pending cycle
-state verified against ledger; no cycle run)
+2026-10-03T11:30Z (kindly-nightshade — first scoreable Epoch-2 cycle)
