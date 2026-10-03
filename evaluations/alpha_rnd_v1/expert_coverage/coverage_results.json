@@ -1,0 +1,508 @@
+[
+ {
+  "ticker": "UAMY",
+  "date": "2025-09-29",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2025-09-29",
+   "eligible": 1669,
+   "triggered_any": 653,
+   "pool_size_noFA": 25,
+   "laneA": 414,
+   "laneB": 158,
+   "laneC": 71,
+   "rs": 46,
+   "catalyst": 155
+  },
+  "in_current_universe": false,
+  "eligible": true,
+  "families": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH",
+   "CATALYST",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {
+   "A": 7,
+   "RS": 6
+  },
+  "scores": {
+   "A": 0.9455,
+   "RS": 1.8141
+  },
+  "pool": true,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 6.39,
+  "deep_score_no_fa_rank": 3,
+  "deep_no_fa": true,
+  "deep_note": "FA label deferred; +10 if acceleration confirmed via filed<=date companyfacts",
+  "fa": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "ticker": "FIVE",
+  "date": "2025-10-01",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2025-10-01",
+   "eligible": 1673,
+   "triggered_any": 569,
+   "pool_size_noFA": 25,
+   "laneA": 420,
+   "laneB": 136,
+   "laneC": 114,
+   "rs": 47,
+   "catalyst": 24
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 155.18,
+  "fa": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "ticker": "FROG",
+  "date": "2025-10-03",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2025-10-03",
+   "eligible": 1679,
+   "triggered_any": 581,
+   "pool_size_noFA": 25,
+   "laneA": 415,
+   "laneB": 123,
+   "laneC": 101,
+   "rs": 49,
+   "catalyst": 66
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "QUALITY_PULLBACK",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {
+   "B": 28
+  },
+  "scores": {
+   "B": 0.6678
+  },
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 48.07,
+  "fa": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "ticker": "DGXX",
+  "date": "2025-10-20",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2025-10-20",
+   "eligible": 1679,
+   "triggered_any": 677,
+   "pool_size_noFA": 26,
+   "laneA": 444,
+   "laneB": 166,
+   "laneC": 91,
+   "rs": 49,
+   "catalyst": 153
+  },
+  "in_current_universe": true,
+  "eligible": false,
+  "families": [],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED"
+ },
+ {
+  "ticker": "HUT",
+  "date": "2025-11-18",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2025-11-18",
+   "eligible": 1677,
+   "triggered_any": 813,
+   "pool_size_noFA": 26,
+   "laneA": 368,
+   "laneB": 158,
+   "laneC": 47,
+   "rs": 38,
+   "catalyst": 460
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "CATALYST",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 38.67,
+  "fa": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "ticker": "ZETA",
+  "date": "2025-12-02",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2025-12-02",
+   "eligible": 1693,
+   "triggered_any": 640,
+   "pool_size_noFA": 26,
+   "laneA": 423,
+   "laneB": 114,
+   "laneC": 60,
+   "rs": 37,
+   "catalyst": 188
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 17.7,
+  "fa": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ {
+  "ticker": "MP",
+  "date": "2026-01-08",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2026-01-08",
+   "eligible": 1692,
+   "triggered_any": 778,
+   "pool_size_noFA": 26,
+   "laneA": 602,
+   "laneB": 109,
+   "laneC": 210,
+   "rs": 40,
+   "catalyst": 134
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 61.06,
+  "fa": []
+ },
+ {
+  "ticker": "FLNC",
+  "date": "2026-03-03",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2026-03-03",
+   "eligible": 1798,
+   "triggered_any": 1222,
+   "pool_size_noFA": 24,
+   "laneA": 680,
+   "laneB": 329,
+   "laneC": 61,
+   "rs": 46,
+   "catalyst": 652
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 14.92,
+  "fa": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "ticker": "LUNR",
+  "date": "2026-04-24",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2026-04-24",
+   "eligible": 1759,
+   "triggered_any": 680,
+   "pool_size_noFA": 25,
+   "laneA": 290,
+   "laneB": 184,
+   "laneC": 67,
+   "rs": 49,
+   "catalyst": 288
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "MOMENTUM",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {
+   "A": 143
+  },
+  "scores": {
+   "A": 0.5202
+  },
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 25.53,
+  "fa": [
+   "net_income_improving"
+  ]
+ },
+ {
+  "ticker": "ASYS",
+  "date": "2026-05-04",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2026-05-04",
+   "eligible": 1765,
+   "triggered_any": 795,
+   "pool_size_noFA": 24,
+   "laneA": 290,
+   "laneB": 93,
+   "laneC": 70,
+   "rs": 48,
+   "catalyst": 563
+  },
+  "in_current_universe": true,
+  "eligible": false,
+  "families": [],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED"
+ },
+ {
+  "ticker": "BB",
+  "date": "2026-05-15",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2026-05-15",
+   "eligible": 1797,
+   "triggered_any": 888,
+   "pool_size_noFA": 26,
+   "laneA": 321,
+   "laneB": 65,
+   "laneC": 35,
+   "rs": 49,
+   "catalyst": 672
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {
+   "A": 95,
+   "RS": 44
+  },
+  "scores": {
+   "A": 0.6304,
+   "RS": 0.7218
+  },
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 6.19,
+  "fa": [
+   "net_income_improving"
+  ]
+ },
+ {
+  "ticker": "KEEL",
+  "date": "2026-05-22",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2026-05-22",
+   "eligible": 1813,
+   "triggered_any": 708,
+   "pool_size_noFA": 23,
+   "laneA": 296,
+   "laneB": 77,
+   "laneC": 56,
+   "rs": 51,
+   "catalyst": 427
+  },
+  "in_current_universe": true,
+  "eligible": false,
+  "families": [],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED"
+ },
+ {
+  "ticker": "IREN",
+  "date": "2026-08-14",
+  "regime": "NORMAL",
+  "context": {
+   "date": "2026-08-14",
+   "eligible": 1853,
+   "triggered_any": 945,
+   "pool_size_noFA": 21,
+   "laneA": 436,
+   "laneB": 210,
+   "laneC": 53,
+   "rs": 51,
+   "catalyst": 479
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "CATALYST"
+  ],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 44.06,
+  "fa": []
+ },
+ {
+  "ticker": "PANW",
+  "date": "2026-09-08",
+  "regime": "RISKIER_PATH_1",
+  "context": {
+   "date": "2026-09-08",
+   "eligible": 1815,
+   "triggered_any": 724,
+   "pool_size_noFA": 27,
+   "laneA": 370,
+   "laneB": 326,
+   "laneC": 47,
+   "rs": 49,
+   "catalyst": 192
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "CATALYST",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 336.98,
+  "fa": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "ticker": "FTNT",
+  "date": "2026-09-08",
+  "regime": "RISKIER_PATH_1",
+  "context": {
+   "date": "2026-09-08",
+   "eligible": 1815,
+   "triggered_any": 724,
+   "pool_size_noFA": 27,
+   "laneA": 370,
+   "laneB": 326,
+   "laneC": 47,
+   "rs": 49,
+   "catalyst": 192
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "QUALITY_PULLBACK",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {
+   "B": 161
+  },
+  "scores": {
+   "B": 0.5447
+  },
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 157.47,
+  "fa": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "ticker": "AMAT",
+  "date": "2026-09-08",
+  "regime": "RISKIER_PATH_1",
+  "context": {
+   "date": "2026-09-08",
+   "eligible": 1815,
+   "triggered_any": 724,
+   "pool_size_noFA": 27,
+   "laneA": 370,
+   "laneB": 326,
+   "laneC": 47,
+   "rs": 49,
+   "catalyst": 192
+  },
+  "in_current_universe": true,
+  "eligible": true,
+  "families": [
+   "CATALYST",
+   "FUNDAMENTAL_ACCELERATION"
+  ],
+  "ranks": {},
+  "scores": {},
+  "pool": false,
+  "deep": false,
+  "final_ta": "NOT_TESTED",
+  "close": 472.79,
+  "fa": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ }
+]
