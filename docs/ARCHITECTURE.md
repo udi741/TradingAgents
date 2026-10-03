@@ -79,6 +79,9 @@ explicit promotion decision.
   alerts; flags missed executions instead of faking fills.
 - **Control/documentation worktree** (this repo): holds no implementation
   code of record; holds all canonical docs and state YAMLs.
+- **Base repository role**: neutral canonical checkout / worktree factory —
+  never used for experiments. See `docs/BASE_REPOSITORY_ROLE.md`
+  (audit done; normalization pending a separate gate).
 
 ### Data integrity
 
