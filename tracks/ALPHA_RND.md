@@ -296,3 +296,16 @@ removed on exit (no duplicates; watch_status TRIGGERED prevents re-entry).
 Bug fixed: ACN exit_rules missing `label` would have crashed the exit path.
 Notifications now also fire `notify-send` desktop alerts (cron-safe env) for
 triggers, exits, and REANALYSIS_REQUIRED. No buys without frozen rules.
+
+### Close-confirmation execution fix (2026-10-03)
+
+A close-confirmed condition can no longer fill at the confirming close.
+Exits: PBF close<78 and ACN close<194 now emit
+`CONFIRMED_PENDING_NEXT_OPEN_EXIT` and fill at the next regular-session open
+(actual open incl. gaps). All DETERMINISTIC_CONFIRMATION entries already used
+PENDING_NEXT_OPEN — unchanged. Intraday stops (PBF 74.50, APPS 10.42) fill at
+stop level, or at the actual open if the session gaps through the stop.
+Pending orders whose target open fully passed while machine was off are marked
+`MISSED_EXECUTION_REVIEW_REQUIRED` — no retroactive/later-price substitution.
+Notifications: ENTRY/EXIT CONFIRMED — PENDING NEXT OPEN, then ENTRY/EXIT
+EXECUTED.
