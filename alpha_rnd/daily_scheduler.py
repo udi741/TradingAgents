@@ -192,20 +192,49 @@ def run_cycle(session: str) -> None:
             event("ALPHA_DISCOVERY_ERROR", session=session,
                   stage="ta", tail=(r.stderr or r.stdout)[-400:])
             return
-        st = _j(SCHED_STATE, {}) or {}
-        st["analysis_done"] = st.get("analysis_done") or {}
-        st["analysis_done"][session] = {"deep": deep, "ta_signals": signals}
-        SCHED_STATE.write_text(json.dumps(st, indent=1))
-        event("ALPHA_DISCOVERY_TA_COMPLETE", session=session,
-              deep=deep, ta_signals=signals)
-        # Canonical publication boundary: TA artifact prose -> watch spec is a
-        # researcher synthesis step (accepted manual path). The scheduler must
-        # NOT invent classifications; it requests the canonical publish step
-        # and withholds the done marker until it lands.
-        event("ALPHA_PUBLICATION_REQUIRED", session=session,
-              resume="feather-room",
-              how="synthesize watch specs into gen_watchlist.py, then run: "
-                  "python3 -m alpha_rnd.publish <session>")
+        # 4. Automatic publication synthesis (translator, not strategy):
+        #    frozen TA artifacts -> PublicationIntents -> fail-closed
+        #    validation -> canonical publish -> live watchlist.
+        r = subprocess.run([PY, "-m", "alpha_rnd.synthesize", session],
+                           cwd=ROOT,
+                           env={**os.environ, "PYTHONPATH": str(ROOT)},
+                           capture_output=True, text=True, timeout=1320)
+        idoc = _j(EV_DIR / f"publication_intents_{session}.json") or {}
+        if r.returncode != 0 and not idoc.get("validated") and not idoc.get("review_required"):
+            event("ALPHA_DISCOVERY_ERROR", session=session,
+                  stage="publication_synthesis",
+                  tail=(r.stderr or r.stdout)[-400:])
+            return
+        reviews = idoc.get("review_required") or []
+        # 5. Canonical publish (atomic, idempotent) — mixed policy: validated
+        #    intents publish now; ambiguous cases fail closed to review.
+        r = subprocess.run([PY, "-m", "alpha_rnd.publish", session],
+                           cwd=ROOT,
+                           env={**os.environ, "PYTHONPATH": str(ROOT)},
+                           capture_output=True, text=True, timeout=300)
+        if r.returncode != 0:
+            event("ALPHA_DISCOVERY_ERROR", session=session,
+                  stage="publish", tail=(r.stderr or r.stdout)[-400:])
+            return
+        pub = (_j(SCHED_STATE, {}) or {}).get("published_sessions", {}).get(session)
+        if not pub:
+            event("ALPHA_DISCOVERY_ERROR", session=session,
+                  stage="publish_marker", tail="publish ran without marker")
+            return
+        if reviews:
+            event("ALPHA_PUBLICATION_REVIEW_REQUIRED", session=session,
+                  tickers=[x["ticker"] for x in reviews],
+                  violations={x["ticker"]: x["violations"] for x in reviews},
+                  resume="feather-room")
+        summary = {"deep": deep, "ta_signals": signals,
+                   "published": pub,
+                   "validated": idoc.get("validated"),
+                   "pending_review": [x["ticker"] for x in reviews]}
+        mark_done(session, summary)
+        event("ALPHA_DISCOVERY_COMPLETE", session=session,
+              deep=deep, ta_signals=signals, published=pub,
+              pending_review=[x["ticker"] for x in reviews],
+              user_action_required="review_pending" if reviews else "none")
 
 
 def check() -> None:

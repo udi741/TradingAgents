@@ -26,6 +26,35 @@ def publish(session: str) -> dict:
     import alpha_rnd.gen_watchlist as gw
 
     doc = gw.build_doc()
+    # Merge validated PublicationIntents for this session (synthesis artifact).
+    intents_path = (ROOT / "evaluations" / "alpha_rnd_v1"
+                    / f"publication_intents_{session}.json")
+    if intents_path.exists():
+        idoc = json.loads(intents_path.read_text())
+        by_ticker = {w["ticker"]: w for w in doc["watches"]}
+        for t in idoc.get("validated", []):
+            i = idoc["intents"][t]
+            if i.get("watch_mode") in (None, "NONE"):
+                continue
+            by_ticker[t] = {
+                "ticker": t, "cls": i["watch_mode"], "v": "auto",
+                "trigger": i.get("trigger"),
+                "trigger_type": (i.get("params") or {}).get("type"),
+                "params": i.get("params"),
+                "entry_convention": i.get("entry_convention"),
+                "invalidation": i.get("invalidation"),
+                "horizon": i.get("horizon"),
+                "reevaluation": i.get("reevaluation"),
+                "artifact": f"{t}_{session}.json",
+                "size_frac": i.get("size_frac") or 1.0,
+                "auto_execution_authorized": bool(
+                    i.get("auto_execution_authorized")),
+                "source": "auto_synth",
+            }
+        doc["watches"] = list(by_ticker.values())
+        doc["sha256"] = __import__("hashlib").sha256(
+            json.dumps({k: v for k, v in doc.items() if k != "sha256"},
+                       sort_keys=True).encode()).hexdigest()
     blob = json.dumps(doc, indent=1)
     tmp = gw.OUT.with_suffix(".tmp")
     tmp.write_text(blob)

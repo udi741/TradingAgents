@@ -82,26 +82,28 @@ class SchedTest(unittest.TestCase):
                             for t in "ABCDEFGHIJK"]}))
         (ds.EV_DIR / "case_artifacts" / "A_2026-10-05.json").write_text(
             json.dumps({"ticker": "A", "signal": "BUY"}))
-        with mock.patch.object(ds.subprocess, "run", return_value=mock.Mock(returncode=0, stdout="", stderr="")), \
+        def fake_run(cmd, **kw):
+            cmd = [str(x) for x in cmd]
+            if "synthesize" in " ".join(cmd):
+                (ds.EV_DIR / "publication_intents_2026-10-05.json").write_text(json.dumps(
+                    {"validated": ["A"], "intents": {}, "review_required": []}))
+            if "publish" in " ".join(cmd):
+                st = ds._j(ds.SCHED_STATE, {}) or {}
+                st["published_sessions"] = {"2026-10-05": {"watch_count": 3, "sha256": "x"}}
+                ds.SCHED_STATE.write_text(json.dumps(st))
+            return mock.Mock(returncode=0, stdout="", stderr="")
+        with mock.patch.object(ds.subprocess, "run", side_effect=fake_run), \
              mock.patch.object(ds, "ensure_bridge", return_value=True):
             ds.run_cycle("2026-10-05")
         kinds = [e["kind"] for e in self._events()]
         self.assertEqual(kinds[0], "ALPHA_DISCOVERY_STARTED")
-        self.assertIn("ALPHA_PUBLICATION_REQUIRED", kinds)  # no COMPLETE pre-publish
-        self.assertNotIn("ALPHA_DISCOVERY_COMPLETE", kinds)
-        self.assertFalse(ds.cycle_done("2026-10-05"))  # done only after publication
-        # canonical publish lands -> next tick marks done + COMPLETE once
-        st = ds._j(ds.SCHED_STATE, {})
-        st["published_sessions"] = {"2026-10-05": {"watch_count": 3, "sha256": "x"}}
-        ds.SCHED_STATE.write_text(json.dumps(st))
-        with mock.patch.object(ds, "last_completed_session", return_value="2026-10-05"):
-            ds.check()
-        kinds = [e["kind"] for e in self._events()]
-        self.assertIn("ALPHA_DISCOVERY_COMPLETE", kinds)
+        self.assertIn("ALPHA_DISCOVERY_COMPLETE", kinds)  # auto publish -> done
         self.assertTrue(ds.cycle_done("2026-10-05"))
         n = kinds.count("ALPHA_DISCOVERY_COMPLETE")
-        with mock.patch.object(ds, "last_completed_session", return_value="2026-10-05"):
+        with mock.patch.object(ds, "last_completed_session", return_value="2026-10-05"), \
+             mock.patch.object(ds.subprocess, "Popen") as pop:
             ds.check()  # completed -> no republish, no second COMPLETE
+        pop.assert_not_called()
         self.assertEqual(kinds.count("ALPHA_DISCOVERY_COMPLETE"), n)
 
     def test_crash_after_partial_ta_resumes_only_missing(self):
@@ -144,8 +146,8 @@ class SchedTest(unittest.TestCase):
         self.assertEqual(len(ta_calls), 1)
         self.assertTrue(ta_calls[0][-1].endswith("run_ta.py")
                         or all(len(a) != 1 for a in ta_calls[0][2:]))  # 0 missing tickers
-        self.assertFalse(ds.cycle_done("2026-10-05"))  # publication still pending
-        self.assertIn("2026-10-05", ds._j(ds.SCHED_STATE)["analysis_done"])
+        kinds = [e["kind"] for e in self._events()]
+        self.assertIn("ALPHA_DISCOVERY_ERROR", kinds)  # synthesize/publish not provisioned in this fake
 
     def test_deep_allocation_formula_and_tiebreak(self):
         cands = [

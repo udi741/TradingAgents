@@ -1,0 +1,319 @@
+{
+ "session": "2026-10-02",
+ "synthesized_at": "2026-10-03T17:15:28.122710+00:00",
+ "model": "devin-deep",
+ "temperature": 0,
+ "intents": {
+  "ASST": {
+   "ticker": "ASST",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "Post-October-13 warrant window only: sustained trade above ~$35 through the warrant period proving absorption (alongside a confirmed Bitcoin breakout), or a deep pullback to ~$26.25 offering a quarter-size tactical trade with a hard stop below $25",
+   "params": {
+    "avoid_zone": "30-35",
+    "supply_zone": "33-35",
+    "absorption_level": 35,
+    "tactical_pullback": 26.25,
+    "tactical_stop_below": 25,
+    "residual_stop": 28.69,
+    "early_warning": 29.35,
+    "unwind_supports": [
+     26.25,
+     21
+    ],
+    "warrant_window": "~October 13",
+    "sizing_cap": "quarter-size max; desk-level watch flag caps future position at reduced sizing"
+   },
+   "entry_convention": "post-event conditional re-entry; quarter-size tactical trade only",
+   "invalidation": "hard stop below $25 on the $26.25 tactical trade; residual-position stop at a daily close below $28.69",
+   "stop_level": 28.69,
+   "target": null,
+   "horizon": null,
+   "reevaluation": "post-October-13 warrant window; the Bitcoin tape is the primary monitored variable",
+   "size_frac": 0.25,
+   "auto_execution_authorized": false,
+   "ambiguity": "Text states two re-entry triggers: the trader-plan decisive close above $32.10 plus Bitcoin breakout, which the debate explicitly rejected and replaced with the post-Oct-13 sustained-above-$35 condition; the amended trigger is used here."
+  },
+  "AXGN": {
+   "ticker": "AXGN",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Long re-entry only after a daily close reclaims $40.00 and a subsequent session holds above $38.70 (the validated $38.90-40.00 reclaim on above-average volume); optional half-size tactical short only on a failed $38.90-40.00 retest, no trading within 24 hours of trial or regulatory headlines",
+   "params": {
+    "reclaim_zone": "38.90-40.00",
+    "hold_level": 38.7,
+    "breakdown_level": 36.97,
+    "air_pocket": "low-$30s",
+    "first_trim_zone": "low-$40s (VWMA ~42.88, offering 42.50, 10-EMA ~41.88)",
+    "daily_atr": "~5.9-6%"
+   },
+   "entry_convention": "reclaim-plus-hold confirmation, then one-third of a standard allocation, add only on follow-through, stop below the reclaim candle",
+   "invalidation": "decisive close below $36.97 opens the documented low-$30s air pocket; stop below the reclaim candle on the re-entry",
+   "stop_level": null,
+   "target": null,
+   "horizon": "2-8 weeks",
+   "reevaluation": "verify the ~$17M below-the-line charge behind the -$20M Q1 net loss and the equity-raise rationale; prostatectomy trial readout treated as a binary event",
+   "size_frac": 0.33,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "HHH": {
+   "ticker": "HHH",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Re-entry at the $65.8 confluence / $63.75-64.58 breakout shelf executable only if price holds on stabilizing volume AND a catalyst check on the undisclosed ~$5.3B asset expansion is completed first; alternatively a small starter long of 10-15% of capital (~$10-15K) on a decisive close above $74.88 on expanding volume with a stop back below ~$73.8",
+   "params": {
+    "avoid_zone": "71-74.88",
+    "resistance_zone": "73.77-74.88",
+    "reentry_confluence": 65.8,
+    "breakout_shelf": "63.75-64.58",
+    "breakout_trigger": 74.88,
+    "starter_stop": 73.8,
+    "starter_size": "10-15% of capital (~$10-15K)",
+    "first_support": 69.6,
+    "atr": 2.57
+   },
+   "entry_convention": "conditional accumulation at confluence/shelf after volume stabilization plus catalyst check; or bounded breakout starter",
+   "invalidation": "daily close below $63.75 or verified disclosure that the ~$5B acquisition program was made at poor economics",
+   "stop_level": 73.8,
+   "target": null,
+   "horizon": "4-8 weeks",
+   "reevaluation": "filed/announced monetization event (subsidiary IPO, land-portfolio sale, confirmed insider purchase via regulatory filing) upgrades; disclosure of expansion economics gates all re-entry",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "KOD": {
+   "ticker": "KOD",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "Priced equity offering: if a deal prices in the $55-80 range, deploy 1.5-2.5% of the book (~$1,500-2,500) two to three sessions after the print once absorption is visible; an $80+ deal supports the higher end, a print below ~$60 signals smaller size or no trade; alternatively a price reset toward the $72-80 zone",
+   "params": {
+    "avoid_price": 94,
+    "offering_entry_range": "55-80",
+    "deploy_frac_of_book": "1.5-2.5% (~$1,500-2,500)",
+    "weak_print_level": 60,
+    "reset_zone": "72-80",
+    "first_support": 80,
+    "floor": "88.50-89.90",
+    "cut_level": 88.6,
+    "bear_case_offering_range": "47-56",
+    "failed_readout_gap": "~30",
+    "reentry_allocation": "quarter-to-half standard allocation (~2-3% of the $100k cash)"
+   },
+   "entry_convention": "process-based: reassess at deal price two to three sessions post-print; no level-prediction entry",
+   "invalidation": "break of ~$88.60 without a raise, a priced offering below ~$40, or a failed December Phase 3 readout; position size is the real stop \u2014 a miss could gap to ~$30 regardless of resting orders",
+   "stop_level": 71.5,
+   "target": 78.0,
+   "horizon": "watch through the expected offering (~1-3 months); any re-entered position held only into the December Phase 3 readout (~90 days)",
+   "reevaluation": "priced offering announcement; December Phase 3 readout treated as a binary event",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "The report itself flags the stated $71.50 stop as fictional against a gap event; retained as stated, but the text says position size, not the stop, is the real risk control."
+  },
+  "PAYC": {
+   "ticker": "PAYC",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Confirmed close above 232 on >=1.5M shares volume with a positive or turning MACD histogram (capped at quarter size), or a probe at the 200-205 gap fill only after down-day volume dries up below prior up-day volume",
+   "params": {
+    "distribution_range": "213-232",
+    "breakout_level": 232,
+    "min_volume_shares": 1500000,
+    "gap_fill_zone": "200-205",
+    "trigger_kill_level": 213,
+    "deeper_support": 175,
+    "atr": 7.6
+   },
+   "entry_convention": "volume-confirmed breakout close or stabilized gap-fill probe; quarter size with small initial sizing per ATR 7.6",
+   "invalidation": "daily close below 213 removes all triggers until a new base forms; hard risk line for any residual position",
+   "stop_level": 213,
+   "target": null,
+   "horizon": "flat indefinitely; formal review at the next employment report and next quarterly filing",
+   "reevaluation": "next jobs print and next PAYC filing; pull current P/E and EV/S multiples and insider transaction filings before adding",
+   "size_frac": 0.25,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "PGEN": {
+   "ticker": "PGEN",
+   "classification": "ACTIONABLE_NOW",
+   "watch_mode": "AUTO_ENTRY",
+   "trigger": "Staggered limit buys in the $8.00-8.20 zone (10 EMA / prior breakout shelf); do not chase $8.54 and do not add on price momentum alone",
+   "params": {
+    "entry_zone": "8.00-8.20",
+    "entry_price_ref": 8.1,
+    "structural_stop": 7.75,
+    "breakout_level": 8.98,
+    "sma50": 7.03,
+    "next_support": 6.4,
+    "add_condition": "Q3-2026 operating cash flow positive with revenue holding near or above ~$50M",
+    "total_size": "~7.5% of the $100,000 portfolio (~$7,500)"
+   },
+   "entry_convention": "staggered limit buys inside the stated zone; confirmed break above $8.98 justifies raising the stop, not new capital",
+   "invalidation": "daily close under $7.75 trims toward exit; loss of the 50 SMA near $7.03 is structural invalidation (next support ~$6.40); a competitor FDA approval on INO-3107 is an immediate de-risk",
+   "stop_level": 7.75,
+   "target": 11.0,
+   "horizon": "1-3 months (through Q3-2026 earnings verification)",
+   "reevaluation": "Q3-2026 report \u2014 upgrade only if operating cash flow turns meaningfully positive and revenue holds ~$50M+; downgrade on revenue collapse or a new equity raise; INO-3107 FDA decision",
+   "size_frac": 0.5,
+   "auto_execution_authorized": true,
+   "ambiguity": "Sizing conflict inside the report: Executive Summary totals ~7.5% of portfolio (~$7,500) while Position Sizing states half a standard allocation (~10%, ~$10,000); both figures are stated and neither is reconciled."
+  },
+  "SYNA": {
+   "ticker": "SYNA",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Small starter only on a pullback toward ~$112 that holds on contracting volume with no deal-negative news; genuine asymmetric entry only below ~$106 near the pre-deal anchor; adding back is also warranted if a second bidder emerges over the top",
+   "params": {
+    "offer_price": 123,
+    "current_spread": "~$1.90 (~1.6%)",
+    "starter_zone": 112,
+    "conviction_entry_below": 106,
+    "deal_break_zone": "95-106",
+    "pre_deal_anchor": "89-103",
+    "residual_arb_cap": "25-35% of a standard allocation"
+   },
+   "entry_convention": "graduated, deal-verification-gated pullback entries",
+   "invalidation": "any financing, MAC, or shareholder-litigation development, rival-bidder walk or second amended agreement, or closing-timeline slippage compressing the annualized spread toward risk-free",
+   "stop_level": null,
+   "target": 106.0,
+   "horizon": "through deal resolution (weeks to a quarter)",
+   "reevaluation": "second bidder over the top; deal tripwires (financing/MAC/litigation); pullback to $106-112 with the deal verifiably on track",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "TWST": {
+   "ticker": "TWST",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Post-2026-10-03-lockup evidence only: quarter-to-half size on a confirmed post-lockup close above $200.31 with volume, or quarter size if the $178-183 shelf holds over multiple sessions; stay out entirely if $183.39 breaks on heavy volume",
+   "params": {
+    "lockup_expiry": "2026-10-03",
+    "breakout_level": 200.31,
+    "shelf": "178-183",
+    "break_level": 183.39,
+    "downside_zone": "164-167",
+    "sma50": 135,
+    "supply_zone": 208,
+    "atr": 11.5,
+    "reentry_size": "quarter-to-half standard on breakout; quarter on shelf hold; cap re-entry at half a standard allocation"
+   },
+   "entry_convention": "post-event confirmed breakout close or demonstrated multi-session shelf hold; do not average into weakness",
+   "invalidation": "heavy-volume break of $183.39/$183 on lockup supply confirms the bearish break toward $164-167",
+   "stop_level": 183,
+   "target": 208.0,
+   "horizon": "1-3 months, contingent on post-lockup confirmation",
+   "reevaluation": "confirmed absorption of lockup supply; disclosed DeepMind economics, a real revenue contribution, or a second consecutive cash-flow-positive quarter",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "TXG": {
+   "ticker": "TXG",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "$84-86 zone (10 EMA) is a watch zone requiring momentum stabilization before any 2-3% starter position; the $74.60/$77.88 shelf is where risk/reward genuinely inverts for a larger entry with a stop under ~$72",
+   "params": {
+    "watch_zone": "84-86",
+    "accumulation_shelf": "74.60-77.88",
+    "larger_entry_stop_below": 72,
+    "starter_size": "2-3% of portfolio",
+    "hard_invalidation": 74.6,
+    "atr": 5,
+    "revenue_inflection_band": "141-173mm"
+   },
+   "entry_convention": "conditional pullback entries only after momentum stabilization; verify unconfirmed insider-selling and Sentira claims through a real feed before any re-entry",
+   "invalidation": "$74.60 hard invalidation; verified insider selling or a macro reversal deepens the Sell",
+   "stop_level": 74.6,
+   "target": null,
+   "horizon": "1-3 months",
+   "reevaluation": "a revenue print decisively above ~$151-173mm validates the inflection and upgrades the levels; verification of insider-selling claims",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "XNCR": {
+   "ticker": "XNCR",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "AUTO_ENTRY",
+   "trigger": "Reduced tactical short at quarter size (~1-1.25% of risk budget) entered only on a retest of the $25.50-25.70 rejection zone rather than at $24.84 mid-range; add to the short on a break of $23.30 targeting the unfilled July gap near $17; cover and flip long on a confirmed daily close above $25.70 on >2M shares toward $28-29",
+   "params": {
+    "battleground": "24.00-25.50",
+    "short_entry_zone": "25.50-25.70",
+    "add_break_level": 23.3,
+    "gap_target": 17,
+    "bull_flip_level": 25.7,
+    "bull_flip_min_volume": 2000000,
+    "upside_target": "28-29",
+    "accumulation_zone": "17-19"
+   },
+   "entry_convention": "limit-style short at the rejection-zone ceiling; quarter size",
+   "invalidation": "hard invalidation on any confirmed daily close above $25.70 on >2M shares (flips the setup bullish toward $28-29); a verified Xencor pipeline catalyst closes the short immediately given overnight gap risk",
+   "stop_level": 25.75,
+   "target": 17.0,
+   "horizon": "days to weeks, governed by range-resolution triggers (2-6 weeks)",
+   "reevaluation": "actual Xencor pipeline data or milestone announcements; next 10-Q clarifying the ~$51M below-the-line Q1 charge; signs of a follow-on raise",
+   "size_frac": 0.25,
+   "auto_execution_authorized": true,
+   "ambiguity": null
+  }
+ },
+ "validated": [
+  "AXGN",
+  "PAYC",
+  "TWST",
+  "TXG"
+ ],
+ "review_required": [
+  {
+   "ticker": "ASST",
+   "session": "2026-10-02",
+   "violations": [
+    "ambiguous: Text states two re-entry triggers: the trader-plan decisive close above $32.10 plus Bitcoin breakout, which the debate explicitly rejected and replaced with the post-Oct-13 sustained-above-$35 condition; the amended trigger is used here."
+   ],
+   "artifact": "case_artifacts/ASST_2026-10-02.json"
+  },
+  {
+   "ticker": "HHH",
+   "session": "2026-10-02",
+   "violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/HHH_2026-10-02.json"
+  },
+  {
+   "ticker": "KOD",
+   "session": "2026-10-02",
+   "violations": [
+    "ambiguous: The report itself flags the stated $71.50 stop as fictional against a gap event; retained as stated, but the text says position size, not the stop, is the real risk control."
+   ],
+   "artifact": "case_artifacts/KOD_2026-10-02.json"
+  },
+  {
+   "ticker": "PGEN",
+   "session": "2026-10-02",
+   "violations": [
+    "ambiguous: Sizing conflict inside the report: Executive Summary totals ~7.5% of portfolio (~$7,500) while Position Sizing states half a standard allocation (~10%, ~$10,000); both figures are stated and neither is reconciled."
+   ],
+   "artifact": "case_artifacts/PGEN_2026-10-02.json"
+  },
+  {
+   "ticker": "SYNA",
+   "session": "2026-10-02",
+   "violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/SYNA_2026-10-02.json"
+  },
+  {
+   "ticker": "XNCR",
+   "session": "2026-10-02",
+   "violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "artifact": "case_artifacts/XNCR_2026-10-02.json"
+  }
+ ]
+}
