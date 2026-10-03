@@ -79,9 +79,10 @@ explicit promotion decision.
   alerts; flags missed executions instead of faking fills.
 - **Control/documentation worktree** (this repo): holds no implementation
   code of record; holds all canonical docs and state YAMLs.
-- **Base repository role**: neutral canonical checkout / worktree factory —
-  never used for experiments. See `docs/BASE_REPOSITORY_ROLE.md`
-  (audit done; normalization pending a separate gate).
+- **Base repository role**: `BASE_INFRASTRUCTURE_HOST` — Git root, bridge
+  host (`infra/devin-bridge` @ ceabecf9), worktree-management point; never
+  used for experiments. Local `main` mirrors `origin/main`; new work
+  branches from fetched `origin/main`. See `docs/BASE_REPOSITORY_ROLE.md`.
 
 ### Data integrity
 

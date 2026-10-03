@@ -17,8 +17,10 @@ shortcut conflict, the rule wins.
 4. C12 is **validation/control, not a strategy playground**. Never import
    ALPHA or EXPERT experimentation into C12.
 5. EXPERT findings must not contaminate C12.
-6. New independent research starts from freshly fetched `origin/main`;
-   existing track work continues in that track's existing branch/worktree.
+6. New independent research starts from freshly fetched `origin/main`
+   (never from the `infra/devin-bridge` base checkout); existing track work
+   continues in that track's existing branch/worktree. The base worktree is
+   `BASE_INFRASTRUCTURE_HOST` — see `docs/BASE_REPOSITORY_ROLE.md`.
 
 ## Prospective integrity
 
