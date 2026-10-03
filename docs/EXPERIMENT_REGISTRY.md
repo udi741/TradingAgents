@@ -43,6 +43,7 @@ WAITING.
 | Holding-horizon audit/alignment | COMPLETE | 60 sessions = measurement not exit; exits per frozen hierarchy | Horizon concepts separated | ledger HOLDING_HORIZON_AUDIT | permanent rule |
 | Fast trigger monitor V1 | COMPLETE | cron monitor live; AUTO_ENTRY / DETERMINISTIC / REANALYZE classes | Local execution without live session | `alpha_rnd/monitor.py` | — |
 | Close-confirmation execution fix | COMPLETE | close-confirmed -> next open; missed -> REVIEW_REQUIRED | Removes same-close fills | `alpha_rnd/` | permanent |
+| EXPERT_DISCOVERY_COVERAGE_V1 | COMPLETE (RETRO DIAGNOSTIC) | 12/16 family-level hits, 1/16 deep (UAMY); misses = sub-$5/illiquidity + sub-quota ranks | ALPHA shares little of expert's buy set at deep level | `evaluations/alpha_rnd_v1/expert_coverage/` | diagnostic only, no tuning |
 | E1 staging counterfactual | ACCUMULATING | needs ≥10 pairs, ≥20 sessions matured | Does entry staging add or cost? | ledger | read when matured |
 
 ## Retired research lines (project-wide)

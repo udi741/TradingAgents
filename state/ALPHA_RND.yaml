@@ -4,7 +4,7 @@ type: OPPORTUNITY_RND_PAPER_ONLY
 owner_session: feather-room
 branch: exp/alpha-rnd-v1
 worktree: /home/udi/udi_provate/TradingAgents-alpha-rnd
-current_gate: V1_AND_V2_DISCOVERY_COMPLETE_MONITORING
+current_gate: V1_V2_COMPLETE_MONITOR_PLUS_RETRO_COVERAGE_DONE
 last_accepted_result: >-
   V1 (session 2026-10-01): 28-name frozen pool, 10 deep TA runs,
   0 ACTIONABLE_NOW, 6 WATCH_FOR_ENTRY, 4 REJECT. 3 VALID_PROSPECTIVE fills
@@ -15,7 +15,8 @@ last_accepted_result: >-
 next_action: >-
   Mark book each completed session; monitor 13 active watch triggers
   (expiry 2026-10-30) via the cron fast-trigger monitor; E1 shadow
-  counterfactual ACCUMULATING.
+  counterfactual ACCUMULATING. Coverage diagnostic done: ALPHA noticed
+  12/16 expert buys at family level, 1/16 reached deep analysis (UAMY).
 blockers: []
 paper_account:
   starting_capital: 100000.00
@@ -56,4 +57,4 @@ monitor:
   command: 'cd TradingAgents-alpha-rnd && PYTHONPATH=. python3 -m alpha_rnd.monitor --once'
   events_log: alpha_rnd/trigger_events.jsonl (append-only)
 production_modification_permission: none without separate explicit promotion decision
-last_updated_utc: '2026-10-03T10:30:00Z'
+last_updated_utc: '2026-10-03T14:20:00Z'

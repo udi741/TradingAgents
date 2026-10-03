@@ -435,3 +435,29 @@ against alpha worktree ledger + monitor_state.json — no conflicts found
 monitor live). Documentation definition-of-done adopted for all future
 ALPHA gates (artifacts -> track md -> yaml -> aggregates -> registry ->
 decision log -> runbook -> commit -> report).
+
+---
+
+## EXPERT_DISCOVERY_COVERAGE_V1 (RETROSPECTIVE DIAGNOSTIC — NOT_PROSPECTIVE, NOT_PROFITABILITY_VALIDATION)
+
+Question: on the exact dates the expert bought, would current ALPHA discovery
+have noticed? Replay of the FROZEN pipeline at each decision date (PIT data
+only; universe membership = today's list — survivorship caveat; UAMY absent
+from current universe but evaluated via data).
+
+Authoritative cases: 16 (12 E-cohort frozen case_ids + IREN + 3
+RISKIER_PATH_1 disclosures). Excluded: SANM (ambiguous date), IONQ (two
+candidate dates). Result: ELIGIBLE 13/16 — DGXX ($4.53) and KEEL ($4.81)
+failed price>=$5; ASYS failed liquidity ($2.8M medDV20). DISCOVERY_HIT 12/13
+eligible (MP triggered nothing). CANDIDATE_POOL 1/16 (UAMY: LaneA #7, RS #6,
+CAT, FA). DEEP_ALLOCATION 1/16 (UAMY). All other family hits ranked far below
+frozen quotas (FROG B#28, BB A#95/RS#44, LUNR A#143, FTNT B#161).
+FINAL_TA_DECISION = NOT_TESTED everywhere — no historical LLM inference.
+
+FUTURE_HYPOTHESIS (record only, no tuning): the expert systematically buys
+sub-$5/low-liquidity small caps outside ALPHA's eligibility band (3/16 cases)
+and enters names ALPHA sees via catalyst/FA but ranks below quota (11/16).
+A single deep-hit (UAMY) is too thin to conclude overlap.
+
+Artifacts: `evaluations/alpha_rnd_v1/expert_coverage/` (per-date evals,
+coverage_results.json, coverage_summary.json).
