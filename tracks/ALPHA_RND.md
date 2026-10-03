@@ -114,3 +114,18 @@ Monitor the six frozen watch triggers session-by-session; if a zone fills,
 record paper entry at that session's fill price. Experiment E1: shadow
 counterfactual — mark-to-market "buy at 2026-10-02 open" for PBF+ACN vs the
 staged trigger path to measure whether entry discipline adds or costs.
+
+### Gate-1 addendum — first post-freeze session (2026-10-02)
+
+- 3 of 6 watch triggers filled at frozen zone limits: PBF @80.00 (62sh),
+  ACN @205.00 (24sh), APPS @11.30 (442sh; PM Hold — zone entry was the
+  PM-authorized path: half-position only on pullback into 11.0-11.3).
+- Untriggered: IOVA (low 13.95 vs 12.20-13.00), CDNA (low 65.88 vs 60-62),
+  SDGR (no close>32.45, pullback zone not reached).
+- Open positions mark @ 2026-10-02 close: PBF +$48.36, ACN -$146.40,
+  APPS -$57.46. NAV $99,844.50; cash $85,125.40.
+- E1 shadow read (one session): buying at the open cost -0.7% (PBF) and
+  -5.7% (ACN); staged trigger fills gave +1.0% and -3.0%. Discipline
+  delta so far: +1.66% (PBF), +2.70% (ACN) — entry staging ahead on both.
+- Invalidations: ACN close 198.90 still above 194 hard exit; all positions
+  remain open. Next mark at next completed session.
