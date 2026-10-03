@@ -70,6 +70,8 @@ ALPHA_MAP = {
 }
 ALPHA_SCHED_MAP = {
     "ALPHA_DISCOVERY_STARTED": ("INFO", True),
+    "ALPHA_DISCOVERY_TA_COMPLETE": ("INFO", True),
+    "ALPHA_PUBLICATION_REQUIRED": ("ACTION_REQUIRED", True),
     "ALPHA_DISCOVERY_COMPLETE": ("SUCCESS", True),
     "ALPHA_DISCOVERY_ERROR": ("ACTION_REQUIRED", True),
     "ALPHA_DISCOVERY_BLOCKED_BRIDGE": ("WARNING", True),
@@ -193,6 +195,11 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
             next_action = ("ALPHA full-cycle discovery did NOT complete "
                            f"(stage: {rec.get('stage', '?')}). "
                            "Resume feather-room; see alpha_rnd/scheduler.log.")
+            action_required = True
+        elif kind == "ALPHA_PUBLICATION_REQUIRED":
+            next_action = ("TA analysis finished but live-watch publication "
+                           "is the canonical researcher step — resume "
+                           "feather-room to publish. Session not marked done.")
             action_required = True
         elif kind == "ALPHA_DISCOVERY_BLOCKED_BRIDGE":
             next_action = ("Model bridge unreachable. The scheduler retries "
