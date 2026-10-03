@@ -1,5 +1,5 @@
 {
- "session": "2026-10-01",
+ "session": "2026-10-02",
  "sources": [
   "sp500",
   "sp400"
@@ -8182,6 +8182,12 @@
    ]
   },
   {
+   "ticker": "DRCT",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "DRH",
    "indices": [
     "nasdaq_listed"
@@ -8459,12 +8465,6 @@
    "indices": [
     "sp400",
     "other_listed"
-   ]
-  },
-  {
-   "ticker": "DYAI",
-   "indices": [
-    "nasdaq_listed"
    ]
   },
   {
@@ -15512,12 +15512,6 @@
    ]
   },
   {
-   "ticker": "LESL",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "LEU",
    "indices": [
     "other_listed"
@@ -16138,12 +16132,6 @@
    "ticker": "LTH",
    "indices": [
     "other_listed"
-   ]
-  },
-  {
-   "ticker": "LTRN",
-   "indices": [
-    "nasdaq_listed"
    ]
   },
   {
@@ -20045,12 +20033,6 @@
    "indices": [
     "sp500",
     "other_listed"
-   ]
-  },
-  {
-   "ticker": "OTLK",
-   "indices": [
-    "nasdaq_listed"
    ]
   },
   {

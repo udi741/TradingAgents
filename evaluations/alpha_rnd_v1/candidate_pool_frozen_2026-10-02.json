@@ -1,0 +1,688 @@
+{
+ "session": "2026-10-02",
+ "frozen_at": "2026-10-03T08:17:38.679502+00:00",
+ "universe_size_raw": 4767,
+ "universe_size_eligible": 1865,
+ "filters": {
+  "min_history": 252,
+  "min_price": 5.0,
+  "min_median_dv20": 20000000
+ },
+ "exclusion_counts": {
+  "fetch_failed": 9,
+  "insufficient_history": 296,
+  "illiquid": 1413,
+  "price_below_5": 1184
+ },
+ "lane_counts": {
+  "A_momentum": 242,
+  "B_pullback": 207,
+  "C_breakout": 67,
+  "RS_leaders": 43,
+  "catalyst": 41,
+  "fund_acc": 139
+ },
+ "candidates": [
+  {
+   "ticker": "IOVA",
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 14.22,
+   "ret_5": 0.2927,
+   "ret_20": 0.6345,
+   "rs_60": 2.2276,
+   "rsi_14": 79.9,
+   "pullback_20": 0.071,
+   "vol_ratio_5_20": 1.97,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "ocf_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 34
+  },
+  {
+   "ticker": "QMCO",
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 34.5,
+   "ret_5": 0.089,
+   "ret_20": 0.4198,
+   "rs_60": 2.2909,
+   "rsi_14": 77.3,
+   "pullback_20": 0.019,
+   "vol_ratio_5_20": 1.3,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "ocf_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 34
+  },
+  {
+   "ticker": "TWST",
+   "labels": [
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 188.67,
+   "ret_5": 0.0319,
+   "ret_20": 0.4659,
+   "rs_60": 0.9878,
+   "rsi_14": 70.7,
+   "pullback_20": 0.058,
+   "vol_ratio_5_20": 1.41,
+   "catalyst_events": [],
+   "acceleration_flags": [],
+   "deep_score": 21.976
+  },
+  {
+   "ticker": "TXG",
+   "labels": [
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 93.5,
+   "ret_5": 0.0909,
+   "ret_20": 0.479,
+   "rs_60": 1.143,
+   "rsi_14": 77.0,
+   "pullback_20": 0.017,
+   "vol_ratio_5_20": 1.24,
+   "catalyst_events": [],
+   "acceleration_flags": [],
+   "deep_score": 22.286
+  },
+  {
+   "ticker": "CDNA",
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 67.15,
+   "ret_5": 0.0545,
+   "ret_20": 0.3468,
+   "rs_60": 1.2804,
+   "rsi_14": 81.3,
+   "pullback_20": 0.038,
+   "vol_ratio_5_20": 1.19,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "ocf_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 32.561
+  },
+  {
+   "ticker": "MRNA",
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 190.01,
+   "ret_5": -0.0446,
+   "ret_20": 0.2763,
+   "rs_60": 1.4554,
+   "rsi_14": 66.2,
+   "pullback_20": 0.09,
+   "vol_ratio_5_20": 1.14,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "ocf_improving",
+    "op_income_improving"
+   ],
+   "deep_score": 32.911
+  },
+  {
+   "ticker": "KOD",
+   "labels": [
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 94.45,
+   "ret_5": 1.9196,
+   "ret_20": 1.5976,
+   "rs_60": 1.3301,
+   "rsi_14": 85.3,
+   "pullback_20": 0.092,
+   "vol_ratio_5_20": 3.66,
+   "catalyst_events": [],
+   "acceleration_flags": [],
+   "deep_score": 22.66
+  },
+  {
+   "ticker": "SDGR",
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 30.31,
+   "ret_5": 0.0506,
+   "ret_20": 0.4635,
+   "rs_60": 0.7788,
+   "rsi_14": 69.9,
+   "pullback_20": 0.066,
+   "vol_ratio_5_20": 1.27,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 31.558
+  },
+  {
+   "ticker": "ASST",
+   "labels": [
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 30.03,
+   "ret_5": 0.02,
+   "ret_20": 0.1197,
+   "rs_60": 1.3569,
+   "rsi_14": 69.8,
+   "pullback_20": 0.064,
+   "vol_ratio_5_20": 0.75,
+   "catalyst_events": [],
+   "acceleration_flags": [],
+   "deep_score": 22.714
+  },
+  {
+   "ticker": "XNCR",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "QUALITY_PULLBACK"
+   ],
+   "close": 24.84,
+   "ret_5": 0.0437,
+   "ret_20": -0.0669,
+   "rs_60": 0.515,
+   "rsi_14": 51.2,
+   "pullback_20": 0.072,
+   "vol_ratio_5_20": 0.98,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 21.03
+  },
+  {
+   "ticker": "PAYC",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "QUALITY_PULLBACK"
+   ],
+   "close": 220.99,
+   "ret_5": 0.0024,
+   "ret_20": -0.0812,
+   "rs_60": 0.5597,
+   "rsi_14": 50.9,
+   "pullback_20": 0.072,
+   "vol_ratio_5_20": 0.73,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 21.119
+  },
+  {
+   "ticker": "ETON",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "QUALITY_PULLBACK"
+   ],
+   "close": 55.36,
+   "ret_5": -0.0402,
+   "ret_20": -0.0758,
+   "rs_60": 0.4566,
+   "rsi_14": 48.6,
+   "pullback_20": 0.086,
+   "vol_ratio_5_20": 1.62,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "ocf_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 20.913
+  },
+  {
+   "ticker": "IQV",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "QUALITY_PULLBACK"
+   ],
+   "close": 258.21,
+   "ret_5": -0.045,
+   "ret_20": -0.0494,
+   "rs_60": 0.2092,
+   "rsi_14": 45.3,
+   "pullback_20": 0.069,
+   "vol_ratio_5_20": 0.89,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 20.418
+  },
+  {
+   "ticker": "HALO",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "QUALITY_PULLBACK"
+   ],
+   "close": 109.86,
+   "ret_5": -0.0355,
+   "ret_20": -0.0081,
+   "rs_60": 0.371,
+   "rsi_14": 53.2,
+   "pullback_20": 0.06,
+   "vol_ratio_5_20": 1.06,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 20.742
+  },
+  {
+   "ticker": "MXL",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM"
+   ],
+   "close": 105.93,
+   "ret_5": 0.1288,
+   "ret_20": 0.7818,
+   "rs_60": 0.0793,
+   "rsi_14": 71.5,
+   "pullback_20": 0.006,
+   "vol_ratio_5_20": 1.17,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "ocf_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 20.159
+  },
+  {
+   "ticker": "OUST",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM"
+   ],
+   "close": 44.39,
+   "ret_5": 0.0153,
+   "ret_20": 0.2389,
+   "rs_60": -0.0925,
+   "rsi_14": 63.0,
+   "pullback_20": 0.001,
+   "vol_ratio_5_20": 1.24,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 20
+  },
+  {
+   "ticker": "MTRN",
+   "labels": [
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM"
+   ],
+   "close": 312.16,
+   "ret_5": 0.1781,
+   "ret_20": 0.2976,
+   "rs_60": 0.1902,
+   "rsi_14": 77.4,
+   "pullback_20": 0.007,
+   "vol_ratio_5_20": 1.22,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 20.38
+  },
+  {
+   "ticker": "SYNA",
+   "labels": [
+    "MULTI_SIGNAL",
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM"
+   ],
+   "close": 121.1,
+   "ret_5": 0.1789,
+   "ret_20": 0.2398,
+   "rs_60": -0.0913,
+   "rsi_14": 71.8,
+   "pullback_20": 0.007,
+   "vol_ratio_5_20": 2.32,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 817720
+    }
+   ],
+   "acceleration_flags": [
+    "net_income_improving",
+    "ocf_improving",
+    "op_income_improving",
+    "revenue_growth_strong"
+   ],
+   "deep_score": 31
+  },
+  {
+   "ticker": "NKTR",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 43.58,
+   "ret_5": -0.2362,
+   "ret_20": -0.4294,
+   "rs_60": -0.4288,
+   "rsi_14": 22.0,
+   "pullback_20": 0.44,
+   "vol_ratio_5_20": 1.28,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 906709
+    }
+   ],
+   "acceleration_flags": [
+    "ocf_improving"
+   ],
+   "deep_score": 21
+  },
+  {
+   "ticker": "ACN",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 198.9,
+   "ret_5": 0.1294,
+   "ret_20": 0.0299,
+   "rs_60": 0.4039,
+   "rsi_14": 59.1,
+   "pullback_20": 0.126,
+   "vol_ratio_5_20": 1.86,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 1467373
+    }
+   ],
+   "acceleration_flags": [
+    "net_income_improving"
+   ],
+   "deep_score": 21.808
+  },
+  {
+   "ticker": "AXGN",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 37.39,
+   "ret_5": -0.1383,
+   "ret_20": -0.2062,
+   "rs_60": -0.1692,
+   "rsi_14": 27.5,
+   "pullback_20": 0.227,
+   "vol_ratio_5_20": 1.03,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 805928
+    }
+   ],
+   "acceleration_flags": [
+    "ocf_improving",
+    "revenue_growth_strong"
+   ],
+   "deep_score": 21
+  },
+  {
+   "ticker": "MOD",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 178.2,
+   "ret_5": -0.1003,
+   "ret_20": -0.0452,
+   "rs_60": -0.2946,
+   "rsi_14": 42.8,
+   "pullback_20": 0.123,
+   "vol_ratio_5_20": 1.26,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 67347
+    }
+   ],
+   "acceleration_flags": [
+    "net_income_improving",
+    "ocf_improving",
+    "revenue_growth_strong"
+   ],
+   "deep_score": 21
+  },
+  {
+   "ticker": "ON",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 84.89,
+   "ret_5": 0.0996,
+   "ret_20": 0.1526,
+   "rs_60": -0.159,
+   "rsi_14": 65.5,
+   "pullback_20": 0.018,
+   "vol_ratio_5_20": 1.06,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 1097864
+    }
+   ],
+   "acceleration_flags": [
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 21
+  },
+  {
+   "ticker": "RIVN",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 14.3,
+   "ret_5": -0.0756,
+   "ret_20": -0.1012,
+   "rs_60": -0.2372,
+   "rsi_14": 35.9,
+   "pullback_20": 0.149,
+   "vol_ratio_5_20": 1.32,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261002",
+     "cik": 1874178
+    }
+   ],
+   "acceleration_flags": [
+    "net_income_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 21
+  },
+  {
+   "ticker": "USAR",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 13.59,
+   "ret_5": -0.1047,
+   "ret_20": -0.2318,
+   "rs_60": -0.3062,
+   "rsi_14": 32.6,
+   "pullback_20": 0.296,
+   "vol_ratio_5_20": 0.82,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 1970622
+    }
+   ],
+   "acceleration_flags": [
+    "net_income_improving"
+   ],
+   "deep_score": 21
+  },
+  {
+   "ticker": "QUBT",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 8.18,
+   "ret_5": -0.0871,
+   "ret_20": 0.0276,
+   "rs_60": -0.1324,
+   "rsi_14": 43.8,
+   "pullback_20": 0.162,
+   "vol_ratio_5_20": 0.8,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261002",
+     "cik": 1758009
+    }
+   ],
+   "acceleration_flags": [
+    "net_income_improving",
+    "revenue_growth_strong"
+   ],
+   "deep_score": 21
+  },
+  {
+   "ticker": "PGEN",
+   "labels": [
+    "MULTI_SIGNAL",
+    "FUNDAMENTAL_ACCELERATION",
+    "MOMENTUM",
+    "RELATIVE_STRENGTH"
+   ],
+   "close": 8.54,
+   "ret_5": 0.1019,
+   "ret_20": 0.1961,
+   "rs_60": 0.5179,
+   "rsi_14": 67.2,
+   "pullback_20": 0.049,
+   "vol_ratio_5_20": 1.29,
+   "catalyst_events": [],
+   "acceleration_flags": [
+    "net_income_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 31.036
+  },
+  {
+   "ticker": "HHH",
+   "labels": [
+    "CATALYST",
+    "FUNDAMENTAL_ACCELERATION"
+   ],
+   "close": 71.04,
+   "ret_5": 0.0381,
+   "ret_20": 0.1186,
+   "rs_60": -0.0403,
+   "rsi_14": 60.0,
+   "pullback_20": 0.053,
+   "vol_ratio_5_20": 1.43,
+   "catalyst_events": [
+    {
+     "form": "8-K",
+     "date": "20261001",
+     "cik": 1981792
+    }
+   ],
+   "acceleration_flags": [
+    "net_income_improving",
+    "op_income_improving",
+    "revenue_growth_accelerating"
+   ],
+   "deep_score": 21
+  }
+ ],
+ "artifact_sha256": "1da5f0e601efba5ada68b077bda869d7df0137f84bdf7dfd09795a0d2e714716",
+ "existing_book_confirmations": [
+  "IOVA",
+  "CDNA",
+  "SDGR",
+  "ACN"
+ ],
+ "prior_cycle_excluded": [
+  "QMCO",
+  "MRNA"
+ ],
+ "deep_candidates_v2": [
+  "PGEN",
+  "SYNA",
+  "ASST",
+  "KOD",
+  "TXG",
+  "TWST",
+  "PAYC",
+  "XNCR",
+  "AXGN",
+  "HHH"
+ ]
+}

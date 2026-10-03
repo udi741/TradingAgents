@@ -320,7 +320,7 @@ def main() -> None:
 
     # Fundamental acceleration on pre-pool (union of lane tops + catalysts)
     pre = set(laneA.index[:60]) | set(laneB.index[:40]) | set(laneC.index[:40]) | set(rs_leaders.index[:40]) | set(catalyst)
-    fcache = OUT / "fundamental_facts.json"
+    fcache = OUT / f"fundamental_facts_{session}.json"
     if fcache.exists():
         fund = json.loads(fcache.read_text())
     else:
@@ -411,7 +411,7 @@ def main() -> None:
         "artifact_sha256": None,
     }
     result["artifact_sha256"] = sha(json.dumps(result["candidates"], sort_keys=True))
-    (OUT / "candidate_pool_frozen.json").write_text(json.dumps(result, indent=1, default=str))
+    (OUT / f"candidate_pool_frozen_{session}.json").write_text(json.dumps(result, indent=1, default=str))
     print(json.dumps(result["lane_counts"]))
     for c in pool:
         print(f"{c['ticker']:6} {','.join(c['labels'])}")
