@@ -3,7 +3,7 @@
 Durable source of truth for all research/validation tracks. Update this file
 whenever a track's gate, result, or next action changes.
 
-Last updated: 2026-10-03T07:40:00Z
+Last updated: 2026-10-03T12:00:00Z
 
 ---
 
@@ -28,8 +28,10 @@ Last updated: 2026-10-03T07:40:00Z
 - Protocol: ALPHA_RND_V1_PAPER_BOOK_PROTOCOL_FREEZE complete — all 3 fills
   VALID_PROSPECTIVE (APPS-A explicit conditional); E1 Oct-2 marks demoted to
   RETROSPECTIVE_SHADOW_DIAGNOSTIC; exit/watch/horizon rules frozen
-- Next action: session marking only — positions, watch zones (expiry
-  2026-10-30), invalidations; E1 ACCUMULATING
+- V2 gate complete (session 2026-10-02): 22 new candidates, 10 deep runs,
+  0 ACTIONABLE_NOW, 10 new WATCH triggers frozen; 4 book confirmations
+- Next action: session marking; monitor 13 watch triggers (expiry
+  2026-10-30); E1 ACCUMULATING
 - Details: `tracks/ALPHA_RND.md`
 
 ### C12_PROSPECTIVE

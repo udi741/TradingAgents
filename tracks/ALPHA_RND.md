@@ -193,3 +193,27 @@ market first satisfied it. PBF: frozen ~13:35Z, first zone touch 14:02Z →
 VALID. APPS: frozen ~13:41Z, first touch 17:26Z → VALID. ACN: frozen 13:27Z
 pre-open, first touch 13:52Z → VALID (resting order could have existed at
 open). All three fills confirmed VALID_PROSPECTIVE_FILL. Book unchanged.
+
+---
+
+## Gate 2 — ALPHA_RND_V2_CURRENT_OPPORTUNITY_DISCOVERY (COMPLETE 2026-10-03)
+
+Session: **2026-10-02**. Universe 4,767 raw / 1,865 eligible (same frozen
+hygiene). Fresh pool: 28 names; EXISTING_BOOK_CONFIRMATION: IOVA, CDNA, SDGR,
+ACN (screened high again — reported, not re-decided). PRIOR_CYCLE_ANALYZED:
+QMCO, MRNA. New candidates: 22.
+
+Deep-10 (same frozen score rule): PGEN SYNA ASST KOD TXG TWST PAYC XNCR AXGN
+HHH — artifacts in `case_artifacts/*_2026-10-02.json`.
+
+Results: PGEN PM=**Buy** but staged limit zone 8.00-8.20 below price →
+WATCH_FOR_ENTRY. All 9 Sells published explicit conditional re-entry triggers →
+WATCH_FOR_ENTRY each. ACTIONABLE_NOW: 0. REJECT: 0 (no name was left
+thesis-free AND trigger-free). No new orders; no fills. Watch expiry
+2026-10-30; zones frozen before future price observation.
+
+Book unchanged: PBF/ACN/APPS open under frozen rules; V1 watches IOVA/CDNA/SDGR
+untriggered, expiry 2026-10-30. NAV $99,844.50; cash $85,125.40; 7 open slots.
+
+Next action: session marking; monitor 13 active watch triggers; fill only on
+triggers occurring after freeze; E1 ACCUMULATING.
