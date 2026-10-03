@@ -90,6 +90,48 @@ class SchedTest(unittest.TestCase):
         self.assertIn("ALPHA_DISCOVERY_COMPLETE", kinds)
         self.assertTrue(ds.cycle_done("2026-10-05"))
 
+    def test_crash_after_partial_ta_resumes_only_missing(self):
+        (ds.EV_DIR / "candidate_pool_frozen_2026-10-05.json").write_text(json.dumps(
+            {"candidates": [{"ticker": t, "labels": ["MOMENTUM"], "rs_60": 1}
+                            for t in "ABCDEFGHIJK"]}))
+        for t in "ABC":  # 3/10 already analyzed before crash
+            (ds.EV_DIR / "case_artifacts" / f"{t}_2026-10-05.json").write_text(
+                json.dumps({"ticker": t, "signal": "HOLD"}))
+        calls = []
+        def fake_run(cmd, **kw):
+            calls.append(cmd)
+            return mock.Mock(returncode=0, stdout="", stderr="")
+        with mock.patch.object(ds.subprocess, "run", side_effect=fake_run), \
+             mock.patch.object(ds, "ensure_bridge", return_value=True):
+            ds.run_cycle("2026-10-05")
+        ta_call = [c for c in calls if "run_ta.py" in str(c)]
+        self.assertEqual(len(ta_call), 1)
+        passed = [a for a in ta_call[0] if isinstance(a, str) and len(a) == 1]
+        self.assertEqual(sorted(passed), list("DEFGHIJ"))  # K outside deep-10; no re-analysis
+
+    def test_crash_before_done_marker_no_duplicate_side_effects(self):
+        # simulate: artifacts published, marker never written -> retry is a
+        # no-side-effect rerun (discovery file rewritten identically, all TA
+        # artifacts cached, no orders/watches touched by scheduler at all)
+        (ds.EV_DIR / "candidate_pool_frozen_2026-10-05.json").write_text(json.dumps(
+            {"candidates": [{"ticker": t, "labels": ["MOMENTUM"], "rs_60": 1}
+                            for t in "ABCDEFGHIJK"]}))
+        for t in "ABCDEFGHIJ":
+            (ds.EV_DIR / "case_artifacts" / f"{t}_2026-10-05.json").write_text(
+                json.dumps({"ticker": t, "signal": "HOLD"}))
+        calls = []
+        def fake_run(cmd, **kw):
+            calls.append(cmd)
+            return mock.Mock(returncode=0, stdout="", stderr="")
+        with mock.patch.object(ds.subprocess, "run", side_effect=fake_run), \
+             mock.patch.object(ds, "ensure_bridge", return_value=True):
+            ds.run_cycle("2026-10-05")
+        ta_calls = [c for c in calls if "run_ta.py" in str(c)]
+        self.assertEqual(len(ta_calls), 1)
+        self.assertTrue(ta_calls[0][-1].endswith("run_ta.py")
+                        or all(len(a) != 1 for a in ta_calls[0][2:]))  # 0 missing tickers
+        self.assertTrue(ds.cycle_done("2026-10-05"))
+
     def test_deep_allocation_formula_and_tiebreak(self):
         cands = [
             {"ticker": "Z", "labels": ["MOMENTUM"], "rs_60": 0},

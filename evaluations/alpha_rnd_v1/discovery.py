@@ -248,6 +248,22 @@ def acceleration(session: str, cik: int) -> dict | None:
     return {"facts": out, "acceleration_flags": sorted(set(acc))}
 
 
+def select_deep_candidates(candidates: list[dict], quota: int = 10) -> list[str]:
+    """Canonical deep-allocation selection (single implementation, used by
+    manual workflow AND daily_scheduler — do not reimplement elsewhere).
+    score = 10*n_labels + 2*clip(rs_60,0,2) + (1 if CATALYST);
+    tie-break: score desc, ticker asc."""
+    scored = []
+    for c in candidates:
+        labs = c.get("labels") or []
+        base = [x for x in labs if x != "MULTI_SIGNAL"]
+        sc = (10 * len(base) + 2 * min(max(c.get("rs_60") or 0, 0), 2)
+              + (1 if "CATALYST" in labs else 0))
+        scored.append((c["ticker"], sc))
+    scored.sort(key=lambda x: (-x[1], x[0]))
+    return [t for t, _ in scored[:quota]]
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     session = sys.argv[1] if len(sys.argv) > 1 else last_completed_session()

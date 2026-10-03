@@ -78,7 +78,8 @@ def event(kind: str, **fields) -> None:
 
 def _load_discovery():
     spec = importlib.util.spec_from_file_location(
-        "alpha_discovery", EV_DIR / "discovery.py")
+        "alpha_discovery",
+        ROOT / "evaluations" / "alpha_rnd_v1" / "discovery.py")
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
     return m
@@ -106,19 +107,11 @@ def mark_done(session: str, summary: dict) -> None:
 
 
 def deep_allocation(session: str) -> list[str]:
-    """Frozen deep-score ranking applied to the frozen pool artifact:
-    10*labels + 2*clip(rs_60,0,2) + (1 if CATALYST). Read-only derivation."""
+    """Delegate to the canonical implementation in discovery.py —
+    orchestration only, no strategy logic duplicated here."""
     pool = (_j(EV_DIR / f"candidate_pool_frozen_{session}.json", {}) or {}) \
         .get("candidates") or []
-    scored = []
-    for c in pool:
-        labs = c.get("labels") or []
-        base = [x for x in labs if x != "MULTI_SIGNAL"]
-        sc = (10 * len(base) + 2 * min(max(c.get("rs_60") or 0, 0), 2)
-              + (1 if "CATALYST" in labs else 0))
-        scored.append((c["ticker"], sc))
-    scored.sort(key=lambda x: (-x[1], x[0]))
-    return [t for t, _ in scored[:DEEP_QUOTA]]
+    return _load_discovery().select_deep_candidates(pool, quota=DEEP_QUOTA)
 
 
 def bridge_status() -> str:
@@ -182,7 +175,11 @@ def run_cycle(session: str) -> None:
             event("ALPHA_DISCOVERY_BLOCKED_BRIDGE", session=session,
                   deep=deep, status=bridge_status())
             return  # retried on next tick (not marked done)
-        r = subprocess.run([PY, str(EV_DIR / "run_ta.py"), session, *deep],
+        # Resume-safe: run_ta.run_one returns the existing artifact without a
+        # model call; pass only missing tickers to keep the subprocess cheap.
+        missing = [t for t in deep
+                   if not (EV_DIR / "case_artifacts" / f"{t}_{session}.json").exists()]
+        r = subprocess.run([PY, str(EV_DIR / "run_ta.py"), session, *missing],
                            cwd=ROOT,
                            env={**os.environ, "PYTHONPATH": str(ROOT)},
                            capture_output=True, text=True, timeout=14400)
