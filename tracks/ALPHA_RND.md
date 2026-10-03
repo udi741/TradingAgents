@@ -286,3 +286,13 @@ $5k notional x size_frac, 10bps costs. Events immutable in
 event; refreshes that one ticker's market/filing/catalyst state; returns
 BUY_NOW / KEEP_WATCHING / REJECT with horizon + execution instruction. To be
 invoked manually or by a later session when a REANALYSIS_REQUIRED event exists.
+
+### Monitor operational completion (2026-10-03)
+
+Verified: exits AUTO-EXECUTE as paper exits (not just alerts). PBF: intraday
+Low<=74.50 -> exit @74.50 (stop); close<78 -> exit @ close. ACN: close<194 ->
+exit @ close. APPS: intraday Low<=10.42 -> exit @10.42. Costs 10bps; position
+removed on exit (no duplicates; watch_status TRIGGERED prevents re-entry).
+Bug fixed: ACN exit_rules missing `label` would have crashed the exit path.
+Notifications now also fire `notify-send` desktop alerts (cron-safe env) for
+triggers, exits, and REANALYSIS_REQUIRED. No buys without frozen rules.
