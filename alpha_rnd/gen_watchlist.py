@@ -124,7 +124,7 @@ POSITIONS = [
      "horizon": "through ~Nov-3 earnings", "artifact": "APPS_2026-10-01.json"},
 ]
 
-def main():
+def build_doc() -> dict:
     doc = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "watch_expiry": "2026-10-30",
@@ -135,7 +135,14 @@ def main():
     }
     blob = json.dumps(doc, sort_keys=True).encode()
     doc["sha256"] = hashlib.sha256(blob).hexdigest()
-    OUT.write_text(json.dumps(doc, indent=1))
+    return doc
+
+
+def main():
+    doc = build_doc()
+    tmp = OUT.with_suffix(".tmp")
+    tmp.write_text(json.dumps(doc, indent=1))
+    tmp.replace(OUT)
     print(OUT, doc["sha256"][:16], len(WATCHES), "watches", len(POSITIONS), "positions")
 
 if __name__ == "__main__":

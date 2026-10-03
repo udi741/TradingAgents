@@ -192,12 +192,20 @@ def run_cycle(session: str) -> None:
             event("ALPHA_DISCOVERY_ERROR", session=session,
                   stage="ta", tail=(r.stderr or r.stdout)[-400:])
             return
-        summary = {"deep": deep, "ta_signals": signals}
-        mark_done(session, summary)
-        event("ALPHA_DISCOVERY_COMPLETE", session=session,
-              deep=deep, ta_signals=signals,
-              user_action_required="watch_merge_pending"
-              if signals else "none")
+        st = _j(SCHED_STATE, {}) or {}
+        st["analysis_done"] = st.get("analysis_done") or {}
+        st["analysis_done"][session] = {"deep": deep, "ta_signals": signals}
+        SCHED_STATE.write_text(json.dumps(st, indent=1))
+        event("ALPHA_DISCOVERY_TA_COMPLETE", session=session,
+              deep=deep, ta_signals=signals)
+        # Canonical publication boundary: TA artifact prose -> watch spec is a
+        # researcher synthesis step (accepted manual path). The scheduler must
+        # NOT invent classifications; it requests the canonical publish step
+        # and withholds the done marker until it lands.
+        event("ALPHA_PUBLICATION_REQUIRED", session=session,
+              resume="feather-room",
+              how="synthesize watch specs into gen_watchlist.py, then run: "
+                  "python3 -m alpha_rnd.publish <session>")
 
 
 def check() -> None:
@@ -209,6 +217,24 @@ def check() -> None:
             return  # another checker tick in flight
         session = last_completed_session()
         st = _j(SCHED_STATE, {}) or {}
+        # Publication landed for a session whose analysis finished: close it.
+        pub = (st.get("published_sessions") or {})
+        ad = (st.get("analysis_done") or {})
+        for s, summ in ad.items():
+            if s in pub and not cycle_done(s):
+                mark_done(s, {"deep": summ.get("deep"),
+                              "ta_signals": summ.get("ta_signals"),
+                              "published": pub[s]})
+                event("ALPHA_DISCOVERY_COMPLETE", session=s,
+                      deep=summ.get("deep"),
+                      ta_signals=summ.get("ta_signals"),
+                      published=pub[s],
+                      user_action_required="none")
+        if session in ad and session not in pub:
+            _log(f"session {session} analysis complete; awaiting publication")
+            return
+        if session in ad and session in pub:
+            return  # just closed above
         if cycle_done(session):
             if st.get("uptodate_reported") != session:
                 st["uptodate_reported"] = session
