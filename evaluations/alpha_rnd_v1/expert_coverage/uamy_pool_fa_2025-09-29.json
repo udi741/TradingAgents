@@ -1,0 +1,273 @@
+[
+ {
+  "t": "ONDS",
+  "base": 35,
+  "fams": [
+   "CATALYST",
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "revenue_growth_strong"
+  ]
+ },
+ {
+  "t": "QURE",
+  "base": 35,
+  "fams": [
+   "CATALYST",
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "UAMY",
+  "base": 34.628,
+  "fams": [
+   "CATALYST",
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "UUUU",
+  "base": 34.226,
+  "fams": [
+   "CATALYST",
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": []
+ },
+ {
+  "t": "CIFR",
+  "base": 33.053,
+  "fams": [
+   "CATALYST",
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "OPEN",
+  "base": 24,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "TLRY",
+  "base": 24,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": []
+ },
+ {
+  "t": "BE",
+  "base": 23.944,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ {
+  "t": "NB",
+  "base": 23.374,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "ocf_improving"
+  ]
+ },
+ {
+  "t": "IREN",
+  "base": 23.333,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": []
+ },
+ {
+  "t": "RGTI",
+  "base": 22.28,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "OKLO",
+  "base": 22.209,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": []
+ },
+ {
+  "t": "INTC",
+  "base": 21.938,
+  "fams": [
+   "CATALYST",
+   "MOMENTUM"
+  ],
+  "fa": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "ANIP",
+  "base": 21.688,
+  "fams": [
+   "CATALYST",
+   "QUALITY_PULLBACK"
+  ],
+  "fa": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "SBET",
+  "base": 21.598,
+  "fams": [
+   "CATALYST",
+   "QUALITY_PULLBACK"
+  ],
+  "fa": []
+ },
+ {
+  "t": "BTU",
+  "base": 21.585,
+  "fams": [
+   "MOMENTUM",
+   "RELATIVE_STRENGTH"
+  ],
+  "fa": [
+   "ocf_improving"
+  ]
+ },
+ {
+  "t": "GRAL",
+  "base": 21.387,
+  "fams": [
+   "CATALYST",
+   "MOMENTUM"
+  ],
+  "fa": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ {
+  "t": "BB",
+  "base": 11.17,
+  "fams": [
+   "CATALYST"
+  ],
+  "fa": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "SRRK",
+  "base": 11.003,
+  "fams": [
+   "CATALYST"
+  ],
+  "fa": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "FCX",
+  "base": 11,
+  "fams": [
+   "CATALYST"
+  ],
+  "fa": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ {
+  "t": "KMX",
+  "base": 11,
+  "fams": [
+   "CATALYST"
+  ],
+  "fa": [
+   "ocf_improving"
+  ]
+ },
+ {
+  "t": "MLTX",
+  "base": 11,
+  "fams": [
+   "CATALYST"
+  ],
+  "fa": []
+ },
+ {
+  "t": "ALNY",
+  "base": 10.568,
+  "fams": [
+   "QUALITY_PULLBACK"
+  ],
+  "fa": [
+   "revenue_growth_strong"
+  ]
+ },
+ {
+  "t": "TPB",
+  "base": 10.493,
+  "fams": [
+   "QUALITY_PULLBACK"
+  ],
+  "fa": [
+   "revenue_growth_strong"
+  ]
+ },
+ {
+  "t": "DB",
+  "base": 10.286,
+  "fams": [
+   "QUALITY_PULLBACK"
+  ],
+  "fa": []
+ }
+]

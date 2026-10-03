@@ -559,5 +559,18 @@
     "revenue_growth_accelerating"
    ]
   }
- ]
+ ],
+ "uamy_verification": {
+  "gate": "ALPHA_RND_UAMY_DEEP_RANK_VERIFICATION_V1",
+  "original_flaw": "FA label (+10) computed only for UAMY, not for pool competitors",
+  "corrected": "FA computed for all 25 pool members via companyfacts filed<=2025-09-29",
+  "uamy_score_symmetric": 44.628,
+  "uamy_rank": 3,
+  "deep_quota": 10,
+  "pool_size": 25,
+  "no_fa_rank": 3,
+  "tie_dependence": false,
+  "classification": "DEEP_ALLOCATION_CONFIRMED",
+  "verified_at": "2026-10-03T16:07:05.556588+00:00"
+ }
 }
