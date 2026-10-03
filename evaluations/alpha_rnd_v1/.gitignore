@@ -4,3 +4,4 @@ results/
 memory/
 *.db-wal
 *.db-shm
+evaluations/alpha_rnd_v1/intraday_1m_*.csv
