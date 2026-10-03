@@ -494,3 +494,22 @@ Disable: remove the daily_scheduler crontab line.
   retries pass only missing tickers (no duplicate model calls); completed
   marker written only after full success. Scheduler writes no orders/watches,
   so a retry cannot duplicate economic side effects.
+
+### Publication audit V1.2 (2026-10-03)
+
+Audit verdict: PUBLICATION_PARTIAL. The accepted V2 path after TA was a
+researcher synthesis step (read case_artifacts -> author watch specs in
+gen_watchlist.py -> regenerate live_watchlist.json) — never captured in code,
+and NOT automatable without inventing classification logic. Fixed boundary:
+
+- Scheduler: discovery -> canonical deep-10 -> resumable TA -> emits
+  ALPHA_DISCOVERY_TA_COMPLETE + ALPHA_PUBLICATION_REQUIRED (ACTION_REQUIRED,
+  resume feather-room). Session stays open (not done).
+- Canonical publish: `python3 -m alpha_rnd.publish <session>` regenerates the
+  live watchlist atomically via gen_watchlist.build_doc() and records a
+  published_sessions marker. Idempotent overwrite; never duplicates.
+- Next hourly tick sees publish marker -> ALPHA_DISCOVERY_COMPLETE + done.
+- Monitor remains sole execution owner throughout.
+
+Equivalent to manual V2 path verified: build_doc() output identical to
+current live_watchlist.json modulo generated_at/sha256.

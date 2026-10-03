@@ -101,3 +101,10 @@ measurement points, never automatic exits.
   case_artifacts/<T>_<session>.json are checkpoints; retry skips completed
   stages/cases. No orders or watches are created by the scheduler.
 - Telegram: scheduler_events.jsonl -> relay ALPHA_SCHED source.
+
+## Publication boundary (V1.2)
+
+After an unattended cycle's TA stage, the session is NOT complete until the
+canonical publish step runs: synthesize watch specs in gen_watchlist.py, then
+`python3 -m alpha_rnd.publish <session>`. The scheduler detects the marker and
+emits ALPHA_DISCOVERY_COMPLETE. PUBLICATION_REQUIRED notifies via Telegram.
