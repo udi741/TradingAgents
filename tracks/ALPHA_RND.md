@@ -185,3 +185,11 @@ unrealized, maxDD, SPY comparison. No strategy conclusions from daily moves.
 3 valid prospective fills; NAV $99,844.50 @ 2026-10-02 close; cash $85,125.40;
 invested $14,874.60; unrealized −$155.50. Next action: mark at each completed
 session; check watch zones and invalidations; no new inference.
+
+### Intraday fill-timing audit (2026-10-03)
+
+1-minute evidence (`intraday_trigger_evidence.json`): rule must exist before
+market first satisfied it. PBF: frozen ~13:35Z, first zone touch 14:02Z →
+VALID. APPS: frozen ~13:41Z, first touch 17:26Z → VALID. ACN: frozen 13:27Z
+pre-open, first touch 13:52Z → VALID (resting order could have existed at
+open). All three fills confirmed VALID_PROSPECTIVE_FILL. Book unchanged.
