@@ -18,16 +18,16 @@ for p in (m.EVENTS, m.NOTIFY):
         p.unlink()
 
 
-def mk_df(closes, vols):
-    idx = pd.date_range("2026-08-01", periods=len(closes), freq="B")
+def mk_df(closes, vols, end="2026-10-10"):
+    idx = pd.bdate_range(end=end, periods=len(closes))
     return pd.DataFrame({"Open": closes, "High": closes, "Low": closes,
                          "Close": closes, "Volume": vols}, index=idx)
 
 
 def fresh_state():
     return {"last_check_utc": None, "processed_close_sessions": [], "confirm": {},
-            "pending_open_fills": [], "positions": {}, "cash": 50000.0,
-            "nav_last": 50000.0, "watch_status": {}}
+            "pending_open_fills": [], "pending_open_exits": [], "positions": {},
+            "cash": 50000.0, "nav_last": 50000.0, "watch_status": {}}
 
 
 def test_zone_fill_guards():
@@ -113,29 +113,83 @@ def test_intraday_stop_exit():
                        "Close": [79.5, 74.2], "Volume": [1, 1]},
                       index=pd.date_range("2026-10-05 14:00", periods=2, freq="min", tz="UTC"))
     m.fetch_intraday = lambda tickers: {"PB": df}
-    m.intraday_pass(st, wl)
+    m.intraday_pass(st, wl, {})
     assert "PB" not in st["positions"], "stop must auto-exit"
     assert abs(st["cash"] - (50000 + 10 * 74.5 * (1 - m.COST_BPS))) < 0.01
 
 
-def test_close_below_exit_and_no_dup():
+def wl_pos(t, level):
+    return {"watches": [], "open_positions": [
+        {"ticker": t, "invalidation": {"type": "close_below", "level": level, "label": f"close<{level}"},
+         "exit_rules": [{"type": "close_below", "level": level, "label": f"close<{level}"}]}]}
+
+
+def test_close_exit_waits_for_next_open():
+    st = fresh_state()
+    st["positions"]["PB"] = {"shares": 10, "fill": 80.0}
+    df = mk_df([80.0] * 30 + [77.0], [1_000_000] * 31)
+    m.close_pass(st, wl_pos("PB", 78.0), {"PB": df}, "2026-10-05")
+    assert "PB" in st["positions"], "close<78 must NOT sell at the confirming close"
+    assert st["pending_open_exits"][0]["ticker"] == "PB"
+    assert st["cash"] == 50000.0
+
+
+def test_pending_exit_fills_at_next_open():
     st = fresh_state()
     st["positions"]["AC"] = {"shares": 5, "fill": 205.0}
-    df = mk_df([200.0] * 30 + [190.0], [1_000_000] * 31)
-    wl = {"watches": [], "open_positions": [
-        {"ticker": "AC", "invalidation": {"type": "close_below", "level": 194.0, "label": "close<194"},
-         "exit_rules": [{"type": "close_below", "level": 194.00}]}]}
-    m.close_pass(st, wl, {"AC": df}, "2026-10-05")
+    st["pending_open_exits"] = [{"ticker": "AC", "why": "close<194", "confirm_session": "2026-10-05"}]
+    closes = [200.0] * 30 + [190.0, 180.0]
+    df = mk_df(closes, [1_000_000] * 32, end="2026-10-06")
+    df.iloc[-1, df.columns.get_loc("Open")] = 175.0  # next session gaps down
+    m.resolve_pending(st, {"watches": []}, {"AC": df}, "2026-10-06", live=True)
     assert "AC" not in st["positions"]
-    cash1 = st["cash"]
-    m.close_pass(st, wl, {"AC": df}, "2026-10-06")  # second eval -> no dup
-    assert st["cash"] == cash1 and "AC" not in st["positions"]
+    assert abs(st["cash"] - (50000 + 5 * 175.0 * (1 - m.COST_BPS))) < 0.01, "exit at ACTUAL next open"
+
+
+def test_missed_open_marks_no_fill():
+    st = fresh_state()
+    st["pending_open_fills"] = [{"ticker": "ZZ", "frac": 1.0, "why": "x", "confirm_session": "2026-10-05"}]
+    df = mk_df([10.0] * 30 + [11.0, 12.0], [1_000_000] * 32, end="2026-10-08")
+    # current session is 2026-10-08; target was 2026-10-06 -> already passed
+    m.resolve_pending(st, {"watches": []}, {"ZZ": df}, "2026-10-08", live=True)
+    assert "ZZ" not in st["positions"], "missed open must not invent a retro fill"
+
+
+def test_close_entry_waits_for_next_open():
+    st = fresh_state()
+    closes = [10.0] * 30 + [26.0]
+    vols = [1_000_000] * 30 + [3_000_000]
+    df = mk_df(closes, vols)
+    wl = {"watches": [{"ticker": "XN", "cls": "DETERMINISTIC_CONFIRMATION",
+                       "trigger_type": "close_breakout_vol", "params": {"bo_level": 25.70, "vol_min": 2_000_000},
+                       "size_frac": 1.0, "invalidation": "s", "horizon": "h", "trigger": "t"}],
+          "open_positions": []}
+    m.close_pass(st, wl, {"XN": df}, "2026-10-05")
+    assert "XN" not in st["positions"] and st["pending_open_fills"][0]["ticker"] == "XN"
+
+
+def test_gap_through_stop_exits_at_open():
+    st = fresh_state()
+    st["positions"]["AP"] = {"shares": 100, "fill": 11.30}
+    wl = {"watches": [], "open_positions": [
+        {"ticker": "AP", "invalidation": {"type": "intraday_stop", "level": 10.42, "label": "stop"},
+         "exit_rules": []}]}
+    df = pd.DataFrame({"Open": [10.10, 10.2], "Low": [10.05, 10.15], "High": [10.3, 10.3],
+                       "Close": [10.2, 10.25], "Volume": [1, 1]},
+                      index=pd.date_range("2026-10-06 14:00", periods=2, freq="min", tz="UTC"))
+    m.fetch_intraday = lambda tickers: {"AP": df}
+    m.resolve_pending = lambda *a, **k: None
+    m.intraday_pass(st, wl, {})
+    assert "AP" not in st["positions"]
+    assert abs(st["cash"] - (50000 + 100 * 10.10 * (1 - m.COST_BPS))) < 0.01, "gap -> exit at actual open"
 
 
 if __name__ == "__main__":
     for f in [test_zone_fill_guards, test_close_breakout, test_no_close_breakout_on_touch,
               test_reanalysis_emits_no_fill, test_expiry, test_session_open,
-              test_intraday_stop_exit, test_close_below_exit_and_no_dup]:
+              test_intraday_stop_exit, test_close_exit_waits_for_next_open,
+              test_pending_exit_fills_at_next_open, test_missed_open_marks_no_fill,
+              test_close_entry_waits_for_next_open, test_gap_through_stop_exits_at_open]:
         f()
         print(f"PASS {f.__name__}")
     print("ALL TESTS PASS")

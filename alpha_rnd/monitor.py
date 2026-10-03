@@ -52,12 +52,16 @@ def session_open(dt: datetime) -> bool:
 
 def load_state() -> dict:
     if STATE.exists():
-        return json.loads(STATE.read_text())
+        st = json.loads(STATE.read_text())
+        st.setdefault("pending_open_fills", [])
+        st.setdefault("pending_open_exits", [])
+        return st
     return {
         "last_check_utc": None,
         "processed_close_sessions": [],
         "confirm": {},          # ticker -> progress dict
         "pending_open_fills": [],  # fills waiting next-session open
+        "pending_open_exits": [],  # exits waiting next-session open
         "positions": {},        # ticker -> {shares, fill, source}
         "cash": 85125.40,       # seeded from ledger 2026-10-02 mark
         "nav_last": 99844.50,
@@ -165,15 +169,12 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
     st["watch_status"][ticker] = "TRIGGERED"
     emit(st, {"ticker": ticker, "action": ev_type, "price": price, "shares": shares,
               "cost": round(cost, 2), "cls": watch["cls"], "invalidation": watch["invalidation"]})
-    notify(f"""ALPHA_RND TRIGGER
+    notify(f"""ALPHA_RND PAPER ENTRY EXECUTED
 
 {ticker}
 Price: ${price:.2f}
 Frozen entry: {watch['trigger'][:120]}
 Class: {watch['cls']}
-
-Action:
-PAPER ENTRY recorded
 
 Shares: {shares}
 Price: ${price:.2f}
@@ -181,25 +182,73 @@ Stop: {watch['invalidation'][:80]}
 Expected horizon: {watch['horizon']}""")
 
 
+def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "") -> None:
+    pos = st["positions"].pop(ticker, None)
+    if pos is None:
+        return
+    proceeds = pos["shares"] * price * (1 - COST_BPS)
+    st["cash"] += proceeds
+    emit(st, {"ticker": ticker, "action": "PAPER_EXIT", "why": why,
+              "price": price, "shares": pos["shares"], "proceeds": round(proceeds, 2)})
+    notify(f"ALPHA_RND PAPER EXIT EXECUTED\n\n{ticker}\n{why}\nExit @ ${price:.2f}\nProceeds ${proceeds:,.2f}")
+
+
+def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
+                    current_session_date: str, live: bool = True) -> None:
+    """Execute pending next-open orders at the ACTUAL open of the first
+    session after confirm_session — only while that session is live.
+    If its open is already fully in the past (live=False close-pass counts the
+    just-closed session as past too), mark MISSED — no retroactive fill."""
+    for kind, queue, is_exit in (("entry", st["pending_open_fills"], False),
+                                 ("exit", st["pending_open_exits"], True)):
+        keep = []
+        for od in queue:
+            t = od["ticker"]
+            df = daily.get(t)
+            if df is None:
+                keep.append(od)
+                continue
+            dates = sorted(str(d.date()) for d in df.index)
+            after = [d for d in dates if d > od["confirm_session"]]
+            if not after:
+                keep.append(od)
+                continue
+            target = after[0]
+            missed = target < current_session_date or (not live and target <= current_session_date)
+            if missed:
+                emit(st, {"ticker": t, "action": "MISSED_EXECUTION_REVIEW_REQUIRED",
+                          "kind": kind, "why": od.get("why"), "confirm_session": od["confirm_session"],
+                          "missed_session": target})
+                notify(f"ALPHA_RND MISSED EXECUTION\n\n{t}\nTarget open {target} already passed (machine off at open?).\nManual review required — no retroactive fill.")
+                continue
+            px = float(df[df.index.strftime("%Y-%m-%d") == target]["Open"].iloc[0])
+            if is_exit:
+                do_exit(st, t, px, od["why"])
+            else:
+                do_fill(st, wl, t, px, od.get("frac", 1.0))
+        queue[:] = keep
+
+
 def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
     avgv = {t: df["Volume"].rolling(20).mean() for t, df in daily.items()}
     ret = {t: df["Close"].pct_change() for t, df in daily.items()}
 
-    # ── position exits (close-based only; intraday stops handled live) ──
+    # ── position exits: close-confirmed rules -> PENDING_NEXT_OPEN exit ──
     for pos in wl["open_positions"]:
         t = pos["ticker"]
         if t not in st["positions"] or t not in daily:
             continue
+        if any(o["ticker"] == t for o in st["pending_open_exits"]):
+            continue
         c = float(daily[t]["Close"].iloc[-1])
         for rule in pos["exit_rules"]:
             if rule["type"] == "close_below" and c < rule["level"]:
-                px = c
-                st["cash"] += st["positions"][t]["shares"] * px * (1 - COST_BPS)
                 lbl = rule.get("label", f"close<{rule['level']}")
-                emit(st, {"ticker": t, "action": "PAPER_EXIT", "why": lbl,
-                          "price": px, "session": session})
-                notify(f"ALPHA_RND EXIT\n\n{t}\nInvalidation hit: {lbl}\nExit @ ${px:.2f} (close)")
-                del st["positions"][t]
+                st["pending_open_exits"].append({"ticker": t, "why": lbl,
+                                                 "confirm_session": session})
+                emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT",
+                          "why": lbl, "confirm_close": c, "session": session})
+                notify(f"ALPHA_RND EXIT CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{lbl}\nConfirming close ${c:.2f}\nExits at next regular-session open.")
 
     for w in wl["watches"]:
         t = w["ticker"]
@@ -229,7 +278,9 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
             else:
                 st["pending_open_fills"].append({"ticker": t, "frac": w["size_frac"],
                                                  "why": how, "confirm_session": session})
-                emit(st, {"ticker": t, "action": "PENDING_NEXT_OPEN", "session": session})
+                emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY",
+                          "how": how, "session": session})
+                notify(f"ALPHA_RND ENTRY CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{how}\nClass: {w['cls']}\nEnters at next regular-session open.")
 
         # mechanical evaluators
         if "multi_close_in_zone" in tt:
@@ -310,11 +361,19 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
             emit(st, {"ticker": t, "action": "NO_ACTION", "why": f"veto: close {c}<{p['veto_level']} heavy vol"})
 
 
-def intraday_pass(st: dict, wl: dict) -> None:
+def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> None:
     tickers = [w["ticker"] for w in wl["watches"]
                if st["watch_status"].get(w["ticker"]) not in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS")]
     pos_tickers = [p["ticker"] for p in wl["open_positions"] if p["ticker"] in st["positions"]]
-    data = fetch_intraday(list(set(tickers + pos_tickers)))
+    pend = {o["ticker"] for o in st["pending_open_fills"]} | {o["ticker"] for o in st["pending_open_exits"]}
+    data = fetch_intraday(list(set(tickers + pos_tickers + list(pend))))
+    today_sess = None
+    for df in data.values():
+        d = str(df.index[-1].tz_convert("US/Eastern").date())
+        today_sess = d if today_sess is None else min(today_sess, d)
+    if today_sess:
+        resolve_pending(st, wl, daily, today_sess)
+
     for t in pos_tickers:
         pos = next(p for p in wl["open_positions"] if p["ticker"] == t)
         inv = pos["invalidation"]
@@ -322,13 +381,12 @@ def intraday_pass(st: dict, wl: dict) -> None:
         if df is None:
             continue
         low = float(df["Low"].min())
-        if inv["type"] == "intraday_stop" and low <= inv["level"]:
-            px = inv["level"]
-            st["cash"] += st["positions"][t]["shares"] * px * (1 - COST_BPS)
-            emit(st, {"ticker": t, "action": "PAPER_EXIT", "why": "intraday stop",
-                      "price": px})
-            notify(f"ALPHA_RND EXIT\n\n{t}\nHard stop {px} hit intraday\nExit @ ${px:.2f}")
-            del st["positions"][t]
+        first_open = float(df["Open"].iloc[0])
+        if inv["type"] == "intraday_stop" and first_open <= inv["level"]:
+            # gapped through the stop at the open -> exit at ACTUAL open
+            do_exit(st, t, first_open, f"gap-through open below stop {inv['level']}")
+        elif inv["type"] == "intraday_stop" and low <= inv["level"]:
+            do_exit(st, t, inv["level"], f"intraday stop {inv['level']}")
 
     for w in wl["watches"]:
         t = w["ticker"]
@@ -356,22 +414,10 @@ def intraday_pass(st: dict, wl: dict) -> None:
 
 
 def settle_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
-    """Fill PENDING_NEXT_OPEN orders at the first open of a session AFTER the
-    confirmation session. Called when a new completed session appears."""
-    still = []
-    for od in st["pending_open_fills"]:
-        t = od["ticker"]
-        df = daily.get(t)
-        if df is None:
-            still.append(od)
-            continue
-        newer = df[df.index > pd.Timestamp(od["confirm_session"])]
-        if newer.empty:
-            still.append(od)
-            continue
-        px = float(newer.iloc[0]["Open"])  # open of first session after confirmation
-        do_fill(st, wl, t, px, od.get("frac", 1.0))
-    st["pending_open_fills"] = [od for od in still if od["ticker"] not in st["positions"]]
+    """Close-pass pending check: any pending order whose target session has
+    already fully passed is MISSED (no retroactive fill). Live-session fills
+    happen in intraday_pass via resolve_pending."""
+    resolve_pending(st, wl, daily, session, live=False)
 
 
 def run_once(st: dict, wl: dict) -> None:
@@ -385,11 +431,11 @@ def run_once(st: dict, wl: dict) -> None:
         st["processed_close_sessions"].append(sess)  # skip pre-freeze sessions entirely
         sess = None
     if sess:
-        # fill next-open orders using the NEW session's open
+        # pending orders whose target open already passed -> MISSED
         settle_pending(st, wl, daily, sess)
         close_pass(st, wl, daily, sess)
     if session_open(now_utc()):
-        intraday_pass(st, wl)
+        intraday_pass(st, wl, daily)
     st["last_check_utc"] = now_utc().isoformat()
     save_state(st)
 

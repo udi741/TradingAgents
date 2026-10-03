@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-03T09:32:02.217607+00:00",
+ "last_check_utc": "2026-10-03T09:41:29.130413+00:00",
  "processed_close_sessions": [
   "2026-10-02"
  ],
@@ -48,5 +48,6 @@
  },
  "cash": 85125.4,
  "nav_last": 99844.5,
- "watch_status": {}
+ "watch_status": {},
+ "pending_open_exits": []
 }
