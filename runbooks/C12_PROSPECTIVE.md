@@ -30,6 +30,25 @@ Open/resume the Devin session **`kindly-nightshade`** and give it:
 "Continue C12 Epoch 2 per `runbooks/C12_PROSPECTIVE.md` in
 TradingAgents-tracks. Run the next weekly cycle under the timing guard."
 
+## Concrete cycle procedure (per due decision session S)
+
+1. Verify bridge exposes `devin-quick`/`devin-deep`; relaunch with
+   `--timeout 1200` if needed (deep calls exceed the 180s default).
+2. After ISO-week finality (Fri ≥21:00 UTC or weekend) AND after the
+   current-only rollover (the Saturday ~05:00 UTC after decision Friday —
+   so withheld/current-only adapters agree S is in the past):
+   `PYTHONPATH=. python3 -m ta_eval.gate_c12_prospective --prepare-week`
+   `PYTHONPATH=. python3 -m ta_eval.gate_c12_prospective --run-week S`
+3. Retry only missing/invalid candidate artifacts by re-running
+   `--run-week S`; never alter prompts/models/token semantics.
+4. The timing guard decides scoreability at decision freeze; do not settle
+   fills before the next session completes
+   (`--settle-pending-fills`, `--score-matured`, `--update-marks` afterwards).
+5. If a cycle freezes late: `--dispose-week S` marks it
+   LATE_DECISION_NON_SCOREABLE and voids its orders.
+
+No background sleeper is currently running; do not assume one exists.
+
 ## What must never change
 
 - The v0.5.0 decision layer, prompts, graph.

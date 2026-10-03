@@ -17,10 +17,13 @@ Last updated: 2026-10-03 (by PROJECT_CONTROL initialization)
 
 ## C12 — validation control (session `kindly-nightshade`)
 
-- Status: ACTIVE, Epoch 2 prospective weekly cycles under the timing guard.
-- Scoreable observations so far: 0 (Epoch 1 was a dry run; the 2026-09-25
-  week was thrown out as LATE_DECISION_NON_SCOREABLE).
-- Nothing for the user to do; it advances with real market weeks.
+- Status: ACTIVE, Epoch 2 frozen (activated 2026-09-29); no scoreable
+  observations yet (Epoch 1 was a dry run; the 2026-09-25 week was thrown
+  out as LATE_DECISION_NON_SCOREABLE).
+- Due now: the 2026-10-02 decision session is prepared/runnable until its
+  execution deadline 2026-10-05 13:30 UTC — resume `kindly-nightshade` to run
+  it. Nothing C12-related is running autonomously (the earlier armed sleeper
+  died with its session).
 - Do not touch its worktree: `/home/udi/udi_provate/TradingAgents-c12`.
 
 ## ALPHA — active opportunity R&D (paper only, session `feather-room`)

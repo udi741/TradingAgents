@@ -9,7 +9,9 @@ external to TA. It exists to produce clean evidence, not to generate trades.
 
 # STATUS
 
-ACTIVE — Epoch 2 prospective paper trading. Scoreable observations: 0.
+ACTIVE — Epoch 2 activated 2026-09-29T06:48:31Z (epoch_hash 753e3021…).
+Scoreable observations: 0. First scoreable cycle (decision session
+2026-10-02) is due now; deadline 2026-10-05T13:30Z.
 
 # OWNER
 
@@ -33,8 +35,9 @@ Devin session `kindly-nightshade`. Worktree
 
 # CURRENT STATE
 
-See `state/C12_PROSPECTIVE.yaml`. Epoch 2 running weekly cycles under the
-timing guard.
+See `state/C12_PROSPECTIVE.yaml`. Epoch 2 frozen; no cycle has run under it
+yet. No runner/service is currently alive — the earlier armed sleeper died
+with its session (never executed).
 
 # FROZEN RULES / PROTOCOL
 
@@ -72,9 +75,10 @@ documentation.
 
 # EXACT NEXT ACTION / TRIGGER
 
-Run the next Epoch 2 weekly recommendation cycle under the timing guard at
-the scheduled time; mark cycle scoreable/non-scoreable; record in ledger and
-update this doc + `state/C12_PROSPECTIVE.yaml`.
+Run the 2026-10-02 Epoch 2 cycle before the 2026-10-05T13:30Z execution
+deadline (`--prepare-week` then `--run-week 2026-10-02` in the C12 worktree;
+rollover already passed 2026-10-03T05:00Z). Mark scoreable/non-scoreable;
+record in ledger and update this doc + `state/C12_PROSPECTIVE.yaml`.
 
 # HISTORY
 
@@ -87,4 +91,5 @@ update this doc + `state/C12_PROSPECTIVE.yaml`.
 
 # LAST UPDATED
 
-2026-10-03T10:13:19Z (normalized by PROJECT_CONTROL)
+2026-10-03T10:24Z (kindly-nightshade — adoption/reconciliation: pending cycle
+state verified against ledger; no cycle run)
