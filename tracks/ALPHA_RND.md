@@ -461,3 +461,11 @@ A single deep-hit (UAMY) is too thin to conclude overlap.
 
 Artifacts: `evaluations/alpha_rnd_v1/expert_coverage/` (per-date evals,
 coverage_results.json, coverage_summary.json).
+
+### UAMY deep-rank verification (2026-10-03)
+
+Methodology flaw found in coverage gate: FA bonus was applied to UAMY without
+computing it for pool rivals. Corrected symmetrically (all 25 pool members,
+companyfacts filed<=2025-09-29): UAMY deep score 44.628, rank **3 of 25**,
+inside the 10-slot quota — **DEEP_ALLOCATION_CONFIRMED** (would have been
+rank 3 even without FA). Prior aggregate unchanged otherwise.
