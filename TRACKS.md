@@ -78,6 +78,8 @@ Last updated: 2026-10-03T10:13:19Z
   >=15 explicit exits
 - Production modification permission: none — analysis only
 - Detail: `tracks/EXPERT_RND.md`, `state/EXPERT_RND.yaml`,
+  M5 archive `archive/tradingagents/expert_mimic_m5/` (mimic worktree no
+  longer a runtime dependency),
   `tracks/EXPERT_PROSPECTIVE_PROTOCOL.md`
 - Last-updated: 2026-10-03T10:13:19Z
 
