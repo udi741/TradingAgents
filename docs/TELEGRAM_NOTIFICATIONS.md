@@ -50,17 +50,22 @@ source log path.
 
 ## Running modes
 
-**Recommended — `--serve`** (long-running process): delivers events every
-60s AND answers read-only bot commands:
+**Installed — systemd user service** `tradingagents-telegram.service`
+(delivers events every 60s AND answers read-only bot commands; starts
+automatically at boot — user lingering is enabled, so no login or terminal
+is required; `Restart=always` recovers crashes):
 
 ```bash
-cd /home/udi/udi_provate/TradingAgents-tracks
-PYTHONPATH=. nohup python3 -m ops.telegram_relay --serve >> /tmp/telegram_relay.log 2>&1 &
+systemctl --user status tradingagents-telegram.service
+systemctl --user restart tradingagents-telegram.service
+systemctl --user stop tradingagents-telegram.service    # disable alerts
+systemctl --user disable tradingagents-telegram.service # survive reboot too
 ```
 
-To run it permanently, create a user systemd unit equivalent to that
-command (requires `loginctl enable-linger` to survive logout) or add the
-command to a startup script. It does NOT restart itself on reboot.
+Unit: `~/.config/systemd/user/tradingagents-telegram.service`
+(interpreter `/usr/bin/python3`, `WorkingDirectory=TradingAgents-tracks`,
+no secrets inside). Manual equivalent:
+`PYTHONPATH=. python3 -m ops.telegram_relay --serve`
 
 **Alternative — cron `--once`** (delivery only, no /commands):
 

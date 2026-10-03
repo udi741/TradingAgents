@@ -49,6 +49,11 @@ Last updated: 2026-10-03 (by PROJECT_CONTROL initialization)
 
 ## PROJECT_CONTROL — this worktree
 
-- V1 knowledge architecture initialized 2026-10-03.
-- Track agents now maintain their own docs; PROJECT_CONTROL only handles
-  major global doc changes.
+- Knowledge architecture, workspace cleanup, base normalization, and
+  Telegram relay all complete (session `nonchalant-citipati`).
+- Infrastructure is reboot-recoverable: ALPHA + C12 run under cron, the
+  Telegram relay runs as systemd user service
+  `tradingagents-telegram.service` (auto-starts at boot via lingering),
+  the bridge starts on-demand when C12 needs it. Daily Telegram heartbeat
+  is ON. Health check: `systemctl --user status tradingagents-telegram.service`
+  or `/status` inside Telegram.

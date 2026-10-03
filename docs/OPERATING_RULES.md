@@ -71,6 +71,18 @@ A track task is **NOT COMPLETE** until:
     `docs/WORKSPACE_INVENTORY.md`. Retiring a physical worktree is always a
     separate approved cleanup gate, never part of closing an experiment.
 
+## Background infrastructure
+
+17. **BACKGROUND SERVICES MUST BE REBOOT-RECOVERABLE.** After an ordinary
+    reboot, routine infrastructure resumes automatically: cron daemon
+    (enabled) runs the ALPHA per-minute monitor and C12 hourly scheduler;
+    systemd user service `tradingagents-telegram.service` (enabled,
+    `Restart=always`) runs the Telegram relay — user lingering is enabled
+    (`loginctl show-user udi` → Linger=yes) so it starts without a login.
+    The model bridge is intentionally on-demand: the C12 scheduler starts
+    it when a cycle needs it. Anything that fundamentally requires
+    login/unlock must be documented explicitly rather than assumed.
+
 ## Honesty
 
 18. Do not invent missing facts. Use `UNKNOWN` when a fact cannot be
