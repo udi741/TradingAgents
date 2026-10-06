@@ -135,6 +135,15 @@ def bridge_status() -> str:
         return "down"
 
 
+def _systemctl_env() -> dict:
+    """cron lacks XDG_RUNTIME_DIR/DBUS; derive the user bus path from UID."""
+    env = dict(os.environ)
+    rd = f"/run/user/{os.getuid()}"
+    env.setdefault("XDG_RUNTIME_DIR", rd)
+    env.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path={rd}/bus")
+    return env
+
+
 def ensure_bridge() -> bool:
     """Bridge lifecycle is owned by tradingagents-swe-bridge.service only.
 
@@ -152,7 +161,7 @@ def ensure_bridge() -> bool:
     _log("bridge down; requesting systemd restart of tradingagents-swe-bridge")
     subprocess.run(
         ["systemctl", "--user", "restart", "tradingagents-swe-bridge.service"],
-        check=False, capture_output=True)
+        check=False, capture_output=True, env=_systemctl_env())
     for _ in range(45):
         if bridge_status() == "ok":
             return True
