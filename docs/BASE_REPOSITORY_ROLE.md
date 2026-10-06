@@ -71,6 +71,11 @@ must never spawn `python -m devin_bridge` themselves — an unmanaged
 duplicate would fight the owner for :8765. (Enforced in
 alpha_rnd/daily_scheduler.py and ta_eval/c12_scheduler.py.)
 
+Cron caveat: cron supplies no XDG_RUNTIME_DIR/DBUS, so `systemctl --user`
+fails bare. Both schedulers set `XDG_RUNTIME_DIR=/run/user/<uid>` (derived
+from `os.getuid()`, not hardcoded) before calling systemctl — verified
+working from a cron-equivalent minimal environment.
+
 Boot ownership map: systemd → telegram relay + SWE bridge;
 cron → ALPHA monitor, ALPHA scheduler, C12 scheduler; interactive Devin
 sessions → manual only.
