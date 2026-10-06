@@ -476,8 +476,31 @@ def alpha_status() -> str:
     pos = st.get("positions", {})
     watches = [w["ticker"] for w in wl.get("watches", [])
                if st.get("watch_status", {}).get(w["ticker"], "ACTIVE") == "ACTIVE"]
-    age = _age_s(ALPHA_CRON_LOG)
-    health = "OK" if age is not None and age < 180 else f"STALE ({int(age or -1)}s)"
+    # health = last SUCCESSFUL tick (state), not cron-log writes (fires even
+    # when every invocation crashes); also flag a recent traceback.
+    last_tick = None
+    try:
+        last_tick = datetime.fromisoformat(st.get("last_check_utc") or "")
+    except Exception:
+        pass
+    tick_age = (datetime.now(timezone.utc) - last_tick).total_seconds() \
+        if last_tick else None
+    recent_crash = False
+    try:
+        tail = ALPHA_CRON_LOG.read_bytes()[-4000:].decode(errors="replace")
+        # crash only if the newest traceback is more recent than the last
+        # successful "checked" tick in the log tail
+        tb = tail.rfind("Traceback")
+        ok_tick = tail.rfind("checked 20")
+        recent_crash = tb > ok_tick and (_age_s(ALPHA_CRON_LOG) or 1e9) < 240
+    except OSError:
+        pass
+    if recent_crash or (tick_age is not None and tick_age > 240):
+        err = tail.strip().splitlines()[-1][:80] if recent_crash else "tick overdue"
+        health = f"ERROR (last ok tick {int(tick_age or -1)}s ago; {err})"
+    else:
+        health = "OK" if tick_age is not None and tick_age < 240 else \
+            f"UNKNOWN (no ticks yet)"
     plines, unrl, asof = _alpha_positions_view(st)
     cash = st.get("cash", 0.0)
     invested = sum(p["shares"] * p["fill"] for p in pos.values())
