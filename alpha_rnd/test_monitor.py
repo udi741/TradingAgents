@@ -388,14 +388,15 @@ def test_temporal_mark_integrity():
     m.eod_marks(st, daily, "2026-10-05")
     new = st["positions"]["NEW"]
     assert "mark" not in new and new["mark_status"] == "UNMARKED_SINCE_ENTRY"
-    assert st["positions"]["OLD"]["mark"] == 120.0
-    assert st["book"]["unrealized"] == 200.0
+    assert st["positions"]["OLD"]["mark"] == 110.0
+    assert st["book"]["unrealized"] == 100.0
     assert st["book"]["unmarked_positions"] == ["NEW"]
-    assert st["book"]["nav"] == 50000.0 + 1200.0
-    assert st["book"]["provisional_nav_incl_unmarked_at_cost"] == 50000.0 + 1200.0 + 250.0
+    assert st["book"]["nav"] == 50000.0 + 1100.0
+    assert st["book"]["provisional_nav_incl_unmarked_at_cost"] == 50000.0 + 1100.0 + 250.0
     # after tonight's 10-06 mark both positions are valid
     m.eod_marks(st, daily, "2026-10-06")
     assert st["positions"]["NEW"]["mark"] == 60.0
+    assert st["positions"]["OLD"]["mark"] == 120.0
     assert st["book"]["unmarked_positions"] == []
     # realized: exit accumulates canonical realized P&L
     st3 = fresh_state()
