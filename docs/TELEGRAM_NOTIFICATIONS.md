@@ -40,13 +40,15 @@ Secrets: ~/.config/tradingagents/telegram.env (chmod 600, NEVER in git)
 | C12_CYCLE_SCOREABLE_COMPLETE | SUCCESS | yes |
 | C12_CYCLE_NON_SCOREABLE | WARNING | yes |
 | C12_AUTOMATION_BLOCKED_BRIDGE | ACTION_REQUIRED | yes |
-| C12_EXECUTION_SETTLED | SUCCESS | yes |
+| C12_EXECUTION_SETTLED | SUCCESS | yes — shows effective OPEN session/time separately from record time |
 | C12_EXECUTION_MISSED | ACTION_REQUIRED | yes |
 | C12_AUTOMATION_ERROR | ERROR | yes |
 
-ACTION_REQUIRED/ERROR messages always include: what happened, what to do,
-which session to resume (`cd <worktree> && devin -r <session>`), and the
-source log path.
+Every message ends with `USER ACTION: NONE` or `USER ACTION REQUIRED:`
+plus the exact step and which session to resume
+(`cd <worktree> && devin -r <session>`). `/status`, `/alpha`, `/c12`
+report CURRENT health; old resolved errors appear only under
+"last historical error".
 
 ## Running modes
 

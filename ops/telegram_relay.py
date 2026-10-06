@@ -44,6 +44,10 @@ ALPHA_CRON_LOG = ALPHA_ROOT / "alpha_rnd" / "monitor_cron.log"
 C12_NOTIF = C12_ROOT / "evaluations" / "gate_c12_prospective" / "c12_notifications.jsonl"
 C12_STATE = C12_ROOT / "evaluations" / "gate_c12_prospective" / "scheduler_state.json"
 C12_LOG = C12_ROOT / "evaluations" / "gate_c12_prospective" / "scheduler.log"
+C12_NAV = C12_ROOT / "evaluations" / "gate_c12_prospective" / "c12_nav.jsonl"
+C12_LEDGER = C12_ROOT / "evaluations" / "gate_c12_prospective" / "c12_signal_ledger.jsonl"
+C12_WEEKS = C12_ROOT / "evaluations" / "gate_c12_prospective" / "weeks"
+ALPHA_SCHED_STATE = ALPHA_ROOT / "alpha_rnd" / "scheduler_state.json"
 
 CFG_DIR = Path.home() / ".config" / "tradingagents"
 ENV_FILE = CFG_DIR / "telegram.env"
@@ -177,10 +181,44 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
                            "system did NOT invent a fill.")
         elif action == "monitor_error":
             next_action = "Monitor hit an internal error; investigate."
+        body = None
+        if action == "PAPER_ENTRY":
+            body = (f"{ticker} — PAPER ENTRY EXECUTED\n\n"
+                    f"{rec.get('shares')} shares @ ${rec.get('price')}\n"
+                    + (f"Cost: ${rec.get('cost')}\n" if rec.get('cost') else "")
+                    + (f"Stop: {rec.get('invalidation')}\n" if rec.get('invalidation') else ""))
+        elif action == "PAPER_EXIT":
+            body = (f"{ticker} — PAPER EXIT EXECUTED\n\n"
+                    f"Exit @ ${rec.get('price')}\n"
+                    + (f"Proceeds: ${rec.get('proceeds')}\n" if rec.get('proceeds') else "")
+                    + (f"Reason: {rec.get('why')}" if rec.get('why') else ""))
+        elif action == "CONFIRMED_PENDING_NEXT_OPEN_ENTRY":
+            body = (f"{ticker} — ENTRY CONFIRMED FOR NEXT REGULAR OPEN\n\n"
+                    f"Why:\n{rec.get('how','trigger condition met')}\n\n"
+                    "Status: NOT BOUGHT YET\n"
+                    "Expected next step: the monitor will paper-enter at the "
+                    "next eligible regular-session open.")
+        elif action == "CONFIRMED_PENDING_NEXT_OPEN_EXIT":
+            body = (f"{ticker} — EXIT CONFIRMED FOR NEXT REGULAR OPEN\n\n"
+                    f"Why:\n{rec.get('how') or rec.get('why','exit condition met')}\n\n"
+                    "Status: NOT SOLD YET\n"
+                    "Expected next step: the monitor will paper-exit at the "
+                    "next regular-session open.")
+        elif action == "REANALYSIS_REQUIRED":
+            body = (f"{ticker} — REANALYSIS REQUIRED\n\n"
+                    f"{rec.get('how','frozen trigger fired')}\n\n"
+                    "Status: NO BUY YET — a fresh single-ticker analysis is "
+                    "required before any decision.")
+        elif action == "MISSED_EXECUTION_REVIEW_REQUIRED":
+            body = (f"{ticker} — MISSED EXECUTION (machine was off)\n\n"
+                    f"{rec.get('why','')}\n"
+                    "The required next-open execution already passed. No "
+                    "fill was invented — manual review needed.")
         return {
             "source_track": "ALPHA", "event_type": action, "severity": sev,
             "event_timestamp": rec.get("utc"), "ticker": ticker,
-            "summary": " | ".join(parts), "action_required": action_required,
+            "summary": " | ".join(parts), "body": body,
+            "action_required": action_required,
             "recommended_next_action": next_action,
             "source_ref": str(ALPHA_EVENTS), "event_id": _event_id("ALPHA", raw),
             "send": send,
@@ -212,10 +250,24 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
             next_action = ("Model bridge unreachable. The scheduler retries "
                            "automatically on the next hourly tick — no action "
                            "needed unless this persists.")
+        body = None
+        if kind == "ALPHA_DISCOVERY_COMPLETE":
+            deep = rec.get("deep") or []
+            pub = rec.get("published") or {}
+            pr = rec.get("pending_review") or []
+            uar = rec.get("user_action_required")
+            body = ("ALPHA DAILY SCAN COMPLETE\n\n"
+                    f"Session: {rec.get('session')}\n"
+                    f"Deep-analyzed: {len(deep)}\n"
+                    f"Active watches published: {pub.get('watch_count', '?')}\n"
+                    f"Review required: {', '.join(pr) if pr else 'none'}\n"
+                    f"User action required: {'YES' if uar and uar != 'none' else 'NO'}")
+            if deep:
+                body += "\n\nDeep-analyzed names:\n" + ", ".join(map(str, deep))
         return {
             "source_track": "ALPHA", "event_type": kind, "severity": sev,
             "event_timestamp": rec.get("ts"), "ticker": None,
-            "summary": f"{kind} — {fields}" if fields else kind,
+            "summary": f"{kind} — {fields}" if fields else kind, "body": body,
             "action_required": action_required,
             "recommended_next_action": next_action,
             "source_ref": str(ALPHA_SCHED_EVENTS),
@@ -239,10 +291,25 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
                        "was created. Review needed.")
     elif kind == "C12_CYCLE_NON_SCOREABLE":
         next_action = "This weekly cycle does not count (per frozen rules). No fix needed unless unexpected."
+    body = None
+    if kind == "C12_EXECUTION_SETTLED":
+        import re
+        m = re.search(r"FILLED (\S+) @ ([\d.]+) on (\S+) \[(\w+)\]",
+                      str(rec.get("detail", "")))
+        if m:
+            t_, px_, d_, slot_ = m.groups()
+            body = (f"{t_} — PAPER FILL RECORDED\n\n"
+                    f"Effective simulated execution:\n"
+                    f"{d_} regular-session {slot_} @ ${float(px_):.2f}\n\n"
+                    "This order was frozen before the open.\n"
+                    "The accounting record was written later, after session "
+                    "data became available — C12 did not trade overnight.")
+        else:
+            body = f"PAPER EXECUTION RECORDED\n\n{rec.get('detail')}"
     return {
         "source_track": "C12", "event_type": kind, "severity": sev,
         "event_timestamp": rec.get("ts"), "ticker": None,
-        "summary": f"{kind} — {fields}" if fields else kind,
+        "summary": f"{kind} — {fields}" if fields else kind, "body": body,
         "action_required": action_required,
         "recommended_next_action": next_action,
         "source_ref": str(C12_NOTIF), "event_id": _event_id("C12", raw),
@@ -255,12 +322,16 @@ def format_message(ev: dict) -> str:
     track = ev["source_track"]
     title = {"ACTION_REQUIRED": "ACTION REQUIRED", "ERROR": "ERROR",
              "SUCCESS": "OK", "WARNING": "WARNING", "INFO": "INFO"}[sev]
-    lines = [f"{SEV_EMOJI[sev]} {track} — {title}", "", ev["summary"][:700]]
-    if ev["recommended_next_action"]:
-        lines += ["", "What you should do:", ev["recommended_next_action"]]
-    if sev in ("ACTION_REQUIRED", "ERROR") and track in SESSIONS:
+    lines = [f"{SEV_EMOJI[sev]} {track} — {title}", "",
+             (ev.get("body") or ev["summary"])[:700]]
+    if ev["recommended_next_action"] and sev not in ("ACTION_REQUIRED", "ERROR"):
+        lines += ["", "Note:", ev["recommended_next_action"]]
+    if sev in ("ACTION_REQUIRED", "ERROR"):
         cd, cmd = SESSIONS[track]
-        lines += ["", cd, cmd]
+        lines += ["", "USER ACTION REQUIRED:",
+                  ev["recommended_next_action"] or "Review needed.", "", cd, cmd]
+    else:
+        lines += ["", "USER ACTION: NONE"]
     lines += ["", f"Source: {ev['source_ref']}"]
     return "\n".join(lines)
 
@@ -342,33 +413,95 @@ def alpha_status() -> str:
                if st.get("watch_status", {}).get(w["ticker"], "ACTIVE") == "ACTIVE"]
     age = _age_s(ALPHA_CRON_LOG)
     health = "OK" if age is not None and age < 180 else f"STALE ({int(age or -1)}s)"
-    lines = [f"ALPHA monitor: {health}",
+    lines = ["ALPHA — current health", "",
+             f"Monitor: {health} (cron, per-minute)",
              f"NAV last: ${st.get('nav_last')}", f"cash: ${st.get('cash')}",
-             f"positions ({len(pos)}): " + (", ".join(
+             f"Positions ({len(pos)}): " + (", ".join(
                  f"{t} {p['shares']}sh @{p['fill']}" for t, p in pos.items()) or "none"),
-             f"active watches ({len(watches)}): " + (", ".join(watches) or "none"),
-             f"pending opens: {len(st.get('pending_open_fills', []))} entries / "
+             f"Active watches ({len(watches)}): " + (", ".join(watches) or "none"),
+             f"Pending next-open: {len(st.get('pending_open_fills', []))} entries / "
              f"{len(st.get('pending_open_exits', []))} exits"]
     reanalysis = [t for t, s in st.get("watch_status", {}).items() if s == "REANALYSIS"]
     if reanalysis:
         lines.append(f"REANALYSIS pending: {', '.join(reanalysis)}")
+    # discovery cycle freshness (separate hourly scheduler)
+    d = json.loads(ALPHA_SCHED_STATE.read_text()) if ALPHA_SCHED_STATE.exists() else {}
+    lc = (d.get("last_cycle") or {})
+    done = d.get("completed_sessions") or []
+    lines += ["", "Discovery scheduler:",
+              f"last completed session: {done[-1] if done else 'none'}"]
+    if lc.get("session"):
+        lines.append(f"last cycle finished: {lc.get('finished_at','?')[:16]}Z")
     return "\n".join(lines)
 
 
+def _last_lines(path: Path, n: int) -> list[str]:
+    try:
+        return path.read_text().strip().splitlines()[-n:]
+    except Exception:
+        return []
+
+
 def c12_status() -> str:
-    st = json.loads(C12_STATE.read_text()) if C12_STATE.exists() else {}
-    lines = ["C12 scheduler:"]
-    lines.append(f"last action: {st.get('last_action', 'unknown')}")
-    for k in ("session", "decision_session", "last_session", "scoreable_count"):
-        if st.get(k) is not None:
-            lines.append(f"{k}: {st[k]}")
-    # last notification
-    if C12_NOTIF.exists():
+    """CURRENT health — historical errors are reported separately."""
+    lines = ["C12 — current health", ""]
+    # scheduler freshness from its log (hourly cron writes every tick)
+    age = _age_s(C12_LOG)
+    health = "OK" if age is not None and age < 7200 else f"STALE ({int(age or -1)}s)"
+    lines.append(f"Scheduler: {health} (hourly cron)")
+    # last tick line (ts + action)
+    last_tick_ts = ""
+    for ln in reversed(_last_lines(C12_LOG, 20)):
+        if " check:" in ln:
+            last_tick_ts = ln[:25]
+            lines.append(f"last tick: {ln.strip()[:90]}")
+            break
+    # current week state
+    weeks = sorted(C12_WEEKS.iterdir()) if C12_WEEKS.exists() else []
+    if weeks:
+        w = json.loads((weeks[-1] / "state.json").read_text())
+        lines += [f"decision session: {w.get('decision_session')}",
+                  f"disposition: {w.get('disposition','?')}",
+                  f"cases done: {len(w.get('cases_done') or [])}/{len(w.get('selected') or [])}"]
+    # pending orders + open positions (read-only ledger/nav)
+    pending = open_pos = 0
+    if C12_LEDGER.exists():
+        latest = {}
+        for l in C12_LEDGER.read_text().splitlines():
+            try:
+                r = json.loads(l)
+                latest[r.get("ticker") or r.get("id")] = r
+            except Exception:
+                pass
+        pending = sum(1 for r in latest.values()
+                      if r.get("maturity_status") == "PENDING_ENTRY")
+    navlines = _last_lines(C12_NAV, 1)
+    if navlines:
         try:
-            last = json.loads(C12_NOTIF.read_text().strip().splitlines()[-1])
-            lines.append(f"last event: {last.get('kind')} @ {last.get('ts')}")
+            nav = json.loads(navlines[0])
+            open_pos = nav.get("open_positions", 0)
+            lines.append(f"open paper positions: {open_pos}   NAV: ${nav.get('nav')}")
         except Exception:
             pass
+    lines.append(f"pending entry orders: {pending}")
+    # current unresolved blocker = an error newer than the last healthy tick
+    last_err = None
+    if C12_NOTIF.exists():
+        for l in _last_lines(C12_NOTIF, 20):
+            try:
+                r = json.loads(l)
+                if r.get("kind") == "C12_AUTOMATION_ERROR":
+                    last_err = r
+            except Exception:
+                pass
+    # unresolved only if the error is newer than the last successful tick
+    err_is_current = bool(last_err) and str(last_err.get("ts", "")) > last_tick_ts
+    if err_is_current:
+        lines += ["", f"CURRENT UNRESOLVED ERROR: {last_err.get('error','?')[:150]}",
+                  f"at {last_err.get('ts')}"]
+    elif last_err:
+        lines += ["", f"last historical error (resolved — later ticks healthy):",
+                  f"{last_err.get('error','?')[:120]} @ {last_err.get('ts','?')[:16]}Z"]
     return "\n".join(lines)
 
 

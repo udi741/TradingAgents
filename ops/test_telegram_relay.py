@@ -18,8 +18,10 @@ TMP = Path(tempfile.mkdtemp(prefix="relay_test_"))
 
 ALPHA_FIXTURE = TMP / "trigger_events.jsonl"
 C12_FIXTURE = TMP / "c12_notifications.jsonl"
+SCHED_FIXTURE = TMP / "scheduler_events.jsonl"
 tr.ALPHA_EVENTS = ALPHA_FIXTURE
 tr.C12_NOTIF = C12_FIXTURE
+tr.ALPHA_SCHED_EVENTS = SCHED_FIXTURE
 tr.STATE_FILE = TMP / "state.json"
 
 
@@ -64,8 +66,9 @@ ev = tr.normalize("C12", {"ts": "t1", "kind": "C12_AUTOMATION_BLOCKED_BRIDGE"}, 
 assert ev["severity"] == "ACTION_REQUIRED" and "kindly-nightshade" not in ev["recommended_next_action"]
 msg = tr.format_message(ev)
 assert "kindly-nightshade" in msg and "TradingAgents-c12" in msg
-assert "WHAT" not in msg.upper() or True  # structure check below
-assert "What you should do:" in msg
+assert "USER ACTION REQUIRED:" in msg
+ev_ok = tr.normalize("C12", {"ts": "t", "kind": "C12_CYCLE_STARTED"}, "x")
+assert "USER ACTION: NONE" in tr.format_message(ev_ok)
 ev2 = tr.normalize("C12", {"ts": "t1", "kind": "C12_CYCLE_STARTED"}, 'x')
 assert ev2["send"] and ev2["severity"] == "INFO"
 
@@ -120,12 +123,61 @@ tr.ALPHA_WATCHLIST = Path("/home/udi/udi_provate/TradingAgents-alpha-rnd/alpha_r
 tr.ALPHA_CRON_LOG = Path("/home/udi/udi_provate/TradingAgents-alpha-rnd/alpha_rnd/monitor_cron.log")
 tr.C12_STATE = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/scheduler_state.json")
 tr.C12_NOTIF = C12_FIXTURE
+tr.C12_LOG = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/scheduler.log")
+tr.C12_NAV = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/c12_nav.jsonl")
+tr.C12_LEDGER = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/c12_signal_ledger.jsonl")
+tr.C12_WEEKS = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/weeks")
 a = tr.alpha_status(); c = tr.c12_status()
-assert "positions" in a and "C12" in c
+assert "Positions" in a and "C12" in c and "disposition" in c
 assert "TELEGRAM_BOT_TOKEN" not in a + c
 
 # secrets never in messages
 for _, t in bot.sent + bot3.sent:
     assert "TELEGRAM" not in t and ".env" not in t
+
+# --- UX: C12 delayed accounting fill ---
+ev = tr.normalize("C12", {"ts": "2026-10-06T01:00:00Z", "kind": "C12_EXECUTION_SETTLED",
+                          "detail": "FILLED NTAP @ 216.4300 on 2026-10-05 [OPEN]"}, 'x')
+m = tr.format_message(ev)
+assert "PAPER FILL RECORDED" in m and "NTAP" in m
+assert "2026-10-05 regular-session OPEN @ $216.43" in m
+assert "frozen before the open" in m and "did not trade overnight" in m
+assert "USER ACTION: NONE" in m
+
+# --- UX: discovery-complete hides internals ---
+ev = tr.normalize("ALPHA_SCHED", {"ts": "t", "kind": "ALPHA_DISCOVERY_COMPLETE",
+    "session": "2026-10-05", "deep": ["IOVA","SYNA"], "ta_signals": {},
+    "published": {"published_at": "t", "watch_count": 13, "sha256": "abc"},
+    "pending_review": [], "user_action_required": "none"}, 'x')
+m = tr.format_message(ev)
+assert "ALPHA DAILY SCAN COMPLETE" in m and "Session: 2026-10-05" in m
+assert "Active watches published: 13" in m and "User action required: NO" in m
+assert "sha256" not in m and "ta_signals" not in m and "IOVA" in m
+
+# --- UX: pending-next-open says NOT BOUGHT YET ---
+ev = tr.normalize("ALPHA", {"ticker": "TWST", "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY",
+                            "how": "close 205.0>200.31 on vol 3205000>=2421390", "utc": "u"}, 'x')
+m = tr.format_message(ev)
+assert "ENTRY CONFIRMED FOR NEXT REGULAR OPEN" in m and "NOT BOUGHT YET" in m
+assert "USER ACTION: NONE" in m
+
+# --- current health vs historical error (synthetic) ---
+import time as _t
+C12LOG = TMP/"sched.log"; C12LOG.write_text("2026-01-01T00:00:00Z check: session=x action=done\n")
+WK = TMP/"weeks"; (WK/"2026-01-01").mkdir(parents=True)
+(WK/"2026-01-01"/"state.json").write_text(json.dumps({"decision_session":"2026-01-01","disposition":"SCOREABLE","cases_done":["A"],"selected":["A"]}))
+old_c12 = (tr.C12_LOG, tr.C12_WEEKS, tr.C12_NAV, tr.C12_LEDGER, tr.C12_NOTIF)
+tr.C12_LOG, tr.C12_WEEKS = C12LOG, WK
+tr.C12_NAV = TMP/"no_nav.jsonl"; tr.C12_LEDGER = TMP/"no_led.jsonl"
+ERRF = TMP/"errs.jsonl"
+ERRF.write_text(json.dumps({"ts":"2026-01-01T01:00:00Z","kind":"C12_AUTOMATION_ERROR","error":"boom"})+"\n")
+tr.C12_NOTIF = ERRF
+c = tr.c12_status()  # error 01:00 is NEWER than last tick 00:00 -> current
+assert "CURRENT UNRESOLVED ERROR" in c
+# resolved case: a healthy tick after the error
+C12LOG.write_text("2026-01-01T00:00:00Z check: x\n2026-01-02T00:00:00Z check: session=y action=done\n")
+c = tr.c12_status()
+assert "resolved" in c and "CURRENT UNRESOLVED" not in c
+tr.C12_LOG, tr.C12_WEEKS, tr.C12_NAV, tr.C12_LEDGER, tr.C12_NOTIF = old_c12
 
 print("ALL TESTS PASSED")
