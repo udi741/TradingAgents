@@ -37,13 +37,8 @@ EVENTS = AR / "scheduler_events.jsonl"
 LOG = AR / "scheduler.log"
 
 BRIDGE_MODELS_URL = "http://127.0.0.1:8765/v1/models"
-BRIDGE_DIR = Path("/home/udi/udi_provate/TradingAgents")
-BRIDGE_ARGS = [
-    "python3", "-m", "devin_bridge",
-    "--quick-model", "swe-2-medium", "--deep-model", "swe-2-high",
-    "--timeout", "1200",
-]
-BRIDGE_LOG = Path("/tmp/devin_bridge_alpha.log")
+# Bridge process lifecycle is owned by tradingagents-swe-bridge.service.
+# The accepted config lives in that unit; schedulers only consume :8765.
 BRIDGE_ACTIVITY_WINDOW_S = 900  # busy if log touched within 15 min
 
 DEEP_QUOTA = 10
@@ -141,17 +136,24 @@ def bridge_status() -> str:
 
 
 def ensure_bridge() -> bool:
+    """Bridge lifecycle is owned by tradingagents-swe-bridge.service only.
+
+    Schedulers are consumers: they may ask systemd to recover the service
+    and wait, but must never spawn a bridge process directly (would create
+    an unmanaged duplicate that fights the supervised owner for :8765).
+    """
     st = bridge_status()
     if st == "ok":
         return True
     if st == "foreign_busy":
         return False
-    # down: safe to launch our accepted config
-    _log("bridge down; launching accepted config")
-    with BRIDGE_LOG.open("ab") as f:
-        subprocess.Popen(BRIDGE_ARGS, cwd=BRIDGE_DIR, stdout=f,
-                         stderr=subprocess.STDOUT, start_new_session=True)
-    for _ in range(30):
+    # down: nothing is listening, so no in-flight request can be disturbed;
+    # delegate recovery to the supervised owner.
+    _log("bridge down; requesting systemd restart of tradingagents-swe-bridge")
+    subprocess.run(
+        ["systemctl", "--user", "restart", "tradingagents-swe-bridge.service"],
+        check=False, capture_output=True)
+    for _ in range(45):
         if bridge_status() == "ok":
             return True
         time.sleep(2)
