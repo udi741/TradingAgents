@@ -32,6 +32,7 @@ EV_DIR = ROOT / "evaluations" / "alpha_rnd_v1"
 SCHED_LOCK = AR / "alpha_scheduler.lock"
 CYCLE_LOCK = AR / "alpha_cycle.lock"
 SCHED_STATE = AR / "scheduler_state.json"
+SCHED_STATE_LOCK = AR / "scheduler_state.lock"
 EVENTS = AR / "scheduler_events.jsonl"
 LOG = AR / "scheduler.log"
 
@@ -94,16 +95,29 @@ def cycle_done(session: str) -> bool:
     return session in (st.get("completed_sessions") or [])
 
 
+def _state_txn(fn):
+    """Serialized read-modify-write of scheduler_state.json (flock + atomic
+    replace). Call inside check()/run_cycle/publish — never while already
+    holding this lock."""
+    with SCHED_STATE_LOCK.open("w") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        st = _j(SCHED_STATE, {}) or {}
+        fn(st)
+        tmp = SCHED_STATE.with_suffix(".tmp")
+        tmp.write_text(json.dumps(st, indent=1))
+        tmp.replace(SCHED_STATE)
+
+
 def mark_done(session: str, summary: dict) -> None:
-    st = _j(SCHED_STATE, {}) or {}
-    done = st.get("completed_sessions") or []
-    if session not in done:
-        done.append(session)
-    st["completed_sessions"] = done
-    st["last_cycle"] = {"session": session,
-                        "finished_at": datetime.now(timezone.utc).isoformat(),
-                        "summary": summary}
-    SCHED_STATE.write_text(json.dumps(st, indent=1))
+    def _mut(st):
+        done = st.get("completed_sessions") or []
+        if session not in done:
+            done.append(session)
+        st["completed_sessions"] = done
+        st["last_cycle"] = {"session": session,
+                            "finished_at": datetime.now(timezone.utc).isoformat(),
+                            "summary": summary}
+    _state_txn(_mut)
 
 
 def deep_allocation(session: str) -> list[str]:
@@ -266,8 +280,7 @@ def check() -> None:
             return  # just closed above
         if cycle_done(session):
             if st.get("uptodate_reported") != session:
-                st["uptodate_reported"] = session
-                SCHED_STATE.write_text(json.dumps(st, indent=1))
+                _state_txn(lambda x: x.__setitem__("uptodate_reported", session))
                 _log(f"ALPHA_DISCOVERY_UP_TO_DATE session={session}")
             else:
                 _log(f"up to date session={session}")

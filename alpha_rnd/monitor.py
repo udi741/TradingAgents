@@ -25,6 +25,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import re
+from contextlib import contextmanager
+import fcntl
 
 import pandas as pd
 import yfinance as yf
@@ -33,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[1]
 D = ROOT / "alpha_rnd"
 WATCHLIST = D / "live_watchlist.json"
 STATE = D / "monitor_state.json"
+STATE_LOCK = D / "monitor_state.lock"
 EVENTS = D / "trigger_events.jsonl"
 LEDGER = ROOT / "evaluations" / "alpha_rnd_v1" / "alpha_paper_ledger.jsonl"
 NOTIFY = D / "NOTIFICATIONS.log"
@@ -83,7 +86,24 @@ def load_state() -> dict:
 
 
 def save_state(st: dict) -> None:
-    STATE.write_text(json.dumps(st, indent=1, default=str))
+    """Atomic replace: tmp file + os.replace — a crash cannot leave a
+    truncated canonical state."""
+    tmp = STATE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(st, indent=1, default=str))
+    tmp.replace(STATE)
+
+
+@contextmanager
+def locked_state():
+    """Single canonical mutation path: kernel flock serializes every
+    read-modify-write of monitor_state.json (cron ticks, pending-order
+    resolution, EOD marks, AND manual ops utilities). Yield the state; the
+    (possibly mutated) dict is atomically written back on clean exit."""
+    with STATE_LOCK.open("w") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        st = load_state()
+        yield st
+        save_state(st)
 
 
 def emit(st: dict, ev: dict) -> None:
@@ -517,7 +537,12 @@ def eod_marks(st: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
             f.write(json.dumps(rec, default=str) + "\n")
 
 
-def run_once(st: dict, wl: dict) -> None:
+def run_once(wl: dict) -> None:
+    with locked_state() as st:
+        _run_once_locked(st, wl)
+
+
+def _run_once_locked(st: dict, wl: dict) -> None:
     daily = fetch_daily([w["ticker"] for w in wl["watches"]] +
                         [p["ticker"] for p in wl["open_positions"]] +
                         list(st["positions"]))
@@ -569,25 +594,28 @@ def status(wl: dict, st: dict) -> str:
 
 def main() -> None:
     wl = json.loads(WATCHLIST.read_text())
-    st = load_state()
-    # seed V1 positions once
-    for p in wl["open_positions"]:
-        if p["ticker"] not in st["positions"]:
-            st["positions"][p["ticker"]] = {"shares": p["shares"], "fill": p["fill"],
-                                           "invalidation": p["invalidation"]["label"],
-                                           "horizon": p["horizon"], "seeded": True}
+    st = load_state()  # read-only snapshot for --status
+    # seed V1 positions once (under the canonical lock)
+    with locked_state() as st:
+        for p in wl["open_positions"]:
+            if p["ticker"] not in st["positions"]:
+                st["positions"][p["ticker"]] = {"shares": p["shares"], "fill": p["fill"],
+                                               "invalidation": p["invalidation"]["label"],
+                                               "horizon": p["horizon"], "seeded": True}
     if "--status" in sys.argv:
         print(status(wl, st))
         return
     if "--loop" in sys.argv:
         while True:
             try:
-                run_once(st, wl)
+                run_once(wl)
             except Exception as e:
-                emit(st, {"action": "NO_ACTION", "why": f"monitor_error {e!r}"})
+                with locked_state() as sx:
+                    emit(sx, {"action": "NO_ACTION", "why": f"monitor_error {e!r}"})
             time.sleep(60)
     else:
-        run_once(st, wl)
+        run_once(wl)
+        st = load_state()
         print(f"checked {st['last_check_utc']}")
 
 

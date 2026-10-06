@@ -316,3 +316,26 @@ def test_corrective_exit_and_blocked():
 
 
 test_corrective_exit_and_blocked()
+
+
+def test_locked_state_serialization_and_atomicity():
+    import tempfile, os
+    td = Path(tempfile.mkdtemp())
+    m.STATE = td / "state.json"; m.STATE_LOCK = td / "state.lock"
+    # writer A mutates under lock
+    with m.locked_state() as st:
+        st["pending_open_exits"] = [{"ticker": "PGEN", "why": "X"}]
+    # writer B adds pending entry under lock — A's update must persist
+    with m.locked_state() as st:
+        st["pending_open_fills"] = [{"ticker": "TWST", "frac": 0.5}]
+        assert st["pending_open_exits"][0]["ticker"] == "PGEN"
+    st = json.loads(m.STATE.read_text())
+    assert st["pending_open_exits"] and st["pending_open_fills"]
+    # corrupt tmp left by a crash does not corrupt canonical state
+    (td / "state.tmp").write_text("{garbage")
+    with m.locked_state() as st:
+        assert st["pending_open_exits"][0]["ticker"] == "PGEN"
+    print("locked_state_serialization ok")
+
+
+test_locked_state_serialization_and_atomicity()

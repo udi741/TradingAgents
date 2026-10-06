@@ -64,13 +64,14 @@ def publish(session: str) -> dict:
     tmp.write_text(blob)
     tmp.replace(gw.OUT)  # atomic
 
-    st = json.loads(STATE.read_text()) if STATE.exists() else {}
-    pub = st.get("published_sessions") or {}
-    pub[session] = {"published_at": datetime.now(timezone.utc).isoformat(),
-                    "watch_count": len(doc["watches"]),
-                    "sha256": doc["sha256"]}
-    st["published_sessions"] = pub
-    STATE.write_text(json.dumps(st, indent=1))
+    import alpha_rnd.daily_scheduler as ds
+    def _mut(st):
+        pub = st.get("published_sessions") or {}
+        pub[session] = {"published_at": datetime.now(timezone.utc).isoformat(),
+                        "watch_count": len(doc["watches"]),
+                        "sha256": doc["sha256"]}
+        st["published_sessions"] = pub
+    ds._state_txn(_mut)
     print(f"published session={session} watches={len(doc['watches'])} "
           f"sha={doc['sha256'][:16]}")
     return {"session": session, "watch_count": len(doc["watches"])}
