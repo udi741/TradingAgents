@@ -440,9 +440,10 @@ def _pnl(v) -> str:
     return f"+${v:,.0f}" if v >= 0 else f"-${abs(v):,.0f}"
 
 
-def _alpha_positions_view(st: dict) -> tuple[list[str], float, str]:
+def _alpha_positions_view(st: dict, wl: dict | None = None):
     """Per-position lines + total unrealized + freshness label."""
     pos = st.get("positions", {})
+    wl_pos = {p["ticker"]: p for p in (wl or {}).get("open_positions", [])}
     mark = _alpha_last_mark()
     marks = {p["ticker"]: p for p in (mark or {}).get("positions", [])}
     mark_sess = (mark or {}).get("session")
@@ -451,23 +452,41 @@ def _alpha_positions_view(st: dict) -> tuple[list[str], float, str]:
              else "STALE" if mark_sess else "NONE")
     when = (f"{mark_sess} regular-session close" if mark_sess else "no mark yet")
     lines, tot = [], 0.0
+    unmarked = []
     for t, p in pos.items():
         entry = p["fill"]
         mp = marks.get(t)
-        if mp:
+        # temporal invariant: a mark predating the entry session is invalid
+        ent_sess = p.get("entry_session")
+        valid = (mp is not None and mark_sess
+                 and (not ent_sess or ent_sess <= mark_sess))
+        if valid:
             px, unr = mp["close"], mp["unrealized"]
-        else:  # no canonical mark (e.g. intraday entry) — show entry as mark
-            px, unr = entry, 0.0
-        pct = (px - entry) / entry * 100 if entry else 0
-        tot += unr
-        extra = [f"{p['shares']}sh @ ${entry:.2f}",
-                 f"last ${px:.2f}", f"{_pnl(unr)} ({pct:+.1f}%)"]
-        if p.get("invalidation"):
-            extra.append(f"stop: {p['invalidation'][:60]}")
+            tot += unr
+            pct = (px - entry) / entry * 100 if entry else 0
+            extra = [f"{p['shares']}sh @ ${entry:.2f}",
+                     f"last ${px:.2f}", f"{_pnl(unr)} ({pct:+.1f}%)"]
+        else:
+            unmarked.append(t)
+            extra = [f"{p['shares']}sh @ ${entry:.2f}",
+                     "mark: UNMARKED_SINCE_ENTRY"]
+        # post-entry risk label: canonical typed rule only — a pre-entry veto
+        # or prose invalidation text is NOT an active stop
+        sr = p.get("stop_rule") or {}
+        spec_inv = (wl_pos.get(t) or {}).get("invalidation")
+        if sr.get("type") == "intraday_stop":
+            extra.append(f"post-entry stop: ${sr['level']}")
+        elif isinstance(spec_inv, dict) and spec_inv.get("type") == "intraday_stop":
+            extra.append(f"post-entry stop: ${spec_inv['level']} "
+                         f"({spec_inv.get('label','')[:30]})")
+        elif isinstance(spec_inv, dict) and spec_inv.get("type"):
+            extra.append(f"exit rule: {spec_inv.get('label') or spec_inv['type']}")
+        else:
+            extra.append("post-entry stop: NOT PROVIDED")
         if p.get("horizon"):
             extra.append(f"horizon: {p['horizon'][:60]}")
         lines.append(f"  {t}: " + " | ".join(extra))
-    return lines, tot, f"{when} ({fresh})"
+    return lines, tot, f"{when} ({fresh})", unmarked
 
 
 def alpha_status() -> str:
@@ -501,7 +520,7 @@ def alpha_status() -> str:
     else:
         health = "OK" if tick_age is not None and tick_age < 240 else \
             f"UNKNOWN (no ticks yet)"
-    plines, unrl, asof = _alpha_positions_view(st)
+    plines, unrl, asof, unmarked_pos = _alpha_positions_view(st, wl)
     cash = st.get("cash", 0.0)
     invested = sum(p["shares"] * p["fill"] for p in pos.values())
     mark = _alpha_last_mark()
@@ -513,7 +532,13 @@ def alpha_status() -> str:
              f"Monitor: {health} (per-minute cron)",
              f"Last mark: {asof}",
              f"NAV: ${nav if nav else st.get('nav_last')}   cash: ${cash:,.0f}",
-             f"invested: ${invested:,.0f}   unrealized P&L: {_pnl(unrl)}",
+             f"invested: ${invested:,.0f}   unrealized P&L: {_pnl(unrl)}"
+             + (f"   realized P&L: {_pnl(st.get('realized'))}"
+                if st.get("realized") else "")
+             + (f"\nunmarked since entry: {', '.join(unmarked_pos)} "
+                f"(provisional book incl. them at cost: "
+                f"${(st.get('book') or {}).get('provisional_nav_incl_unmarked_at_cost')})"
+                if unmarked_pos else ""),
              f"positions: {len(pos)}   active watches: {len(watches)}",
              f"pending next-open: {len(st.get('pending_open_fills', []))} entries / "
              f"{len(st.get('pending_open_exits', []))} exits",
@@ -663,8 +688,9 @@ def status_summary() -> str:
     c_age = _age_s(C12_LOG)
     c_health = "OK" if c_age is not None and c_age < 7200 else "STALE"
     mst = json.loads(ALPHA_STATE.read_text()) if ALPHA_STATE.exists() else {}
+    _awl = json.loads(ALPHA_WATCHLIST.read_text()) if ALPHA_WATCHLIST.exists() else {}
     mark = _alpha_last_mark() or {}
-    plines, unrl, asof = _alpha_positions_view(mst)
+    plines, unrl, asof, _unm = _alpha_positions_view(mst, _awl)
     book = _c12_book()
     nav = book["nav"] or {}
     acts = pending_action_items(load_state())
@@ -704,8 +730,9 @@ def status_summary() -> str:
 def digest_text() -> str:
     """Compact daily operations digest (post-close when marks exist)."""
     mst = json.loads(ALPHA_STATE.read_text()) if ALPHA_STATE.exists() else {}
+    _awl = json.loads(ALPHA_WATCHLIST.read_text()) if ALPHA_WATCHLIST.exists() else {}
     mark = _alpha_last_mark() or {}
-    plines, unrl, asof = _alpha_positions_view(mst)
+    plines, unrl, asof, _unm = _alpha_positions_view(mst, _awl)
     book = _c12_book()
     nav = book["nav"] or {}
     acts = pending_action_items(load_state())
