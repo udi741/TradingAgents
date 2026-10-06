@@ -373,3 +373,36 @@ def test_schema_safe_dispatch_and_pending_via_intraday_open():
 
 
 test_schema_safe_dispatch_and_pending_via_intraday_open()
+
+
+def test_temporal_mark_integrity():
+    st = fresh_state()
+    st["positions"] = {
+        "OLD": {"shares": 10, "fill": 100.0},
+        "NEW": {"shares": 5, "fill": 50.0, "entry_session": "2026-10-06",
+                "cost": 250.0},
+    }
+    daily = {"OLD": mk_df([110.0, 120.0], [1, 1], end="2026-10-06"),
+             "NEW": mk_df([55.0, 60.0], [1, 1], end="2026-10-06")}
+    # EOD mark for the PREVIOUS session must not touch NEW (entered 10-06)
+    m.eod_marks(st, daily, "2026-10-05")
+    new = st["positions"]["NEW"]
+    assert "mark" not in new and new["mark_status"] == "UNMARKED_SINCE_ENTRY"
+    assert st["positions"]["OLD"]["mark"] == 120.0
+    assert st["book"]["unrealized"] == 200.0
+    assert st["book"]["unmarked_positions"] == ["NEW"]
+    assert st["book"]["nav"] == 50000.0 + 1200.0
+    assert st["book"]["provisional_nav_incl_unmarked_at_cost"] == 50000.0 + 1200.0 + 250.0
+    # after tonight's 10-06 mark both positions are valid
+    m.eod_marks(st, daily, "2026-10-06")
+    assert st["positions"]["NEW"]["mark"] == 60.0
+    assert st["book"]["unmarked_positions"] == []
+    # realized: exit accumulates canonical realized P&L
+    st3 = fresh_state()
+    st3["positions"]["X"] = {"shares": 10, "fill": 10.0, "cost": 101.0}
+    m.do_exit(st3, "X", 9.0, "test")
+    assert st3["realized"] == round(90 * (1 - m.COST_BPS) - 101.0, 2)
+    print("temporal_mark_integrity ok")
+
+
+test_temporal_mark_integrity()

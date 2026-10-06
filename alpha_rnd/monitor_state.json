@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-06T14:19:05.284830+00:00",
+ "last_check_utc": "2026-10-06T14:46:03.877001+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05"
@@ -37,7 +37,8 @@
    "mark_session": "2026-10-05",
    "mark_source": "regular_session_close",
    "unrealized": 257.92,
-   "unrealized_pct": 5.2
+   "unrealized_pct": 5.2,
+   "mark_status": "MARKED"
   },
   "ACN": {
    "shares": 24,
@@ -49,7 +50,8 @@
    "mark_session": "2026-10-05",
    "mark_source": "regular_session_close",
    "unrealized": -238.8,
-   "unrealized_pct": -4.85
+   "unrealized_pct": -4.85,
+   "mark_status": "MARKED"
   },
   "APPS": {
    "shares": 442,
@@ -61,7 +63,8 @@
    "mark_session": "2026-10-05",
    "mark_source": "regular_session_close",
    "unrealized": -39.78,
-   "unrealized_pct": -0.8
+   "unrealized_pct": -0.8,
+   "mark_status": "MARKED"
   },
   "SDGR": {
    "shares": 161,
@@ -71,11 +74,7 @@
    "horizon": "trigger-event driven",
    "stop_rule": {},
    "entry_session": "2026-10-06",
-   "mark": 32.6,
-   "mark_session": "2026-10-05",
-   "mark_source": "regular_session_close",
-   "unrealized": 257.6,
-   "unrealized_pct": 5.16
+   "mark_status": "UNMARKED_SINCE_ENTRY"
   },
   "TWST": {
    "shares": 11,
@@ -85,15 +84,11 @@
    "horizon": "1-3 months post-lockup",
    "stop_rule": {},
    "entry_session": "2026-10-06",
-   "mark": 205.0,
-   "mark_session": "2026-10-05",
-   "mark_source": "regular_session_close",
-   "unrealized": -50.05,
-   "unrealized_pct": -2.17
+   "mark_status": "UNMARKED_SINCE_ENTRY"
   }
  },
  "cash": 77562.62598318882,
- "nav_last": 99920.17,
+ "nav_last": 92416.57,
  "watch_status": {
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED",
@@ -102,12 +97,18 @@
  "pending_open_exits": [],
  "book": {
   "mark_session": "2026-10-05",
-  "market_value": 22357.54,
-  "unrealized": 186.89,
-  "exposure": 22357.54,
-  "nav": 99920.17,
+  "market_value": 14853.94,
+  "unrealized": -20.66,
+  "exposure": 14853.94,
+  "nav": 92416.57,
+  "provisional_nav_incl_unmarked_at_cost": 99712.62,
+  "unmarked_positions": [
+   "SDGR",
+   "TWST"
+  ],
   "cash": 77562.62598318882,
-  "realized": 0.0,
-  "marked_at": "2026-10-06T14:19:03.012151+00:00"
- }
+  "realized": -259.42,
+  "marked_at": "2026-10-06T14:46:03.373881+00:00"
+ },
+ "realized": -259.42
 }

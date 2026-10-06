@@ -205,6 +205,7 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
             stop = {"type": "intraday_stop", "level": float(mm.group(1)),
                     "label": watch["invalidation"], "legacy_parsed": True}
     st["positions"][ticker] = {"shares": shares, "fill": price, "frac": frac,
+                              "cost": cost,
                               "invalidation": watch["invalidation"],
                               "horizon": watch["horizon"], "stop_rule": stop,
                               "entry_session": now_utc().strftime("%Y-%m-%d")}
@@ -230,6 +231,8 @@ def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "") -> Non
         return
     proceeds = pos["shares"] * price * (1 - COST_BPS)
     st["cash"] += proceeds
+    st["realized"] = round(st.get("realized", 0.0)
+                           + proceeds - pos.get("cost", pos["shares"] * pos["fill"]), 2)
     emit(st, {"ticker": ticker, "action": "PAPER_EXIT", "why": why,
               "price": price, "shares": pos["shares"], "proceeds": round(proceeds, 2)})
     notify(f"ALPHA_RND PAPER EXIT EXECUTED\n\n{ticker}\n{why}\nExit @ ${price:.2f}\nProceeds ${proceeds:,.2f}")
@@ -498,9 +501,19 @@ def eod_marks(st: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
     re-running for the same session replaces identical values; cash, shares
     and fills are never touched. Pending next-open orders are not positions.
     """
-    mv = upnl = 0.0
+    mv = upnl = unmarked_cost = 0.0
+    unmarked = []
     stale = []
     for t, pos in st["positions"].items():
+        if pos.get("entry_session") and pos["entry_session"] > session:
+            # mark predates entry — temporally invalid; do not stamp
+            for k in ("mark", "mark_session", "mark_source", "unrealized",
+                      "unrealized_pct"):
+                pos.pop(k, None)
+            pos["mark_status"] = "UNMARKED_SINCE_ENTRY"
+            unmarked.append(t)
+            unmarked_cost += pos.get("cost", pos["shares"] * pos["fill"])
+            continue
         df = daily.get(t)
         c = None
         if df is not None and len(df):
@@ -516,6 +529,7 @@ def eod_marks(st: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
         pos["mark_session"] = session
         pos["mark_source"] = "regular_session_close"
         pos.pop("mark_stale", None)
+        pos["mark_status"] = "MARKED"
         pos["unrealized"] = round((c - pos["fill"]) * pos["shares"], 2)
         pos["unrealized_pct"] = round((c / pos["fill"] - 1) * 100, 2)
         mv += c * pos["shares"]
@@ -527,6 +541,9 @@ def eod_marks(st: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
         "unrealized": round(upnl, 2),
         "exposure": round(mv, 2),
         "nav": st["nav_last"],
+        "provisional_nav_incl_unmarked_at_cost":
+            round(st["cash"] + mv + unmarked_cost, 2),
+        "unmarked_positions": unmarked,
         "cash": st["cash"],
         "realized": st.get("realized", 0.0),
         "marked_at": now_utc().isoformat(),
