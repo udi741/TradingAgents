@@ -48,6 +48,7 @@ C12_NAV = C12_ROOT / "evaluations" / "gate_c12_prospective" / "c12_nav.jsonl"
 C12_LEDGER = C12_ROOT / "evaluations" / "gate_c12_prospective" / "c12_signal_ledger.jsonl"
 C12_WEEKS = C12_ROOT / "evaluations" / "gate_c12_prospective" / "weeks"
 ALPHA_SCHED_STATE = ALPHA_ROOT / "alpha_rnd" / "scheduler_state.json"
+ALPHA_LEDGER = ALPHA_ROOT / "evaluations" / "alpha_rnd_v1" / "alpha_paper_ledger.jsonl"
 
 CFG_DIR = Path.home() / ".config" / "tradingagents"
 ENV_FILE = CFG_DIR / "telegram.env"
@@ -326,6 +327,14 @@ def format_message(ev: dict) -> str:
              (ev.get("body") or ev["summary"])[:700]]
     if ev["recommended_next_action"] and sev not in ("ACTION_REQUIRED", "ERROR"):
         lines += ["", "Note:", ev["recommended_next_action"]]
+    # cheap post-state context for executions
+    if track == "ALPHA" and ev["event_type"] in ("PAPER_ENTRY", "PAPER_EXIT"):
+        try:
+            mst = json.loads(ALPHA_STATE.read_text())
+            lines += ["", f"Book now: {len(mst.get('positions', {}))} open positions, "
+                          f"cash ${mst.get('cash', 0):,.0f}"]
+        except Exception:
+            pass
     if sev in ("ACTION_REQUIRED", "ERROR"):
         cd, cmd = SESSIONS[track]
         lines += ["", "USER ACTION REQUIRED:",
@@ -405,6 +414,62 @@ def _age_s(path: Path) -> float | None:
         return None
 
 
+def _last_jsonl(path: Path) -> dict | None:
+    try:
+        return json.loads(path.read_text().strip().splitlines()[-1])
+    except Exception:
+        return None
+
+
+def _alpha_last_mark() -> dict | None:
+    """Latest canonical MARK record from the ALPHA paper ledger."""
+    if not ALPHA_LEDGER.exists():
+        return None
+    last = None
+    for l in ALPHA_LEDGER.read_text().splitlines():
+        try:
+            r = json.loads(l)
+            if r.get("type") == "MARK":
+                last = r
+        except Exception:
+            pass
+    return last
+
+
+def _pnl(v) -> str:
+    return f"+${v:,.0f}" if v >= 0 else f"-${abs(v):,.0f}"
+
+
+def _alpha_positions_view(st: dict) -> tuple[list[str], float, str]:
+    """Per-position lines + total unrealized + freshness label."""
+    pos = st.get("positions", {})
+    mark = _alpha_last_mark()
+    marks = {p["ticker"]: p for p in (mark or {}).get("positions", [])}
+    mark_sess = (mark or {}).get("session")
+    proc = st.get("processed_close_sessions") or []
+    fresh = ("LAST_COMPLETED_CLOSE" if mark_sess and proc and mark_sess == proc[-1]
+             else "STALE" if mark_sess else "NONE")
+    when = (f"{mark_sess} regular-session close" if mark_sess else "no mark yet")
+    lines, tot = [], 0.0
+    for t, p in pos.items():
+        entry = p["fill"]
+        mp = marks.get(t)
+        if mp:
+            px, unr = mp["close"], mp["unrealized"]
+        else:  # no canonical mark (e.g. intraday entry) — show entry as mark
+            px, unr = entry, 0.0
+        pct = (px - entry) / entry * 100 if entry else 0
+        tot += unr
+        extra = [f"{p['shares']}sh @ ${entry:.2f}",
+                 f"last ${px:.2f}", f"{_pnl(unr)} ({pct:+.1f}%)"]
+        if p.get("invalidation"):
+            extra.append(f"stop: {p['invalidation'][:60]}")
+        if p.get("horizon"):
+            extra.append(f"horizon: {p['horizon'][:60]}")
+        lines.append(f"  {t}: " + " | ".join(extra))
+    return lines, tot, f"{when} ({fresh})"
+
+
 def alpha_status() -> str:
     st = json.loads(ALPHA_STATE.read_text()) if ALPHA_STATE.exists() else {}
     wl = json.loads(ALPHA_WATCHLIST.read_text()) if ALPHA_WATCHLIST.exists() else {}
@@ -413,26 +478,61 @@ def alpha_status() -> str:
                if st.get("watch_status", {}).get(w["ticker"], "ACTIVE") == "ACTIVE"]
     age = _age_s(ALPHA_CRON_LOG)
     health = "OK" if age is not None and age < 180 else f"STALE ({int(age or -1)}s)"
-    lines = ["ALPHA — current health", "",
-             f"Monitor: {health} (cron, per-minute)",
-             f"NAV last: ${st.get('nav_last')}", f"cash: ${st.get('cash')}",
-             f"Positions ({len(pos)}): " + (", ".join(
-                 f"{t} {p['shares']}sh @{p['fill']}" for t, p in pos.items()) or "none"),
-             f"Active watches ({len(watches)}): " + (", ".join(watches) or "none"),
-             f"Pending next-open: {len(st.get('pending_open_fills', []))} entries / "
-             f"{len(st.get('pending_open_exits', []))} exits"]
+    plines, unrl, asof = _alpha_positions_view(st)
+    cash = st.get("cash", 0.0)
+    invested = sum(p["shares"] * p["fill"] for p in pos.values())
+    mark = _alpha_last_mark()
+    nav = (mark or {}).get("nav")
     reanalysis = [t for t, s in st.get("watch_status", {}).items() if s == "REANALYSIS"]
-    if reanalysis:
-        lines.append(f"REANALYSIS pending: {', '.join(reanalysis)}")
-    # discovery cycle freshness (separate hourly scheduler)
     d = json.loads(ALPHA_SCHED_STATE.read_text()) if ALPHA_SCHED_STATE.exists() else {}
-    lc = (d.get("last_cycle") or {})
     done = d.get("completed_sessions") or []
-    lines += ["", "Discovery scheduler:",
-              f"last completed session: {done[-1] if done else 'none'}"]
-    if lc.get("session"):
-        lines.append(f"last cycle finished: {lc.get('finished_at','?')[:16]}Z")
+    lines = ["ALPHA — PAPER PORTFOLIO", "",
+             f"Monitor: {health} (per-minute cron)",
+             f"Last mark: {asof}",
+             f"NAV: ${nav if nav else st.get('nav_last')}   cash: ${cash:,.0f}",
+             f"invested: ${invested:,.0f}   unrealized P&L: {_pnl(unrl)}",
+             f"positions: {len(pos)}   active watches: {len(watches)}",
+             f"pending next-open: {len(st.get('pending_open_fills', []))} entries / "
+             f"{len(st.get('pending_open_exits', []))} exits",
+             f"reanalysis required: {', '.join(reanalysis) if reanalysis else 'none'}",
+             f"last discovery session: {done[-1] if done else 'none'}",
+             "", "Positions:"] + plines + ["", "Watches: " + (", ".join(watches) or "none")]
     return "\n".join(lines)
+
+
+def _c12_book() -> dict:
+    """Read-only C12 book: open trades, pending orders, latest NAV."""
+    out = {"open": [], "pending": 0, "nav": None, "scoreable": 0, "matured20": 0, "matured60": 0}
+    if C12_LEDGER.exists():
+        latest = {}
+        for l in C12_LEDGER.read_text().splitlines():
+            try:
+                r = json.loads(l)
+                latest[r.get("ticker") or r.get("id")] = r
+            except Exception:
+                pass
+        for r in latest.values():
+            ms = r.get("maturity_status")
+            if ms == "PENDING_ENTRY":
+                out["pending"] += 1
+            if r.get("scoreable"):
+                out["scoreable"] += 1
+            if r.get("rel20") is not None:
+                out["matured20"] += 1
+            if r.get("rel60") is not None:
+                out["matured60"] += 1
+    if C12_NAV.exists() and C12_NAV.stat().st_size:
+        pass
+    if (p := C12_NAV.parent / "c12_paper_portfolio.jsonl").exists():
+        tr = {}
+        for l in p.read_text().splitlines():
+            try:
+                r = json.loads(l); tr[r["trade_id"]] = r
+            except Exception:
+                pass
+        out["open"] = [t for t in tr.values() if t.get("status") == "OPEN"]
+    out["nav"] = _last_jsonl(C12_NAV)
+    return out
 
 
 def _last_lines(path: Path, n: int) -> list[str]:
@@ -484,6 +584,23 @@ def c12_status() -> str:
         except Exception:
             pass
     lines.append(f"pending entry orders: {pending}")
+    # prospective book detail
+    book = _c12_book()
+    nav = book["nav"] or {}
+    lines += ["", "C12 PROSPECTIVE BOOK",
+              f"NAV: ${nav.get('nav')}   cash: ${nav.get('cash')}   "
+              f"invested: ${nav.get('gross_exposure')}",
+              f"scoreable signals: {book['scoreable']}   matured 20s: "
+              f"{book['matured20']}   60s: {book['matured60']}"]
+    if book["open"]:
+        unr = (nav.get("open_mkt_value") or 0) - (nav.get("gross_exposure") or 0)
+        lines.append(f"book unrealized P&L: {_pnl(unr)}  "
+                     f"(mark {str(nav.get('ts','?'))[:16]}Z)")
+        lines.append("Positions:")
+        for t in book["open"]:
+            lines.append(f"  {t['ticker']}: {t['shares']:.1f}sh @ ${t['entry_price']}"
+                         f" — effective entry {t['entry_session']} regular-session OPEN"
+                         f" (${t['notional']:,.0f})")
     # current unresolved blocker = an error newer than the last healthy tick
     last_err = None
     if C12_NOTIF.exists():
@@ -502,6 +619,70 @@ def c12_status() -> str:
     elif last_err:
         lines += ["", f"last historical error (resolved — later ticks healthy):",
                   f"{last_err.get('error','?')[:120]} @ {last_err.get('ts','?')[:16]}Z"]
+    return "\n".join(lines)
+
+
+def status_summary() -> str:
+    """Compact cross-project dashboard for /status."""
+    a_age = _age_s(ALPHA_CRON_LOG)
+    a_health = "OK" if a_age is not None and a_age < 180 else "STALE"
+    c_age = _age_s(C12_LOG)
+    c_health = "OK" if c_age is not None and c_age < 7200 else "STALE"
+    mst = json.loads(ALPHA_STATE.read_text()) if ALPHA_STATE.exists() else {}
+    mark = _alpha_last_mark() or {}
+    plines, unrl, asof = _alpha_positions_view(mst)
+    book = _c12_book()
+    nav = book["nav"] or {}
+    acts = pending_action_items(load_state())
+    pend = mst.get("pending_open_fills", [])
+    pend_s = ", ".join(p["ticker"] for p in pend) if pend and isinstance(pend[0], dict) \
+             else str(len(pend))
+    lines = ["TRADINGAGENTS STATUS", "",
+             "ALPHA",
+             f"Health: {a_health}   NAV: ${mark.get('nav') or mst.get('nav_last')}",
+             f"Positions: {len(mst.get('positions', {}))}   "
+             f"unrealized: {_pnl(unrl)}  (marks as of {asof})",
+             f"Pending entry: {pend_s or 'none'}",
+             "",
+             "C12",
+             f"Health: {c_health}   NAV: ${nav.get('nav')}",
+             f"Positions: {', '.join(t['ticker'] for t in book['open']) or 'none'}",
+             f"Pending orders: {book['pending']}",
+             "",
+             "TELEGRAM: OK", "",
+             "USER ACTION: NONE" if acts == "none" else f"USER ACTION REQUIRED: {acts}"]
+    return "\n".join(lines)
+
+
+def digest_text() -> str:
+    """Compact daily operations digest (post-close when marks exist)."""
+    mst = json.loads(ALPHA_STATE.read_text()) if ALPHA_STATE.exists() else {}
+    mark = _alpha_last_mark() or {}
+    plines, unrl, asof = _alpha_positions_view(mst)
+    book = _c12_book()
+    nav = book["nav"] or {}
+    acts = pending_action_items(load_state())
+    d = json.loads(ALPHA_SCHED_STATE.read_text()) if ALPHA_SCHED_STATE.exists() else {}
+    done = d.get("completed_sessions") or []
+    lines = ["TRADINGAGENTS DAILY SUMMARY", "",
+             f"ALPHA (marks as of {asof}):",
+             f"  NAV ${mark.get('nav') or mst.get('nav_last')}   "
+             f"unrealized {_pnl(unrl)}   positions {len(mst.get('positions', {}))}"]
+    for ln in plines:
+        lines.append("  " + ln.split(" | invalidation")[0].split(" | stop:")[0].split(" | horizon")[0])
+    lines += [f"  pending next-open: {len(mst.get('pending_open_fills', []))} entries / "
+              f"{len(mst.get('pending_open_exits', []))} exits",
+              f"  discovery: last session {done[-1] if done else 'none'}",
+              "",
+              f"C12: NAV ${nav.get('nav')}   positions {len(book['open'])}   "
+              f"pending orders {book['pending']}",
+              "",
+              "SYSTEM:",
+              f"  ALPHA monitor {'OK' if (_age_s(ALPHA_CRON_LOG) or 1e9) < 180 else 'CHECK'}",
+              f"  C12 scheduler {'OK' if (_age_s(C12_LOG) or 1e9) < 7200 else 'CHECK'}",
+              "  Telegram relay OK",
+              "",
+              "USER ACTION: NONE" if acts == "none" else f"USER ACTION REQUIRED: {acts}"]
     return "\n".join(lines)
 
 
@@ -539,9 +720,7 @@ def build_app(env: dict):
         await update.message.reply_text(fn()[:4000])
 
     async def h_status(u, c):
-        await guard(u, lambda: (
-            "TradingAgents status\n\n" + alpha_status() + "\n\n" + c12_status()
-            + "\n\nPending ACTION_REQUIRED: " + pending_action_items(load_state())))
+        await guard(u, status_summary)
 
     async def h_alpha(u, c):
         await guard(u, alpha_status)
@@ -552,8 +731,8 @@ def build_app(env: dict):
     async def h_help(u, c):
         await guard(u, lambda: (
             "Read-only commands:\n/status — system health + pending items\n"
-            "/alpha — paper book, watches, pending executions\n"
-            "/c12 — control cycle state\n/help — this list"))
+            "/alpha — paper portfolio dashboard\n"
+            "/c12 — prospective book + scheduler\n/help — this list"))
 
     for cmd, fn in (("status", h_status), ("alpha", h_alpha),
                     ("c12", h_c12), ("help", h_help)):
@@ -572,7 +751,7 @@ async def serve(env: dict) -> None:
                 await deliver_pending(app.bot, chat_id, st)
                 if (st.get("heartbeat_enabled")
                         and time.time() - st.get("heartbeat_last", 0) > HEARTBEAT_INTERVAL_S):
-                    await _send(app.bot, chat_id, heartbeat_text())
+                    await _send(app.bot, chat_id, digest_text())
                     st["heartbeat_last"] = time.time()
                 save_state(st)
             except Exception as e:

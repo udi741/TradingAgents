@@ -109,7 +109,28 @@ Other commands: `--test` (send test), `--status` (config/cursors/queues),
   buy/sell, no TA runs, no watchlist/stop changes, no shell.
 - No secrets in messages, logs, or documentation.
 
-## Heartbeat
+## Dashboard semantics
+
+- `/alpha` = paper portfolio dashboard: NAV/cash/invested, per-position
+  shares/entry/last mark/unrealized P&L (%), stop, horizon, watches,
+  pending next-open orders, reanalysis items.
+- `/c12` = prospective book: NAV/cash/exposure, scoreable counts, matured
+  20s/60s, open positions with *effective simulated entry session (OPEN
+  convention)* — never implied as real-time execution.
+- `/status` = compact cross-project health + one-line totals.
+- Every message ends `USER ACTION: NONE` or `USER ACTION REQUIRED: <step>
+  <session>`.
+
+### Mark freshness
+
+Marks come only from canonical ledgers (ALPHA `MARK` records, C12
+`--update-marks`). They are labeled with their session and freshness
+(LAST_COMPLETED_CLOSE vs STALE). The relay never fetches live quotes and
+never invents marks — an entry without a canonical mark shows its fill
+price. Unrealized P&L is simple presentation math (`shares*(mark-entry)`);
+NAV/realized always come from canonical state.
+
+## Heartbeat → daily digest
 
 Optional ~daily "systems alive" message (`--heartbeat on`): reports ALPHA
 monitor freshness (cron log <3min), C12 scheduler freshness (<2h), relay
