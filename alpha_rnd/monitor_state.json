@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-06T09:33:03.410171+00:00",
+ "last_check_utc": "2026-10-06T14:19:05.284830+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05"
@@ -25,14 +25,7 @@
   "AXGN": {},
   "HHH": {}
  },
- "pending_open_fills": [
-  {
-   "ticker": "TWST",
-   "frac": 0.5,
-   "why": "close 205.0>200.31 on vol 3205000>=2421390",
-   "confirm_session": "2026-10-05"
-  }
- ],
+ "pending_open_fills": [],
  "positions": {
   "PBF": {
    "shares": 62,
@@ -70,43 +63,51 @@
    "unrealized": -39.78,
    "unrealized_pct": -0.8
   },
-  "PGEN": {
-   "shares": 609,
-   "fill": 8.2,
+  "SDGR": {
+   "shares": 161,
+   "fill": 31.0,
    "frac": 1.0,
-   "invalidation": "stop $7.75; structural <$7.03",
-   "horizon": "1-3 months through Q3 print",
-   "mark": 7.74,
+   "invalidation": "NOT_STATED",
+   "horizon": "trigger-event driven",
+   "stop_rule": {},
+   "entry_session": "2026-10-06",
+   "mark": 32.6,
    "mark_session": "2026-10-05",
    "mark_source": "regular_session_close",
-   "unrealized": -280.14,
-   "unrealized_pct": -5.61,
-   "integrity_review": "MISSED_EXECUTION_REVIEW_REQUIRED",
-   "stop_suspended": "corrective next-open exit supersedes re-armed stop"
+   "unrealized": 257.6,
+   "unrealized_pct": 5.16
+  },
+  "TWST": {
+   "shares": 11,
+   "fill": 209.5500030517578,
+   "frac": 0.5,
+   "invalidation": "stay out if $183.39 breaks on heavy volume",
+   "horizon": "1-3 months post-lockup",
+   "stop_rule": {},
+   "entry_session": "2026-10-06",
+   "mark": 205.0,
+   "mark_session": "2026-10-05",
+   "mark_source": "regular_session_close",
+   "unrealized": -50.05,
+   "unrealized_pct": -2.17
   }
  },
- "cash": 80126.6062,
- "nav_last": 99694.21,
+ "cash": 77562.62598318882,
+ "nav_last": 99920.17,
  "watch_status": {
   "PGEN": "TRIGGERED",
-  "TWST": "TRIGGERED"
+  "TWST": "TRIGGERED",
+  "SDGR": "TRIGGERED"
  },
- "pending_open_exits": [
-  {
-   "ticker": "PGEN",
-   "why": "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP",
-   "confirm_session": "2026-10-05",
-   "corrective": true
-  }
- ],
+ "pending_open_exits": [],
  "book": {
   "mark_session": "2026-10-05",
-  "market_value": 19567.6,
-  "unrealized": -300.8,
-  "exposure": 19567.6,
-  "nav": 99694.21,
-  "cash": 80126.6062,
+  "market_value": 22357.54,
+  "unrealized": 186.89,
+  "exposure": 22357.54,
+  "nav": 99920.17,
+  "cash": 77562.62598318882,
   "realized": 0.0,
-  "marked_at": "2026-10-06T08:25:53.932738+00:00"
+  "marked_at": "2026-10-06T14:19:03.012151+00:00"
  }
 }

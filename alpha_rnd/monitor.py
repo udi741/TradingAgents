@@ -236,7 +236,8 @@ def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "") -> Non
 
 
 def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
-                    current_session_date: str, live: bool = True) -> None:
+                    current_session_date: str, live: bool = True,
+                    intraday: dict[str, pd.DataFrame] | None = None) -> None:
     """Execute pending next-open orders at the ACTUAL open of the first
     session after confirm_session — only while that session is live.
     If its open is already fully in the past (live=False close-pass counts the
@@ -256,6 +257,19 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
             dates = sorted(str(d.date()) for d in df.index)
             after = [d for d in dates if d > od["confirm_session"]]
             if not after:
+                # the daily frame excludes the still-open session (end is
+                # exclusive) — during the live target session, the intraday
+                # frame IS today's bar set
+                idf = (intraday or {}).get(t)
+                if live and idf is not None and len(idf) and \
+                        str(idf.index[0].date()) == current_session_date \
+                        and current_session_date > od["confirm_session"]:
+                    px = float(idf["Open"].iloc[0])
+                    if is_exit:
+                        do_exit(st, t, px, od["why"])
+                    else:
+                        do_fill(st, wl, t, px, od.get("frac", 1.0))
+                    continue
                 keep.append(od)
                 continue
             target = after[0]
@@ -418,21 +432,33 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> None:
         d = str(df.index[-1].tz_convert("US/Eastern").date())
         today_sess = d if today_sess is None else min(today_sess, d)
     if today_sess:
-        resolve_pending(st, wl, daily, today_sess)
+        resolve_pending(st, wl, daily, today_sess, intraday=data)
 
     for t in pos_tickers:
-        inv = ((wl_pos.get(t) or {}).get("invalidation")
-               or st["positions"][t].get("stop_rule") or {})
-        df = data.get(t)
-        if df is None:
-            continue
-        low = float(df["Low"].min())
-        first_open = float(df["Open"].iloc[0])
-        if inv["type"] == "intraday_stop" and first_open <= inv["level"]:
-            # gapped through the stop at the open -> exit at ACTUAL open
-            do_exit(st, t, first_open, f"gap-through open below stop {inv['level']}")
-        elif inv["type"] == "intraday_stop" and low <= inv["level"]:
-            do_exit(st, t, inv["level"], f"intraday stop {inv['level']}")
+        try:
+            if t not in st["positions"]:
+                continue  # exited earlier in this same pass
+            inv = ((wl_pos.get(t) or {}).get("invalidation")
+                   or st["positions"][t].get("stop_rule") or {})
+            df = data.get(t)
+            if df is None:
+                continue
+            it = inv.get("type") if isinstance(inv, dict) else None
+            if it != "intraday_stop":
+                if it is None and isinstance(inv, dict) and inv.get("level") is not None:
+                    emit(st, {"ticker": t, "action": "NO_ACTION",
+                              "why": "unsupported_rule_schema (has level, no type)"})
+                continue  # {} / close-based / veto rules -> not intraday stops
+            low = float(df["Low"].min())
+            first_open = float(df["Open"].iloc[0])
+            if first_open <= inv["level"]:
+                # gapped through the stop at the open -> exit at ACTUAL open
+                do_exit(st, t, first_open, f"gap-through open below stop {inv['level']}")
+            elif low <= inv["level"]:
+                do_exit(st, t, inv["level"], f"intraday stop {inv['level']}")
+        except Exception as e:
+            emit(st, {"ticker": t, "action": "NO_ACTION",
+                      "why": f"rule_eval_error {e!r}"})
 
     for w in wl["watches"]:
         t = w["ticker"]

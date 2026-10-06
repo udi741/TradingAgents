@@ -339,3 +339,37 @@ def test_locked_state_serialization_and_atomicity():
 
 
 test_locked_state_serialization_and_atomicity()
+
+
+def test_schema_safe_dispatch_and_pending_via_intraday_open():
+    st = fresh_state()
+    # position with NO stop_rule and NOT in open_positions -> inv={} must not crash
+    st["positions"]["PGEN"] = {"shares": 10, "fill": 8.2, "stop_suspended": "x"}
+    st["pending_open_exits"] = [{"ticker": "PGEN", "confirm_session": "2026-10-05",
+                                 "why": "INTEGRITY_CORRECTIVE_EXIT"}]
+    st["pending_open_fills"] = [{"ticker": "TWST", "confirm_session": "2026-10-05",
+                                 "frac": 0.5}]
+    # daily frame lacks today's bar (end-exclusive) -> intraday frame supplies open
+    daily = {"PGEN": mk_df([8.0], [1], end="2026-10-05"),
+             "TWST": mk_df([200.0], [1], end="2026-10-05")}
+    intra = {"PGEN": mk_intraday([7.79]), "TWST": mk_intraday([209.55])}
+    m.resolve_pending(st, {"watches": [{"ticker": "TWST", "cls": "DETERMINISTIC_CONFIRMATION",
+                                        "invalidation": "x", "horizon": "y",
+                                        "size_frac": 0.5}]},
+                      daily, "2026-10-06", live=True, intraday=intra)
+    assert "PGEN" not in st["positions"] and "TWST" in st["positions"]
+    evs = [json.loads(l) for l in m.EVENTS.read_text().splitlines()]
+    assert any(e.get("action") == "PAPER_EXIT" and e.get("ticker") == "PGEN"
+               and e.get("price") == 7.79 for e in evs)
+    # same-session inv={} dispatch: intraday_pass must not crash on PGEN-less state
+    st2 = fresh_state()
+    st2["positions"]["Z"] = {"shares": 1, "fill": 9.0}  # no stop_rule, not in wl
+    with mock.patch.object(m, "fetch_intraday",
+                           return_value={"Z": mk_intraday([9.5])}), \
+         mock.patch.object(m, "session_open", return_value=True):
+        m.intraday_pass(st2, {"watches": [], "open_positions": []}, {})
+    assert "Z" in st2["positions"]  # untouched, no crash
+    print("schema_safe_dispatch ok")
+
+
+test_schema_safe_dispatch_and_pending_via_intraday_open()
