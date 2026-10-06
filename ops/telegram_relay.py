@@ -622,6 +622,17 @@ def c12_status() -> str:
     return "\n".join(lines)
 
 
+def bridge_health() -> dict:
+    """Non-billable bridge health via /healthz (no model call)."""
+    import urllib.request
+    try:
+        with urllib.request.urlopen("http://127.0.0.1:8765/healthz",
+                                    timeout=5) as r:
+            return json.loads(r.read())
+    except Exception as e:
+        return {"status": "down", "error": str(e)[:80]}
+
+
 def status_summary() -> str:
     """Compact cross-project dashboard for /status."""
     a_age = _age_s(ALPHA_CRON_LOG)
@@ -634,6 +645,16 @@ def status_summary() -> str:
     book = _c12_book()
     nav = book["nav"] or {}
     acts = pending_action_items(load_state())
+    bh = bridge_health()
+    b_health = ("OK" if bh.get("status") == "ok"
+                and (bh.get("models") or {}).get("devin-quick") == "swe-2-medium"
+                and (bh.get("models") or {}).get("devin-deep") == "swe-2-high"
+                else "DOWN")
+    if bh.get("status") == "down":
+        acts = ("SWE bridge down — restart: systemctl --user restart "
+                "tradingagents-swe-bridge.service; if it still fails, resume "
+                "nonchalant-citipati" if acts == "none"
+                else acts + "; SWE bridge down")
     pend = mst.get("pending_open_fills", [])
     pend_s = ", ".join(p["ticker"] for p in pend) if pend and isinstance(pend[0], dict) \
              else str(len(pend))
@@ -649,6 +670,9 @@ def status_summary() -> str:
              f"Positions: {', '.join(t['ticker'] for t in book['open']) or 'none'}",
              f"Pending orders: {book['pending']}",
              "",
+             f"SWE bridge: {b_health}" +
+             ("" if b_health == "OK" else "  — " +
+              "restart: systemctl --user restart tradingagents-swe-bridge.service"),
              "TELEGRAM: OK", "",
              "USER ACTION: NONE" if acts == "none" else f"USER ACTION REQUIRED: {acts}"]
     return "\n".join(lines)
@@ -680,6 +704,7 @@ def digest_text() -> str:
               "SYSTEM:",
               f"  ALPHA monitor {'OK' if (_age_s(ALPHA_CRON_LOG) or 1e9) < 180 else 'CHECK'}",
               f"  C12 scheduler {'OK' if (_age_s(C12_LOG) or 1e9) < 7200 else 'CHECK'}",
+              f"  SWE bridge {'OK' if bridge_health().get('status') == 'ok' else 'DOWN'}",
               "  Telegram relay OK",
               "",
               "USER ACTION: NONE" if acts == "none" else f"USER ACTION REQUIRED: {acts}"]

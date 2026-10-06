@@ -78,10 +78,16 @@ A track task is **NOT COMPLETE** until:
     (enabled) runs the ALPHA per-minute monitor and C12 hourly scheduler;
     systemd user service `tradingagents-telegram.service` (enabled,
     `Restart=always`) runs the Telegram relay — user lingering is enabled
-    (`loginctl show-user udi` → Linger=yes) so it starts without a login.
-    The model bridge is intentionally on-demand: the C12 scheduler starts
-    it when a cycle needs it. Anything that fundamentally requires
-    login/unlock must be documented explicitly rather than assumed.
+    (`loginctl show-user udi` → Linger=yes) so they start without a login.
+    The SWE model bridge is supervised by
+    `tradingagents-swe-bridge.service` (enabled, `Restart=always`) running
+    the accepted config on :8765; schedulers retain their on-demand bridge
+    start as a fallback. Interactive Devin sessions
+    (feather-room / kindly-nightshade / nonchalant-citipati /
+    groovy-allspice) are development agents and must NEVER auto-start —
+    only the runtime bridge runs automatically. Anything that
+    fundamentally requires login/unlock must be documented explicitly
+    rather than assumed.
 
 ## Honesty
 

@@ -63,6 +63,15 @@ the base directory.
 
 ## Bridge operations
 
+The bridge is a supervised systemd USER service
+`tradingagents-swe-bridge.service` (enabled; `Restart=always`; starts at
+boot via user lingering — no login needed). It exposes
+`devin-quick -> swe-2-medium`, `devin-deep -> swe-2-high`, timeout 1200,
+127.0.0.1:8765. Health (non-billable): `curl 127.0.0.1:8765/healthz`;
+logs: `journalctl --user -u tradingagents-swe-bridge.service`.
+Interactive Devin sessions are development agents, resumed by name — they
+never auto-start.
+
 Effective config (unchanged): `--quick-model swe-2-medium
 --deep-model swe-2-high --timeout 1200`, port 8765, cwd=base,
 `PYTHONPATH=.` → `devin-quick -> swe-2-medium`, `devin-deep -> swe-2-high`.
