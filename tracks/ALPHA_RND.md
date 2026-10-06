@@ -545,3 +545,16 @@ only watchlist `open_positions` (V1 seeds) and watch-fill positions stored
 stop_rule derived at fill/migration from frozen invalidation text.
 No retroactive fill invented — MISSED_EXECUTION_REVIEW_REQUIRED recorded;
 PGEN remains open with stop armed (gap-through exits at actual open).
+
+### PGEN integrity resolution + typed stops (2026-10-06)
+
+- PGEN: MISSED_EXECUTION_REVIEW_REQUIRED stands; corrective exit queued —
+  next regular-session open at ACTUAL open price
+  (INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP). No retroactive $7.75.
+- Typed stops canonicalized: watch spec `stop_rule` field (publish.py emits
+  it from validated intent stop_level) -> do_fill consumes it; prose regex is
+  legacy fallback only; suspended/reviewed positions are never re-armed.
+- TWST verified for next open: entry close>200.31 confirmed, veto_level
+  183.39 typed; post-entry stop explicitly "not provided" by TA artifact —
+  accepted frozen spec, nothing invented. (Earlier "$73.8" was HHH's, a
+  mislabel in the audit prose.)
