@@ -440,52 +440,41 @@ def _pnl(v) -> str:
     return f"+${v:,.0f}" if v >= 0 else f"-${abs(v):,.0f}"
 
 
-def _alpha_positions_view(st: dict, wl: dict | None = None):
-    """Per-position lines + total unrealized + freshness label."""
+def _alpha_positions_view(st: dict, wl: dict | None = None) -> tuple[list[str], float, str, list]:
+    """Per-position lines + marked-only unrealized total + freshness label.
+
+    Uses the canonical per-position mark fields (mark/mark_session/
+    mark_status) written by the monitor; positions without a temporally
+    valid mark are labeled UNMARKED_SINCE_ENTRY and excluded from the P&L
+    total (their fill is shown but never implied to be a live mark).
+    """
     pos = st.get("positions", {})
-    wl_pos = {p["ticker"]: p for p in (wl or {}).get("open_positions", [])}
-    mark = _alpha_last_mark()
-    marks = {p["ticker"]: p for p in (mark or {}).get("positions", [])}
-    mark_sess = (mark or {}).get("session")
+    book = st.get("book") or {}
+    mark_sess = book.get("mark_session")
     proc = st.get("processed_close_sessions") or []
     fresh = ("LAST_COMPLETED_CLOSE" if mark_sess and proc and mark_sess == proc[-1]
              else "STALE" if mark_sess else "NONE")
     when = (f"{mark_sess} regular-session close" if mark_sess else "no mark yet")
     lines, tot = [], 0.0
-    unmarked = []
     for t, p in pos.items():
         entry = p["fill"]
-        mp = marks.get(t)
-        # temporal invariant: a mark predating the entry session is invalid
-        ent_sess = p.get("entry_session")
-        valid = (mp is not None and mark_sess
-                 and (not ent_sess or ent_sess <= mark_sess))
-        if valid:
-            px, unr = mp["close"], mp["unrealized"]
+        if p.get("mark_status") == "MARKED" and p.get("mark") is not None:
+            px, unr = p["mark"], p.get("unrealized", 0.0)
             tot += unr
-            pct = (px - entry) / entry * 100 if entry else 0
-            extra = [f"{p['shares']}sh @ ${entry:.2f}",
-                     f"last ${px:.2f}", f"{_pnl(unr)} ({pct:+.1f}%)"]
+            pct = p.get("unrealized_pct")
+            core = (f"{p['shares']}sh @ ${entry:.2f} | last ${px:.2f} | "
+                    f"{_pnl(unr)} ({f'{pct:+.1f}%' if pct is not None else ''})")
         else:
-            unmarked.append(t)
-            extra = [f"{p['shares']}sh @ ${entry:.2f}",
-                     "mark: UNMARKED_SINCE_ENTRY"]
-        # post-entry risk label: canonical typed rule only — a pre-entry veto
-        # or prose invalidation text is NOT an active stop
-        sr = p.get("stop_rule") or {}
-        spec_inv = (wl_pos.get(t) or {}).get("invalidation")
-        if sr.get("type") == "intraday_stop":
-            extra.append(f"post-entry stop: ${sr['level']}")
-        elif isinstance(spec_inv, dict) and spec_inv.get("type") == "intraday_stop":
-            extra.append(f"post-entry stop: ${spec_inv['level']} "
-                         f"({spec_inv.get('label','')[:30]})")
-        elif isinstance(spec_inv, dict) and spec_inv.get("type"):
-            extra.append(f"exit rule: {spec_inv.get('label') or spec_inv['type']}")
-        else:
-            extra.append("post-entry stop: NOT PROVIDED")
+            px, unr = entry, 0.0
+            core = (f"{p['shares']}sh @ ${entry:.2f} | UNMARKED_SINCE_ENTRY "
+                    f"(entry {p.get('entry_session','?')}; shown at cost)")
+        extra = []
+        if p.get("invalidation"):
+            extra.append(f"stop: {p['invalidation'][:55]}")
         if p.get("horizon"):
-            extra.append(f"horizon: {p['horizon'][:60]}")
-        lines.append(f"  {t}: " + " | ".join(extra))
+            extra.append(f"horizon: {p['horizon'][:55]}")
+        lines.append(f"  {t}: {core}" + (" | " + " | ".join(extra) if extra else ""))
+    unmarked = [t for t, p in pos.items() if p.get("mark_status") == "UNMARKED_SINCE_ENTRY"]
     return lines, tot, f"{when} ({fresh})", unmarked
 
 
@@ -530,15 +519,18 @@ def alpha_status() -> str:
     done = d.get("completed_sessions") or []
     lines = ["ALPHA — PAPER PORTFOLIO", "",
              f"Monitor: {health} (per-minute cron)",
-             f"Last mark: {asof}",
-             f"NAV: ${nav if nav else st.get('nav_last')}   cash: ${cash:,.0f}",
-             f"invested: ${invested:,.0f}   unrealized P&L: {_pnl(unrl)}"
+             f"Latest canonical EOD mark session: {(st.get('book') or {}).get('mark_session') or asof}"
+             + (" — current book fully comparable: NO" if unmarked_pos else ""),
+             (f"Current fully-marked NAV: UNAVAILABLE\n"
+              f"Marked-assets subtotal: ${(st.get('book') or {}).get('nav', nav):,.2f}\n"
+              f"Provisional book value: ${(st.get('book') or {}).get('provisional_nav_incl_unmarked_at_cost'):,.2f} "
+              f"(unmarked at entry cost: {', '.join(unmarked_pos)})"
+              if unmarked_pos else
+              f"NAV: ${nav if nav else st.get('nav_last')}"),
+             f"cash: ${cash:,.0f}   invested: ${invested:,.0f}   "
+             f"unrealized P&L{' (marked positions only)' if unmarked_pos else ''}: {_pnl(unrl)}"
              + (f"   realized P&L: {_pnl(st.get('realized'))}"
-                if st.get("realized") else "")
-             + (f"\nunmarked since entry: {', '.join(unmarked_pos)} "
-                f"(provisional book incl. them at cost: "
-                f"${(st.get('book') or {}).get('provisional_nav_incl_unmarked_at_cost')})"
-                if unmarked_pos else ""),
+                if st.get("realized") else ""),
              f"positions: {len(pos)}   active watches: {len(watches)}",
              f"pending next-open: {len(st.get('pending_open_fills', []))} entries / "
              f"{len(st.get('pending_open_exits', []))} exits",
@@ -681,6 +673,18 @@ def bridge_health() -> dict:
         return {"status": "down", "error": str(e)[:80]}
 
 
+def _alpha_nav_line(mst: dict, unmarked: list) -> str:
+    """Honest NAV headline: no normal NAV while any position is unmarked."""
+    book = mst.get("book") or {}
+    if unmarked:
+        prov = book.get("provisional_nav_incl_unmarked_at_cost")
+        return (f"Fully-marked NAV: UNAVAILABLE   "
+                f"marked subtotal ${book.get('nav', mst.get('nav_last')):,.2f}   "
+                f"provisional book ${prov:,.2f} "
+                f"(unmarked: {', '.join(unmarked)})")
+    return f"NAV: ${book.get('nav', mst.get('nav_last')):,.2f}"
+
+
 def status_summary() -> str:
     """Compact cross-project dashboard for /status."""
     a_age = _age_s(ALPHA_CRON_LOG)
@@ -709,9 +713,9 @@ def status_summary() -> str:
              else str(len(pend))
     lines = ["TRADINGAGENTS STATUS", "",
              "ALPHA",
-             f"Health: {a_health}   NAV: ${mark.get('nav') or mst.get('nav_last')}",
+             f"Health: {a_health}   {_alpha_nav_line(mst, _unm)}",
              f"Positions: {len(mst.get('positions', {}))}   "
-             f"unrealized: {_pnl(unrl)}  (marks as of {asof})",
+             f"unrealized{' (marked only)' if _unm else ''}: {_pnl(unrl)}  (marks as of {asof})",
              f"Pending entry: {pend_s or 'none'}",
              "",
              "C12",
@@ -740,8 +744,9 @@ def digest_text() -> str:
     done = d.get("completed_sessions") or []
     lines = ["TRADINGAGENTS DAILY SUMMARY", "",
              f"ALPHA (marks as of {asof}):",
-             f"  NAV ${mark.get('nav') or mst.get('nav_last')}   "
-             f"unrealized {_pnl(unrl)}   positions {len(mst.get('positions', {}))}"]
+             f"  {_alpha_nav_line(mst, _unm)}   "
+             f"unrealized{' (marked only)' if _unm else ''} {_pnl(unrl)}   "
+             f"positions {len(mst.get('positions', {}))}"]
     for ln in plines:
         lines.append("  " + ln.split(" | invalidation")[0].split(" | stop:")[0].split(" | horizon")[0])
     lines += [f"  pending next-open: {len(mst.get('pending_open_fills', []))} entries / "

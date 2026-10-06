@@ -180,4 +180,31 @@ c = tr.c12_status()
 assert "resolved" in c and "CURRENT UNRESOLVED" not in c
 tr.C12_LOG, tr.C12_WEEKS, tr.C12_NAV, tr.C12_LEDGER, tr.C12_NOTIF = old_c12
 
+# --- partial-mark NAV labeling ---
+mk_pos = lambda t, marked: {"shares": 10, "fill": 100.0, "mark_status": "MARKED" if marked else "UNMARKED_SINCE_ENTRY",
+                           "mark": 110.0 if marked else None, "unrealized": 100.0 if marked else 0.0}
+st_all = {"positions": {"A": mk_pos("A", True), "B": mk_pos("B", True)},
+          "processed_close_sessions": ["S1"], "cash": 0,
+          "book": {"mark_session": "S1", "nav": 5000.0, "unmarked_positions": []}}
+st_unm = {"positions": {"A": mk_pos("A", True), "SDGR": mk_pos("SDGR", False)},
+          "processed_close_sessions": ["S1"], "cash": 0,
+          "book": {"mark_session": "S1", "nav": 5000.0,
+                   "provisional_nav_incl_unmarked_at_cost": 6000.0,
+                   "unmarked_positions": ["SDGR"]}}
+assert _t and True
+nav_all = tr._alpha_nav_line(st_all, [])
+assert nav_all.startswith("NAV:") and "5,000" in nav_all
+_, tot, _, unm = tr._alpha_positions_view(st_unm)
+assert unm == ["SDGR"] and tot == 100.0
+nav_unm = tr._alpha_nav_line(st_unm, unm)
+assert "NAV:" not in nav_unm
+assert "UNAVAILABLE" in nav_unm and "marked subtotal $5,000.00" in nav_unm
+assert "provisional book $6,000.00" in nav_unm and "SDGR" in nav_unm
+# unmarked position excluded from P&L but shown at cost
+view, _, _, _ = tr._alpha_positions_view(st_unm)
+assert "UNMARKED_SINCE_ENTRY" in view[1]
+# restore: everything marked -> normal NAV returns
+nav_back = tr._alpha_nav_line(st_all, [])
+assert nav_back.startswith("NAV:")
+
 print("ALL TESTS PASSED")
