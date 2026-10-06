@@ -13,6 +13,7 @@ from alpha_rnd import monitor as m  # noqa: E402
 # keep synthetic test events out of the real ledger/notifications
 m.EVENTS = Path("/tmp/alpha_test_events.jsonl")
 m.NOTIFY = Path("/tmp/alpha_test_notify.log")
+m.LEDGER = Path("/tmp/alpha_test_ledger.jsonl")
 for p in (m.EVENTS, m.NOTIFY):
     if p.exists():
         p.unlink()
@@ -193,3 +194,41 @@ if __name__ == "__main__":
         f()
         print(f"PASS {f.__name__}")
     print("ALL TESTS PASS")
+
+
+def test_eod_marks():
+    st = fresh_state()
+    st["positions"] = {
+        "AAA": {"shares": 10, "fill": 100.0},
+        "NEW": {"shares": 5, "fill": 50.0},   # entered same day
+        "NOPX": {"shares": 7, "fill": 10.0},  # no data
+    }
+    st["pending_open_fills"] = [{"ticker": "PEND", "frac": 1.0,
+                                 "confirm_session": "2026-10-09"}]
+    daily = {
+        "AAA": mk_df([110.0, 120.0], [1, 1]),
+        "NEW": mk_df([55.0, 60.0], [1, 1]),
+        # NOPX absent -> stale, no invented price
+        "PEND": mk_df([999.0], [1]),
+    }
+    m.eod_marks(st, daily, "2026-10-09")
+    assert st["positions"]["AAA"]["mark"] == 120.0
+    assert st["positions"]["AAA"]["mark_session"] == "2026-10-09"
+    assert st["positions"]["AAA"]["unrealized"] == 200.0
+    assert st["positions"]["NEW"]["unrealized"] == 50.0      # same-day entry marked at close
+    assert st["positions"]["NOPX"].get("mark_stale") is True  # no invented price
+    assert "PEND" not in st["positions"]                      # pending excluded
+    assert st["cash"] == 50000.0                              # cash untouched
+    nav = st["nav_last"]
+    assert nav == 50000.0 + 120.0 * 10 + 60.0 * 5
+    assert st["book"]["mark_session"] == "2026-10-09"
+    # idempotent: re-run same session -> identical
+    st2 = json.loads(json.dumps(st))
+    m.eod_marks(st2, daily, "2026-10-09")
+    assert st2["book"]["nav"] == st["book"]["nav"]
+    assert st2["positions"] == st["positions"]
+    print("eod_marks ok")
+
+
+import json  # noqa: E402
+test_eod_marks()

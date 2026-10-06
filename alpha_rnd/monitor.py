@@ -32,6 +32,7 @@ D = ROOT / "alpha_rnd"
 WATCHLIST = D / "live_watchlist.json"
 STATE = D / "monitor_state.json"
 EVENTS = D / "trigger_events.jsonl"
+LEDGER = ROOT / "evaluations" / "alpha_rnd_v1" / "alpha_paper_ledger.jsonl"
 NOTIFY = D / "NOTIFICATIONS.log"
 
 OPEN_HHMM = (13, 30)   # 13:30 UTC regular open (no DST/holiday table — see README)
@@ -420,9 +421,81 @@ def settle_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: 
     resolve_pending(st, wl, daily, session, live=False)
 
 
+def eod_marks(st: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
+    """End-of-session mark-to-market. Deterministic recompute: every open
+    position marked at the regular-session CLOSE for `session`. Idempotent —
+    re-running for the same session replaces identical values; cash, shares
+    and fills are never touched. Pending next-open orders are not positions.
+    """
+    mv = upnl = 0.0
+    stale = []
+    for t, pos in st["positions"].items():
+        df = daily.get(t)
+        c = None
+        if df is not None and len(df):
+            row = df[df.index.date == pd.Timestamp(session).date()]
+            if len(row):
+                c = float(row["Close"].iloc[-1])
+        if c is None:
+            pos["mark_session"] = pos.get("mark_session")  # keep prior
+            pos["mark_stale"] = True
+            stale.append(t)
+            continue
+        pos["mark"] = round(c, 4)
+        pos["mark_session"] = session
+        pos["mark_source"] = "regular_session_close"
+        pos.pop("mark_stale", None)
+        pos["unrealized"] = round((c - pos["fill"]) * pos["shares"], 2)
+        pos["unrealized_pct"] = round((c / pos["fill"] - 1) * 100, 2)
+        mv += c * pos["shares"]
+        upnl += pos["unrealized"]
+    st["nav_last"] = round(st["cash"] + mv, 2)
+    st["book"] = {
+        "mark_session": session,
+        "market_value": round(mv, 2),
+        "unrealized": round(upnl, 2),
+        "exposure": round(mv, 2),
+        "nav": st["nav_last"],
+        "cash": st["cash"],
+        "realized": st.get("realized", 0.0),
+        "marked_at": now_utc().isoformat(),
+    }
+    if stale:
+        emit(st, {"action": "EOD_MARK_UNAVAILABLE", "tickers": stale,
+                  "session": session})
+        notify(f"ALPHA_RND EOD MARK UNAVAILABLE\n{', '.join(stale)} — left STALE, no price invented.")
+    # Canonical ledger MARK record (append-only; dedup by session+content so
+    # repeated ticks never duplicate, but a later same-session fill re-marks).
+    ledger = LEDGER
+    rec = {"type": "MARK",
+           "frozen_at": now_utc().isoformat(),
+           "session": session,
+           "positions": [{"ticker": t, "fill": p["fill"], "close": p["mark"],
+                          "unrealized": p["unrealized"]}
+                         for t, p in sorted(st["positions"].items())
+                         if p.get("mark_session") == session],
+           "cash": st["cash"], "nav": st["nav_last"],
+           "open_slots": MAX_POSITIONS - len(st["positions"])}
+    body = {k: v for k, v in rec.items() if k != "frozen_at"}
+    last_mark = None
+    if ledger.exists():
+        for l in ledger.read_text().splitlines():
+            try:
+                r = json.loads(l)
+                if r.get("type") == "MARK":
+                    last_mark = r
+            except Exception:
+                pass
+    prev = {k: v for k, v in (last_mark or {}).items() if k != "frozen_at"}
+    if prev != body:
+        with ledger.open("a") as f:
+            f.write(json.dumps(rec, default=str) + "\n")
+
+
 def run_once(st: dict, wl: dict) -> None:
     daily = fetch_daily([w["ticker"] for w in wl["watches"]] +
-                        [p["ticker"] for p in wl["open_positions"]])
+                        [p["ticker"] for p in wl["open_positions"]] +
+                        list(st["positions"]))
     sess = last_close_session(daily)
     MIN_EVAL_SESSION = "2026-10-03"  # triggers frozen 10-02/10-03: no retro eval
     if sess and sess > MIN_EVAL_SESSION and sess not in st["processed_close_sessions"]:
@@ -434,6 +507,12 @@ def run_once(st: dict, wl: dict) -> None:
         # pending orders whose target open already passed -> MISSED
         settle_pending(st, wl, daily, sess)
         close_pass(st, wl, daily, sess)
+    if sess:
+        # Canonical EOD valuation for the latest completed session —
+        # idempotent, safe to recompute every tick.
+        if st.get("book", {}).get("mark_session") != sess or \
+                any(p.get("mark_session") != sess for p in st["positions"].values()):
+            eod_marks(st, daily, sess)
     if session_open(now_utc()):
         intraday_pass(st, wl, daily)
     st["last_check_utc"] = now_utc().isoformat()
