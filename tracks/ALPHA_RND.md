@@ -582,3 +582,12 @@ intraday frame. Delayed accounting of precommitted orders settled:
 TWST entry 11@209.55; PGEN corrective exit 609@7.79 (realized -$259.42).
 Monitor health now reflects last successful tick / latest traceback, not
 cron writes.
+
+### Temporal mark integrity (2026-10-06)
+
+eod_marks never marks a position at a session earlier than entry_session —
+such positions get mark_status=UNMARKED_SINCE_ENTRY and are excluded from
+canonical marks/NAV; book carries provisional_nav_incl_unmarked_at_cost.
+Realized P&L accumulates in state (PGEN corrective: -$259.42). Telegram
+positions now show typed post-entry stop only; a pre-entry veto is never
+labeled a stop.
