@@ -63,6 +63,18 @@ the base directory.
 
 ## Bridge operations
 
+The bridge is a supervised systemd USER service — its SINGLE OWNER.
+Schedulers (ALPHA/C12) are consumers only: they query /healthz and
+/v1/models, may request `systemctl --user restart
+tradingagents-swe-bridge.service`, wait, and emit BLOCKED events. They
+must never spawn `python -m devin_bridge` themselves — an unmanaged
+duplicate would fight the owner for :8765. (Enforced in
+alpha_rnd/daily_scheduler.py and ta_eval/c12_scheduler.py.)
+
+Boot ownership map: systemd → telegram relay + SWE bridge;
+cron → ALPHA monitor, ALPHA scheduler, C12 scheduler; interactive Devin
+sessions → manual only.
+
 The bridge is a supervised systemd USER service
 `tradingagents-swe-bridge.service` (enabled; `Restart=always`; starts at
 boot via user lingering — no login needed). It exposes
