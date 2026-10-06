@@ -47,6 +47,10 @@ def publish(session: str) -> dict:
                 "reevaluation": i.get("reevaluation"),
                 "artifact": f"{t}_{session}.json",
                 "size_frac": i.get("size_frac") or 1.0,
+                "stop_rule": ({"type": "intraday_stop",
+                               "level": i["stop_level"],
+                               "label": i.get("invalidation")}
+                              if i.get("stop_level") else None),
                 "auto_execution_authorized": bool(
                     i.get("auto_execution_authorized")),
                 "source": "auto_synth",

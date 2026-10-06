@@ -284,3 +284,31 @@ def test_watch_fill_stop_enforcement():
 
 
 test_watch_fill_stop_enforcement()
+
+
+def test_corrective_exit_and_blocked():
+    st = fresh_state()
+    st["positions"]["PGEN"] = {"shares": 10, "fill": 8.2, "stop_suspended": "x"}
+    st["pending_open_exits"] = [{"ticker": "PGEN", "confirm_session": "2026-10-05",
+                                 "why": "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP"}]
+    st["pending_open_fills"] = [{"ticker": "BLK", "confirm_session": "2026-10-05",
+                                 "frac": 1.0, "blocked": True}]
+    # session 2026-10-06 live: PGEN exits at ACTUAL open (not $7.75)
+    daily = {"PGEN": mk_df([9.0], [1], end="2026-10-06"),
+             "BLK": mk_df([5.0], [1], end="2026-10-06")}
+    m.resolve_pending(st, {"watches": [{"ticker": "BLK"}]}, daily, "2026-10-06", live=True)
+    assert "PGEN" not in st["positions"]
+    ev = [json.loads(l) for l in m.EVENTS.read_text().splitlines()
+          if json.loads(l).get("ticker") == "PGEN"][-1]
+    assert ev["action"] == "PAPER_EXIT" and ev["price"] == 9.0  # actual open, not 7.75
+    assert "MISSED_HARD_STOP" in ev["why"]
+    # blocked entry stays queued, no fill
+    assert len(st["pending_open_fills"]) == 1 and st["pending_open_fills"][0]["blocked"]
+    # repeat -> no duplicate exit
+    n = len(m.EVENTS.read_text().splitlines())
+    m.resolve_pending(st, {"watches": []}, daily, "2026-10-06", live=True)
+    assert len(m.EVENTS.read_text().splitlines()) == n
+    print("corrective_exit_and_blocked ok")
+
+
+test_corrective_exit_and_blocked()

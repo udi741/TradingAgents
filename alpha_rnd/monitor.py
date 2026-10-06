@@ -61,7 +61,8 @@ def load_state() -> dict:
         # migrate watch-fill positions: derive typed stop_rule from the
         # frozen invalidation text if missing (e.g. PGEN "stop $7.75")
         for pos in st.get("positions", {}).values():
-            if "stop_rule" not in pos and isinstance(pos.get("invalidation"), str):
+            if "stop_rule" not in pos and isinstance(pos.get("invalidation"), str) \
+                    and not pos.get("integrity_review") and not pos.get("stop_suspended"):
                 mm = re.search(r"stop \$?(\d+\.?\d*)", pos["invalidation"])
                 if mm:
                     pos["stop_rule"] = {"type": "intraday_stop",
@@ -176,11 +177,13 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
         return
     cost = shares * price * (1 + COST_BPS)
     st["cash"] -= cost
-    stop = {}
-    mm = re.search(r"stop \$?(\d+\.?\d*)", str(watch["invalidation"]))
-    if mm:
-        stop = {"type": "intraday_stop", "level": float(mm.group(1)),
-                "label": watch["invalidation"]}
+    # canonical typed stop from the watch spec; prose parse = legacy fallback only
+    stop = dict(watch.get("stop_rule") or {})
+    if not stop:
+        mm = re.search(r"stop \$?(\d+\.?\d*)", str(watch["invalidation"]))
+        if mm:
+            stop = {"type": "intraday_stop", "level": float(mm.group(1)),
+                    "label": watch["invalidation"], "legacy_parsed": True}
     st["positions"][ticker] = {"shares": shares, "fill": price, "frac": frac,
                               "invalidation": watch["invalidation"],
                               "horizon": watch["horizon"], "stop_rule": stop,
@@ -223,6 +226,9 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
         keep = []
         for od in queue:
             t = od["ticker"]
+            if od.get("blocked"):
+                keep.append(od)
+                continue
             df = daily.get(t)
             if df is None:
                 keep.append(od)
