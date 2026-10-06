@@ -239,8 +239,8 @@ from unittest import mock  # noqa: E402
 test_eod_marks()
 
 
-def mk_intraday(prices):
-    idx = pd.date_range("2026-10-05 10:30", periods=len(prices), freq="1min",
+def mk_intraday(prices, day="2026-10-05"):
+    idx = pd.date_range(f"{day} 10:30", periods=len(prices), freq="1min",
                         tz="US/Eastern")
     return pd.DataFrame({"Open": prices, "High": prices, "Low": prices,
                          "Close": prices, "Volume": 1}, index=idx)
@@ -352,10 +352,10 @@ def test_schema_safe_dispatch_and_pending_via_intraday_open():
     # daily frame lacks today's bar (end-exclusive) -> intraday frame supplies open
     daily = {"PGEN": mk_df([8.0], [1], end="2026-10-05"),
              "TWST": mk_df([200.0], [1], end="2026-10-05")}
-    intra = {"PGEN": mk_intraday([7.79]), "TWST": mk_intraday([209.55])}
+    intra = {"PGEN": mk_intraday([7.79], "2026-10-06"), "TWST": mk_intraday([209.55], "2026-10-06")}
     m.resolve_pending(st, {"watches": [{"ticker": "TWST", "cls": "DETERMINISTIC_CONFIRMATION",
                                         "invalidation": "x", "horizon": "y",
-                                        "size_frac": 0.5}]},
+                                        "trigger": "t", "size_frac": 0.5}]},
                       daily, "2026-10-06", live=True, intraday=intra)
     assert "PGEN" not in st["positions"] and "TWST" in st["positions"]
     evs = [json.loads(l) for l in m.EVENTS.read_text().splitlines()]
