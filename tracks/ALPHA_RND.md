@@ -534,3 +534,14 @@ genuine artifact-internal conflicts; HHH/SYNA wrong-mode output correctly
 refused; XNCR over-claimed AUTO_ENTRY vs Sell refused). V1 out-of-sample:
 1 validated (QMCO), 9 review — artifacts contain real sizing/stop
 contradictions Devin had resolved by judgment.
+
+### PGEN stop-integrity incident (2026-10-06)
+
+Classification: STOP_BREACHED_MONITOR_BUG. PGEN entered 10:39 ET @ $8.20
+(AUTO_ENTRY); its frozen intraday hard stop $7.75 was breached post-entry at
+13:40 ET (low 7.55, close 7.74) but never executed: intraday_pass iterated
+only watchlist `open_positions` (V1 seeds) and watch-fill positions stored
+`invalidation` as raw text. Fix: all open positions stop-checked; typed
+stop_rule derived at fill/migration from frozen invalidation text.
+No retroactive fill invented — MISSED_EXECUTION_REVIEW_REQUIRED recorded;
+PGEN remains open with stop armed (gap-through exits at actual open).
