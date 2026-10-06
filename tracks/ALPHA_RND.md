@@ -558,3 +558,14 @@ PGEN remains open with stop armed (gap-through exits at actual open).
   183.39 typed; post-entry stop explicitly "not provided" by TA artifact —
   accepted frozen spec, nothing invented. (Earlier "$73.8" was HHH's, a
   mislabel in the audit prose.)
+
+### State concurrency hardening (2026-10-06)
+
+Race classification: REAL_PRODUCTION_WRITER_RACE (B) — any two overlapping
+monitor ticks, or a tick vs an ops write, could lose read-modify-write
+updates; that is how the corrective-exit write was first clobbered.
+Fix: monitor_state.json mutations now go through `locked_state()` — kernel
+flock over load->mutate->save with atomic tmp+replace; scheduler_state.json
+mutations via `_state_txn` (flock + atomic replace) used by check/run_cycle/
+publish. Ledgers/events remain append-only. Tests patched to redirect
+canonical paths; a stray-stub leak in test_monitor fixed.
