@@ -115,3 +115,16 @@ Cycle tail is now fully automated: TA -> `alpha_rnd.synthesize` ->
 fail-closed validate -> `alpha_rnd.publish` -> monitor consumes.
 Ambiguous tickers -> ALPHA_PUBLICATION_REVIEW_REQUIRED (Telegram
 ACTION_REQUIRED); resume feather-room for those only.
+
+## EOD mark-to-market (installed 2026-10-06)
+
+- Ownership: `monitor.eod_marks()` runs inside `run_once` whenever the latest
+  completed session lacks canonical marks — covers post-close ticks and
+  catch-up after downtime; also precedes scheduler discovery on cycle days.
+- Marks: regular-session CLOSE only; per-position mark/mark_session/
+  unrealized in monitor_state + append-only ledger MARK record
+  (alpha_paper_ledger.jsonl). Pending next-open orders excluded.
+- Idempotent: recomputes same values; ledger dedups identical marks.
+- Missing price -> mark_stale + EOD_MARK_UNAVAILABLE event (Telegram).
+- Dashboard freshness: LAST_COMPLETED_CLOSE = mark session ==
+  latest processed close; otherwise STALE.

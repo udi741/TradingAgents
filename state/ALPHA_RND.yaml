@@ -64,3 +64,8 @@ daily_discovery_scheduler:
   cron: '7 * * * *'
   status: AWAITING_FIRST_UNATTENDED_DISCOVERY_VERIFICATION
   next_unattended_session: '2026-10-05'
+
+eod_marks:
+  owner: monitor.eod_marks (run_once, per completed session)
+  ledger_record: alpha_paper_ledger.jsonl MARK
+  first_catchup_mark: 2026-10-05
