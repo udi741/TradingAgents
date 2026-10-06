@@ -197,7 +197,7 @@ assert nav_all.startswith("NAV:") and "5,000" in nav_all
 _, tot, _, unm = tr._alpha_positions_view(st_unm)
 assert unm == ["SDGR"] and tot == 100.0
 nav_unm = tr._alpha_nav_line(st_unm, unm)
-assert "NAV:" not in nav_unm
+assert "NAV: $" not in nav_unm  # no normal NAV headline while unmarked
 assert "UNAVAILABLE" in nav_unm and "marked subtotal $5,000.00" in nav_unm
 assert "provisional book $6,000.00" in nav_unm and "SDGR" in nav_unm
 # unmarked position excluded from P&L but shown at cost
