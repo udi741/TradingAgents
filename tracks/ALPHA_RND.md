@@ -569,3 +569,16 @@ flock over load->mutate->save with atomic tmp+replace; scheduler_state.json
 mutations via `_state_txn` (flock + atomic replace) used by check/run_cycle/
 publish. Ledgers/events remain append-only. Tests patched to redirect
 canonical paths; a stray-stub leak in test_monitor fixed.
+
+### Monitor crash + open-order recovery (2026-10-06)
+
+KeyError('type') crashed every tick: a position with suspended/no typed rule
+yielded inv={} in the intraday stop loop. Fixed: schema-safe dispatch (typed
+intraday stops only; everything else skips cleanly, malformed schema emits
+warning), per-ticker isolation, stale-list guard. Second gap: pending
+next-open orders couldn't see today's open because fetch_daily's end is
+exclusive — resolve_pending now takes the live session's open from the
+intraday frame. Delayed accounting of precommitted orders settled:
+TWST entry 11@209.55; PGEN corrective exit 609@7.79 (realized -$259.42).
+Monitor health now reflects last successful tick / latest traceback, not
+cron writes.
