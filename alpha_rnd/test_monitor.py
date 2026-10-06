@@ -179,8 +179,12 @@ def test_gap_through_stop_exits_at_open():
                        "Close": [10.2, 10.25], "Volume": [1, 1]},
                       index=pd.date_range("2026-10-06 14:00", periods=2, freq="min", tz="UTC"))
     m.fetch_intraday = lambda tickers: {"AP": df}
+    orig_rp = m.resolve_pending
     m.resolve_pending = lambda *a, **k: None
-    m.intraday_pass(st, wl, {})
+    try:
+        m.intraday_pass(st, wl, {})
+    finally:
+        m.resolve_pending = orig_rp
     assert "AP" not in st["positions"]
     assert abs(st["cash"] - (50000 + 100 * 10.10 * (1 - m.COST_BPS))) < 0.01, "gap -> exit at actual open"
 

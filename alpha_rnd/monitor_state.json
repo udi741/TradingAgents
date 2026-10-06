@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-06T08:51:02.859111+00:00",
+ "last_check_utc": "2026-10-06T08:57:02.868130+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05"
@@ -81,12 +81,8 @@
    "mark_source": "regular_session_close",
    "unrealized": -280.14,
    "unrealized_pct": -5.61,
-   "stop_rule": {
-    "type": "intraday_stop",
-    "level": 7.75,
-    "label": "stop $7.75; structural <$7.03"
-   },
-   "integrity_review": "MISSED_EXECUTION_REVIEW_REQUIRED"
+   "integrity_review": "MISSED_EXECUTION_REVIEW_REQUIRED",
+   "stop_suspended": "corrective next-open exit supersedes re-armed stop"
   }
  },
  "cash": 80126.6062,
@@ -95,7 +91,14 @@
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED"
  },
- "pending_open_exits": [],
+ "pending_open_exits": [
+  {
+   "ticker": "PGEN",
+   "why": "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP",
+   "confirm_session": "2026-10-05",
+   "corrective": true
+  }
+ ],
  "book": {
   "mark_session": "2026-10-05",
   "market_value": 19567.6,
