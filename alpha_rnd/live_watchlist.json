@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-03T09:31:14.689099+00:00",
+ "generated_at": "2026-10-06T04:16:39.900334+00:00",
  "watch_expiry": "2026-10-30",
  "recommendation_freeze": "2026-10-02 (V1) / 2026-10-03 (V2)",
  "sizing": {
@@ -325,5 +325,5 @@
    "artifact": "APPS_2026-10-01.json"
   }
  ],
- "sha256": "01d2be80233e71ab5797dacdd40e33480234c6763bd1aea3c5ded94c897757c0"
+ "sha256": "4fd1ae0772f0fd6f92e92a44333c6cdc237eaddf0f554e7f7026af2af5db1a7f"
 }

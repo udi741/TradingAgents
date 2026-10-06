@@ -1,0 +1,2 @@
+{"ts": "2026-10-06T04:07:02.270309+00:00", "kind": "ALPHA_DISCOVERY_STARTED", "session": "2026-10-05"}
+{"ts": "2026-10-06T04:16:39.904317+00:00", "kind": "ALPHA_DISCOVERY_COMPLETE", "session": "2026-10-05", "deep": ["IOVA", "QMCO", "MRNA", "CDNA", "SDGR", "BMNR", "RXO", "NTRA", "SYNA", "ASST"], "ta_signals": {}, "published": {"published_at": "2026-10-06T04:16:39.901281+00:00", "watch_count": 13, "sha256": "4fd1ae0772f0fd6f92e92a44333c6cdc237eaddf0f554e7f7026af2af5db1a7f"}, "pending_review": [], "user_action_required": "none"}

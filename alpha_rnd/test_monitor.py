@@ -231,4 +231,56 @@ def test_eod_marks():
 
 
 import json  # noqa: E402
+from unittest import mock  # noqa: E402
 test_eod_marks()
+
+
+def mk_intraday(prices):
+    idx = pd.date_range("2026-10-05 10:30", periods=len(prices), freq="1min",
+                        tz="US/Eastern")
+    return pd.DataFrame({"Open": prices, "High": prices, "Low": prices,
+                         "Close": prices, "Volume": 1}, index=idx)
+
+
+def test_watch_fill_stop_enforcement():
+    """AUTO_ENTRY fill -> same-session stop breach -> exactly one PAPER_EXIT."""
+    wl = {"open_positions": [], "watches": [
+        {"ticker": "ZZZ", "cls": "AUTO_ENTRY", "size_frac": 1.0,
+         "trigger_type": "intraday_zone_touch",
+         "params": {"zone": [8.0, 8.2]}, "invalidation": "stop $7.75",
+         "horizon": "x", "trigger": "zone touch"}]}
+    st = fresh_state()
+    # tick 1: price enters zone -> fill; stop armed immediately
+    with mock.patch.object(
+            m, "fetch_intraday",
+            return_value={"ZZZ": mk_intraday([8.1, 8.2])}), \
+         mock.patch.object(m, "session_open",
+                                                  return_value=True):
+        m.intraday_pass(st, wl, {})
+    assert st["positions"]["ZZZ"]["shares"] > 0
+    assert st["positions"]["ZZZ"]["stop_rule"]["level"] == 7.75
+    # tick 2 same session: trade through the stop -> exit at stop level
+    evs_before = len(m.EVENTS.read_text().splitlines()) if m.EVENTS.exists() else 0
+    with mock.patch.object(
+            m, "fetch_intraday",
+            return_value={"ZZZ": mk_intraday([8.2, 7.6])}), \
+         mock.patch.object(m, "session_open",
+                                                  return_value=True):
+        m.intraday_pass(st, wl, {})
+    assert "ZZZ" not in st["positions"]
+    evs = [json.loads(l) for l in m.EVENTS.read_text().splitlines()[evs_before:]]
+    exits = [e for e in evs if e.get("action") == "PAPER_EXIT" and e.get("ticker") == "ZZZ"]
+    assert len(exits) == 1 and exits[0]["price"] == 7.75
+    # tick 3: no duplicate exit; no position to re-evaluate
+    with mock.patch.object(
+            m, "fetch_intraday",
+            return_value={"ZZZ": mk_intraday([7.5])}), \
+         mock.patch.object(m, "session_open",
+                                                  return_value=True):
+        m.intraday_pass(st, wl, {})
+    evs = m.EVENTS.read_text().splitlines()
+    assert len([l for l in evs if '"PAPER_EXIT"' in l and "ZZZ" in l]) == 1
+    print("watch_fill_stop_enforcement ok")
+
+
+test_watch_fill_stop_enforcement()

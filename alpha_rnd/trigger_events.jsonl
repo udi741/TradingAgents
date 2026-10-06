@@ -1,0 +1,4 @@
+{"ticker": "PGEN", "action": "PAPER_ENTRY", "price": 8.2, "shares": 609, "cost": 4998.79, "cls": "AUTO_ENTRY", "invalidation": "stop $7.75; structural <$7.03", "utc": "2026-10-05T14:39:42.449541+00:00"}
+{"ticker": "TWST", "action": "CONFIRMED", "how": "close 205.0>200.31 on vol 3205000>=2421390", "session": "2026-10-05", "close": 205.0, "vol": 3205000.0, "utc": "2026-10-06T01:36:02.862884+00:00"}
+{"ticker": "TWST", "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY", "how": "close 205.0>200.31 on vol 3205000>=2421390", "session": "2026-10-05", "utc": "2026-10-06T01:36:02.862976+00:00"}
+{"ticker": "PGEN", "action": "MISSED_EXECUTION_REVIEW_REQUIRED", "why": "intraday stop $7.75 breached post-entry on 2026-10-05 (first breach 13:40 ET, low 7.55, close 7.74) but monitor never evaluated watch-fill positions' stops (bug); position remains OPEN; no retroactive fill created", "utc": "2026-10-06T08:37:41.794714+00:00"}

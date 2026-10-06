@@ -24,6 +24,8 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import re
+
 import pandas as pd
 import yfinance as yf
 
@@ -56,6 +58,15 @@ def load_state() -> dict:
         st = json.loads(STATE.read_text())
         st.setdefault("pending_open_fills", [])
         st.setdefault("pending_open_exits", [])
+        # migrate watch-fill positions: derive typed stop_rule from the
+        # frozen invalidation text if missing (e.g. PGEN "stop $7.75")
+        for pos in st.get("positions", {}).values():
+            if "stop_rule" not in pos and isinstance(pos.get("invalidation"), str):
+                mm = re.search(r"stop \$?(\d+\.?\d*)", pos["invalidation"])
+                if mm:
+                    pos["stop_rule"] = {"type": "intraday_stop",
+                                        "level": float(mm.group(1)),
+                                        "label": pos["invalidation"]}
         return st
     return {
         "last_check_utc": None,
@@ -165,8 +176,15 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
         return
     cost = shares * price * (1 + COST_BPS)
     st["cash"] -= cost
+    stop = {}
+    mm = re.search(r"stop \$?(\d+\.?\d*)", str(watch["invalidation"]))
+    if mm:
+        stop = {"type": "intraday_stop", "level": float(mm.group(1)),
+                "label": watch["invalidation"]}
     st["positions"][ticker] = {"shares": shares, "fill": price, "frac": frac,
-                              "invalidation": watch["invalidation"], "horizon": watch["horizon"]}
+                              "invalidation": watch["invalidation"],
+                              "horizon": watch["horizon"], "stop_rule": stop,
+                              "entry_session": now_utc().strftime("%Y-%m-%d")}
     st["watch_status"][ticker] = "TRIGGERED"
     emit(st, {"ticker": ticker, "action": ev_type, "price": price, "shares": shares,
               "cost": round(cost, 2), "cls": watch["cls"], "invalidation": watch["invalidation"]})
@@ -365,7 +383,8 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
 def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> None:
     tickers = [w["ticker"] for w in wl["watches"]
                if st["watch_status"].get(w["ticker"]) not in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS")]
-    pos_tickers = [p["ticker"] for p in wl["open_positions"] if p["ticker"] in st["positions"]]
+    wl_pos = {p["ticker"]: p for p in wl["open_positions"]}
+    pos_tickers = list(st["positions"])  # ALL open positions, incl. watch fills
     pend = {o["ticker"] for o in st["pending_open_fills"]} | {o["ticker"] for o in st["pending_open_exits"]}
     data = fetch_intraday(list(set(tickers + pos_tickers + list(pend))))
     today_sess = None
@@ -376,8 +395,8 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> None:
         resolve_pending(st, wl, daily, today_sess)
 
     for t in pos_tickers:
-        pos = next(p for p in wl["open_positions"] if p["ticker"] == t)
-        inv = pos["invalidation"]
+        inv = ((wl_pos.get(t) or {}).get("invalidation")
+               or st["positions"][t].get("stop_rule") or {})
         df = data.get(t)
         if df is None:
             continue
