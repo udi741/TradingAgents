@@ -591,3 +591,24 @@ canonical marks/NAV; book carries provisional_nav_incl_unmarked_at_cost.
 Realized P&L accumulates in state (PGEN corrective: -$259.42). Telegram
 positions now show typed post-entry stop only; a pre-entry veto is never
 labeled a stop.
+
+### RISK_GUARDRAIL_V1 (2026-10-07, prospective)
+
+Invariant: no automatic entry unless the frozen plan has a machine-actionable
+post-entry risk rule (typed stop / typed close exit). Enforced at do_fill:
+missing plan -> watch_status=RISK_PLAN_REQUIRED, NOT BOUGHT, Telegram INFO.
+Boundary recorded in state (PRE/POST_RISK_GUARDRAIL); no historical fills
+altered.
+
+Root cause of no-plan entries: published watch specs never required typed
+post-entry rules — invalidation prose wasn't machine-enforceable.
+Watch audit: every current entry-capable watch except none has a typed rule;
+all classify INTERESTING_BUT_RISK_PLAN_REQUIRED on next trigger (fail closed).
+Positions: PBF/APPS typed stops valid; ACN pending exit undisturbed.
+
+Fresh management reviews (position-context TA, 2026-10-06, new decisions):
+TWST Underweight -> sell 4/11 next open, residual close<164; SDGR
+Underweight -> sell 100/161 next open, residual close<27.29. Also fixed:
+unattended 10-05 cycle TA step had failed silently (py3.10 ImportError);
+scheduler now uses .venv312 and treats empty signals as
+ALPHA_DISCOVERY_ERROR stage=ta_empty.
