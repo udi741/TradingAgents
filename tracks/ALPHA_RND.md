@@ -612,3 +612,21 @@ Underweight -> sell 100/161 next open, residual close<27.29. Also fixed:
 unattended 10-05 cycle TA step had failed silently (py3.10 ImportError);
 scheduler now uses .venv312 and treats empty signals as
 ALPHA_DISCOVERY_ERROR stage=ta_empty.
+
+### TA provenance + exit-session audit (2026-10-07, pre-open)
+
+- 2026-10-05 AND 2026-10-06 unattended cycles: TA stage failed for ALL deep
+  tickers (py3.10 ImportError; 0 SWE-2 calls; 0 artifacts) yet both were
+  marked ALPHA_DISCOVERY_COMPLETE — FALSE. Both now marked
+  INVALID_TA_RUNTIME_FAILURE in scheduler_state (history preserved, no
+  backfill, no rerun). Scheduler now errors on zero-signal TA (ta_empty) and
+  uses .venv312 explicitly (verified cron-equivalent: py3.12.15, TA+langchain
+  imports OK, bridge aliases resolve).
+- Provenance: TWST/SDGR entries authorized by the VALID manual V2 TA
+  artifacts (TWST/SDGR_2026-10-02.json, published 2026-10-03); the broken
+  cycles changed no rules (validated=[] in both publication_intents).
+  PBF/APPS/ACN provenance likewise from valid 10-01 artifacts.
+- Timing: TWST/SDGR mgmt decisions frozen 10:18/10:31 UTC, before the
+  13:30 UTC open; confirm_session corrected to decision session 2026-10-06
+  -> eligible open = TODAY 2026-10-07 (same as ACN). General rule: eligible
+  open = first regular-session open after the decision timestamp.
