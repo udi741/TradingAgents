@@ -322,6 +322,7 @@ def test_locked_state_serialization_and_atomicity():
     import tempfile, os
     td = Path(tempfile.mkdtemp())
     m.STATE = td / "state.json"; m.STATE_LOCK = td / "state.lock"
+    m.STATE.write_text(json.dumps({"positions": {}, "cash": 0.0}))  # canonical book exists
     # writer A mutates under lock
     with m.locked_state() as st:
         st["pending_open_exits"] = [{"ticker": "PGEN", "why": "X"}]
@@ -485,3 +486,57 @@ def test_exactly_once_execution():
 
 
 test_exactly_once_execution()
+
+
+def test_final_review_blockers():
+    # 3: one-time seeding — restart after close never resurrects
+    st = fresh_state()
+    st["positions"] = {"PBF": {"shares": 62, "fill": 80.0, "seeded": True}}
+    st["retired_seeds"] = ["ACN", "APPS"]
+    wl = {"open_positions": [{"ticker": t, "shares": 1, "fill": 1.0,
+                              "invalidation": {"label": "x"}, "horizon": "h"}
+                             for t in ("PBF", "ACN", "APPS")]}
+    m._seed_once(st, wl)  # initialized already
+    assert set(st["positions"]) == {"PBF"}  # no resurrection
+    st2 = fresh_state(); st2["retired_seeds"] = ["ACN", "APPS"]
+    m._seed_once(st2, wl)  # first init: seeds PBF only, ACN/APPS retired
+    assert set(st2["positions"]) == {"PBF"} and st2["initialized"]
+    # missing state -> fail closed
+    import tempfile
+    td = Path(tempfile.mkdtemp()); old = m.STATE; m.STATE = td / "missing.json"
+    try:
+        m.load_state(); assert False, "must fail closed"
+    except RuntimeError:
+        pass
+    finally:
+        m.STATE = old
+    # 1: partial exit preserves prior valid EOD mark on residual
+    st3 = fresh_state()
+    st3["positions"]["SDGR"] = {"shares": 161, "fill": 31.0, "cost": 3103.10,
+                                "mark": 28.90, "mark_session": "2026-10-06",
+                                "mark_status": "MARKED"}
+    m.do_exit(st3, "SDGR", 27.81, "mgmt", shares=100)
+    p = st3["positions"]["SDGR"]
+    assert p["shares"] == 61 and p["mark"] == 28.90 and p["mark_session"] == "2026-10-06"
+    # 2 crash-window B: mutation without durable write -> retry executes ONCE total
+    st4 = fresh_state()
+    st4["positions"]["A"] = {"shares": 10, "fill": 5.0, "cost": 50.0}
+    st4["pending_open_exits"] = [{"ticker": "A", "confirm_session": "2026-10-06", "why": "x"}]
+    daily = {"A": mk_df([9.0] * 3, [1] * 3, end="2026-10-07")}
+    # simulate crash: first resolve mutates in-memory only, state never saved
+    m.resolve_pending(st4, {"watches": []}, daily, "2026-10-07", live=True)
+    cash_after_crash = st4["cash"]  # lost (never persisted)
+    # recovery: reload from disk (no executed ids) -> executes exactly once
+    st4b = fresh_state()
+    st4b["positions"]["A"] = {"shares": 10, "fill": 5.0, "cost": 50.0}
+    st4b["pending_open_exits"] = [{"ticker": "A", "confirm_session": "2026-10-06", "why": "x"}]
+    m.resolve_pending(st4b, {"watches": []}, daily, "2026-10-07", live=True)
+    assert abs(st4b["cash"] - (50000.0 + 10 * 9.0 * (1 - m.COST_BPS))) < 0.01
+    # crash-window C: durable write happened -> retry suppressed
+    st4c = json.loads(json.dumps(st4b))
+    m.resolve_pending(st4c, {"watches": []}, daily, "2026-10-07", live=True)
+    assert st4c["cash"] == st4b["cash"]
+    print("final_review_blockers ok")
+
+
+test_final_review_blockers()

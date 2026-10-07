@@ -72,17 +72,9 @@ def load_state() -> dict:
                                         "level": float(mm.group(1)),
                                         "label": pos["invalidation"]}
         return st
-    return {
-        "last_check_utc": None,
-        "processed_close_sessions": [],
-        "confirm": {},          # ticker -> progress dict
-        "pending_open_fills": [],  # fills waiting next-session open
-        "pending_open_exits": [],  # exits waiting next-session open
-        "positions": {},        # ticker -> {shares, fill, source}
-        "cash": 85125.40,       # seeded from ledger 2026-10-02 mark
-        "nav_last": 99844.50,
-        "watch_status": {},     # ticker -> ACTIVE|TRIGGERED|EXPIRED|KILLED|REANALYSIS
-    }
+    raise RuntimeError(
+        "monitor_state.json MISSING — canonical book absent. FAIL CLOSED: "
+        "no seeding, no trading. Manual review required.")
 
 
 def save_state(st: dict) -> None:
@@ -733,15 +725,36 @@ def status(wl: dict, st: dict) -> str:
 def main() -> None:
     wl = json.loads(WATCHLIST.read_text())
     st = load_state()  # read-only snapshot for --status
-    # seed V1 positions once (under the canonical lock)
+def _seed_once(st: dict, wl: dict) -> None:
+    """One-time explicit initialization. After it, absence of a previously
+    closed position means CLOSED — never re-seeded (retired_seeds is
+    defense-in-depth only)."""
+    if st.get("initialized"):
+        return
+    for p in wl["open_positions"]:
+        if p["ticker"] in st.get("retired_seeds", []):
+            continue
+        if p["ticker"] not in st["positions"]:
+            st["positions"][p["ticker"]] = {
+                "shares": p["shares"], "fill": p["fill"],
+                "invalidation": p["invalidation"]["label"],
+                "horizon": p["horizon"], "seeded": True}
+    st["initialized"] = True
+
+
+def main() -> None:
+    # absence of a previously closed position means CLOSED — never re-seeded.
     with locked_state() as st:
-        for p in wl["open_positions"]:
-            if p["ticker"] in st.get("retired_seeds", []):
-                continue  # legitimately exited — never resurrect
-            if p["ticker"] not in st["positions"]:
-                st["positions"][p["ticker"]] = {"shares": p["shares"], "fill": p["fill"],
-                                               "invalidation": p["invalidation"]["label"],
-                                               "horizon": p["horizon"], "seeded": True}
+        if not st.get("initialized"):
+            for p in wl["open_positions"]:
+                if p["ticker"] in st.get("retired_seeds", []):
+                    continue
+                if p["ticker"] not in st["positions"]:
+                    st["positions"][p["ticker"]] = {
+                        "shares": p["shares"], "fill": p["fill"],
+                        "invalidation": p["invalidation"]["label"],
+                        "horizon": p["horizon"], "seeded": True}
+            st["initialized"] = True
     if "--status" in sys.argv:
         print(status(wl, st))
         return
