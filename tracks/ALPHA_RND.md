@@ -657,3 +657,12 @@ STOPPED pending user review.
 - PBF downtime audit: session low 83.91 > 74.50 stop — no missed action.
 - Telegram: cursors advanced, zero suppressed C12 bytes, one summary queued;
   relay STOPPED.
+
+### wl NameError hotfix (2026-10-07)
+
+Final-review edit left a broken inline seed block in main() referencing an
+unloaded `wl` — every cron tick crashed BEFORE any mutation/save: zero
+economic impact (verified: cash/positions/marks/pending/events unchanged).
+main() now loads the watchlist and calls _seed_once; anti-resurrection
+invariants intact. New production-main entrypoint test (isolated paths)
+covers the class of failure helper tests missed.
