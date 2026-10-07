@@ -642,3 +642,18 @@ reconciled: cash $90,203.02, realized -$1,485.68, positions PBF 62 / SDGR 61
 / TWST 7; ACN/APPS/PGEN closed; pending 0/0. Incident evidence preserved in
 ledger + evaluations/alpha_rnd_v1/incident_2026-10-07/. Automation remains
 STOPPED pending user review.
+
+### Incident final review (2026-10-07)
+
+- Mark continuity restored from forensic snapshot: PBF 82.88 / SDGR 28.90 /
+  TWST 166.97 @ 2026-10-06 close (reconciliation had wrongly stripped them;
+  partial exits never invalidated residual marks — the repair did).
+- Book: cash $90,203.02, realized -$1,485.68, NAV $98,273.27 (labeled
+  MIXED-TIME: Oct-7 cash + Oct-6 marks; comparable EOD NAV at tonight's mark).
+- Seeding: one-time explicit init (initialized flag) + fail-closed on missing
+  canonical state; retired_seeds defense-in-depth only.
+- Crash-safety: economic truth = canonical state (atomic replace); ledger/
+  events are receipts; crash windows proven by test (single execution total).
+- PBF downtime audit: session low 83.91 > 74.50 stop — no missed action.
+- Telegram: cursors advanced, zero suppressed C12 bytes, one summary queued;
+  relay STOPPED.
