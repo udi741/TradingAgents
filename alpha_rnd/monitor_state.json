@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-07T10:33:13.795152+00:00",
+ "last_check_utc": "2026-10-07T10:44:04.478282+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
@@ -122,14 +122,18 @@
   {
    "ticker": "TWST",
    "shares": 4,
-   "confirm_session": "2026-10-07",
-   "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~4 of 11 at next open; residual hard exit on close<164"
+   "confirm_session": "2026-10-06",
+   "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~4 of 11 at next open; residual hard exit on close<164",
+   "decision_utc": "2026-10-07T10:31:00+00:00",
+   "eligible_open_session": "2026-10-07"
   },
   {
    "ticker": "SDGR",
    "shares": 100,
-   "confirm_session": "2026-10-07",
-   "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~100 of 161 at next open; residual stop close<$27.29"
+   "confirm_session": "2026-10-06",
+   "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~100 of 161 at next open; residual stop close<$27.29",
+   "decision_utc": "2026-10-07T10:31:00+00:00",
+   "eligible_open_session": "2026-10-07"
   }
  ],
  "book": {

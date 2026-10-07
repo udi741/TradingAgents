@@ -407,3 +407,30 @@ def test_temporal_mark_integrity():
 
 
 test_temporal_mark_integrity()
+
+
+def test_decision_session_eligibility():
+    """Pre-open decision -> that day's open is eligible; post-open -> next session."""
+    st = fresh_state()
+    st["positions"]["A"] = {"shares": 10, "fill": 5.0}
+    # decision made 2026-10-06 (session), eligible open = first session after it
+    st["pending_open_exits"] = [{"ticker": "A", "confirm_session": "2026-10-06", "why": "test"}]
+    daily = {"A": mk_df([5.0] * 3, [1] * 3, end="2026-10-07")}
+    m.resolve_pending(st, {"watches": []}, daily, "2026-10-07", live=True)
+    assert "A" not in st["positions"]  # today's open used, not 10-08
+    ev = [json.loads(l) for l in m.EVENTS.read_text().splitlines()][-1]
+    assert ev["price"] == 5.0
+    # exactly-at-open boundary: decision timestamp == open -> NOT eligible same open
+    assert m.session_open(datetime(2026, 10, 7, 13, 30, tzinfo=timezone.utc))
+    assert not m.session_open(datetime(2026, 10, 7, 13, 29, tzinfo=timezone.utc))
+    # weekend: no session between Fri decision and Mon open -> Monday eligible
+    st2 = fresh_state()
+    st2["positions"]["B"] = {"shares": 1, "fill": 5.0}
+    st2["pending_open_exits"] = [{"ticker": "B", "confirm_session": "2026-10-09", "why": "test"}]  # Fri
+    daily2 = {"B": mk_df([5.0] * 3, [1] * 3, end="2026-10-13")}  # Mon bar
+    m.resolve_pending(st2, {"watches": []}, daily2, "2026-10-13", live=True)
+    assert "B" not in st2["positions"]
+    print("decision_session_eligibility ok")
+
+
+test_decision_session_eligibility()
