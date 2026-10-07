@@ -473,8 +473,9 @@ def _alpha_positions_view(st: dict, wl: dict | None = None) -> tuple[list[str], 
             core = (f"{p['shares']}sh @ ${entry:.2f} | UNMARKED_SINCE_ENTRY "
                     f"(entry {p.get('entry_session','?')}; shown at cost)")
         extra = []
-        if p.get("invalidation"):
-            extra.append(f"stop: {p['invalidation'][:55]}")
+        stop = _current_stop_label(t, p, wl)
+        if stop:
+            extra.append(stop)
         if p.get("horizon"):
             extra.append(f"horizon: {p['horizon'][:55]}")
         lines.append(f"  {t}: {core}" + (" | " + " | ".join(extra) if extra else ""))
@@ -514,23 +515,20 @@ def alpha_status() -> str:
         health = "OK" if tick_age is not None and tick_age < 240 else \
             f"UNKNOWN (no ticks yet)"
     plines, unrl, asof, unmarked_pos = _alpha_positions_view(st, wl)
-    cash = st.get("cash", 0.0)
-    invested = sum(p["shares"] * p["fill"] for p in pos.values())
-    mark = _alpha_last_mark()
-    nav = (mark or {}).get("nav")
+    bk = _alpha_book(st)
+    cash = bk["cash"] or 0.0
+    invested = bk["invested"]
     reanalysis = [t for t, s in st.get("watch_status", {}).items() if s == "REANALYSIS"]
     d = json.loads(ALPHA_SCHED_STATE.read_text()) if ALPHA_SCHED_STATE.exists() else {}
     done = d.get("completed_sessions") or []
+    sess_status = d.get("session_status") or {}
+    valid_ta = [x for x in done if sess_status.get(x) != "INVALID_TA_RUNTIME_FAILURE"]
+    invalid_ta = [x for x in done if sess_status.get(x) == "INVALID_TA_RUNTIME_FAILURE"]
     lines = ["ALPHA — PAPER PORTFOLIO", "",
              f"Monitor: {health} (per-minute cron)",
              f"Latest canonical EOD mark session: {(st.get('book') or {}).get('mark_session') or asof}"
              + (" — current book fully comparable: NO" if unmarked_pos else ""),
-             (f"Current fully-marked NAV: UNAVAILABLE\n"
-              f"Marked-assets subtotal: ${(st.get('book') or {}).get('nav', nav):,.2f}\n"
-              f"Provisional book value: ${(st.get('book') or {}).get('provisional_nav_incl_unmarked_at_cost'):,.2f} "
-              f"(unmarked at entry cost: {', '.join(unmarked_pos)})"
-              if unmarked_pos else
-              f"NAV: ${nav if nav else st.get('nav_last')}"),
+             _alpha_nav_headline(st)[0],
              f"cash: ${cash:,.0f}   invested: ${invested:,.0f}   "
              f"unrealized P&L{' (marked positions only)' if unmarked_pos else ''}: {_pnl(unrl)}"
              + (f"   realized P&L: {_pnl(st.get('realized'))}"
@@ -539,7 +537,10 @@ def alpha_status() -> str:
              f"pending next-open: {len(st.get('pending_open_fills', []))} entries / "
              f"{len(st.get('pending_open_exits', []))} exits",
              f"reanalysis required: {', '.join(reanalysis) if reanalysis else 'none'}",
-             f"last discovery session: {done[-1] if done else 'none'}",
+             (f"last VALID TA research session: {valid_ta[-1] if valid_ta else 'none'}   "
+              f"(last attempted: {invalid_ta[-1]} = INVALID_TA_RUNTIME_FAILURE)"
+              if invalid_ta else
+              f"last discovery session: {done[-1] if done else 'none'}"),
              "", "Positions:"] + plines + ["", "Watches: " + (", ".join(watches) or "none")]
     return "\n".join(lines)
 
@@ -677,16 +678,110 @@ def bridge_health() -> dict:
         return {"status": "down", "error": str(e)[:80]}
 
 
-def _alpha_nav_line(mst: dict, unmarked: list) -> str:
-    """Honest NAV headline: no normal NAV while any position is unmarked."""
+def _alpha_book(mst: dict) -> dict:
+    """THE canonical ALPHA valuation view — all dashboards use this.
+
+    Source of truth: monitor_state.json `book` block + top-level
+    cash/realized/nav_last written by the repaired monitor. The ledger MARK
+    history is NOT used for headline valuation (it contains
+    incident-corrupted records). Detects MIXED-TIME (cash includes today's
+    executions while marks are yesterday's close) and unmarked positions.
+    """
     book = mst.get("book") or {}
+    pos = mst.get("positions", {})
+    unmarked = book.get("unmarked_positions") or [
+        t for t, p in pos.items() if p.get("mark_status") == "UNMARKED_SINCE_ENTRY"]
+    mixed = bool(book.get("note") and "MIXED-TIME" in str(book["note"]))
+    market_value = book.get("market_value")
+    cash = book.get("cash", mst.get("cash", 0.0))
+    realized = book.get("realized", mst.get("realized"))
+    invested = sum(p["shares"] * p["fill"] for p in pos.values())
+    # canonical valuation: cash + marked market value (+ unmarked at cost)
+    if market_value is not None:
+        marked_subtotal = (cash or 0) + market_value
+    else:
+        marked_subtotal = book.get("nav", mst.get("nav_last", cash))
+        market_value = (marked_subtotal or 0) - (cash or 0)
+    valuation = marked_subtotal
     if unmarked:
-        prov = book.get("provisional_nav_incl_unmarked_at_cost")
-        return (f"Fully-marked NAV: UNAVAILABLE   "
-                f"marked subtotal ${book.get('nav', mst.get('nav_last')):,.2f}   "
-                f"provisional book ${prov:,.2f} "
-                f"(unmarked: {', '.join(unmarked)})")
-    return f"NAV: ${book.get('nav', mst.get('nav_last')):,.2f}"
+        valuation += sum(p["shares"] * p["fill"] for t, p in pos.items()
+                         if t in unmarked)
+    mark_sess = book.get("mark_session")
+    proc = mst.get("processed_close_sessions") or []
+    if not mark_sess:
+        fresh = "NONE"
+    elif mixed:
+        fresh = "MIXED-TIME"
+    elif proc and mark_sess == proc[-1]:
+        fresh = "LAST_COMPLETED_CLOSE"
+    else:
+        fresh = "STALE"
+    return {"cash": cash, "realized": realized, "market_value": market_value,
+            "marked_subtotal": marked_subtotal,
+            "unrealized": book.get("unrealized"), "invested": invested,
+            "valuation": valuation, "unmarked": unmarked, "mixed": mixed,
+            "mark_session": mark_sess, "fresh": fresh,
+            "provisional": book.get("provisional_nav_incl_unmarked_at_cost")}
+
+
+def _alpha_nav_headline(mst: dict) -> tuple[str, list]:
+    """Honest NAV headline; returns (text, flags). Never a normal NAV
+    when unmarked or mixed-time."""
+    b = _alpha_book(mst)
+    if b["unmarked"]:
+        return (f"Current fully-marked NAV: UNAVAILABLE   "
+                f"marked subtotal ${b['marked_subtotal']:,.2f}   "
+                f"provisional book ${b['provisional'] or b['valuation']:,.2f} "
+                f"(unmarked at entry cost: {', '.join(b['unmarked'])})"), ["unmarked"]
+    if b["mixed"]:
+        return (f"Current EOD NAV: UNAVAILABLE   "
+                f"Mixed-time book value: ${b['valuation']:,.2f} "
+                f"(cash incl. today's executions; marks as of "
+                f"{b['mark_session']} close)"), ["mixed"]
+    return f"NAV: ${b['valuation']:,.2f}", []
+
+
+def _alpha_research_label(d: dict) -> str:
+    """Latest VALID TA session vs last attempted (invalid TA cycles named)."""
+    done = d.get("completed_sessions") or []
+    inv = [x for x in done
+           if (d.get("session_status") or {}).get(x) == "INVALID_TA_RUNTIME_FAILURE"]
+    val = [x for x in done if x not in inv]
+    if inv:
+        return (f"last valid {val[-1] if val else 'none'} "
+                f"(last attempted {inv[-1]} INVALID_TA_RUNTIME_FAILURE)")
+    return f"last session {done[-1] if done else 'none'}"
+
+
+def _current_stop_label(t: str, p: dict, wl: dict):
+    """Current machine-enforced post-entry rule — typed first.
+
+    Position stop_rule (mgmt review residual rules) wins; else watchlist
+    open_positions typed invalidation (PBF/APPS seeded rules); else the
+    raw invalidation text last — clearly labeled 'orig' since it may be a
+    stale pre-entry veto, never displayed as a live stop.
+    """
+    sr = p.get("stop_rule")
+    if isinstance(sr, dict) and sr.get("type") == "close_below":
+        return f"stop: close < ${sr['level']:.2f}"
+    if isinstance(sr, dict) and sr.get("type") == "intraday_stop":
+        return f"stop: intraday <= ${sr['level']:.2f}"
+    for op in (wl or {}).get("open_positions", []):
+        if op["ticker"] != t:
+            continue
+        inv = op.get("invalidation")
+        if isinstance(inv, dict) and inv.get("type") == "intraday_stop":
+            return f"stop: intraday <= ${inv['level']:.2f}"
+        if isinstance(inv, dict) and inv.get("type") == "close_below":
+            return f"stop: close < ${inv['level']:.2f}"
+    if p.get("invalidation"):
+        return f"orig invalidation: {p['invalidation'][:50]}"
+    return None
+
+
+def _alpha_nav_line(mst: dict, unmarked: list) -> str:
+    """Backwards-compat wrapper — delegates to _alpha_nav_headline."""
+    return _alpha_nav_headline(mst)[0]
 
 
 def status_summary() -> str:
@@ -755,7 +850,7 @@ def digest_text() -> str:
         lines.append("  " + ln.split(" | invalidation")[0].split(" | stop:")[0].split(" | horizon")[0])
     lines += [f"  pending next-open: {len(mst.get('pending_open_fills', []))} entries / "
               f"{len(mst.get('pending_open_exits', []))} exits",
-              f"  discovery: last session {done[-1] if done else 'none'}",
+              f"  discovery: {_alpha_research_label(d)}",
               "",
               f"C12: NAV ${nav.get('nav')}   positions {len(book['open'])}   "
               f"pending orders {book['pending']}",

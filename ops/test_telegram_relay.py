@@ -207,4 +207,59 @@ assert "UNMARKED_SINCE_ENTRY" in view[1]
 nav_back = tr._alpha_nav_line(st_all, [])
 assert nav_back.startswith("NAV:")
 
+# --- canonical book-view: stale/corrupted nav_last cannot override ---
+import copy as _copy
+st_corrupt = {"positions": {"A": mk_pos("A", True)}, "cash": 90203.02,
+              "nav_last": 960935.02, "realized": -1485.68,
+              "processed_close_sessions": ["S1"],
+              "book": {"mark_session": "S1", "cash": 90203.02,
+                       "market_value": 8070.25, "realized": -1485.68,
+                       "unmarked_positions": []}}
+bk = tr._alpha_book(st_corrupt)
+assert bk["valuation"] == 98273.27  # canonical book wins over corrupt nav_last
+assert tr._alpha_nav_headline(st_corrupt)[0] == "NAV: $98,273.27"
+# stale ledger MARK can't override either (alpha_status ignores it) — headline
+# comes solely from the book helper, which never reads the ledger.
+
+# --- mixed-time: no normal EOD NAV ---
+st_mixed = _copy.deepcopy(st_corrupt)
+st_mixed["book"]["note"] = "MIXED-TIME valuation: cash incl. today's fills"
+h, flags = tr._alpha_nav_headline(st_mixed)
+assert "Mixed-time book value: $98,273.27" in h and "NAV: $" not in h.split("$98")[0]
+assert "marks as of S1 close" in h
+# after EOD marks land (note cleared) -> normal NAV restored
+del st_mixed["book"]["note"]
+assert tr._alpha_nav_headline(st_mixed)[0] == "NAV: $98,273.27"
+
+# --- current typed stops displayed; pre-entry veto not shown as stop ---
+wl_p = {"open_positions": [{"ticker": "PBF",
+        "invalidation": {"type": "intraday_stop", "level": 74.5}}], "watches": []}
+pos_mixed = {"positions": {
+    "PBF": {"shares": 62, "fill": 80.0, "invalidation": "hard stop",
+            "mark_status": "MARKED", "mark": 82.88, "unrealized": 178.56},
+    "SDGR": {"shares": 61, "fill": 31.0, "invalidation": "NOT_STATED",
+             "stop_rule": {"type": "close_below", "level": 27.29},
+             "mark_status": "MARKED", "mark": 28.9, "unrealized": -128.1},
+    "TWST": {"shares": 7, "fill": 209.55,
+             "invalidation": "stay out if $183.39 breaks on heavy volume",
+             "stop_rule": {"type": "close_below", "level": 164.0},
+             "mark_status": "MARKED", "mark": 166.97, "unrealized": -298.06}}}
+pl, _, _, _ = tr._alpha_positions_view(pos_mixed, wl_p)
+assert "intraday <= $74.50" in pl[0]                      # PBF hard stop
+assert "close < $27.29" in pl[1]                          # SDGR typed residual
+assert "close < $164.00" in pl[2]                         # TWST typed residual
+assert "183.39" not in pl[2]                              # pre-entry veto hidden
+
+# --- invalid TA session not called valid research ---
+d_inv = {"completed_sessions": ["2026-10-02", "2026-10-06"],
+         "session_status": {"2026-10-06": "INVALID_TA_RUNTIME_FAILURE"}}
+lbl = tr._alpha_research_label(d_inv)
+assert "last valid 2026-10-02" in lbl and "INVALID_TA_RUNTIME_FAILURE" in lbl
+assert tr._alpha_research_label({"completed_sessions": ["S1"]}) == "last session S1"
+
+# --- rendering performs no state mutation ---
+snap = _copy.deepcopy(st_mixed)
+tr._alpha_nav_headline(st_mixed); tr._alpha_positions_view(pos_mixed, wl_p)
+assert st_mixed == snap
+
 print("ALL TESTS PASSED")
