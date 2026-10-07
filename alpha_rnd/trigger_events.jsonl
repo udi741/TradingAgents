@@ -14,3 +14,288 @@
 {"action": "EOD_MARK_UNAVAILABLE", "tickers": ["ACN", "APPS"], "session": "2026-10-05", "utc": "2026-10-06T15:24:14.823116+00:00"}
 {"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T08:53:03.984512+00:00"}
 {"action": "POLICY_BOUNDARY", "kind": "RISK_GUARDRAIL_V1", "active_from": "2026-10-07", "why": "no auto-entry without a machine-actionable post-entry risk plan; prospective only", "utc": "2026-10-07T10:32:42.470007+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:31:05.354523+00:00"}
+{"ticker": "TWST", "action": "PAPER_EXIT", "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~4 of 11 at next open; residual hard exit on close<164", "price": 158.25999450683594, "shares": 4, "proceeds": 632.41, "utc": "2026-10-07T13:31:05.372225+00:00"}
+{"ticker": "SDGR", "action": "PAPER_EXIT", "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~100 of 161 at next open; residual stop close<$27.29", "price": 27.809999465942383, "shares": 100, "proceeds": 2778.22, "utc": "2026-10-07T13:31:05.380413+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:32:03.786202+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:32:04.753101+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:32:04.769456+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:33:03.436528+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:33:04.212898+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:33:04.229256+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:34:04.329319+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:34:06.004888+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:34:06.021264+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:35:02.679920+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:35:04.022279+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:35:04.038836+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:36:02.846217+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:36:04.151063+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:36:04.167475+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:37:02.690396+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:37:03.621988+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:37:03.638394+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:38:03.678830+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:38:04.190573+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:38:04.207122+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:39:03.967128+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:39:05.358988+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:39:05.375387+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:40:03.893627+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:40:04.950561+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:40:04.967170+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:41:03.406671+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:41:04.955686+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:41:04.971954+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:42:03.344153+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:42:04.750048+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:42:04.766187+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:43:03.363834+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:43:04.216290+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:43:04.232523+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:44:03.002618+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:44:04.097436+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:44:04.113782+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:45:03.186183+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.22999572753906, "shares": 24, "proceeds": 4680.83, "utc": "2026-10-07T13:45:03.779158+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:45:03.795253+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:46:03.839132+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:46:05.524678+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:46:05.540913+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:47:03.233774+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:47:04.124891+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:47:04.141143+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:48:03.737505+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:48:04.249731+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:48:04.265911+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:49:02.891430+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:49:04.798394+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:49:04.814637+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:50:03.443535+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:50:03.936920+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:50:03.953110+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:51:02.680395+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:51:03.761074+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:51:03.777344+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:52:03.591254+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:52:04.621276+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:52:04.638008+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:53:03.191898+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:53:04.201645+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:53:04.217976+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:54:02.781503+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:54:03.549131+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:54:03.565312+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:55:03.583223+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:55:04.219751+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:55:04.236042+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:56:03.405762+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:56:03.906093+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:56:03.922249+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:57:02.870995+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:57:03.482704+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:57:03.498905+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:58:02.924861+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:58:03.514490+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:58:03.530657+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T13:59:03.153687+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T13:59:03.843631+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T13:59:03.859850+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:00:03.777743+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:00:05.393857+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:00:05.410113+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:01:03.520930+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:01:04.008045+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:01:04.024205+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:02:02.804529+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:02:03.334786+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:02:03.351354+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:03:04.812113+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:03:06.174937+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:03:06.191228+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:04:02.956854+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:04:03.623910+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:04:03.640292+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:05:03.545507+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:05:04.728292+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:05:04.744511+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:06:04.008942+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:06:05.159496+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:06:05.175722+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:07:02.934598+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:07:03.671122+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:07:03.687464+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:08:03.292810+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:08:05.461176+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:08:05.477485+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:09:03.766493+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:09:04.239304+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:09:04.255725+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:10:03.265575+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:10:03.983441+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:10:03.999822+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:11:02.508219+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:11:03.346123+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:11:03.362337+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:12:04.511243+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:12:05.089672+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:12:05.106247+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:13:02.989942+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:13:03.986183+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:13:04.002677+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:14:02.510194+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:14:03.031312+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:14:03.047491+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:15:02.709860+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:15:03.428031+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:15:03.444306+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:16:03.846234+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:16:05.188674+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:16:05.204940+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:17:02.874577+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:17:03.548619+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:17:03.564865+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:18:03.809369+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:18:04.561884+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:18:04.578364+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:19:03.294513+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:19:04.307970+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:19:04.324531+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:20:03.356591+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:20:04.048336+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:20:04.064506+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:21:02.533653+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:21:03.216251+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:21:03.232524+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:22:03.410229+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:22:03.920528+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:22:03.936729+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:23:04.677120+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:23:05.384222+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:23:05.400370+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:24:03.751758+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:24:04.543164+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:24:04.559258+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:25:03.071076+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:25:03.618191+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:25:03.634697+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:26:03.319499+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:26:04.784980+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:26:04.801252+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:27:03.320859+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:27:03.779160+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:27:03.795330+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:28:03.220909+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:28:03.687194+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:28:03.703343+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:29:03.180961+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:29:04.048645+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:29:04.064837+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:30:03.356239+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:30:04.010570+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:30:04.026778+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:31:03.011959+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:31:03.816081+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:31:03.832355+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:32:03.365589+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:32:03.814769+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:32:03.831001+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:33:04.695656+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:33:05.542019+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:33:05.558538+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:34:03.448591+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:34:04.060897+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:34:04.077166+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:35:04.028260+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:35:04.754855+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:35:04.771423+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:36:04.125107+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:36:04.601715+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:36:04.617907+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:37:03.522880+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:37:04.545451+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:37:04.561637+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:38:03.038797+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:38:03.670805+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:38:03.687423+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:39:03.503043+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:39:04.359879+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:39:04.376093+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:40:02.884509+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:40:05.047584+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:40:05.063891+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:41:02.882140+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:41:03.539154+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:41:03.555254+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:42:03.372179+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:42:04.288143+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:42:04.304845+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:43:03.720567+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:43:04.522788+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:43:04.539210+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:44:03.108844+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:44:03.819896+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:44:03.836123+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:45:03.890924+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:45:04.727165+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:45:04.743788+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:46:03.628564+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:46:04.178215+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:46:04.194570+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:47:03.173544+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:47:03.786879+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:47:03.803171+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:48:03.274671+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:48:03.869891+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:48:03.886487+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:49:03.263626+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:49:03.923532+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:49:03.939729+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:50:02.859391+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:50:04.683573+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:50:04.699882+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:51:04.290624+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:51:04.762767+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:51:04.778935+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:52:03.420592+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:52:03.981875+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:52:03.998060+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:53:02.432249+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:53:02.939042+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:53:02.955376+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:54:02.332930+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:54:03.087588+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:54:03.103886+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:55:02.557088+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:55:03.706264+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:55:03.722545+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:56:03.390689+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:56:04.721204+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:56:04.737459+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:57:03.258691+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:57:03.907911+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:57:03.924096+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:58:02.792796+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:58:03.640721+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:58:03.657012+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T14:59:04.583952+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T14:59:05.270987+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T14:59:05.287201+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T15:00:03.468582+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T15:00:04.064143+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T15:00:04.080314+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T15:01:05.378812+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T15:01:06.171936+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T15:01:06.188390+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T15:02:03.699826+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T15:02:04.278114+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T15:02:04.294407+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T15:03:03.052868+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T15:03:03.719202+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T15:03:03.735553+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T15:04:03.788551+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T15:04:05.673435+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T15:04:05.689754+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T15:05:03.303911+00:00"}
+{"ticker": "ACN", "action": "PAPER_EXIT", "why": "close<194.0", "price": 195.0, "shares": 24, "proceeds": 4675.32, "utc": "2026-10-07T15:05:04.089670+00:00"}
+{"ticker": "APPS", "action": "PAPER_EXIT", "why": "gap-through open below stop 10.42", "price": 10.302000045776367, "shares": 442, "proceeds": 4548.93, "utc": "2026-10-07T15:05:04.106102+00:00"}

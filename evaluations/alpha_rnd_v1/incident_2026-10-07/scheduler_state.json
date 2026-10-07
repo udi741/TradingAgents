@@ -1,0 +1,52 @@
+{
+ "completed_sessions": [
+  "2026-10-02",
+  "2026-10-05",
+  "2026-10-06"
+ ],
+ "last_cycle": {
+  "session": "2026-10-06",
+  "finished_at": "2026-10-07T09:19:03.156480+00:00",
+  "summary": {
+   "deep": [
+    "IOVA",
+    "BMNR",
+    "QMCO",
+    "MRNA",
+    "CDNA",
+    "SDGR",
+    "RXO",
+    "PENG",
+    "APPN",
+    "ASST"
+   ],
+   "ta_signals": {},
+   "published": {
+    "published_at": "2026-10-07T09:19:03.150895+00:00",
+    "watch_count": 13,
+    "sha256": "24f533b5853e42c5220c9a305ef2754b8ded15b3b7d434bf7fb8271c6f3b7702"
+   },
+   "validated": [],
+   "pending_review": []
+  }
+ },
+ "note": "seeded at scheduler install; 2026-10-02 processed manually",
+ "uptodate_reported": "2026-10-06",
+ "published_sessions": {
+  "2026-10-05": {
+   "published_at": "2026-10-06T04:16:39.901281+00:00",
+   "watch_count": 13,
+   "sha256": "4fd1ae0772f0fd6f92e92a44333c6cdc237eaddf0f554e7f7026af2af5db1a7f"
+  },
+  "2026-10-06": {
+   "published_at": "2026-10-07T09:19:03.150895+00:00",
+   "watch_count": 13,
+   "sha256": "24f533b5853e42c5220c9a305ef2754b8ded15b3b7d434bf7fb8271c6f3b7702"
+  }
+ },
+ "session_status": {
+  "2026-10-05": "INVALID_TA_RUNTIME_FAILURE",
+  "2026-10-06": "INVALID_TA_RUNTIME_FAILURE",
+  "note": "TA stage failed (py3.10 ImportError, 0 model calls, 0 artifacts); COMPLETE events false; sessions NOT re-run (no backfill); discovery/pool artifacts remain valid"
+ }
+}

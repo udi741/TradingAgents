@@ -206,7 +206,23 @@ def post_entry_risk_plan(watch: dict) -> dict | None:
     return None
 
 
-def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type="PAPER_ENTRY") -> None:
+def _exec_check(st: dict, exec_id: str) -> bool:
+    """Exactly-once guard, phase 1: True if fresh (not yet recorded)."""
+    if exec_id in st.setdefault("executed", []):
+        emit(st, {"action": "NO_ACTION", "why": f"duplicate_suppressed {exec_id}"})
+        return False
+    return True
+
+
+def _exec_commit(st: dict, exec_id: str) -> None:
+    """Phase 2: record AFTER the book mutation succeeded."""
+    done = st.setdefault("executed", [])
+    if exec_id not in done:
+        done.append(exec_id)
+    st["executed"] = done[-2000:]
+
+
+def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type="PAPER_ENTRY", exec_id: str | None = None) -> None:
     watch = next(w for w in wl["watches"] if w["ticker"] == ticker)
     if ticker in st["positions"]:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
@@ -226,6 +242,8 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
     if len(st["positions"]) >= MAX_POSITIONS:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "no_slots"})
         return
+    if exec_id and not _exec_check(st, exec_id):
+        return
     notional = min(POS_NOTIONAL * frac, st["cash"] / (1 + COST_BPS))
     if notional < 500:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "insufficient_cash"})
@@ -242,6 +260,7 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
         if mm:
             stop = {"type": "intraday_stop", "level": float(mm.group(1)),
                     "label": watch["invalidation"], "legacy_parsed": True}
+    _exec_commit(st, exec_id) if exec_id else None
     st["positions"][ticker] = {"shares": shares, "fill": price, "frac": frac,
                               "cost": cost,
                               "invalidation": watch["invalidation"],
@@ -264,16 +283,21 @@ Expected horizon: {watch['horizon']}""")
 
 
 def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "",
-            shares: int | None = None) -> None:
+            shares: int | None = None, exec_id: str | None = None) -> None:
     pos = st["positions"].get(ticker)
     if pos is None:
+        return
+    if exec_id and not _exec_check(st, exec_id):
         return
     sell = min(shares or pos["shares"], pos["shares"])
     proceeds = sell * price * (1 - COST_BPS)
     st["cash"] += proceeds
     pos["shares"] -= sell
+    _exec_commit(st, exec_id) if exec_id else None
     if pos["shares"] <= 0:
         st["positions"].pop(ticker)
+        if pos.get("seeded"):
+            st.setdefault("retired_seeds", []).append(ticker)
     alloc = pos.get("cost", pos["shares"] * pos["fill"]) * (sell / (pos["shares"] + sell))
     st["realized"] = round(st.get("realized", 0.0) + proceeds - alloc, 2)
     if pos["shares"] > 0:
@@ -295,6 +319,9 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
         keep = []
         for od in queue:
             t = od["ticker"]
+            od.setdefault("order_id", f"{kind}:{t}:{od['confirm_session']}:{str(od.get('why'))[:24]}")
+            if od["order_id"] in st.setdefault("executed", []):
+                continue  # already executed exactly once
             if od.get("blocked"):
                 keep.append(od)
                 continue
@@ -313,10 +340,12 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
                         str(idf.index[0].date()) == current_session_date \
                         and current_session_date > od["confirm_session"]:
                     px = float(idf["Open"].iloc[0])
-                    if is_exit:
-                        do_exit(st, t, px, od["why"], shares=od.get("shares"))
-                    else:
-                        do_fill(st, wl, t, px, od.get("frac", 1.0))
+                    if _exec_check(st, od["order_id"]):
+                        if is_exit:
+                            do_exit(st, t, px, od["why"], shares=od.get("shares"))
+                        else:
+                            do_fill(st, wl, t, px, od.get("frac", 1.0))
+                        _exec_commit(st, od["order_id"])
                     continue
                 keep.append(od)
                 continue
@@ -329,10 +358,12 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
                 notify(f"ALPHA_RND MISSED EXECUTION\n\n{t}\nTarget open {target} already passed (machine off at open?).\nManual review required — no retroactive fill.")
                 continue
             px = float(df[df.index.strftime("%Y-%m-%d") == target]["Open"].iloc[0])
-            if is_exit:
-                do_exit(st, t, px, od["why"], shares=od.get("shares"))
-            else:
-                do_fill(st, wl, t, px, od.get("frac", 1.0))
+            if _exec_check(st, od["order_id"]):
+                if is_exit:
+                    do_exit(st, t, px, od["why"], shares=od.get("shares"))
+                else:
+                    do_fill(st, wl, t, px, od.get("frac", 1.0))
+                _exec_commit(st, od["order_id"])
         queue[:] = keep
 
 
@@ -350,7 +381,8 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
             if c < sr["level"]:
                 st["pending_open_exits"].append(
                     {"ticker": t, "why": sr.get("label", f"close<{sr['level']}"),
-                     "confirm_session": session})
+                     "confirm_session": session,
+                     "order_id": f"close_below:{t}:{session}"})
                 emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT",
                           "why": sr.get("label"), "confirm_close": c, "session": session})
                 notify(f"ALPHA_RND EXIT CONFIRMED — PENDING NEXT OPEN\n\n{t}\n"
@@ -517,9 +549,11 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> None:
             first_open = float(df["Open"].iloc[0])
             if first_open <= inv["level"]:
                 # gapped through the stop at the open -> exit at ACTUAL open
-                do_exit(st, t, first_open, f"gap-through open below stop {inv['level']}")
+                do_exit(st, t, first_open, f"gap-through open below stop {inv['level']}",
+                        exec_id=f"intraday_stop:{t}:{today_sess}")
             elif low <= inv["level"]:
-                do_exit(st, t, inv["level"], f"intraday stop {inv['level']}")
+                do_exit(st, t, inv["level"], f"intraday stop {inv['level']}",
+                        exec_id=f"intraday_stop:{t}:{today_sess}")
         except Exception as e:
             emit(st, {"ticker": t, "action": "NO_ACTION",
                       "why": f"rule_eval_error {e!r}"})
@@ -702,6 +736,8 @@ def main() -> None:
     # seed V1 positions once (under the canonical lock)
     with locked_state() as st:
         for p in wl["open_positions"]:
+            if p["ticker"] in st.get("retired_seeds", []):
+                continue  # legitimately exited — never resurrect
             if p["ticker"] not in st["positions"]:
                 st["positions"][p["ticker"]] = {"shares": p["shares"], "fill": p["fill"],
                                                "invalidation": p["invalidation"]["label"],

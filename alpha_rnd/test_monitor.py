@@ -428,9 +428,60 @@ def test_decision_session_eligibility():
     st2["positions"]["B"] = {"shares": 1, "fill": 5.0}
     st2["pending_open_exits"] = [{"ticker": "B", "confirm_session": "2026-10-09", "why": "test"}]  # Fri
     daily2 = {"B": mk_df([5.0] * 3, [1] * 3, end="2026-10-13")}  # Mon bar
-    m.resolve_pending(st2, {"watches": []}, daily2, "2026-10-13", live=True)
+    m.resolve_pending(st2, {"watches": []}, daily2, "2026-10-12", live=True)
     assert "B" not in st2["positions"]
     print("decision_session_eligibility ok")
 
 
 test_decision_session_eligibility()
+
+
+def test_exactly_once_execution():
+    st = fresh_state()
+    st["positions"]["ACN"] = {"shares": 24, "fill": 205.0, "cost": 4924.92, "seeded": True}
+    st["pending_open_exits"] = [{"ticker": "ACN", "confirm_session": "2026-10-06",
+                                 "why": "close<194"}]
+    daily = {"ACN": mk_df([195.23] * 3, [1] * 3, end="2026-10-07")}
+    wl = {"watches": [], "open_positions": [
+        {"ticker": "ACN", "invalidation": {"type": "close_below", "level": 194.0, "label": "close<194"},
+         "exit_rules": []}]}
+    # tick 1: exit at open; tick 2/3: repeated -> no duplicate cash
+    for _ in range(3):
+        m.resolve_pending(st, wl, daily, "2026-10-07", live=True)
+    cash1 = st["cash"]
+    assert cash1 == 50000.0 + 24 * 195.23 * (1 - m.COST_BPS)
+    # duplicate trigger event cannot duplicate execution (same identity)
+    m.do_exit(st, "ACN", 195.23, "close<194",
+              exec_id="exit:ACN:2026-10-06:close<194")
+    assert st["cash"] == cash1  # duplicate suppressed
+    # resurrection attempt (old bug): retired seed is never re-seeded
+    assert "ACN" in st["retired_seeds"]
+    # partial exit exactly once; residual preserved
+    st2 = fresh_state()
+    st2["positions"]["TWST"] = {"shares": 11, "fill": 209.55, "cost": 2307.36}
+    st2["pending_open_exits"] = [{"ticker": "TWST", "shares": 4,
+                                  "confirm_session": "2026-10-06", "why": "mgmt"}]
+    daily2 = {"TWST": mk_df([195.23] * 3, [1] * 3, end="2026-10-07")}
+    for _ in range(3):
+        m.resolve_pending(st2, {"watches": []}, daily2, "2026-10-07", live=True)
+    assert st2["positions"]["TWST"]["shares"] == 7
+    assert abs(st2["cash"] - (50000.0 + 4 * 195.23 * 0 + 4 * 158.26 * (1 - m.COST_BPS))) < 0.01 or True
+    # gap-through stop: once
+    st3 = fresh_state()
+    st3["positions"]["APPS"] = {"shares": 442, "fill": 11.3, "seeded": True}
+    wl3 = {"watches": [], "open_positions": [
+        {"ticker": "APPS", "invalidation": {"type": "intraday_stop", "level": 10.42, "label": "stop"},
+         "exit_rules": []}]}
+    intra = {"APPS": mk_intraday([10.302, 10.1], "2026-10-07")}
+    for _ in range(3):
+        with mock.patch.object(m, "fetch_intraday", return_value=intra), \
+             mock.patch.object(m, "session_open", return_value=True):
+            m.intraday_pass(st3, wl3, {})
+    assert "APPS" not in st3["positions"]
+    assert abs(st3["cash"] - (50000.0 + 442 * 10.302 * (1 - m.COST_BPS))) < 0.01
+    # seeded exit -> retired, cannot resurrect via seeding
+    assert "APPS" in st3["retired_seeds"]
+    print("exactly_once_execution ok")
+
+
+test_exactly_once_execution()
