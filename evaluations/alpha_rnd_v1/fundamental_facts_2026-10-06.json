@@ -1,0 +1,6573 @@
+{
+ "AAMI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3928,
+    "yoy_last_q": 0.4529
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3135,
+    "yoy_last_q": 1.0
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.209,
+    "yoy_last_q": 1.703
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -0.2079,
+    "yoy_last_q": 0.0799
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "AAOI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.5136,
+    "yoy_last_q": 0.8642
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.4536,
+    "yoy_last_q": -0.5478
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.557,
+    "yoy_last_q": -1.504
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -0.7877,
+    "yoy_last_q": -0.6764
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "ABBV": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2018-09-30",
+    "last_filed": "2018-11-07",
+    "yoy_prev_q": 0.1921,
+    "yoy_last_q": 0.1774
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 0.0688,
+    "yoy_last_q": 0.3143
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": -0.4596,
+    "yoy_last_q": 2.8518
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": -0.5953,
+    "yoy_last_q": 1.3419
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "ABCL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.9634,
+    "yoy_last_q": -0.7629
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.082,
+    "yoy_last_q": -0.266
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0538,
+    "yoy_last_q": -0.5961
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 0.723,
+    "yoy_last_q": -1.9014
+   }
+  },
+  "acceleration_flags": []
+ },
+ "ACN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-06-18",
+    "yoy_prev_q": 0.0831,
+    "yoy_last_q": 0.0559
+   },
+   "op_income": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-06-18",
+    "yoy_prev_q": 0.1109,
+    "yoy_last_q": 0.0645
+   },
+   "net_income": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-06-18",
+    "yoy_prev_q": 0.0208,
+    "yoy_last_q": 0.0644
+   },
+   "ocf": {
+    "last_q_end": "2025-11-30",
+    "last_filed": "2025-12-18",
+    "yoy_prev_q": 1.0509,
+    "yoy_last_q": 0.6275
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving"
+  ]
+ },
+ "ACVA": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 0.36,
+    "yoy_last_q": 0.1597
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 0.2649,
+    "yoy_last_q": -0.1273
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.5503,
+    "yoy_last_q": 0.1484
+   }
+  },
+  "acceleration_flags": []
+ },
+ "ALNT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.046,
+    "yoy_last_q": 0.1017
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0617,
+    "yoy_last_q": 0.3368
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.506,
+    "yoy_last_q": 0.8499
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.5174,
+    "yoy_last_q": -0.5568
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "AMD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3785,
+    "yoy_last_q": 0.5011
+   },
+   "op_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.8313,
+    "yoy_last_q": 15.8507
+   },
+   "net_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.9506,
+    "yoy_last_q": 1.6342
+   },
+   "ocf": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.8023,
+    "yoy_last_q": 2.147
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "AME": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.1134,
+    "yoy_last_q": 0.1498
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.1322,
+    "yoy_last_q": 0.1442
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.1353,
+    "yoy_last_q": 0.1354
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.0178,
+    "yoy_last_q": 0.0814
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "AMPL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1693,
+    "yoy_last_q": 0.2116
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.0469,
+    "yoy_last_q": -0.4033
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -166.125,
+    "yoy_last_q": -0.4471
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "AMTM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": -0.0037,
+    "yoy_last_q": -0.0199
+   },
+   "op_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": 0.3727,
+    "yoy_last_q": 0.6699
+   },
+   "net_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": 12.5,
+    "yoy_last_q": 5.6
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "op_income_improving"
+  ]
+ },
+ "ANET": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3513,
+    "yoy_last_q": 0.3769
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3482,
+    "yoy_last_q": 0.3973
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.2569,
+    "yoy_last_q": 0.3646
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.2489,
+    "yoy_last_q": 1.6391
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "APA": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2197,
+    "yoy_last_q": 0.7321
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2853,
+    "yoy_last_q": 0.2388
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 1.9783,
+    "yoy_last_q": -0.4945
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving"
+  ]
+ },
+ "APH": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.5839,
+    "yoy_last_q": 0.55
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.7875,
+    "yoy_last_q": 0.8217
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.2646,
+    "yoy_last_q": 0.6212
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 0.2759,
+    "yoy_last_q": 0.4662
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "APPN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2148,
+    "yoy_last_q": 0.1911
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 4.7842,
+    "yoy_last_q": 0.5047
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.2957,
+    "yoy_last_q": -36.875
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 1.3834,
+    "yoy_last_q": 0.0859
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "APPS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.1245,
+    "yoy_last_q": 0.2678
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 2.698,
+    "yoy_last_q": 5.9477
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 1.2208,
+    "yoy_last_q": 0.1968
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 7.5,
+    "yoy_last_q": 1.0322
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "ASST": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": -75.8841,
+    "yoy_last_q": -68.9862
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": -69.9272,
+    "yoy_last_q": -28.0257
+   },
+   "ocf": null
+  },
+  "acceleration_flags": []
+ },
+ "ATEN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.134,
+    "yoy_last_q": 0.155
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4809,
+    "yoy_last_q": -0.1248
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2608,
+    "yoy_last_q": -0.1571
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -0.4697,
+    "yoy_last_q": -0.8703
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "AVAH": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.1586,
+    "yoy_last_q": 0.1373
+   },
+   "op_income": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.3383,
+    "yoy_last_q": -0.0007
+   },
+   "net_income": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 7.021,
+    "yoy_last_q": 0.491
+   },
+   "ocf": {
+    "last_q_end": "2026-04-04",
+    "last_filed": "2026-05-14",
+    "yoy_prev_q": 0.279,
+    "yoy_last_q": 1.5038
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "AXGN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 0.2656,
+    "yoy_last_q": 0.2306
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": -0.705,
+    "yoy_last_q": -2.2895
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": -4.108,
+    "yoy_last_q": -3.6183
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": -0.0744,
+    "yoy_last_q": 1.1187
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "AXTI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.391,
+    "yoy_last_q": 1.6477
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.8457,
+    "yoy_last_q": 2.5453
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.8159,
+    "yoy_last_q": 2.5879
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-14",
+    "yoy_prev_q": 0.62,
+    "yoy_last_q": -2.4919
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "AYI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-06-25",
+    "yoy_prev_q": 0.0491,
+    "yoy_last_q": 0.0165
+   },
+   "op_income": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-06-25",
+    "yoy_prev_q": 0.2069,
+    "yoy_last_q": 0.3827
+   },
+   "net_income": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-06-25",
+    "yoy_prev_q": 0.249,
+    "yoy_last_q": 0.4329
+   },
+   "ocf": {
+    "last_q_end": "2025-11-30",
+    "last_filed": "2026-01-08",
+    "yoy_prev_q": -0.3042,
+    "yoy_last_q": 0.0651
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "AZTA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.0102,
+    "yoy_last_q": 0.1204
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -8.1123,
+    "yoy_last_q": -1.2584
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -2.3738,
+    "yoy_last_q": 1.0512
+   },
+   "ocf": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-05",
+    "yoy_prev_q": 1.1883,
+    "yoy_last_q": -0.3004
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "BB": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-09-24",
+    "yoy_prev_q": 0.2564,
+    "yoy_last_q": 0.26
+   },
+   "op_income": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-09-24",
+    "yoy_prev_q": 6.65,
+    "yoy_last_q": 1.9217
+   },
+   "net_income": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-09-24",
+    "yoy_prev_q": 3.4737,
+    "yoy_last_q": 1.5489
+   },
+   "ocf": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-06-25",
+    "yoy_prev_q": -0.1921,
+    "yoy_last_q": 1.2556
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "BFLY": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.2499,
+    "yoy_last_q": 0.3947
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.2488,
+    "yoy_last_q": 0.1513
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.0924,
+    "yoy_last_q": 0.0668
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.435,
+    "yoy_last_q": -0.1899
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "BIO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.0114,
+    "yoy_last_q": -0.0009
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.4388,
+    "yoy_last_q": -0.0584
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": -9.2359,
+    "yoy_last_q": 0.1687
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.861,
+    "yoy_last_q": -0.1678
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving"
+  ]
+ },
+ "BMNR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-07-14",
+    "yoy_prev_q": 6.2782,
+    "yoy_last_q": 21.6779
+   },
+   "op_income": {
+    "last_q_end": "2026-05-31",
+    "last_filed": "2026-07-14",
+    "yoy_prev_q": -4205.552,
+    "yoy_last_q": -24.3526
+   },
+   "net_income": {
+    "last_q_end": "2026-02-28",
+    "last_filed": "2026-04-14",
+    "yoy_prev_q": -5342.0133,
+    "yoy_last_q": -3302.1254
+   },
+   "ocf": {
+    "last_q_end": "2025-11-30",
+    "last_filed": "2026-01-13",
+    "yoy_prev_q": -1.1197,
+    "yoy_last_q": -2377.7083
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "BMRN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.0283,
+    "yoy_last_q": 0.1991
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.421,
+    "yoy_last_q": -0.5994
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.4317,
+    "yoy_last_q": -0.8139
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 2.7128,
+    "yoy_last_q": 0.2652
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CACI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 0.0573,
+    "yoy_last_q": 0.0849
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 0.1388,
+    "yoy_last_q": 0.1655
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 0.1266,
+    "yoy_last_q": 0.1657
+   },
+   "ocf": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-10-23",
+    "yoy_prev_q": -0.5055,
+    "yoy_last_q": 3.9354
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CAH": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-05",
+    "yoy_prev_q": 0.2244,
+    "yoy_last_q": 0.1875
+   },
+   "op_income": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-05",
+    "yoy_prev_q": 0.1761,
+    "yoy_last_q": 0.2878
+   },
+   "net_income": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-05",
+    "yoy_prev_q": 0.0817,
+    "yoy_last_q": 0.1675
+   },
+   "ocf": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-10-30",
+    "yoy_prev_q": -4.1193,
+    "yoy_last_q": 1.5908
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "CAI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.7878,
+    "yoy_last_q": 0.4538
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 1.0911,
+    "yoy_last_q": 2.4968
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.995,
+    "yoy_last_q": 0.9911
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "CALM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-29",
+    "last_filed": "2026-09-30",
+    "yoy_prev_q": -0.5295,
+    "yoy_last_q": -0.4151
+   },
+   "op_income": {
+    "last_q_end": "2026-08-29",
+    "last_filed": "2026-09-30",
+    "yoy_prev_q": -0.9435,
+    "yoy_last_q": -1.3297
+   },
+   "net_income": {
+    "last_q_end": "2026-08-29",
+    "last_filed": "2026-09-30",
+    "yoy_prev_q": -0.9008,
+    "yoy_last_q": -1.294
+   },
+   "ocf": {
+    "last_q_end": "2026-08-29",
+    "last_filed": "2026-09-30",
+    "yoy_prev_q": 1.3721,
+    "yoy_last_q": -1.3639
+   }
+  },
+  "acceleration_flags": []
+ },
+ "CAR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.0112,
+    "yoy_last_q": 0.0412
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.5148,
+    "yoy_last_q": 0.4396
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.0509,
+    "yoy_last_q": -0.2989
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CDNA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.3899,
+    "yoy_last_q": 0.5223
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 1.0896,
+    "yoy_last_q": 11.181
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 1.2713,
+    "yoy_last_q": 13.9127
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": -0.7362,
+    "yoy_last_q": 1.163
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CECO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 0.1654,
+    "yoy_last_q": 0.5371
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": -0.9697,
+    "yoy_last_q": -2.837
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": -1.0111,
+    "yoy_last_q": -4.6559
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -10.5556,
+    "yoy_last_q": -0.12
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CELC": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": -0.3978,
+    "yoy_last_q": -0.5024
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": -0.4283,
+    "yoy_last_q": -0.7422
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-14",
+    "yoy_prev_q": -1.1006,
+    "yoy_last_q": -0.5359
+   }
+  },
+  "acceleration_flags": []
+ },
+ "CERT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.0086,
+    "yoy_last_q": 0.0099
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": -1.5645,
+    "yoy_last_q": -1.0256
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": -2.8476,
+    "yoy_last_q": -27.0843
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 3.0391,
+    "yoy_last_q": -0.3261
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CGNX": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-05",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2426,
+    "yoy_last_q": 0.1693
+   },
+   "op_income": {
+    "last_q_end": "2026-07-05",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 1.2947,
+    "yoy_last_q": 0.9689
+   },
+   "net_income": {
+    "last_q_end": "2026-07-05",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 1.1906,
+    "yoy_last_q": 0.796
+   },
+   "ocf": {
+    "last_q_end": "2026-04-05",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 1.9687,
+    "yoy_last_q": 0.1134
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "CHEF": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-27",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.0965,
+    "yoy_last_q": 0.1139
+   },
+   "op_income": {
+    "last_q_end": "2026-03-27",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.2213,
+    "yoy_last_q": 0.4574
+   },
+   "net_income": {
+    "last_q_end": "2026-03-27",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.3582,
+    "yoy_last_q": 0.6881
+   },
+   "ocf": {
+    "last_q_end": "2026-03-27",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.6041,
+    "yoy_last_q": -0.2281
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CHRW": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.0084,
+    "yoy_last_q": 0.1928
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.0066,
+    "yoy_last_q": 0.1844
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.0882,
+    "yoy_last_q": 0.2251
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 4.1969,
+    "yoy_last_q": -0.3561
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CNK": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -0.0698,
+    "yoy_last_q": 0.1894
+   },
+   "op_income": {
+    "last_q_end": "2022-06-30",
+    "last_filed": "2022-08-05",
+    "yoy_prev_q": 0.8053,
+    "yoy_last_q": 0.7822
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -0.7364,
+    "yoy_last_q": 0.8355
+   },
+   "ocf": {
+    "last_q_end": "2022-03-31",
+    "last_filed": "2022-05-06",
+    "yoy_prev_q": -6.9751,
+    "yoy_last_q": 0.0427
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "CNP": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 0.0763,
+    "yoy_last_q": 0.0064
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 0.184,
+    "yoy_last_q": 0.0139
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 0.5181,
+    "yoy_last_q": 0.064
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": -0.2379,
+    "yoy_last_q": -0.3122
+   }
+  },
+  "acceleration_flags": []
+ },
+ "COHR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.1749,
+    "yoy_last_q": 0.2055
+   },
+   "op_income": {
+    "last_q_end": "2024-03-31",
+    "last_filed": "2024-05-07",
+    "yoy_prev_q": 2.8667,
+    "yoy_last_q": -0.669
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.4191,
+    "yoy_last_q": 11.1827
+   },
+   "ocf": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-11-05",
+    "yoy_prev_q": -0.2305,
+    "yoy_last_q": -0.6996
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "COHU": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2017-12-30",
+    "last_filed": "2018-03-02",
+    "yoy_prev_q": 0.3522,
+    "yoy_last_q": 0.1895
+   },
+   "op_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.5918,
+    "yoy_last_q": 1.0169
+   },
+   "net_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.6082,
+    "yoy_last_q": 0.9906
+   },
+   "ocf": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 0.2708,
+    "yoy_last_q": 2.0129
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "CON": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1374,
+    "yoy_last_q": 0.1003
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1904,
+    "yoy_last_q": 0.2851
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2975,
+    "yoy_last_q": 0.4654
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "CPB": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-05-03",
+    "last_filed": "2026-06-08",
+    "yoy_prev_q": -0.0451,
+    "yoy_last_q": -0.044
+   },
+   "op_income": {
+    "last_q_end": "2026-05-03",
+    "last_filed": "2026-06-08",
+    "yoy_prev_q": -0.1651,
+    "yoy_last_q": 0.4845
+   },
+   "net_income": {
+    "last_q_end": "2026-05-03",
+    "last_filed": "2026-06-08",
+    "yoy_prev_q": -0.1618,
+    "yoy_last_q": 0.8788
+   },
+   "ocf": {
+    "last_q_end": "2025-11-02",
+    "last_filed": "2025-12-09",
+    "yoy_prev_q": 0.2931,
+    "yoy_last_q": -0.0044
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving"
+  ]
+ },
+ "CRWD": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 0.7422,
+    "yoy_last_q": 0.6849
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 1.2664,
+    "yoy_last_q": 1.0756
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-04",
+    "yoy_prev_q": 0.0023,
+    "yoy_last_q": 0.5385
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "CTRE": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": null,
+    "yoy_last_q": null
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.219,
+    "yoy_last_q": 0.2984
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.4621,
+    "yoy_last_q": 0.2659
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving"
+  ]
+ },
+ "CTVA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.1105,
+    "yoy_last_q": -0.0119
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.1043,
+    "yoy_last_q": -0.1164
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.1916,
+    "yoy_last_q": -0.3708
+   }
+  },
+  "acceleration_flags": []
+ },
+ "CVI": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": -0.1069,
+    "yoy_last_q": 1.7573
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": -0.561,
+    "yoy_last_q": 0.9737
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": -2.1017,
+    "yoy_last_q": 1.3282
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "CW": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1341,
+    "yoy_last_q": 0.0541
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2345,
+    "yoy_last_q": 0.1432
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2649,
+    "yoy_last_q": 0.2487
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.1505,
+    "yoy_last_q": 0.8541
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "DAC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2025-06-30",
+    "last_filed": "2025-08-05",
+    "yoy_prev_q": 0.02,
+    "yoy_last_q": 0.0643
+   },
+   "op_income": {
+    "last_q_end": "2025-06-30",
+    "last_filed": "2025-08-05",
+    "yoy_prev_q": -0.0517,
+    "yoy_last_q": -0.1032
+   },
+   "net_income": {
+    "last_q_end": "2025-06-30",
+    "last_filed": "2025-08-05",
+    "yoy_prev_q": -0.2349,
+    "yoy_last_q": -0.0726
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "DGII": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.2511,
+    "yoy_last_q": 0.2898
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.2438,
+    "yoy_last_q": 0.5342
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0768,
+    "yoy_last_q": 0.5367
+   },
+   "ocf": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-04",
+    "yoy_prev_q": 0.5916,
+    "yoy_last_q": 0.1988
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "DOCU": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 0.0872,
+    "yoy_last_q": 0.0938
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 0.8473,
+    "yoy_last_q": 0.8033
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 0.0848,
+    "yoy_last_q": 0.2342
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-05",
+    "yoy_prev_q": -0.0133,
+    "yoy_last_q": 0.2794
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "DRI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-10-02",
+    "yoy_prev_q": 0.0593,
+    "yoy_last_q": 0.0511
+   },
+   "op_income": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-10-02",
+    "yoy_prev_q": -0.0282,
+    "yoy_last_q": -0.0587
+   },
+   "net_income": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-10-02",
+    "yoy_prev_q": -0.0513,
+    "yoy_last_q": -0.0946
+   },
+   "ocf": null
+  },
+  "acceleration_flags": []
+ },
+ "DT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.1818,
+    "yoy_last_q": 0.1617
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.5325,
+    "yoy_last_q": 0.1466
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.8893,
+    "yoy_last_q": -0.2357
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.1688,
+    "yoy_last_q": 0.1355
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "ECHO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": -0.0523,
+    "yoy_last_q": -0.0399
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 5.4575,
+    "yoy_last_q": 3.4036
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 0.2752,
+    "yoy_last_q": 28.6429
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": -0.5418,
+    "yoy_last_q": 0.1525
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving"
+  ]
+ },
+ "EGP": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-22",
+    "yoy_prev_q": 0.0906,
+    "yoy_last_q": 0.0905
+   },
+   "op_income": {
+    "last_q_end": "2018-09-30",
+    "last_filed": "2018-10-22",
+    "yoy_prev_q": 0.1257,
+    "yoy_last_q": 0.1293
+   },
+   "net_income": null,
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-22",
+    "yoy_prev_q": 0.1438,
+    "yoy_last_q": 0.0646
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving"
+  ]
+ },
+ "EHC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.0901,
+    "yoy_last_q": 0.0958
+   },
+   "op_income": {
+    "last_q_end": "2022-12-31",
+    "last_filed": "2023-02-27",
+    "yoy_prev_q": -0.0983,
+    "yoy_last_q": 0.183
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.2838,
+    "yoy_last_q": 0.083
+   },
+   "ocf": {
+    "last_q_end": "2023-03-31",
+    "last_filed": "2023-05-03",
+    "yoy_prev_q": 0.3811,
+    "yoy_last_q": 0.0411
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "ESTC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.1774,
+    "yoy_last_q": 0.1513
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 1.1317,
+    "yoy_last_q": -1.4972
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 1.4546,
+    "yoy_last_q": 0.32
+   },
+   "ocf": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.9872,
+    "yoy_last_q": 0.2592
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "ETON": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.4041,
+    "yoy_last_q": 0.9859
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 6.1362,
+    "yoy_last_q": 9.6739
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 1.9885,
+    "yoy_last_q": 5.4789
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-14",
+    "yoy_prev_q": 1.8451,
+    "yoy_last_q": 2.5431
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "EXE": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-28",
+    "yoy_prev_q": 6.7127,
+    "yoy_last_q": -0.4791
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-28",
+    "yoy_prev_q": 5.6546,
+    "yoy_last_q": -0.4607
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": 0.9855,
+    "yoy_last_q": 1.1916
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "EXPD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0437,
+    "yoy_last_q": 0.3207
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.109,
+    "yoy_last_q": 0.4113
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.1267,
+    "yoy_last_q": 0.4502
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.0974,
+    "yoy_last_q": -0.0032
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "EXTR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.1381,
+    "yoy_last_q": 0.1138
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.0258,
+    "yoy_last_q": 0.671
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.0669,
+    "yoy_last_q": 2.0625
+   },
+   "ocf": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-10-30",
+    "yoy_prev_q": -0.7543,
+    "yoy_last_q": -1.7532
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "FCEL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": -0.0486,
+    "yoy_last_q": -0.294
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": -1.1757,
+    "yoy_last_q": 0.5107
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": -1.0475,
+    "yoy_last_q": 0.5148
+   },
+   "ocf": {
+    "last_q_end": "2026-01-31",
+    "last_filed": "2026-03-09",
+    "yoy_prev_q": 0.2155,
+    "yoy_last_q": 0.2576
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "FEIM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-14",
+    "yoy_prev_q": -0.1076,
+    "yoy_last_q": 0.6979
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-14",
+    "yoy_prev_q": -0.6339,
+    "yoy_last_q": 13.2857
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-14",
+    "yoy_prev_q": -0.8983,
+    "yoy_last_q": 5.6498
+   },
+   "ocf": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-14",
+    "yoy_prev_q": 1.7963,
+    "yoy_last_q": 1.2584
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "FICO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 0.3869,
+    "yoy_last_q": 0.2568
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 0.6384,
+    "yoy_last_q": 0.3813
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 0.6263,
+    "yoy_last_q": 0.3047
+   },
+   "ocf": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-01-28",
+    "yoy_prev_q": 0.5886,
+    "yoy_last_q": -0.1027
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "FIX": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2021-03-31",
+    "last_filed": "2021-04-28",
+    "yoy_prev_q": 0.0102,
+    "yoy_last_q": -0.0434
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 1.3229,
+    "yoy_last_q": 0.8607
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 1.1878,
+    "yoy_last_q": 0.913
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": -1.6001,
+    "yoy_last_q": 5.421
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "FLEX": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-26",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.0766,
+    "yoy_last_q": 0.2058
+   },
+   "op_income": {
+    "last_q_end": "2026-06-26",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.1647,
+    "yoy_last_q": 0.2605
+   },
+   "net_income": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-06",
+    "yoy_prev_q": -0.0701,
+    "yoy_last_q": -0.0913
+   },
+   "ocf": {
+    "last_q_end": "2026-06-26",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.1735,
+    "yoy_last_q": -0.3083
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "FORM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.3197,
+    "yoy_last_q": 0.3189
+   },
+   "op_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 4.0927,
+    "yoy_last_q": 3.6968
+   },
+   "net_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 2.1845,
+    "yoy_last_q": 5.1861
+   },
+   "ocf": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": -0.287,
+    "yoy_last_q": 0.9101
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "FRO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2014-06-30",
+    "last_filed": "2014-08-29",
+    "yoy_prev_q": null,
+    "yoy_last_q": -0.0186
+   },
+   "op_income": {
+    "last_q_end": "2014-06-30",
+    "last_filed": "2014-08-29",
+    "yoy_prev_q": null,
+    "yoy_last_q": 0.3449
+   },
+   "net_income": {
+    "last_q_end": "2014-06-30",
+    "last_filed": "2014-08-29",
+    "yoy_prev_q": null,
+    "yoy_last_q": 0.3496
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving"
+  ]
+ },
+ "GCT": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4998,
+    "yoy_last_q": 0.3255
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4044,
+    "yoy_last_q": 0.2253
+   },
+   "ocf": null
+  },
+  "acceleration_flags": []
+ },
+ "GEO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1663,
+    "yoy_last_q": 0.1508
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4643,
+    "yoy_last_q": 0.4131
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.96,
+    "yoy_last_q": 0.632
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -0.1448,
+    "yoy_last_q": 1.197
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "GIS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-09-23",
+    "yoy_prev_q": 0.0117,
+    "yoy_last_q": -0.0283
+   },
+   "op_income": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-09-23",
+    "yoy_prev_q": -0.4115,
+    "yoy_last_q": -0.6329
+   },
+   "net_income": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-09-23",
+    "yoy_prev_q": -7.8296,
+    "yoy_last_q": -0.6703
+   },
+   "ocf": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-09-23",
+    "yoy_prev_q": -0.364,
+    "yoy_last_q": -0.2499
+   }
+  },
+  "acceleration_flags": []
+ },
+ "GO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-12",
+    "yoy_prev_q": 0.0362,
+    "yoy_last_q": 0.011
+   },
+   "op_income": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-12",
+    "yoy_prev_q": -6.9089,
+    "yoy_last_q": 0.2344
+   },
+   "net_income": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-12",
+    "yoy_prev_q": -6.7335,
+    "yoy_last_q": 0.134
+   },
+   "ocf": {
+    "last_q_end": "2026-04-04",
+    "last_filed": "2026-05-13",
+    "yoy_prev_q": 6.5166,
+    "yoy_last_q": -0.1082
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving"
+  ]
+ },
+ "GOLD": {
+  "facts": {
+   "revenue": null,
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 0.7743,
+    "yoy_last_q": 7.9608
+   },
+   "ocf": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-11-07",
+    "yoy_prev_q": -1.8812,
+    "yoy_last_q": 2.5323
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving"
+  ]
+ },
+ "GRAL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2811,
+    "yoy_last_q": 0.2572
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1162,
+    "yoy_last_q": -0.094
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1226,
+    "yoy_last_q": 0.0328
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "GRMN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.1166,
+    "yoy_last_q": 0.1423
+   },
+   "op_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.0442,
+    "yoy_last_q": 0.297
+   },
+   "net_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.0063,
+    "yoy_last_q": 0.2173
+   },
+   "ocf": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": -0.0333,
+    "yoy_last_q": 0.2738
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "GTLB": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.2315,
+    "yoy_last_q": 0.2131
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.545,
+    "yoy_last_q": -2.1026
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.8614,
+    "yoy_last_q": -3.0013
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-02",
+    "yoy_prev_q": 1.7873,
+    "yoy_last_q": 0.4035
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "HAE": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.0275,
+    "yoy_last_q": 0.056
+   },
+   "op_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1417,
+    "yoy_last_q": 0.0666
+   },
+   "net_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1933,
+    "yoy_last_q": -0.03
+   },
+   "ocf": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 1.6344,
+    "yoy_last_q": 2.0079
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "HALO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4223,
+    "yoy_last_q": 0.4767
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3037,
+    "yoy_last_q": 0.4209
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2706,
+    "yoy_last_q": 0.3921
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 0.1916,
+    "yoy_last_q": 0.1677
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "HPE": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-03",
+    "yoy_prev_q": 0.4,
+    "yoy_last_q": 0.3368
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-03",
+    "yoy_prev_q": 1.6736,
+    "yoy_last_q": 4.6397
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-03",
+    "yoy_prev_q": 1.5943,
+    "yoy_last_q": 4.0492
+   },
+   "ocf": {
+    "last_q_end": "2026-01-31",
+    "last_filed": "2026-03-10",
+    "yoy_prev_q": -7.0938,
+    "yoy_last_q": 4.0205
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "HTFL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.4134,
+    "yoy_last_q": 0.4757
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": -0.6858,
+    "yoy_last_q": -0.3051
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": 0.1535,
+    "yoy_last_q": -0.7119
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "HTO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.1239,
+    "yoy_last_q": 0.0877
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.1075,
+    "yoy_last_q": 0.0426
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.1676,
+    "yoy_last_q": 0.1488
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": -0.1569,
+    "yoy_last_q": 0.0122
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "HUBS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.2336,
+    "yoy_last_q": 0.1983
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 2.0168,
+    "yoy_last_q": 2.7599
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 2.4938,
+    "yoy_last_q": 14.302
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.2713,
+    "yoy_last_q": 0.2306
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "HURN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.1671,
+    "yoy_last_q": 0.1178
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.178,
+    "yoy_last_q": 0.1177
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.1205,
+    "yoy_last_q": -0.0525
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.1828,
+    "yoy_last_q": -0.518
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "IDT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-01-31",
+    "last_filed": "2026-03-12",
+    "yoy_prev_q": 0.0426,
+    "yoy_last_q": 0.0566
+   },
+   "op_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-09",
+    "yoy_prev_q": -0.0379,
+    "yoy_last_q": 0.1205
+   },
+   "net_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-09",
+    "yoy_prev_q": 0.0335,
+    "yoy_last_q": -0.0036
+   },
+   "ocf": {
+    "last_q_end": "2025-10-31",
+    "last_filed": "2025-12-10",
+    "yoy_prev_q": -0.989,
+    "yoy_last_q": -62.8232
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "IESC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.1683,
+    "yoy_last_q": 0.396
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.211,
+    "yoy_last_q": 0.5956
+   },
+   "net_income": {
+    "last_q_end": "2023-12-31",
+    "last_filed": "2024-02-02",
+    "yoy_prev_q": 1.382,
+    "yoy_last_q": 0.5512
+   },
+   "ocf": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-01-30",
+    "yoy_prev_q": 0.4932,
+    "yoy_last_q": -0.2565
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "ILMN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-28",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.048,
+    "yoy_last_q": 0.0944
+   },
+   "op_income": {
+    "last_q_end": "2026-06-28",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.2744,
+    "yoy_last_q": 0.1449
+   },
+   "net_income": {
+    "last_q_end": "2026-06-28",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.0229,
+    "yoy_last_q": -0.1191
+   },
+   "ocf": {
+    "last_q_end": "2026-03-29",
+    "last_filed": "2026-05-04",
+    "yoy_prev_q": 2.1169,
+    "yoy_last_q": 0.2042
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "IMNM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": -1.0,
+    "yoy_last_q": -1.0
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": -0.3292,
+    "yoy_last_q": -0.6811
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": -0.293,
+    "yoy_last_q": -0.6851
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-12",
+    "yoy_prev_q": -3.7498,
+    "yoy_last_q": -0.1052
+   }
+  },
+  "acceleration_flags": []
+ },
+ "INSM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 2.2962,
+    "yoy_last_q": 2.9611
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3821,
+    "yoy_last_q": 0.9951
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3625,
+    "yoy_last_q": 0.9588
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -0.4241,
+    "yoy_last_q": 0.1501
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "INSW": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 0.7747,
+    "yoy_last_q": 1.3885
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 3.8766,
+    "yoy_last_q": 3.3443
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 4.7731,
+    "yoy_last_q": 3.7842
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -0.5529,
+    "yoy_last_q": 1.0167
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "IOVA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4482,
+    "yoy_last_q": 0.6565
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3314,
+    "yoy_last_q": 0.5438
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3195,
+    "yoy_last_q": 0.5763
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.152,
+    "yoy_last_q": 0.3049
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "IQV": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.0524,
+    "yoy_last_q": 0.0841
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.0055,
+    "yoy_last_q": 0.0363
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.1614,
+    "yoy_last_q": 0.1004
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.0881,
+    "yoy_last_q": 0.088
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "IRTC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.2566,
+    "yoy_last_q": 0.2008
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.5029,
+    "yoy_last_q": 0.8641
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.5462,
+    "yoy_last_q": 0.9732
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.8483,
+    "yoy_last_q": -2.3168
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "KEYS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.3147,
+    "yoy_last_q": 0.3654
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.9662,
+    "yoy_last_q": 0.9701
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.358,
+    "yoy_last_q": 1.0785
+   },
+   "ocf": {
+    "last_q_end": "2026-01-31",
+    "last_filed": "2026-03-05",
+    "yoy_prev_q": 0.1524,
+    "yoy_last_q": 0.1667
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "KHC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2014-12-27",
+    "last_filed": "2015-08-10",
+    "yoy_prev_q": 0.0014,
+    "yoy_last_q": 0.022
+   },
+   "op_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.0426,
+    "yoy_last_q": 0.1935
+   },
+   "net_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.1208,
+    "yoy_last_q": 0.3021
+   },
+   "ocf": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": -0.0661,
+    "yoy_last_q": 0.3972
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "KNSA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": 0.6117,
+    "yoy_last_q": 0.5551
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": 3.4872,
+    "yoy_last_q": 1.2052
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": 2.4524,
+    "yoy_last_q": 1.6457
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": 4.5992,
+    "yoy_last_q": 1.2487
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "KOD": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": -0.0119,
+    "yoy_last_q": -0.2041
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-13",
+    "yoy_prev_q": -0.0121,
+    "yoy_last_q": -0.2086
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.2657,
+    "yoy_last_q": -0.376
+   }
+  },
+  "acceleration_flags": []
+ },
+ "KR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-15",
+    "last_filed": "2026-09-18",
+    "yoy_prev_q": 0.0067,
+    "yoy_last_q": 0.0201
+   },
+   "op_income": {
+    "last_q_end": "2026-08-15",
+    "last_filed": "2026-09-18",
+    "yoy_prev_q": -2.8611,
+    "yoy_last_q": 0.1251
+   },
+   "net_income": {
+    "last_q_end": "2026-08-15",
+    "last_filed": "2026-09-18",
+    "yoy_prev_q": -3.1359,
+    "yoy_last_q": 0.0525
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "KSS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-09-03",
+    "yoy_prev_q": -0.0204,
+    "yoy_last_q": -0.0087
+   },
+   "op_income": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-09-03",
+    "yoy_prev_q": -0.2333,
+    "yoy_last_q": -0.0645
+   },
+   "net_income": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-09-03",
+    "yoy_prev_q": 0.0667,
+    "yoy_last_q": -0.0131
+   },
+   "ocf": {
+    "last_q_end": "2026-05-02",
+    "last_filed": "2026-06-04",
+    "yoy_prev_q": -12.1429,
+    "yoy_last_q": 0.1957
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "LDOS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.0367,
+    "yoy_last_q": 0.0744
+   },
+   "op_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": -0.0415,
+    "yoy_last_q": -0.0998
+   },
+   "net_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": -0.0964,
+    "yoy_last_q": -0.0946
+   },
+   "ocf": {
+    "last_q_end": "2026-04-03",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": -0.4867,
+    "yoy_last_q": 4.1897
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "LIND": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 0.4712,
+    "yoy_last_q": 1.7125
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 4.5986,
+    "yoy_last_q": 0.8349
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.1021,
+    "yoy_last_q": 0.0222
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving"
+  ]
+ },
+ "LITE": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2025-03-29",
+    "last_filed": "2025-05-07",
+    "yoy_prev_q": 0.0965,
+    "yoy_last_q": 0.1602
+   },
+   "op_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 2.2461,
+    "yoy_last_q": 5.6286
+   },
+   "net_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 2.2841,
+    "yoy_last_q": 4.2698
+   },
+   "ocf": {
+    "last_q_end": "2025-09-27",
+    "last_filed": "2025-11-05",
+    "yoy_prev_q": 18.2174,
+    "yoy_last_q": 0.4621
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "LOPE": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.0672,
+    "yoy_last_q": 0.0669
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.0845,
+    "yoy_last_q": 0.1228
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.0521,
+    "yoy_last_q": 0.1036
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -0.204,
+    "yoy_last_q": 0.3043
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "LSCC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.4224,
+    "yoy_last_q": 0.622
+   },
+   "op_income": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 2.7379,
+    "yoy_last_q": 3.7499
+   },
+   "net_income": {
+    "last_q_end": "2026-07-04",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 3.3443,
+    "yoy_last_q": 5.6457
+   },
+   "ocf": {
+    "last_q_end": "2026-04-04",
+    "last_filed": "2026-05-04",
+    "yoy_prev_q": 0.0807,
+    "yoy_last_q": 0.5758
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "LW": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-10-06",
+    "yoy_prev_q": -0.491,
+    "yoy_last_q": -0.4748
+   },
+   "net_income": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-10-06",
+    "yoy_prev_q": -0.6301,
+    "yoy_last_q": -0.5474
+   },
+   "ocf": {
+    "last_q_end": "2026-08-30",
+    "last_filed": "2026-10-06",
+    "yoy_prev_q": 0.066,
+    "yoy_last_q": -0.333
+   }
+  },
+  "acceleration_flags": []
+ },
+ "LYFT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-11-05",
+    "yoy_prev_q": 0.1175,
+    "yoy_last_q": 0.1143
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.8151,
+    "yoy_last_q": 18.5745
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 4.5512,
+    "yoy_last_q": 0.2476
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": 0.8392,
+    "yoy_last_q": 0.0712
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "MANH": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.0739,
+    "yoy_last_q": 0.0931
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.0279,
+    "yoy_last_q": -0.1024
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.0625,
+    "yoy_last_q": -0.1132
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-24",
+    "yoy_prev_q": 0.3749,
+    "yoy_last_q": 0.1167
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MCK": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.114,
+    "yoy_last_q": 0.0772
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3227,
+    "yoy_last_q": 0.2732
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3493,
+    "yoy_last_q": -0.2168
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3348,
+    "yoy_last_q": 0.7603
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "MGNI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0552,
+    "yoy_last_q": 0.1124
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 6.6591,
+    "yoy_last_q": 0.4218
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 1.458,
+    "yoy_last_q": 0.7388
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 1.0424,
+    "yoy_last_q": -48.1558
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MOD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.3051,
+    "yoy_last_q": 0.2802
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.5059,
+    "yoy_last_q": -0.0119
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -2.1561,
+    "yoy_last_q": 0.4434
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.316,
+    "yoy_last_q": 0.4946
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "MRK": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.0487,
+    "yoy_last_q": 0.0507
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -1.8348,
+    "yoy_last_q": -1.3016
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-04",
+    "yoy_prev_q": -0.1909,
+    "yoy_last_q": 0.5672
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MRNA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 2.6019,
+    "yoy_last_q": 0.0211
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.3219,
+    "yoy_last_q": 0.1014
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.3831,
+    "yoy_last_q": 0.0521
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -0.0485,
+    "yoy_last_q": 0.3925
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "MRP": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 2.6395,
+    "yoy_last_q": 0.3214
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 2.0871,
+    "yoy_last_q": 0.1164
+   },
+   "ocf": null
+  },
+  "acceleration_flags": []
+ },
+ "MRVL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.2757,
+    "yoy_last_q": 0.3655
+   },
+   "op_income": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.2542,
+    "yoy_last_q": 0.5846
+   },
+   "net_income": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": -0.8061,
+    "yoy_last_q": 0.5811
+   },
+   "ocf": {
+    "last_q_end": "2026-05-02",
+    "last_filed": "2026-05-28",
+    "yoy_prev_q": 0.0259,
+    "yoy_last_q": 0.9189
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MSFT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.1672,
+    "yoy_last_q": 0.183
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.2092,
+    "yoy_last_q": 0.1999
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.5952,
+    "yoy_last_q": 0.2306
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.6041,
+    "yoy_last_q": 0.2601
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MSM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-05-30",
+    "last_filed": "2026-07-01",
+    "yoy_prev_q": 0.0292,
+    "yoy_last_q": 0.0782
+   },
+   "op_income": {
+    "last_q_end": "2026-05-30",
+    "last_filed": "2026-07-01",
+    "yoy_prev_q": 0.0409,
+    "yoy_last_q": 0.2902
+   },
+   "net_income": {
+    "last_q_end": "2026-05-30",
+    "last_filed": "2026-07-01",
+    "yoy_prev_q": 0.0806,
+    "yoy_last_q": 0.4137
+   },
+   "ocf": {
+    "last_q_end": "2025-11-29",
+    "last_filed": "2026-01-07",
+    "yoy_prev_q": 0.255,
+    "yoy_last_q": -0.7113
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MSTR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 0.1192,
+    "yoy_last_q": 0.0688
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": -1.4437,
+    "yoy_last_q": -1.5937
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": -1.9741,
+    "yoy_last_q": -1.8203
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": -1.0836,
+    "yoy_last_q": 6.8556
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "MTDR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -0.0642,
+    "yoy_last_q": 0.2676
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -0.8797,
+    "yoy_last_q": 1.0
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -1.1494,
+    "yoy_last_q": 1.6004
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": 0.5534,
+    "yoy_last_q": -0.3535
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MTRN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3081,
+    "yoy_last_q": 0.4222
+   },
+   "op_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.036,
+    "yoy_last_q": 0.4045
+   },
+   "net_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0946,
+    "yoy_last_q": 0.5417
+   },
+   "ocf": {
+    "last_q_end": "2026-04-03",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 2.1229,
+    "yoy_last_q": -1.2778
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MTSI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.225,
+    "yoy_last_q": 0.3577
+   },
+   "op_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4577,
+    "yoy_last_q": 1.0477
+   },
+   "net_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4631,
+    "yoy_last_q": 1.7566
+   },
+   "ocf": {
+    "last_q_end": "2026-01-02",
+    "last_filed": "2026-02-05",
+    "yoy_prev_q": 1.0139,
+    "yoy_last_q": -0.3561
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "MXL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.43,
+    "yoy_last_q": 0.5517
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.6267,
+    "yoy_last_q": 0.83
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.092,
+    "yoy_last_q": 1.0662
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": -1.7138,
+    "yoy_last_q": 0.2218
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "NEO": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-28",
+    "yoy_prev_q": 0.3444,
+    "yoy_last_q": 0.7948
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-28",
+    "yoy_prev_q": 0.3401,
+    "yoy_last_q": 1.0496
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-28",
+    "yoy_prev_q": 0.0227,
+    "yoy_last_q": 0.6787
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "NEOG": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-02-28",
+    "last_filed": "2026-04-09",
+    "yoy_prev_q": -0.0284,
+    "yoy_last_q": -0.0443
+   },
+   "op_income": {
+    "last_q_end": "2026-02-28",
+    "last_filed": "2026-04-09",
+    "yoy_prev_q": 0.9882,
+    "yoy_last_q": -1.6111
+   },
+   "net_income": {
+    "last_q_end": "2026-02-28",
+    "last_filed": "2026-04-09",
+    "yoy_prev_q": 0.9651,
+    "yoy_last_q": -0.5596
+   },
+   "ocf": {
+    "last_q_end": "2025-08-31",
+    "last_filed": "2025-10-09",
+    "yoy_prev_q": -1.7786,
+    "yoy_last_q": 1.6058
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "NET": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.3354,
+    "yoy_last_q": 0.3587
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.1643,
+    "yoy_last_q": -2.058
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.4038,
+    "yoy_last_q": -2.3696
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": 0.9813,
+    "yoy_last_q": 0.0861
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "NEU": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.0446,
+    "yoy_last_q": 0.0696
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.1041,
+    "yoy_last_q": 0.1433
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.0626,
+    "yoy_last_q": 0.2023
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 0.1699,
+    "yoy_last_q": 0.0309
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "NIQ": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 0.1106,
+    "yoy_last_q": 0.0801
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": -1.6497,
+    "yoy_last_q": 0.6574
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 0.2479,
+    "yoy_last_q": -10.2963
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "op_income_improving"
+  ]
+ },
+ "NKE": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-02",
+    "yoy_prev_q": 0.0009,
+    "yoy_last_q": -0.0433
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-02",
+    "yoy_prev_q": -0.3451,
+    "yoy_last_q": -0.0206
+   },
+   "ocf": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-02",
+    "yoy_prev_q": -0.4365,
+    "yoy_last_q": -0.3919
+   }
+  },
+  "acceleration_flags": []
+ },
+ "NKTR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-14",
+    "yoy_prev_q": 0.0383,
+    "yoy_last_q": -0.0934
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-14",
+    "yoy_prev_q": 0.1231,
+    "yoy_last_q": -0.1687
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-14",
+    "yoy_prev_q": 0.1175,
+    "yoy_last_q": 0.0233
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": -0.0243,
+    "yoy_last_q": 0.0969
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "NNE": {
+  "facts": {
+   "revenue": null,
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-12",
+    "yoy_prev_q": 0.5692,
+    "yoy_last_q": -0.3304
+   },
+   "ocf": null
+  },
+  "acceleration_flags": []
+ },
+ "NTAP": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.0439,
+    "yoy_last_q": 0.2989
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.1989,
+    "yoy_last_q": 0.5663
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.1171,
+    "yoy_last_q": 0.6094
+   },
+   "ocf": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.9736,
+    "yoy_last_q": -0.2526
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "NTCT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.0053,
+    "yoy_last_q": 0.1268
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.0422,
+    "yoy_last_q": 3.2055
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1297,
+    "yoy_last_q": 6.935
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.914,
+    "yoy_last_q": -0.3097
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "NTNX": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-29",
+    "yoy_prev_q": 0.104,
+    "yoy_last_q": 0.1003
+   },
+   "op_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-29",
+    "yoy_prev_q": 0.2858,
+    "yoy_last_q": 0.4495
+   },
+   "net_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-29",
+    "yoy_prev_q": 0.8258,
+    "yoy_last_q": 0.1377
+   },
+   "ocf": {
+    "last_q_end": "2025-10-31",
+    "last_filed": "2025-12-04",
+    "yoy_prev_q": 0.1119,
+    "yoy_last_q": 0.2168
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "NTRA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.3882,
+    "yoy_last_q": 0.3771
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -0.1811,
+    "yoy_last_q": 0.3133
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -0.2712,
+    "yoy_last_q": 0.3365
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": 0.6463,
+    "yoy_last_q": -0.0963
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "NTSK": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": 0.278,
+    "yoy_last_q": 0.2915
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": -1.3973,
+    "yoy_last_q": -0.9536
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-02",
+    "yoy_prev_q": -0.4701,
+    "yoy_last_q": -0.2272
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "NVTS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-27",
+    "yoy_prev_q": -0.3866,
+    "yoy_last_q": -0.2734
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-27",
+    "yoy_prev_q": -0.0973,
+    "yoy_last_q": -0.2557
+   },
+   "net_income": {
+    "last_q_end": "2024-09-30",
+    "last_filed": "2024-11-05",
+    "yoy_prev_q": 0.6185,
+    "yoy_last_q": -3.491
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.3159,
+    "yoy_last_q": -0.209
+   }
+  },
+  "acceleration_flags": []
+ },
+ "NWL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.0109,
+    "yoy_last_q": 0.0305
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.619,
+    "yoy_last_q": 0.655
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.1081,
+    "yoy_last_q": 1.3043
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -7.6562,
+    "yoy_last_q": -0.0939
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "OBDC": {
+  "facts": {
+   "revenue": null,
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -1.1005,
+    "yoy_last_q": -0.5219
+   },
+   "ocf": null
+  },
+  "acceleration_flags": []
+ },
+ "OHI": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": null,
+    "yoy_last_q": 0.1766
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.3854,
+    "yoy_last_q": 1.6561
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 0.2012,
+    "yoy_last_q": 0.1844
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving"
+  ]
+ },
+ "OKTA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 0.1119,
+    "yoy_last_q": 0.1058
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 0.4359,
+    "yoy_last_q": 1.6098
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 0.1935,
+    "yoy_last_q": 0.7313
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-29",
+    "yoy_prev_q": 0.1005,
+    "yoy_last_q": 0.1494
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "ON": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 0.0468,
+    "yoy_last_q": 0.0918
+   },
+   "op_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 0.9069,
+    "yoy_last_q": 0.3371
+   },
+   "net_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": 0.9313,
+    "yoy_last_q": 0.3318
+   },
+   "ocf": {
+    "last_q_end": "2026-04-03",
+    "last_filed": "2026-05-04",
+    "yoy_prev_q": 0.2077,
+    "yoy_last_q": -0.603
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "OPCH": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-10-30",
+    "yoy_prev_q": 0.1539,
+    "yoy_last_q": 0.1224
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -0.0069,
+    "yoy_last_q": -0.0839
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -0.0379,
+    "yoy_last_q": -0.0299
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.8951,
+    "yoy_last_q": -0.6787
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "OVV": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.0851,
+    "yoy_last_q": 0.2972
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": -7.4719,
+    "yoy_last_q": 0.9452
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": -2.9623,
+    "yoy_last_q": 0.4853
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.2096,
+    "yoy_last_q": 0.6111
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "P": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-02",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 0.3525,
+    "yoy_last_q": 0.3773
+   },
+   "op_income": {
+    "last_q_end": "2026-08-02",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 1.6397,
+    "yoy_last_q": 11.9655
+   },
+   "net_income": {
+    "last_q_end": "2026-08-02",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 2.7205,
+    "yoy_last_q": 0.5737
+   },
+   "ocf": {
+    "last_q_end": "2026-05-03",
+    "last_filed": "2026-06-05",
+    "yoy_prev_q": 0.2819,
+    "yoy_last_q": -0.3655
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PANW": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-03",
+    "yoy_prev_q": 0.1493,
+    "yoy_last_q": 0.3115
+   },
+   "op_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-03",
+    "yoy_prev_q": 0.6473,
+    "yoy_last_q": -1.8356
+   },
+   "net_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-06-03",
+    "yoy_prev_q": 0.618,
+    "yoy_last_q": -1.6756
+   },
+   "ocf": {
+    "last_q_end": "2025-10-31",
+    "last_filed": "2025-11-20",
+    "yoy_prev_q": -0.0105,
+    "yoy_last_q": 0.1728
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PAYC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.078,
+    "yoy_last_q": 0.0984
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1356,
+    "yoy_last_q": 0.5004
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.1169,
+    "yoy_last_q": 0.2
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.2281,
+    "yoy_last_q": 0.1715
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PBF": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.1186,
+    "yoy_last_q": 0.5623
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 1.5861,
+    "yoy_last_q": 28.5837
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 1.4935,
+    "yoy_last_q": 175.3077
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -42.8608,
+    "yoy_last_q": 0.5106
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PCVX": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.913,
+    "yoy_last_q": -0.3384
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -1.2785,
+    "yoy_last_q": -0.7068
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": -0.0449,
+    "yoy_last_q": -0.6877
+   }
+  },
+  "acceleration_flags": []
+ },
+ "PD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 0.0097,
+    "yoy_last_q": 0.0083
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 1.8892,
+    "yoy_last_q": 1.8713
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 1.7376,
+    "yoy_last_q": -0.1869
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-28",
+    "yoy_prev_q": 0.0706,
+    "yoy_last_q": 0.4439
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "PENG": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-05-29",
+    "last_filed": "2026-07-07",
+    "yoy_prev_q": -0.0616,
+    "yoy_last_q": 0.4764
+   },
+   "op_income": {
+    "last_q_end": "2026-05-29",
+    "last_filed": "2026-07-07",
+    "yoy_prev_q": 0.3895,
+    "yoy_last_q": 4.1674
+   },
+   "net_income": {
+    "last_q_end": "2026-05-29",
+    "last_filed": "2026-07-07",
+    "yoy_prev_q": 3.634,
+    "yoy_last_q": 15.7941
+   },
+   "ocf": {
+    "last_q_end": "2025-11-28",
+    "last_filed": "2026-01-06",
+    "yoy_prev_q": -0.561,
+    "yoy_last_q": 1.2475
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PGEN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 16.3393,
+    "yoy_last_q": 63.2266
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.7347,
+    "yoy_last_q": 1.7128
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.8536,
+    "yoy_last_q": 1.7534
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-13",
+    "yoy_prev_q": -0.1586,
+    "yoy_last_q": -1.6847
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PINS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.1784,
+    "yoy_last_q": 0.1817
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": -1.2632,
+    "yoy_last_q": -11.7478
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": -9.2478,
+    "yoy_last_q": -2.2042
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-04",
+    "yoy_prev_q": 0.0212,
+    "yoy_last_q": -0.0981
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PLPC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.1867,
+    "yoy_last_q": 0.254
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.0446,
+    "yoy_last_q": 0.6294
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.0862,
+    "yoy_last_q": 0.6929
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -0.017,
+    "yoy_last_q": 0.0693
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PLSE": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": null,
+    "yoy_last_q": null
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.0613,
+    "yoy_last_q": -0.2465
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.1063,
+    "yoy_last_q": -0.2864
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-14",
+    "yoy_prev_q": -0.3825,
+    "yoy_last_q": -0.0794
+   }
+  },
+  "acceleration_flags": []
+ },
+ "PRCT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.202,
+    "yoy_last_q": 0.1934
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.1884,
+    "yoy_last_q": -0.2344
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.279,
+    "yoy_last_q": -0.372
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.4741,
+    "yoy_last_q": -1.2454
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "PRLB": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 1.1715,
+    "yoy_last_q": 1.2858
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 1.2537,
+    "yoy_last_q": 1.0673
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -0.1387,
+    "yoy_last_q": -0.0459
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving"
+  ]
+ },
+ "PSX": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0693,
+    "yoy_last_q": 0.5306
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.5749,
+    "yoy_last_q": 3.3865
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-29",
+    "yoy_prev_q": 1.7924,
+    "yoy_last_q": -13.107
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "PTC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.2168,
+    "yoy_last_q": -0.0682
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.3237,
+    "yoy_last_q": -0.2065
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 2.632,
+    "yoy_last_q": -0.1595
+   },
+   "ocf": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-05",
+    "yoy_prev_q": 0.2727,
+    "yoy_last_q": 0.1313
+   }
+  },
+  "acceleration_flags": []
+ },
+ "PWR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.2633,
+    "yoy_last_q": 0.411
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.417,
+    "yoy_last_q": 0.8765
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.5294,
+    "yoy_last_q": 0.9689
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.022,
+    "yoy_last_q": 0.6108
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "QBTS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.8095,
+    "yoy_last_q": -0.0061
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -3.847,
+    "yoy_last_q": -1.0103
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -2.3863,
+    "yoy_last_q": 0.713
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "net_income_improving"
+  ]
+ },
+ "QLYS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.0984,
+    "yoy_last_q": 0.1104
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.1764,
+    "yoy_last_q": 0.2042
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.0654,
+    "yoy_last_q": 0.1082
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.2817,
+    "yoy_last_q": -0.1304
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "QMCO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": 0.0859,
+    "yoy_last_q": 0.2569
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": 0.8463,
+    "yoy_last_q": 1.4
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": 0.6302,
+    "yoy_last_q": -8.0255
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": -7.9088,
+    "yoy_last_q": 1.0561
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "QUBT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 93.641,
+    "yoy_last_q": 90.0
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": -1.4801,
+    "yoy_last_q": -1.2626
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": -1.2385,
+    "yoy_last_q": 0.6778
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": -0.1515,
+    "yoy_last_q": -1.1266
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "RBRK": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-01",
+    "yoy_prev_q": 0.3899,
+    "yoy_last_q": 0.3789
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-01",
+    "yoy_prev_q": 0.4346,
+    "yoy_last_q": 0.2388
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-01",
+    "yoy_prev_q": 0.5901,
+    "yoy_last_q": 0.356
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "REPL": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-14",
+    "yoy_prev_q": -0.0886,
+    "yoy_last_q": 0.2452
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-14",
+    "yoy_prev_q": -0.0692,
+    "yoy_last_q": 0.1953
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-14",
+    "yoy_prev_q": -0.5664,
+    "yoy_last_q": 0.0167
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "RGEN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2018-03-31",
+    "last_filed": "2018-05-08",
+    "yoy_prev_q": 0.6254,
+    "yoy_last_q": 0.4655
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 1.4232,
+    "yoy_last_q": 0.0058
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 0.4293,
+    "yoy_last_q": -0.6631
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": -0.6644,
+    "yoy_last_q": 0.8857
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "RIVN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.1137,
+    "yoy_last_q": 0.2724
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.345,
+    "yoy_last_q": 0.2496
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.2367,
+    "yoy_last_q": 0.2543
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.8519,
+    "yoy_last_q": -2.7394
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "RNG": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.0525,
+    "yoy_last_q": 0.059
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 3.8383,
+    "yoy_last_q": 0.3604
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 3.9646,
+    "yoy_last_q": 1.9648
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 0.5575,
+    "yoy_last_q": 0.0961
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "ROP": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.1129,
+    "yoy_last_q": 0.085
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.0833,
+    "yoy_last_q": 0.0664
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.537,
+    "yoy_last_q": 2.0888
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -0.0053,
+    "yoy_last_q": 0.1199
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving"
+  ]
+ },
+ "RPM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-06",
+    "yoy_prev_q": 0.089,
+    "yoy_last_q": 0.0482
+   },
+   "op_income": null,
+   "net_income": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-06",
+    "yoy_prev_q": -0.0129,
+    "yoy_last_q": 0.1263
+   },
+   "ocf": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-06",
+    "yoy_prev_q": -0.0425,
+    "yoy_last_q": 0.1113
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving"
+  ]
+ },
+ "RVMD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2024-09-30",
+    "last_filed": "2024-11-06",
+    "yoy_prev_q": -1.0,
+    "yoy_last_q": null
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.8492,
+    "yoy_last_q": -0.9082
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -1.1264,
+    "yoy_last_q": -1.6005
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": -0.211,
+    "yoy_last_q": -0.8215
+   }
+  },
+  "acceleration_flags": []
+ },
+ "RVTY": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-05",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": 0.0697,
+    "yoy_last_q": 0.0131
+   },
+   "op_income": {
+    "last_q_end": "2026-07-05",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": 0.0506,
+    "yoy_last_q": -0.0159
+   },
+   "net_income": {
+    "last_q_end": "2026-07-05",
+    "last_filed": "2026-08-11",
+    "yoy_prev_q": -0.036,
+    "yoy_last_q": -0.0394
+   },
+   "ocf": {
+    "last_q_end": "2026-04-05",
+    "last_filed": "2026-05-12",
+    "yoy_prev_q": -0.1315,
+    "yoy_last_q": -0.1009
+   }
+  },
+  "acceleration_flags": []
+ },
+ "RXO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.0056,
+    "yoy_last_q": 0.2502
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.0667,
+    "yoy_last_q": null
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.1613,
+    "yoy_last_q": 0.0
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "S": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.208,
+    "yoy_last_q": 0.2056
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.0888,
+    "yoy_last_q": -0.1258
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.6342,
+    "yoy_last_q": -0.2969
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-28",
+    "yoy_prev_q": 0.2445,
+    "yoy_last_q": -0.2636
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "SAIL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-10",
+    "yoy_prev_q": 0.2155,
+    "yoy_last_q": 0.1682
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-10",
+    "yoy_prev_q": 0.5684,
+    "yoy_last_q": -0.4451
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-10",
+    "yoy_prev_q": 0.6013,
+    "yoy_last_q": -3.7726
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "SANM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-07-27",
+    "yoy_prev_q": 1.0227,
+    "yoy_last_q": 0.6967
+   },
+   "op_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-07-27",
+    "yoy_prev_q": 0.7138,
+    "yoy_last_q": 1.3074
+   },
+   "net_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-07-27",
+    "yoy_prev_q": 0.4585,
+    "yoy_last_q": 0.707
+   },
+   "ocf": {
+    "last_q_end": "2025-12-27",
+    "last_filed": "2026-01-26",
+    "yoy_prev_q": -0.4927,
+    "yoy_last_q": 1.7953
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "SBET": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -738.2862,
+    "yoy_last_q": -2.8039
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -702.1395,
+    "yoy_last_q": -2.8122
+   },
+   "ocf": null
+  },
+  "acceleration_flags": []
+ },
+ "SDGR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.0162,
+    "yoy_last_q": 0.0754
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.0412,
+    "yoy_last_q": 0.2147
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.0036,
+    "yoy_last_q": 1.1384
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 4.668,
+    "yoy_last_q": -1.103
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "SEDG": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.4147,
+    "yoy_last_q": 0.1963
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.4642,
+    "yoy_last_q": 0.8611
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.4177,
+    "yoy_last_q": 0.7535
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 1.1559,
+    "yoy_last_q": -0.2778
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "SEI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.0418,
+    "yoy_last_q": 0.3002
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 1.2924,
+    "yoy_last_q": 0.5888
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 3.0297,
+    "yoy_last_q": 0.7136
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 0.5243,
+    "yoy_last_q": 2.0718
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "SMCI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 1.2336,
+    "yoy_last_q": 1.2268
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 0.2867,
+    "yoy_last_q": 3.264
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-11",
+    "yoy_prev_q": 0.2494,
+    "yoy_last_q": 3.4438
+   },
+   "ocf": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-11-07",
+    "yoy_prev_q": 0.5119,
+    "yoy_last_q": -3.2439
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "SMTC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-04-26",
+    "last_filed": "2026-05-27",
+    "yoy_prev_q": 0.1273,
+    "yoy_last_q": 0.1592
+   },
+   "op_income": {
+    "last_q_end": "2026-04-26",
+    "last_filed": "2026-05-27",
+    "yoy_prev_q": 0.7462,
+    "yoy_last_q": -0.2829
+   },
+   "net_income": {
+    "last_q_end": "2026-04-26",
+    "last_filed": "2026-05-27",
+    "yoy_prev_q": 0.6227,
+    "yoy_last_q": 0.3731
+   },
+   "ocf": {
+    "last_q_end": "2026-04-26",
+    "last_filed": "2026-05-27",
+    "yoy_prev_q": 313.6292,
+    "yoy_last_q": 0.3004
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "SNOW": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 0.3348,
+    "yoy_last_q": 0.3509
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 0.2708,
+    "yoy_last_q": 0.2272
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-09-04",
+    "yoy_prev_q": 0.3128,
+    "yoy_last_q": 0.3567
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-29",
+    "yoy_prev_q": -0.3575,
+    "yoy_last_q": 0.065
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "SNPS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-26",
+    "yoy_prev_q": 0.4187,
+    "yoy_last_q": 0.4237
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-26",
+    "yoy_prev_q": -0.6801,
+    "yoy_last_q": 1.1631
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-26",
+    "yoy_prev_q": -0.9505,
+    "yoy_last_q": 1.2506
+   },
+   "ocf": {
+    "last_q_end": "2026-01-31",
+    "last_filed": "2026-02-25",
+    "yoy_prev_q": 0.2316,
+    "yoy_last_q": 13.7023
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "SNX": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-01",
+    "yoy_prev_q": 0.3097,
+    "yoy_last_q": 0.3775
+   },
+   "op_income": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-01",
+    "yoy_prev_q": 0.5827,
+    "yoy_last_q": 0.6757
+   },
+   "net_income": {
+    "last_q_end": "2026-08-31",
+    "last_filed": "2026-10-01",
+    "yoy_prev_q": 0.8067,
+    "yoy_last_q": 0.8353
+   },
+   "ocf": {
+    "last_q_end": "2026-02-28",
+    "last_filed": "2026-04-02",
+    "yoy_prev_q": -2.9443,
+    "yoy_last_q": -0.1977
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "STRL": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.9159,
+    "yoy_last_q": 0.9011
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 1.4576,
+    "yoy_last_q": 1.0969
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 1.431,
+    "yoy_last_q": 1.195
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.7117,
+    "yoy_last_q": 0.9505
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "SWKS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-07-28",
+    "yoy_prev_q": -0.01,
+    "yoy_last_q": -0.0313
+   },
+   "op_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-07-28",
+    "yoy_prev_q": -0.5673,
+    "yoy_last_q": -0.5615
+   },
+   "net_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-07-28",
+    "yoy_prev_q": -0.4818,
+    "yoy_last_q": -0.6771
+   },
+   "ocf": {
+    "last_q_end": "2026-01-02",
+    "last_filed": "2026-02-05",
+    "yoy_prev_q": -0.5132,
+    "yoy_last_q": 0.0485
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving"
+  ]
+ },
+ "SXI": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2020-06-30",
+    "last_filed": "2020-08-25",
+    "yoy_prev_q": -0.1372,
+    "yoy_last_q": -0.3197
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 3.2034,
+    "yoy_last_q": 2.4596
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 1.4737,
+    "yoy_last_q": 2.0612
+   },
+   "ocf": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-10-31",
+    "yoy_prev_q": 0.0861,
+    "yoy_last_q": -0.0425
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving"
+  ]
+ },
+ "SYNA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.1321,
+    "yoy_last_q": 0.1035
+   },
+   "op_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.0066,
+    "yoy_last_q": 0.5171
+   },
+   "net_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": -9.2222,
+    "yoy_last_q": 0.633
+   },
+   "ocf": {
+    "last_q_end": "2025-09-27",
+    "last_filed": "2025-11-06",
+    "yoy_prev_q": -1.2511,
+    "yoy_last_q": 3.6491
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "TEAM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 0.2331,
+    "yoy_last_q": 0.3171
+   },
+   "op_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 0.1693,
+    "yoy_last_q": -3.5186
+   },
+   "net_income": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -0.1161,
+    "yoy_last_q": -0.3895
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": -0.4947,
+    "yoy_last_q": -0.1305
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "TENB": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.0958,
+    "yoy_last_q": 0.0858
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 1.4948,
+    "yoy_last_q": 2.6606
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 1.0617,
+    "yoy_last_q": 1.2587
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-05",
+    "yoy_prev_q": 0.7368,
+    "yoy_last_q": 0.0065
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving"
+  ]
+ },
+ "TGT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": 0.067,
+    "yoy_last_q": 0.0527
+   },
+   "op_income": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": -0.2289,
+    "yoy_last_q": 0.9438
+   },
+   "net_income": {
+    "last_q_end": "2026-08-01",
+    "last_filed": "2026-08-28",
+    "yoy_prev_q": -0.2461,
+    "yoy_last_q": 1.0075
+   },
+   "ocf": {
+    "last_q_end": "2026-05-02",
+    "last_filed": "2026-05-29",
+    "yoy_prev_q": -0.7502,
+    "yoy_last_q": 1.6036
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving"
+  ]
+ },
+ "THC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 0.0278,
+    "yoy_last_q": 0.0677
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-29",
+    "yoy_prev_q": 0.3743,
+    "yoy_last_q": 0.8238
+   },
+   "net_income": {
+    "last_q_end": "2011-09-30",
+    "last_filed": "2011-11-01",
+    "yoy_prev_q": 1.2,
+    "yoy_last_q": -0.9936
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.3908,
+    "yoy_last_q": 1.0135
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "THRM": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.1126,
+    "yoy_last_q": 0.1095
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": -0.3385,
+    "yoy_last_q": -0.5548
+   },
+   "net_income": {
+    "last_q_end": "2014-09-30",
+    "last_filed": "2014-11-10",
+    "yoy_prev_q": 1.9811,
+    "yoy_last_q": 0.9867
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": -0.2928,
+    "yoy_last_q": 0.6221
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "TRMB": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-12",
+    "yoy_prev_q": 0.1181,
+    "yoy_last_q": 0.11
+   },
+   "op_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-12",
+    "yoy_prev_q": 0.4769,
+    "yoy_last_q": 0.0329
+   },
+   "net_income": {
+    "last_q_end": "2026-07-03",
+    "last_filed": "2026-08-12",
+    "yoy_prev_q": 0.4828,
+    "yoy_last_q": -6.2881
+   },
+   "ocf": {
+    "last_q_end": "2026-04-03",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": -0.3345,
+    "yoy_last_q": 0.7654
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "TSLA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.1578,
+    "yoy_last_q": 0.2552
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 1.3584,
+    "yoy_last_q": -0.5688
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-23",
+    "yoy_prev_q": 0.1663,
+    "yoy_last_q": -0.0495
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-23",
+    "yoy_prev_q": 7.9091,
+    "yoy_last_q": 0.8261
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_accelerating"
+  ]
+ },
+ "TT": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.0599,
+    "yoy_last_q": 0.1056
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.0523,
+    "yoy_last_q": 0.0516
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": -0.0339,
+    "yoy_last_q": 0.0582
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.3734,
+    "yoy_last_q": 0.8445
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "TWLO": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.2,
+    "yoy_last_q": 0.2203
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 3.6645,
+    "yoy_last_q": 1.2857
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 3.5031,
+    "yoy_last_q": 46.5944
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 0.0048,
+    "yoy_last_q": -0.1981
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "TWST": {
+  "facts": {
+   "revenue": null,
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": -0.1035,
+    "yoy_last_q": -0.2045
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-03",
+    "yoy_prev_q": -0.1193,
+    "yoy_last_q": -2.719
+   },
+   "ocf": {
+    "last_q_end": "2025-12-31",
+    "last_filed": "2026-02-26",
+    "yoy_prev_q": 0.0673,
+    "yoy_last_q": -0.158
+   }
+  },
+  "acceleration_flags": []
+ },
+ "TXG": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": -0.0261,
+    "yoy_last_q": -0.1265
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.5666,
+    "yoy_last_q": -1.6491
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.608,
+    "yoy_last_q": -1.5192
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": 3.1845,
+    "yoy_last_q": -0.2396
+   }
+  },
+  "acceleration_flags": []
+ },
+ "ULS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.0752,
+    "yoy_last_q": 0.0515
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.2661,
+    "yoy_last_q": 0.0791
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.3731,
+    "yoy_last_q": 1.7033
+   },
+   "ocf": null
+  },
+  "acceleration_flags": [
+   "net_income_improving"
+  ]
+ },
+ "USFD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.0277,
+    "yoy_last_q": 0.0446
+   },
+   "op_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.0357,
+    "yoy_last_q": 0.1909
+   },
+   "net_income": {
+    "last_q_end": "2026-06-27",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": 0.0087,
+    "yoy_last_q": 0.2277
+   },
+   "ocf": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 1.8129,
+    "yoy_last_q": -0.2481
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "VIAV": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": 0.3637,
+    "yoy_last_q": 0.4284
+   },
+   "op_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -0.4865,
+    "yoy_last_q": 1.9176
+   },
+   "net_income": {
+    "last_q_end": "2026-03-28",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -6.2857,
+    "yoy_last_q": -0.6718
+   },
+   "ocf": {
+    "last_q_end": "2025-09-27",
+    "last_filed": "2025-10-30",
+    "yoy_prev_q": -0.7316,
+    "yoy_last_q": 1.2963
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "VIR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2025-09-30",
+    "last_filed": "2025-11-05",
+    "yoy_prev_q": -0.6052,
+    "yoy_last_q": -0.8992
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.052,
+    "yoy_last_q": 1.6204
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.0391,
+    "yoy_last_q": 1.7217
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-07",
+    "yoy_prev_q": 0.2859,
+    "yoy_last_q": -0.6947
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "op_income_improving"
+  ]
+ },
+ "VST": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 0.1767,
+    "yoy_last_q": 0.1727
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 13.4917,
+    "yoy_last_q": 0.0738
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-10",
+    "yoy_prev_q": 4.8396,
+    "yoy_last_q": -0.0673
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": 0.9199,
+    "yoy_last_q": 1.0017
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "WBD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -0.0096,
+    "yoy_last_q": -0.1116
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -65.7297,
+    "yoy_last_q": 2.2811
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-06",
+    "yoy_prev_q": -5.4371,
+    "yoy_last_q": -0.9057
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": -0.0547,
+    "yoy_last_q": -1.3761
+   }
+  },
+  "acceleration_flags": [
+   "op_income_improving"
+  ]
+ },
+ "WCC": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.1378,
+    "yoy_last_q": 0.1298
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.2183,
+    "yoy_last_q": 0.1862
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-30",
+    "yoy_prev_q": 0.299,
+    "yoy_last_q": 0.1977
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-04-30",
+    "yoy_prev_q": -0.9625,
+    "yoy_last_q": 6.9071
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "WDAY": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 0.1348,
+    "yoy_last_q": 0.1282
+   },
+   "op_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 7.6667,
+    "yoy_last_q": 0.2621
+   },
+   "net_income": {
+    "last_q_end": "2026-07-31",
+    "last_filed": "2026-08-27",
+    "yoy_prev_q": 2.2647,
+    "yoy_last_q": 1.7719
+   },
+   "ocf": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-22",
+    "yoy_prev_q": 0.2285,
+    "yoy_last_q": 0.523
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "WERN": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.1394,
+    "yoy_last_q": 0.2455
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 1.685,
+    "yoy_last_q": -0.7449
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-07",
+    "yoy_prev_q": 0.5779,
+    "yoy_last_q": -0.8559
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": -0.6685,
+    "yoy_last_q": 1.8413
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "WHD": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": 0.3854,
+    "yoy_last_q": 0.6432
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.2785,
+    "yoy_last_q": 0.3746
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-07-31",
+    "yoy_prev_q": -0.2559,
+    "yoy_last_q": 0.2149
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-08",
+    "yoy_prev_q": -0.5184,
+    "yoy_last_q": 2.0875
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "WK": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 0.1989,
+    "yoy_last_q": 0.1864
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 1.619,
+    "yoy_last_q": 1.527
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 1.8889,
+    "yoy_last_q": 1.6929
+   },
+   "ocf": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-04",
+    "yoy_prev_q": 4.5983,
+    "yoy_last_q": 0.5565
+   }
+  },
+  "acceleration_flags": [
+   "revenue_growth_strong"
+  ]
+ },
+ "XNCR": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.862,
+    "yoy_last_q": 0.1746
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.8031,
+    "yoy_last_q": -0.1174
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -1.6626,
+    "yoy_last_q": 0.2951
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-06",
+    "yoy_prev_q": 0.7147,
+    "yoy_last_q": -3.1694
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "revenue_growth_accelerating"
+  ]
+ },
+ "ZETA": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.4988,
+    "yoy_last_q": 0.4355
+   },
+   "op_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": -0.1692,
+    "yoy_last_q": 4.3152
+   },
+   "net_income": {
+    "last_q_end": "2026-06-30",
+    "last_filed": "2026-08-05",
+    "yoy_prev_q": 0.3867,
+    "yoy_last_q": 1.6378
+   },
+   "ocf": {
+    "last_q_end": "2026-03-31",
+    "last_filed": "2026-05-01",
+    "yoy_prev_q": 0.4108,
+    "yoy_last_q": 0.4292
+   }
+  },
+  "acceleration_flags": [
+   "net_income_improving",
+   "ocf_improving",
+   "op_income_improving",
+   "revenue_growth_strong"
+  ]
+ },
+ "ZS": {
+  "facts": {
+   "revenue": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-26",
+    "yoy_prev_q": 0.2591,
+    "yoy_last_q": 0.2543
+   },
+   "op_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-26",
+    "yoy_prev_q": -0.2898,
+    "yoy_last_q": -0.1664
+   },
+   "net_income": {
+    "last_q_end": "2026-04-30",
+    "last_filed": "2026-05-26",
+    "yoy_prev_q": -3.4423,
+    "yoy_last_q": -2.3656
+   },
+   "ocf": {
+    "last_q_end": "2025-10-31",
+    "last_filed": "2025-11-25",
+    "yoy_prev_q": 0.2704,
+    "yoy_last_q": 0.353
+   }
+  },
+  "acceleration_flags": [
+   "ocf_improving",
+   "revenue_growth_strong"
+  ]
+ }
+}

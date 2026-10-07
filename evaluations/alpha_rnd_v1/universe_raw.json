@@ -1,5 +1,5 @@
 {
- "session": "2026-10-02",
+ "session": "2026-10-06",
  "sources": [
   "sp500",
   "sp400"
@@ -3142,12 +3142,6 @@
    ]
   },
   {
-   "ticker": "BBGI",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "BBIO",
    "indices": [
     "nasdaq_listed"
@@ -3841,12 +3835,6 @@
    "ticker": "BLDR",
    "indices": [
     "other_listed"
-   ]
-  },
-  {
-   "ticker": "BLFS",
-   "indices": [
-    "nasdaq_listed"
    ]
   },
   {
@@ -4739,12 +4727,6 @@
    ]
   },
   {
-   "ticker": "BZAI",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "BZFD",
    "indices": [
     "nasdaq_listed"
@@ -5016,6 +4998,12 @@
    "ticker": "CBAN",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "CBAT",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -7689,12 +7677,6 @@
    ]
   },
   {
-   "ticker": "DDS",
-   "indices": [
-    "other_listed"
-   ]
-  },
-  {
    "ticker": "DE",
    "indices": [
     "sp500",
@@ -8178,12 +8160,6 @@
    "ticker": "DPZ",
    "indices": [
     "sp500",
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "DRCT",
-   "indices": [
     "nasdaq_listed"
    ]
   },
@@ -9213,6 +9189,12 @@
    "ticker": "EPM",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "EPOW",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -12121,12 +12103,6 @@
    ]
   },
   {
-   "ticker": "GWH",
-   "indices": [
-    "other_listed"
-   ]
-  },
-  {
    "ticker": "GWRE",
    "indices": [
     "sp400",
@@ -12144,12 +12120,6 @@
    "indices": [
     "sp500",
     "other_listed"
-   ]
-  },
-  {
-   "ticker": "GXAI",
-   "indices": [
-    "nasdaq_listed"
    ]
   },
   {
@@ -16174,7 +16144,7 @@
   {
    "ticker": "LUMN",
    "indices": [
-    "other_listed"
+    "nasdaq_listed"
    ]
   },
   {
@@ -18609,12 +18579,6 @@
   },
   {
    "ticker": "NNNN",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "NNOX",
    "indices": [
     "nasdaq_listed"
    ]
@@ -21512,8 +21476,7 @@
   {
    "ticker": "PSKY",
    "indices": [
-    "sp500",
-    "nasdaq_listed"
+    "sp500"
    ]
   },
   {
@@ -21875,12 +21838,6 @@
   },
   {
    "ticker": "QRHC",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "QRVO",
    "indices": [
     "nasdaq_listed"
    ]
@@ -24063,6 +24020,12 @@
    ]
   },
   {
+   "ticker": "SKYD",
+   "indices": [
+    "other_listed"
+   ]
+  },
+  {
    "ticker": "SKYH",
    "indices": [
     "other_listed"
@@ -24199,12 +24162,6 @@
    ]
   },
   {
-   "ticker": "SLP",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "SLQT",
    "indices": [
     "other_listed"
@@ -24212,12 +24169,6 @@
   },
   {
    "ticker": "SLS",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "SLSN",
    "indices": [
     "nasdaq_listed"
    ]
@@ -25545,6 +25496,12 @@
   },
   {
    "ticker": "TBCH",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
+   "ticker": "TBCV",
    "indices": [
     "nasdaq_listed"
    ]
@@ -27665,6 +27622,12 @@
    ]
   },
   {
+   "ticker": "VJET",
+   "indices": [
+    "other_listed"
+   ]
+  },
+  {
    "ticker": "VKTX",
    "indices": [
     "nasdaq_listed"
@@ -27979,12 +27942,6 @@
    ]
   },
   {
-   "ticker": "VTAK",
-   "indices": [
-    "other_listed"
-   ]
-  },
-  {
    "ticker": "VTEX",
    "indices": [
     "other_listed"
@@ -28129,12 +28086,6 @@
    ]
   },
   {
-   "ticker": "WALD",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "WAT",
    "indices": [
     "sp500",
@@ -28162,8 +28113,7 @@
   {
    "ticker": "WBD",
    "indices": [
-    "sp500",
-    "nasdaq_listed"
+    "sp500"
    ]
   },
   {
@@ -28587,6 +28537,12 @@
    ]
   },
   {
+   "ticker": "WQEY",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "WRAP",
    "indices": [
     "nasdaq_listed"
@@ -28877,12 +28833,6 @@
    "ticker": "XEL",
    "indices": [
     "sp500",
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "XELB",
-   "indices": [
     "nasdaq_listed"
    ]
   },
