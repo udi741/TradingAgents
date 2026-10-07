@@ -630,3 +630,15 @@ ALPHA_DISCOVERY_ERROR stage=ta_empty.
   13:30 UTC open; confirm_session corrected to decision session 2026-10-06
   -> eligible open = TODAY 2026-10-07 (same as ACN). General rule: eligible
   open = first regular-session open after the decision timestamp.
+
+### SEV-1 duplicate-exit incident (2026-10-07)
+
+Root cause: main() re-seeded exited V1 positions from watchlist
+open_positions every tick — exited ACN/APPS resurrected and their rules
+re-fired each minute (188 duplicate PAPER_EXITs, cash corrupted to $952,810).
+Fix: exactly-once execution identity (`executed` ids, check/commit split,
+order_id on pending orders) + retired_seeds anti-resurrection. Book
+reconciled: cash $90,203.02, realized -$1,485.68, positions PBF 62 / SDGR 61
+/ TWST 7; ACN/APPS/PGEN closed; pending 0/0. Incident evidence preserved in
+ledger + evaluations/alpha_rnd_v1/incident_2026-10-07/. Automation remains
+STOPPED pending user review.
