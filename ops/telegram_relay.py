@@ -72,6 +72,10 @@ ALPHA_MAP = {
     "CONFIRMED": ("INFO", False),          # noisy; confirmation event follows
     "WATCH_EXPIRED": ("INFO", False),
     "monitor_error": ("ERROR", True),
+    "RISK_PLAN_REQUIRED": ("INFO", True),
+    "CORRECTIVE_EXIT_SCHEDULED": ("INFO", True),
+    "POLICY_BOUNDARY": ("INFO", True),
+    "EOD_MARK_UNAVAILABLE": ("WARNING", True),
 }
 ALPHA_SCHED_MAP = {
     "ALPHA_DISCOVERY_STARTED": ("INFO", True),
