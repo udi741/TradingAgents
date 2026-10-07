@@ -540,3 +540,42 @@ def test_final_review_blockers():
 
 
 test_final_review_blockers()
+
+
+def test_production_main_entrypoint():
+    """The REAL main()/--once path — helper tests alone let a broken
+    entrypoint ship (the wl NameError incident)."""
+    import tempfile, importlib
+    td = Path(tempfile.mkdtemp())
+    m.STATE = td / "state.json"; m.STATE_LOCK = td / "state.lock"
+    m.WATCHLIST = td / "wl.json"; m.EVENTS = td / "ev.jsonl"
+    m.NOTIFY = td / "n.log"; m.LEDGER = td / "led.jsonl"
+    m.WATCHLIST.write_text(json.dumps({"watches": [], "open_positions": [
+        {"ticker": "PBF", "shares": 62, "fill": 80.0,
+         "invalidation": {"type": "intraday_stop", "level": 74.5, "label": "hard stop"},
+         "exit_rules": [], "horizon": "h"}]}))
+    # A: initialized normal state -> main completes
+    m.STATE.write_text(json.dumps({"initialized": True,
+        "positions": {"PBF": {"shares": 62, "fill": 80.0, "seeded": True}},
+        "cash": 90203.02, "pending_open_fills": [], "pending_open_exits": [],
+        "processed_close_sessions": [], "confirm": {}, "watch_status": {}}))
+    sys.argv = ["monitor", "--once"]
+    m.main()  # must not raise (NameError class)
+    st = json.loads(m.STATE.read_text())
+    # B/C/D: book unchanged, no resurrection, pending 0/0
+    assert set(st["positions"]) == {"PBF"} and st["positions"]["PBF"]["shares"] == 62
+    assert st["pending_open_fills"] == [] and st["pending_open_exits"] == []
+    # F: repeated invocation idempotent
+    m.main()
+    st2 = json.loads(m.STATE.read_text())
+    assert st2["cash"] == st["cash"] and set(st2["positions"]) == {"PBF"}
+    # E: missing canonical state -> fail closed, no traceback escape
+    m.STATE.unlink()
+    try:
+        m.main(); assert False, "must fail closed"
+    except RuntimeError:
+        pass
+    print("production_main_entrypoint ok")
+
+
+test_production_main_entrypoint()

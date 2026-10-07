@@ -743,18 +743,10 @@ def _seed_once(st: dict, wl: dict) -> None:
 
 
 def main() -> None:
-    # absence of a previously closed position means CLOSED — never re-seeded.
+    wl = json.loads(WATCHLIST.read_text())
+    # one-time explicit seeding; afterwards absence = CLOSED (never re-seeded)
     with locked_state() as st:
-        if not st.get("initialized"):
-            for p in wl["open_positions"]:
-                if p["ticker"] in st.get("retired_seeds", []):
-                    continue
-                if p["ticker"] not in st["positions"]:
-                    st["positions"][p["ticker"]] = {
-                        "shares": p["shares"], "fill": p["fill"],
-                        "invalidation": p["invalidation"]["label"],
-                        "horizon": p["horizon"], "seeded": True}
-            st["initialized"] = True
+        _seed_once(st, wl)
     if "--status" in sys.argv:
         print(status(wl, st))
         return
