@@ -33,7 +33,7 @@ def fresh_state():
 
 def test_zone_fill_guards():
     st = fresh_state()
-    wl = {"watches": [{"ticker": "XYZ", "cls": "AUTO_ENTRY", "invalidation": "s",
+    wl = {"watches": [{"ticker": "XYZ", "cls": "AUTO_ENTRY", "invalidation": "s", "stop_rule": {"type": "intraday_stop", "level": 1.0},
                        "horizon": "h", "size_frac": 1.0,
                        "trigger": "z", "params": {"zone": [8.0, 8.2]}}]}
     st["cash"] = 400.0  # below 500 min -> NO_ACTION
@@ -54,7 +54,7 @@ def test_close_breakout():
     df = mk_df(closes, vols)
     wl = {"watches": [{"ticker": "XN", "cls": "DETERMINISTIC_CONFIRMATION",
                        "trigger_type": "close_breakout_vol", "params": {"bo_level": 25.70, "vol_min": 2_000_000},
-                       "size_frac": 1.0, "invalidation": "s", "horizon": "h", "trigger": "t"}],
+                       "size_frac": 1.0, "invalidation": "s", "stop_rule": {"type": "intraday_stop", "level": 1.0}, "horizon": "h", "trigger": "t"}],
           "open_positions": []}
     m.close_pass(st, wl, {"XN": df}, "2026-10-02")
     assert st["watch_status"]["XN"] == "TRIGGERED"
@@ -68,7 +68,7 @@ def test_no_close_breakout_on_touch():
     df = mk_df(closes, vols)
     wl = {"watches": [{"ticker": "XN", "cls": "DETERMINISTIC_CONFIRMATION",
                        "trigger_type": "close_breakout_vol", "params": {"bo_level": 25.70, "vol_min": 2_000_000},
-                       "size_frac": 1.0, "invalidation": "s", "horizon": "h", "trigger": "t"}],
+                       "size_frac": 1.0, "invalidation": "s", "stop_rule": {"type": "intraday_stop", "level": 1.0}, "horizon": "h", "trigger": "t"}],
           "open_positions": []}
     m.close_pass(st, wl, {"XN": df}, "2026-10-02")
     assert st["watch_status"].get("XN") != "TRIGGERED"
@@ -79,7 +79,7 @@ def test_reanalysis_emits_no_fill():
     df = mk_df([120.0] * 30 + [111.0], [1_000_000] * 31)
     wl = {"watches": [{"ticker": "SY", "cls": "REANALYZE_ON_TRIGGER",
                        "trigger_type": "price_level_or_event", "params": {"levels": [112.0]},
-                       "size_frac": 1.0, "invalidation": "s", "horizon": "h", "trigger": "t"}],
+                       "size_frac": 1.0, "invalidation": "s", "stop_rule": {"type": "intraday_stop", "level": 1.0}, "horizon": "h", "trigger": "t"}],
           "open_positions": []}
     m.close_pass(st, wl, {"SY": df}, "2026-10-02")
     assert st["watch_status"]["SY"] == "REANALYSIS"
@@ -91,7 +91,7 @@ def test_expiry():
     df = mk_df([10.0] * 31, [1_000_000] * 31)
     wl = {"watches": [{"ticker": "ZZ", "cls": "DETERMINISTIC_CONFIRMATION",
                        "trigger_type": "close_breakout_vol", "params": {"bo_level": 25.7, "vol_min": 1},
-                       "size_frac": 1.0, "invalidation": "s", "horizon": "h", "trigger": "t"}],
+                       "size_frac": 1.0, "invalidation": "s", "stop_rule": {"type": "intraday_stop", "level": 1.0}, "horizon": "h", "trigger": "t"}],
           "open_positions": []}
     m.close_pass(st, wl, {"ZZ": df}, "2026-11-05")
     assert st["watch_status"]["ZZ"] == "EXPIRED"
@@ -163,7 +163,7 @@ def test_close_entry_waits_for_next_open():
     df = mk_df(closes, vols)
     wl = {"watches": [{"ticker": "XN", "cls": "DETERMINISTIC_CONFIRMATION",
                        "trigger_type": "close_breakout_vol", "params": {"bo_level": 25.70, "vol_min": 2_000_000},
-                       "size_frac": 1.0, "invalidation": "s", "horizon": "h", "trigger": "t"}],
+                       "size_frac": 1.0, "invalidation": "s", "stop_rule": {"type": "intraday_stop", "level": 1.0}, "horizon": "h", "trigger": "t"}],
           "open_positions": []}
     m.close_pass(st, wl, {"XN": df}, "2026-10-05")
     assert "XN" not in st["positions"] and st["pending_open_fills"][0]["ticker"] == "XN"
@@ -354,7 +354,7 @@ def test_schema_safe_dispatch_and_pending_via_intraday_open():
              "TWST": mk_df([200.0], [1], end="2026-10-05")}
     intra = {"PGEN": mk_intraday([7.79], "2026-10-06"), "TWST": mk_intraday([209.55], "2026-10-06")}
     m.resolve_pending(st, {"watches": [{"ticker": "TWST", "cls": "DETERMINISTIC_CONFIRMATION",
-                                        "invalidation": "x", "horizon": "y",
+                                        "invalidation": "x", "horizon": "y", "stop_rule": {"type": "intraday_stop", "level": 1.0},
                                         "trigger": "t", "size_frac": 0.5}]},
                       daily, "2026-10-06", live=True, intraday=intra)
     assert "PGEN" not in st["positions"] and "TWST" in st["positions"]

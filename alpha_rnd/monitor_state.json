@@ -1,12 +1,13 @@
 {
- "last_check_utc": "2026-10-06T14:46:03.877001+00:00",
+ "last_check_utc": "2026-10-07T10:33:13.795152+00:00",
  "processed_close_sessions": [
   "2026-10-02",
-  "2026-10-05"
+  "2026-10-05",
+  "2026-10-06"
  ],
  "confirm": {
   "IOVA": {
-   "consec_in_zone": 0
+   "consec_in_zone": 1
   },
   "CDNA": {},
   "SDGR": {
@@ -33,11 +34,11 @@
    "invalidation": "hard stop",
    "horizon": "2-3wk time-box",
    "seeded": true,
-   "mark": 84.16,
-   "mark_session": "2026-10-05",
+   "mark": 82.88,
+   "mark_session": "2026-10-06",
    "mark_source": "regular_session_close",
-   "unrealized": 257.92,
-   "unrealized_pct": 5.2,
+   "unrealized": 178.56,
+   "unrealized_pct": 3.6,
    "mark_status": "MARKED"
   },
   "ACN": {
@@ -46,11 +47,11 @@
    "invalidation": "daily close below 200 SMA",
    "horizon": "6-12 months",
    "seeded": true,
-   "mark": 195.05,
-   "mark_session": "2026-10-05",
+   "mark": 193.4,
+   "mark_session": "2026-10-06",
    "mark_source": "regular_session_close",
-   "unrealized": -238.8,
-   "unrealized_pct": -4.85,
+   "unrealized": -278.4,
+   "unrealized_pct": -5.66,
    "mark_status": "MARKED"
   },
   "APPS": {
@@ -59,11 +60,11 @@
    "invalidation": "hard stop",
    "horizon": "through ~Nov-3 earnings",
    "seeded": true,
-   "mark": 11.21,
-   "mark_session": "2026-10-05",
+   "mark": 10.49,
+   "mark_session": "2026-10-06",
    "mark_source": "regular_session_close",
-   "unrealized": -39.78,
-   "unrealized_pct": -0.8,
+   "unrealized": -358.02,
+   "unrealized_pct": -7.17,
    "mark_status": "MARKED"
   },
   "SDGR": {
@@ -72,9 +73,18 @@
    "frac": 1.0,
    "invalidation": "NOT_STATED",
    "horizon": "trigger-event driven",
-   "stop_rule": {},
+   "stop_rule": {
+    "type": "close_below",
+    "level": 27.29,
+    "label": "mgmt review: tightened stop just below $27.29"
+   },
    "entry_session": "2026-10-06",
-   "mark_status": "UNMARKED_SINCE_ENTRY"
+   "mark_status": "MARKED",
+   "mark": 28.9,
+   "mark_session": "2026-10-06",
+   "mark_source": "regular_session_close",
+   "unrealized": -338.1,
+   "unrealized_pct": -6.77
   },
   "TWST": {
    "shares": 11,
@@ -82,33 +92,64 @@
    "frac": 0.5,
    "invalidation": "stay out if $183.39 breaks on heavy volume",
    "horizon": "1-3 months post-lockup",
-   "stop_rule": {},
+   "stop_rule": {
+    "type": "close_below",
+    "level": 164.0,
+    "label": "mgmt review: hard exit on any close below $164"
+   },
    "entry_session": "2026-10-06",
-   "mark_status": "UNMARKED_SINCE_ENTRY"
+   "mark_status": "MARKED",
+   "mark": 166.97,
+   "mark_session": "2026-10-06",
+   "mark_source": "regular_session_close",
+   "unrealized": -468.38,
+   "unrealized_pct": -20.32
   }
  },
  "cash": 77562.62598318882,
- "nav_last": 92416.57,
+ "nav_last": 98468.94,
  "watch_status": {
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED",
   "SDGR": "TRIGGERED"
  },
- "pending_open_exits": [],
+ "pending_open_exits": [
+  {
+   "ticker": "ACN",
+   "why": "close<194.0",
+   "confirm_session": "2026-10-06"
+  },
+  {
+   "ticker": "TWST",
+   "shares": 4,
+   "confirm_session": "2026-10-07",
+   "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~4 of 11 at next open; residual hard exit on close<164"
+  },
+  {
+   "ticker": "SDGR",
+   "shares": 100,
+   "confirm_session": "2026-10-07",
+   "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~100 of 161 at next open; residual stop close<$27.29"
+  }
+ ],
  "book": {
-  "mark_session": "2026-10-05",
-  "market_value": 14853.94,
-  "unrealized": -20.66,
-  "exposure": 14853.94,
-  "nav": 92416.57,
-  "provisional_nav_incl_unmarked_at_cost": 99712.62,
-  "unmarked_positions": [
-   "SDGR",
-   "TWST"
-  ],
+  "mark_session": "2026-10-06",
+  "market_value": 20906.31,
+  "unrealized": -1264.34,
+  "exposure": 20906.31,
+  "nav": 98468.94,
+  "provisional_nav_incl_unmarked_at_cost": 98468.94,
+  "unmarked_positions": [],
   "cash": 77562.62598318882,
   "realized": -259.42,
-  "marked_at": "2026-10-06T14:46:03.373881+00:00"
+  "marked_at": "2026-10-07T08:53:04.019766+00:00"
  },
- "realized": -259.42
+ "realized": -259.42,
+ "policy": {
+  "RISK_GUARDRAIL_V1": {
+   "active_from": "2026-10-07",
+   "invariant": "no automatic entry without explicit machine-actionable post-entry risk rule",
+   "boundary": "PRE_RISK_GUARDRAIL fills before this date are unaltered"
+  }
+ }
 }

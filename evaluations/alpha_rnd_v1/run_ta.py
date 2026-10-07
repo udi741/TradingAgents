@@ -66,18 +66,23 @@ def pick(pat, txt, default):
     return m.group(1).capitalize() if m else default
 
 
-def run_one(ticker: str, date: str) -> dict:
+def run_one(ticker: str, date: str,
+            position: tuple[float, float] | None = None,
+            out_name: str | None = None) -> dict:
     from tradingagents.graph.trading_graph import TradingAgentsGraph
-    from tradingagents.portfolio import PortfolioContext
+    from tradingagents.portfolio import PortfolioContext, Position
 
-    art_path = D / "case_artifacts" / f"{ticker}_{date}.json"
+    art_path = D / "case_artifacts" / (out_name or f"{ticker}_{date}.json")
     if art_path.exists():
         return json.loads(art_path.read_text())
 
     graph = TradingAgentsGraph(
         selected_analysts=("market", "social", "news", "fundamentals"), config=cfg()
     )
-    port = PortfolioContext(cash=100000, currency="USD", positions=[])
+    port = PortfolioContext(
+        cash=100000, currency="USD",
+        positions=[Position(ticker=ticker, quantity=position[0],
+                            average_price=position[1])] if position else [])
     t0 = time.monotonic()
     st, signal = graph.propagate(ticker, date, asset_type="stock", portfolio=port)
     dur = time.monotonic() - t0

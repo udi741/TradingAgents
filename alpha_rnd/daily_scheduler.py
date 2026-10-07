@@ -43,6 +43,10 @@ BRIDGE_ACTIVITY_WINDOW_S = 900  # busy if log touched within 15 min
 
 DEEP_QUOTA = 10
 PY = sys.executable
+# TA needs Python >=3.11 (official code uses datetime.UTC/StrEnum); the repo
+# venv is the canonical interpreter, falling back to the system python.
+_TA_PY = ROOT / ".venv312" / "bin" / "python"
+TA_PY = str(_TA_PY) if _TA_PY.exists() else PY
 
 
 def _j(path: Path, default=None):
@@ -204,7 +208,7 @@ def run_cycle(session: str) -> None:
         # model call; pass only missing tickers to keep the subprocess cheap.
         missing = [t for t in deep
                    if not (EV_DIR / "case_artifacts" / f"{t}_{session}.json").exists()]
-        r = subprocess.run([PY, str(EV_DIR / "run_ta.py"), session, *missing],
+        r = subprocess.run([TA_PY, str(EV_DIR / "run_ta.py"), session, *missing],
                            cwd=ROOT,
                            env={**os.environ, "PYTHONPATH": str(ROOT)},
                            capture_output=True, text=True, timeout=14400)
@@ -216,6 +220,13 @@ def run_cycle(session: str) -> None:
         if r.returncode != 0 and not signals:
             event("ALPHA_DISCOVERY_ERROR", session=session,
                   stage="ta", tail=(r.stderr or r.stdout)[-400:])
+            return
+        if not signals:
+            # silent per-ticker failures leave only .error.json artifacts —
+            # a cycle without analyses is NOT complete
+            event("ALPHA_DISCOVERY_ERROR", session=session,
+                  stage="ta_empty",
+                  tail=f"0/{len(deep)} TA artifacts produced")
             return
         # 4. Automatic publication synthesis (translator, not strategy):
         #    frozen TA artifacts -> PublicationIntents -> fail-closed

@@ -1,0 +1,1 @@
+{"ticker": "SYNA", "error": "ImportError(\"cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)\")", "at": "2026-10-06T04:16:39.794151+00:00"}

@@ -180,10 +180,48 @@ def last_close_session(daily: dict[str, pd.DataFrame]) -> str | None:
     return str(min(dates).date())
 
 
+RISK_GUARDRAIL_FROM = "2026-10-07"  # policy-version boundary (prospective only)
+
+
+def post_entry_risk_plan(watch: dict) -> dict | None:
+    """Machine-actionable POST-ENTRY risk rule, or None.
+    Qualifying: typed intraday stop; typed close/exit rule; explicit typed
+    stop_rule on the spec; legacy numeric 'stop $X' still parseable (existing
+    migration fallback, marked). A horizon alone, NOT_STATED, or a pre-entry
+    veto does NOT qualify."""
+    inv = watch.get("invalidation")
+    if isinstance(inv, dict) and inv.get("type") in (
+            "intraday_stop", "close_below", "price_below"):
+        return inv
+    sr = watch.get("stop_rule")
+    if isinstance(sr, dict) and sr.get("type") == "intraday_stop":
+        return sr
+    for r in watch.get("exit_rules") or []:
+        if r.get("type") in ("intraday_stop", "close_below"):
+            return r
+    mm = re.search(r"stop \$?(\d+\.?\d*)", str(inv or ""))
+    if mm:
+        return {"type": "intraday_stop", "level": float(mm.group(1)),
+                "legacy_parsed": True}
+    return None
+
+
 def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type="PAPER_ENTRY") -> None:
     watch = next(w for w in wl["watches"] if w["ticker"] == ticker)
     if ticker in st["positions"]:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
+        return
+        emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
+        return
+    if not post_entry_risk_plan(watch):
+        st["watch_status"][ticker] = "RISK_PLAN_REQUIRED"
+        emit(st, {"ticker": ticker, "action": "RISK_PLAN_REQUIRED",
+                  "why": "entry triggered but frozen plan has no explicit "
+                         "machine-actionable post-entry risk/exit rule; "
+                         "interesting stock, incomplete risk plan — NOT BOUGHT"})
+        notify(f"ALPHA_RND RISK PLAN REQUIRED — NOT AUTO-EXECUTABLE\n\n{ticker}\n"
+               "TA identified an entry opportunity but provided no explicit "
+               "post-entry risk/exit rule.\nStatus: NOT BOUGHT.\nUSER ACTION: NONE")
         return
     if len(st["positions"]) >= MAX_POSITIONS:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "no_slots"})
@@ -225,16 +263,23 @@ Stop: {watch['invalidation'][:80]}
 Expected horizon: {watch['horizon']}""")
 
 
-def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "") -> None:
-    pos = st["positions"].pop(ticker, None)
+def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "",
+            shares: int | None = None) -> None:
+    pos = st["positions"].get(ticker)
     if pos is None:
         return
-    proceeds = pos["shares"] * price * (1 - COST_BPS)
+    sell = min(shares or pos["shares"], pos["shares"])
+    proceeds = sell * price * (1 - COST_BPS)
     st["cash"] += proceeds
-    st["realized"] = round(st.get("realized", 0.0)
-                           + proceeds - pos.get("cost", pos["shares"] * pos["fill"]), 2)
+    pos["shares"] -= sell
+    if pos["shares"] <= 0:
+        st["positions"].pop(ticker)
+    alloc = pos.get("cost", pos["shares"] * pos["fill"]) * (sell / (pos["shares"] + sell))
+    st["realized"] = round(st.get("realized", 0.0) + proceeds - alloc, 2)
+    if pos["shares"] > 0:
+        pos["cost"] = round(pos.get("cost", 0) - alloc, 2)
     emit(st, {"ticker": ticker, "action": "PAPER_EXIT", "why": why,
-              "price": price, "shares": pos["shares"], "proceeds": round(proceeds, 2)})
+              "price": price, "shares": sell, "proceeds": round(proceeds, 2)})
     notify(f"ALPHA_RND PAPER EXIT EXECUTED\n\n{ticker}\n{why}\nExit @ ${price:.2f}\nProceeds ${proceeds:,.2f}")
 
 
@@ -269,7 +314,7 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
                         and current_session_date > od["confirm_session"]:
                     px = float(idf["Open"].iloc[0])
                     if is_exit:
-                        do_exit(st, t, px, od["why"])
+                        do_exit(st, t, px, od["why"], shares=od.get("shares"))
                     else:
                         do_fill(st, wl, t, px, od.get("frac", 1.0))
                     continue
@@ -285,7 +330,7 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
                 continue
             px = float(df[df.index.strftime("%Y-%m-%d") == target]["Open"].iloc[0])
             if is_exit:
-                do_exit(st, t, px, od["why"])
+                do_exit(st, t, px, od["why"], shares=od.get("shares"))
             else:
                 do_fill(st, wl, t, px, od.get("frac", 1.0))
         queue[:] = keep
@@ -294,6 +339,22 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
 def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
     avgv = {t: df["Volume"].rolling(20).mean() for t, df in daily.items()}
     ret = {t: df["Close"].pct_change() for t, df in daily.items()}
+
+    # typed close-below stop_rule on ANY open position (e.g. post-entry
+    # management rules from a fresh review) -> PENDING_NEXT_OPEN exit
+    for t, p in list(st["positions"].items()):
+        sr = p.get("stop_rule") or {}
+        if sr.get("type") == "close_below" and t in daily and t not in {
+                o["ticker"] for o in st["pending_open_exits"]}:
+            c = float(daily[t]["Close"].iloc[-1])
+            if c < sr["level"]:
+                st["pending_open_exits"].append(
+                    {"ticker": t, "why": sr.get("label", f"close<{sr['level']}"),
+                     "confirm_session": session})
+                emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT",
+                          "why": sr.get("label"), "confirm_close": c, "session": session})
+                notify(f"ALPHA_RND EXIT CONFIRMED — PENDING NEXT OPEN\n\n{t}\n"
+                       f"{sr.get('label')}\nConfirming close ${c:.2f}")
 
     # ── position exits: close-confirmed rules -> PENDING_NEXT_OPEN exit ──
     for pos in wl["open_positions"]:

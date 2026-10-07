@@ -7,3 +7,10 @@
 {"ticker": "TWST", "action": "PAPER_ENTRY", "price": 209.5500030517578, "shares": 11, "cost": 2307.36, "cls": "DETERMINISTIC_CONFIRMATION", "invalidation": "stay out if $183.39 breaks on heavy volume", "utc": "2026-10-06T14:18:54.441540+00:00"}
 {"ticker": "PGEN", "action": "PAPER_EXIT", "why": "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP", "price": 7.789999961853027, "shares": 609, "proceeds": 4739.37, "utc": "2026-10-06T14:18:54.458026+00:00"}
 {"ticker": "PGEN", "action": "NO_ACTION", "why": "rule_eval_error KeyError('PGEN')", "utc": "2026-10-06T14:18:54.466269+00:00"}
+{"action": "EOD_MARK_UNAVAILABLE", "tickers": ["PBF", "ACN", "APPS"], "session": "2026-10-05", "utc": "2026-10-06T15:00:34.528895+00:00"}
+{"action": "EOD_MARK_UNAVAILABLE", "tickers": ["PBF"], "session": "2026-10-05", "utc": "2026-10-06T15:02:21.149586+00:00"}
+{"action": "EOD_MARK_UNAVAILABLE", "tickers": ["PBF", "ACN", "APPS"], "session": "2026-10-05", "utc": "2026-10-06T15:03:20.746691+00:00"}
+{"action": "EOD_MARK_UNAVAILABLE", "tickers": ["ACN"], "session": "2026-10-05", "utc": "2026-10-06T15:13:14.429121+00:00"}
+{"action": "EOD_MARK_UNAVAILABLE", "tickers": ["ACN", "APPS"], "session": "2026-10-05", "utc": "2026-10-06T15:24:14.823116+00:00"}
+{"ticker": "ACN", "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT", "why": "close<194.0", "confirm_close": 193.39999389648438, "session": "2026-10-06", "utc": "2026-10-07T08:53:03.984512+00:00"}
+{"action": "POLICY_BOUNDARY", "kind": "RISK_GUARDRAIL_V1", "active_from": "2026-10-07", "why": "no auto-entry without a machine-actionable post-entry risk plan; prospective only", "utc": "2026-10-07T10:32:42.470007+00:00"}
