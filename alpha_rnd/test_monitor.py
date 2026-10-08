@@ -605,3 +605,43 @@ def test_confirm_blocked_without_risk_plan():
 
 
 test_confirm_blocked_without_risk_plan()
+
+
+def test_risk_block_idempotent_across_ticks_and_restart():
+    # same watch revision: tick1 emits once; ticks 2/3 and a "restart" emit 0
+    def mk():
+        st = fresh_state()
+        df = mk_df([10.0] * 30 + [76.0], [1_000_000] * 31)
+        wl = {"watches": [{"ticker": "TX", "cls": "DETERMINISTIC_CONFIRMATION",
+                           "trigger_type": "close_in_zone", "params": {"zone2": [74.6, 77.88]},
+                           "size_frac": 0.5, "invalidation": "stop under ~$72 (shelf leg)",
+                           "horizon": "h", "trigger": "t",
+                           "artifact": "TX_2026-10-02.json", "v": 2}],
+              "open_positions": []}
+        return st, wl, df
+    st, wl, df = mk()
+    before = len(Path(m.EVENTS).read_text().splitlines()) if Path(m.EVENTS).exists() else 0
+    for i in range(3):  # repeated ticks, same revision
+        m.close_pass(st, wl, {"TX": df}, "2026-10-07")
+    evs = Path(m.EVENTS).read_text().splitlines()
+    new = [json.loads(l) for l in evs[before:]]
+    blocks = [e for e in new if e.get("action") == "RISK_PLAN_REQUIRED"]
+    assert len(blocks) == 1, f"expected exactly 1 block event, got {len(blocks)}"
+    assert st["pending_open_fills"] == [] and "TX" not in st["positions"]
+    assert st["watch_status"]["TX"] == "RISK_PLAN_REQUIRED"
+    # restart: fresh process view, same persisted state -> still silent
+    m.close_pass(st, wl, {"TX": df}, "2026-10-07")
+    assert len(Path(m.EVENTS).read_text().splitlines()) == before + 2  # CONFIRMED+block only
+    # new published revision -> eligible for re-evaluation; still unsafe -> ONE new block event
+    wl["watches"][0]["v"] = 3
+    wl["watches"][0]["artifact"] = "TX_2026-10-08.json"
+    m.close_pass(st, wl, {"TX": df}, "2026-10-08")
+    evs = Path(m.EVENTS).read_text().splitlines()
+    blocks = [json.loads(l) for l in evs[before:] if json.loads(l).get("action") == "RISK_PLAN_REQUIRED"]
+    assert len(blocks) == 2 and blocks[-1]["event_id"].endswith("TX_2026-10-08.json#3")
+    m.close_pass(st, wl, {"TX": df}, "2026-10-08")  # same new revision again -> silent
+    assert len(Path(m.EVENTS).read_text().splitlines()) == before + 4
+    print("risk_block_idempotency ok")
+
+
+test_risk_block_idempotent_across_ticks_and_restart()

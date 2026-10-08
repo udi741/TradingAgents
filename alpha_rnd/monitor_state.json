@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-08T06:19:03.913928+00:00",
+ "last_check_utc": "2026-10-08T06:25:07.252631+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
@@ -132,9 +132,13 @@
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-08T06:19:03.873948+00:00",
+  "at": "2026-10-08T06:25:07.214900+00:00",
   "daily_ok": 16,
   "daily_req": 19,
   "status": "ok"
+ },
+ "risk_blocked": {
+  "IOVA": "IOVA_2026-10-01.json#1",
+  "TXG": "TXG_2026-10-02.json#2"
  }
 }

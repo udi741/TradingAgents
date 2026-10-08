@@ -198,6 +198,19 @@ def post_entry_risk_plan(watch: dict) -> dict | None:
     return None
 
 
+def _watch_rev(w: dict) -> str:
+    """Immutable watch-revision identity for risk-block idempotency: tied to
+    the frozen publication artifact + revision, not the wall clock."""
+    return f"{w.get('artifact')}#{w.get('v', '')}"
+
+
+def _risk_blocked(st: dict, w: dict) -> bool:
+    """True while the SAME watch revision stays blocked. A new published
+    revision (different artifact/v) is evaluated again."""
+    return st.get("watch_status", {}).get(w["ticker"]) == "RISK_PLAN_REQUIRED" \
+        and st.get("risk_blocked", {}).get(w["ticker"]) == _watch_rev(w)
+
+
 def _exec_check(st: dict, exec_id: str) -> bool:
     """Exactly-once guard, phase 1: True if fresh (not yet recorded)."""
     if exec_id in st.setdefault("executed", []):
@@ -221,7 +234,9 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
         return
     if not post_entry_risk_plan(watch):
         st["watch_status"][ticker] = "RISK_PLAN_REQUIRED"
+        st.setdefault("risk_blocked", {})[ticker] = _watch_rev(watch)
         emit(st, {"ticker": ticker, "action": "RISK_PLAN_REQUIRED",
+                  "event_id": f"risk_block:{ticker}:{_watch_rev(watch)}",
                   "why": "entry triggered but frozen plan has no explicit "
                          "machine-actionable post-entry risk/exit rule; "
                          "interesting stock, incomplete risk plan — NOT BOUGHT"})
@@ -397,7 +412,8 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
 
     for w in wl["watches"]:
         t = w["ticker"]
-        if st["watch_status"].get(t) in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS"):
+        if st["watch_status"].get(t) in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS") \
+                or _risk_blocked(st, w):
             continue
         if session > EXPIRY:
             st["watch_status"][t] = "EXPIRED"
@@ -425,7 +441,9 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                 # announce "ENTRY CONFIRMED" for a plan that cannot execute.
                 if not post_entry_risk_plan(w):
                     st["watch_status"][t] = "RISK_PLAN_REQUIRED"
+                    st.setdefault("risk_blocked", {})[t] = _watch_rev(w)
                     emit(st, {"ticker": t, "action": "RISK_PLAN_REQUIRED",
+                              "event_id": f"risk_block:{t}:{_watch_rev(w)}",
                               "how": how, "session": session,
                               "why": "trigger confirmed but no machine-actionable "
                                      "post-entry risk plan — NOT AUTO-EXECUTABLE"})
@@ -520,7 +538,8 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
 
 def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
     tickers = [w["ticker"] for w in wl["watches"]
-               if st["watch_status"].get(w["ticker"]) not in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS")]
+               if st["watch_status"].get(w["ticker"]) not in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS")
+               and not _risk_blocked(st, w)]
     wl_pos = {p["ticker"]: p for p in wl["open_positions"]}
     pos_tickers = list(st["positions"])  # ALL open positions, incl. watch fills
     pend = {o["ticker"] for o in st["pending_open_fills"]} | {o["ticker"] for o in st["pending_open_exits"]}
@@ -565,7 +584,8 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
 
     for w in wl["watches"]:
         t = w["ticker"]
-        if st["watch_status"].get(t) in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS"):
+        if st["watch_status"].get(t) in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS") \
+                or _risk_blocked(st, w):
             continue
         if now_utc().strftime("%Y-%m-%d") > EXPIRY:
             continue
