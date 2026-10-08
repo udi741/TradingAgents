@@ -219,8 +219,6 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
     if ticker in st["positions"]:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
         return
-        emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
-        return
     if not post_entry_risk_plan(watch):
         st["watch_status"][ticker] = "RISK_PLAN_REQUIRED"
         emit(st, {"ticker": ticker, "action": "RISK_PLAN_REQUIRED",
@@ -423,11 +421,23 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                           "why": how, "session": session})
                 notify(f"{t} TRIGGER\n\n{how}\n\nClass: REANALYZE_ON_TRIGGER\n\nAction: NO BUY YET — single-ticker refresh required.")
             else:
-                st["pending_open_fills"].append({"ticker": t, "frac": w["size_frac"],
-                                                 "why": how, "confirm_session": session})
-                emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY",
-                          "how": how, "session": session})
-                notify(f"ALPHA_RND ENTRY CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{how}\nClass: {w['cls']}\nEnters at next regular-session open.")
+                # Fill-time guardrail belongs at confirmation too: never
+                # announce "ENTRY CONFIRMED" for a plan that cannot execute.
+                if not post_entry_risk_plan(w):
+                    st["watch_status"][t] = "RISK_PLAN_REQUIRED"
+                    emit(st, {"ticker": t, "action": "RISK_PLAN_REQUIRED",
+                              "how": how, "session": session,
+                              "why": "trigger confirmed but no machine-actionable "
+                                     "post-entry risk plan — NOT AUTO-EXECUTABLE"})
+                    notify(f"ALPHA_RND TRIGGER — NOT AUTO-EXECUTABLE\n\n{t}\n{how}\n"
+                           "No machine-actionable post-entry risk plan.\n"
+                           "Status: NOT BOUGHT. USER ACTION: NONE")
+                else:
+                    st["pending_open_fills"].append({"ticker": t, "frac": w["size_frac"],
+                                                     "why": how, "confirm_session": session})
+                    emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY",
+                              "how": how, "session": session})
+                    notify(f"ALPHA_RND ENTRY CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{how}\nClass: {w['cls']}\nEnters at next regular-session open.")
 
         # mechanical evaluators
         if "multi_close_in_zone" in tt:
@@ -508,13 +518,16 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
             emit(st, {"ticker": t, "action": "NO_ACTION", "why": f"veto: close {c}<{p['veto_level']} heavy vol"})
 
 
-def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> None:
+def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
     tickers = [w["ticker"] for w in wl["watches"]
                if st["watch_status"].get(w["ticker"]) not in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS")]
     wl_pos = {p["ticker"]: p for p in wl["open_positions"]}
     pos_tickers = list(st["positions"])  # ALL open positions, incl. watch fills
     pend = {o["ticker"] for o in st["pending_open_fills"]} | {o["ticker"] for o in st["pending_open_exits"]}
-    data = fetch_intraday(list(set(tickers + pos_tickers + list(pend))))
+    wanted = list(set(tickers + pos_tickers + list(pend)))
+    data = fetch_intraday(wanted)
+    st.setdefault("data_health", {})["intraday_ok"] = len(data)
+    st["data_health"]["intraday_req"] = len(wanted)
     today_sess = None
     for df in data.values():
         d = str(df.index[-1].tz_convert("US/Eastern").date())
@@ -573,6 +586,7 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> None:
         if prog.get("breakout_armed") and "retest_zone" in p and low <= p["retest_zone"][1]:
             do_fill(st, wl, t, p["retest_zone"][1], w["size_frac"])
             continue
+    return len(data)
 
 
 def settle_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
@@ -673,9 +687,15 @@ def run_once(wl: dict) -> None:
 
 
 def _run_once_locked(st: dict, wl: dict) -> None:
-    daily = fetch_daily([w["ticker"] for w in wl["watches"]] +
-                        [p["ticker"] for p in wl["open_positions"]] +
-                        list(st["positions"]))
+    wanted = ([w["ticker"] for w in wl["watches"]] +
+              [p["ticker"] for p in wl["open_positions"]] +
+              list(st["positions"]))
+    daily = fetch_daily(wanted)
+    # PROCESS_ALIVE != MARKET_DATA_HEALTHY: a tick that got zero usable
+    # bars is a successful process but a failed data pass — say so durably.
+    st["data_health"] = {"at": now_utc().isoformat(),
+                         "daily_ok": len(daily), "daily_req": len(wanted),
+                         "status": "ok" if daily else "down"}
     sess = last_close_session(daily)
     MIN_EVAL_SESSION = "2026-10-03"  # triggers frozen 10-02/10-03: no retro eval
     if sess and sess > MIN_EVAL_SESSION and sess not in st["processed_close_sessions"]:
@@ -695,6 +715,8 @@ def _run_once_locked(st: dict, wl: dict) -> None:
             eod_marks(st, daily, sess)
     if session_open(now_utc()):
         intraday_pass(st, wl, daily)
+        if st["data_health"]["status"] == "ok" and not st["data_health"].get("intraday_ok"):
+            st["data_health"]["status"] = "degraded_intraday"
     st["last_check_utc"] = now_utc().isoformat()
     save_state(st)
 
@@ -719,12 +741,12 @@ def status(wl: dict, st: dict) -> str:
         src = "watch fill" if t not in [p["ticker"] for p in wl["open_positions"]] else "V1 fill"
         lines += [f"{t}  {pos['shares']}sh @{pos['fill']} ({src})"]
     lines += ["", f"cash ${st['cash']:,.2f}", ""]
+    h = st.get("data_health") or {}
+    lines += [f"data: {h.get('status', 'unknown')} "
+              f"(daily {h.get('daily_ok', '?')}/{h.get('daily_req', '?')} at {h.get('at', '?')})", ""]
     return "\n".join(lines)
 
 
-def main() -> None:
-    wl = json.loads(WATCHLIST.read_text())
-    st = load_state()  # read-only snapshot for --status
 def _seed_once(st: dict, wl: dict) -> None:
     """One-time explicit initialization. After it, absence of a previously
     closed position means CLOSED — never re-seeded (retired_seeds is
@@ -761,7 +783,8 @@ def main() -> None:
     else:
         run_once(wl)
         st = load_state()
-        print(f"checked {st['last_check_utc']}")
+        h = st.get("data_health") or {}
+        print(f"checked {st['last_check_utc']} data={h.get('status', 'unknown')}")
 
 
 if __name__ == "__main__":

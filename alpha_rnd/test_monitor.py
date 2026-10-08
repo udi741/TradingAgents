@@ -579,3 +579,29 @@ def test_production_main_entrypoint():
 
 
 test_production_main_entrypoint()
+
+
+def test_confirm_blocked_without_risk_plan():
+    # TXG-style prose invalidation ("stop under ~$72") is NOT machine-actionable:
+    # confirmation must block BEFORE announcing "ENTRY CONFIRMED" or queueing a fill
+    st = fresh_state()
+    df = mk_df([10.0] * 30 + [76.0], [1_000_000] * 31)
+    wl = {"watches": [{"ticker": "TX", "cls": "DETERMINISTIC_CONFIRMATION",
+                       "trigger_type": "close_in_zone", "params": {"zone2": [74.6, 77.88]},
+                       "size_frac": 0.5, "invalidation": "stop under ~$72 (shelf leg)",
+                       "horizon": "h", "trigger": "t"}],
+          "open_positions": []}
+    m.close_pass(st, wl, {"TX": df}, "2026-10-07")
+    assert st["pending_open_fills"] == [], "unriskplanned entry must not queue"
+    assert st["watch_status"]["TX"] == "RISK_PLAN_REQUIRED"
+    evs = [json.loads(l) for l in Path(m.EVENTS).read_text().splitlines()]
+    assert any(e.get("action") == "RISK_PLAN_REQUIRED" and e.get("ticker") == "TX" for e in evs)
+    # a typed stop on the same trigger DOES queue normally
+    st2 = fresh_state()
+    wl["watches"][0]["stop_rule"] = {"type": "intraday_stop", "level": 72.0}
+    m.close_pass(st2, wl, {"TX": df}, "2026-10-07")
+    assert st2["pending_open_fills"][0]["ticker"] == "TX"
+    print("confirm_guardrail ok")
+
+
+test_confirm_blocked_without_risk_plan()

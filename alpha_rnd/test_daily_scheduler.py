@@ -2,6 +2,7 @@
 """Orchestration tests for alpha_rnd.daily_scheduler — no model calls."""
 import fcntl
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,7 +14,8 @@ import alpha_rnd.daily_scheduler as ds
 class SchedTest(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
-        for attr in ("SCHED_LOCK", "CYCLE_LOCK", "SCHED_STATE", "EVENTS", "LOG"):
+        for attr in ("SCHED_LOCK", "CYCLE_LOCK", "SCHED_STATE", "EVENTS", "LOG",
+                     "SCHED_STATE_LOCK"):
             setattr(ds, attr, self.tmp / getattr(ds, attr).name)
         ds.EV_DIR = self.tmp / "ev"
         ds.EV_DIR.mkdir()
@@ -148,6 +150,66 @@ class SchedTest(unittest.TestCase):
                         or all(len(a) != 1 for a in ta_calls[0][2:]))  # 0 missing tickers
         kinds = [e["kind"] for e in self._events()]
         self.assertIn("ALPHA_DISCOVERY_ERROR", kinds)  # synthesize/publish not provisioned in this fake
+
+    def test_dead_run_reaped_interrupted_and_relaunched(self):
+        # run-session process vanished (power-off/kill): INTERRUPTED once,
+        # record cleared, due logic resumes prospectively
+        ds._state_txn(lambda st: st.__setitem__("current_run",
+            {"session": "2026-10-05", "run_id": "x", "pid": 99999999,
+             "started_at": "x", "stage": "ta", "last_progress_at": "x",
+             "deep_total": 10}))
+        with mock.patch.object(ds, "last_completed_session", return_value="2026-10-05"), \
+             mock.patch.object(ds.subprocess, "run",
+                               return_value=mock.Mock(returncode=0)), \
+             mock.patch.object(ds.subprocess, "Popen") as pop:
+            ds.check()
+        st = ds._j(ds.SCHED_STATE)
+        self.assertNotIn("current_run", st)
+        self.assertEqual(st["session_status"]["2026-10-05"], "INTERRUPTED")
+        kinds = [e["kind"] for e in self._events()]
+        self.assertEqual(kinds.count("ALPHA_DISCOVERY_INTERRUPTED"), 1)
+        pop.assert_called_once()
+
+    def test_live_run_reported_not_interrupted(self):
+        ds._state_txn(lambda st: st.__setitem__("current_run",
+            {"session": "2026-10-05", "run_id": "x", "pid": os.getpid(),
+             "started_at": "x", "stage": "discovery",
+             "last_progress_at": ds._utcnow(), "deep_total": 0}))
+        with mock.patch.object(ds, "last_completed_session", return_value="2026-10-05"), \
+             mock.patch.object(ds.subprocess, "Popen") as pop:
+            ds.check()
+        pop.assert_not_called()
+        self.assertNotIn("ALPHA_DISCOVERY_INTERRUPTED",
+                         [e["kind"] for e in self._events()])
+
+    def test_exception_leaves_terminal_error(self):
+        # crash inside the pipeline -> ERROR terminal + event, not silent STARTED
+        with mock.patch.object(ds, "_run_cycle", side_effect=RuntimeError("boom")):
+            ds.run_cycle("2026-10-05")
+        st = ds._j(ds.SCHED_STATE)
+        self.assertEqual(st["session_status"]["2026-10-05"], "ERROR")
+        self.assertNotIn("current_run", st)
+        self.assertIn("ALPHA_DISCOVERY_ERROR", [e["kind"] for e in self._events()])
+
+    def test_success_writes_complete_terminal(self):
+        (ds.EV_DIR / "candidate_pool_frozen_2026-10-05.json").write_text(json.dumps(
+            {"candidates": [{"ticker": "A", "labels": ["MOMENTUM"], "rs_60": 1}]}))
+        (ds.EV_DIR / "case_artifacts" / "A_2026-10-05.json").write_text(
+            json.dumps({"ticker": "A", "signal": "HOLD"}))
+        (ds.EV_DIR / "publication_intents_2026-10-05.json").write_text(
+            json.dumps({"validated": [], "review_required": []}))
+        def fake_run(cmd, **kw):
+            if "publish" in str(cmd):
+                ds._state_txn(lambda st: st.setdefault("published_sessions", {})
+                              .__setitem__("2026-10-05", {"published_at": "x"}))
+            return mock.Mock(returncode=0, stdout="", stderr="")
+        with mock.patch.object(ds.subprocess, "run", side_effect=fake_run), \
+             mock.patch.object(ds, "ensure_bridge", return_value=True), \
+             mock.patch.object(ds, "deep_allocation", return_value=["A"]):
+            ds.run_cycle("2026-10-05")
+        st = ds._j(ds.SCHED_STATE)
+        self.assertEqual(st["session_status"]["2026-10-05"], "COMPLETE")
+        self.assertNotIn("current_run", st)
 
     def test_deep_allocation_formula_and_tiebreak(self):
         cands = [

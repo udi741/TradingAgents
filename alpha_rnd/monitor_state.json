@@ -1,13 +1,14 @@
 {
- "last_check_utc": "2026-10-07T15:05:04.122833+00:00",
+ "last_check_utc": "2026-10-08T06:19:03.913928+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
-  "2026-10-06"
+  "2026-10-06",
+  "2026-10-07"
  ],
  "confirm": {
   "IOVA": {
-   "consec_in_zone": 1
+   "consec_in_zone": 2
   },
   "CDNA": {},
   "SDGR": {
@@ -34,12 +35,12 @@
    "invalidation": "hard stop",
    "horizon": "2-3wk time-box",
    "seeded": true,
-   "mark_source": "regular_session_close (restored from incident snapshot)",
+   "mark_source": "regular_session_close",
    "mark_status": "MARKED",
-   "mark": 82.88,
-   "mark_session": "2026-10-06",
-   "unrealized": 178.56,
-   "unrealized_pct": 3.6
+   "mark": 83.68,
+   "mark_session": "2026-10-07",
+   "unrealized": 228.16,
+   "unrealized_pct": 4.6
   },
   "SDGR": {
    "shares": 61,
@@ -54,12 +55,12 @@
    },
    "entry_session": "2026-10-06",
    "mark_status": "MARKED",
-   "mark_source": "regular_session_close (restored from incident snapshot)",
+   "mark_source": "regular_session_close",
    "cost": -1174.53,
-   "mark": 28.9,
-   "mark_session": "2026-10-06",
-   "unrealized": -128.1,
-   "unrealized_pct": -6.77
+   "mark": 27.29,
+   "mark_session": "2026-10-07",
+   "unrealized": -226.31,
+   "unrealized_pct": -11.97
   },
   "TWST": {
    "shares": 7,
@@ -74,31 +75,42 @@
    },
    "entry_session": "2026-10-06",
    "mark_status": "MARKED",
-   "mark_source": "regular_session_close (restored from incident snapshot)",
+   "mark_source": "regular_session_close",
    "cost": -533.4,
-   "mark": 166.97,
-   "mark_session": "2026-10-06",
-   "unrealized": -298.06,
-   "unrealized_pct": -20.32
+   "mark": 155.65,
+   "mark_session": "2026-10-07",
+   "unrealized": -377.3,
+   "unrealized_pct": -25.72
   }
  },
  "cash": 90203.02,
- "nav_last": 98273.27,
+ "nav_last": 98145.42,
  "watch_status": {
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED",
-  "SDGR": "TRIGGERED"
+  "SDGR": "TRIGGERED",
+  "IOVA": "RISK_PLAN_REQUIRED",
+  "TXG": "RISK_PLAN_REQUIRED"
  },
- "pending_open_exits": [],
+ "pending_open_exits": [
+  {
+   "ticker": "TWST",
+   "why": "mgmt review: hard exit on any close below $164",
+   "confirm_session": "2026-10-07",
+   "order_id": "close_below:TWST:2026-10-07"
+  }
+ ],
  "book": {
-  "mark_session": "2026-10-06",
-  "note": "MIXED-TIME valuation: cash includes 2026-10-07 legit fills; marks are 2026-10-06 closes. Not a comparable EOD NAV.",
+  "mark_session": "2026-10-07",
+  "market_value": 7942.4,
+  "unrealized": -375.45,
+  "exposure": 7942.4,
+  "nav": 98145.42,
+  "provisional_nav_incl_unmarked_at_cost": 98145.42,
+  "unmarked_positions": [],
   "cash": 90203.02,
   "realized": -1485.68,
-  "market_value": 8070.25,
-  "unrealized": -247.6,
-  "unmarked_positions": [],
-  "marked_at": null
+  "marked_at": "2026-10-08T04:43:03.047760+00:00"
  },
  "realized": -1485.68,
  "policy": {
@@ -117,5 +129,12 @@
   "intraday_stop:APPS:2026-10-07",
   "exit:TWST:2026-10-06:MGMT_REVIEW_2026-10-06: Underwei",
   "exit:SDGR:2026-10-06:MGMT_REVIEW_2026-10-06: Underwei"
- ]
+ ],
+ "initialized": true,
+ "data_health": {
+  "at": "2026-10-08T06:19:03.873948+00:00",
+  "daily_ok": 16,
+  "daily_req": 19,
+  "status": "ok"
+ }
 }

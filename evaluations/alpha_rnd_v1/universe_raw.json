@@ -1,5 +1,5 @@
 {
- "session": "2026-10-06",
+ "session": "2026-10-07",
  "sources": [
   "sp500",
   "sp400"
@@ -2693,6 +2693,12 @@
    ]
   },
   {
+   "ticker": "AVAT",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "AVAV",
    "indices": [
     "sp400",
@@ -3127,6 +3133,12 @@
    "ticker": "BBAR",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "BBCI",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -7133,7 +7145,6 @@
   {
    "ticker": "CTVA",
    "indices": [
-    "sp500",
     "other_listed"
    ]
   },
@@ -21376,12 +21387,6 @@
    ]
   },
   {
-   "ticker": "PRPL",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "PRPO",
    "indices": [
     "nasdaq_listed"
@@ -21471,12 +21476,6 @@
    "ticker": "PSIX",
    "indices": [
     "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "PSKY",
-   "indices": [
-    "sp500"
    ]
   },
   {
@@ -24022,6 +24021,7 @@
   {
    "ticker": "SKYD",
    "indices": [
+    "sp500",
     "other_listed"
    ]
   },
@@ -24039,12 +24039,6 @@
   },
   {
    "ticker": "SKYW",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "SKYX",
    "indices": [
     "nasdaq_listed"
    ]
@@ -26764,6 +26758,7 @@
   {
    "ticker": "TWLO",
    "indices": [
+    "sp500",
     "sp400",
     "other_listed"
    ]
@@ -27948,12 +27943,6 @@
    ]
   },
   {
-   "ticker": "VTIX",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "VTOL",
    "indices": [
     "other_listed"
@@ -28025,6 +28014,7 @@
   {
    "ticker": "VYLR",
    "indices": [
+    "sp500",
     "other_listed"
    ]
   },
@@ -28108,12 +28098,6 @@
    "ticker": "WAY",
    "indices": [
     "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "WBD",
-   "indices": [
-    "sp500"
    ]
   },
   {
@@ -28515,6 +28499,12 @@
    "ticker": "WOR",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "WORX",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {

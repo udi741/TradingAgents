@@ -43,6 +43,11 @@ BRIDGE_ACTIVITY_WINDOW_S = 900  # busy if log touched within 15 min
 
 DEEP_QUOTA = 10
 PY = sys.executable
+# Per-stage subprocess bounds. The same numbers bound staleness: a run whose
+# last durable progress is older than its stage timeout + slack is STALLED.
+STAGE_TIMEOUTS = {"book": 600, "discovery": 7200, "ta": 14400,
+                  "synthesize": 1320, "publish": 300}
+STALE_SLACK_S = 900
 # TA needs Python >=3.11 (official code uses datetime.UTC/StrEnum); the repo
 # venv is the canonical interpreter, falling back to the system python.
 _TA_PY = ROOT / ".venv312" / "bin" / "python"
@@ -116,7 +121,109 @@ def mark_done(session: str, summary: dict) -> None:
         st["last_cycle"] = {"session": session,
                             "finished_at": datetime.now(timezone.utc).isoformat(),
                             "summary": summary}
+        _terminal(st, session, "COMPLETE")
     _state_txn(_mut)
+
+
+def _utcnow() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _pid_alive(pid) -> bool:
+    try:
+        os.kill(int(pid), 0)
+        return True
+    except (ProcessLookupError, TypeError, ValueError):
+        return False
+    except PermissionError:
+        return True
+
+
+def _terminal(st: dict, session: str, status: str) -> None:
+    """Exactly one durable terminal status per run attempt; called under the
+    state lock. A later successful retry honestly overwrites INTERRUPTED."""
+    if st.get("current_run", {}).get("session") == session:
+        st.pop("current_run")
+    st.setdefault("session_status", {})[session] = status
+
+
+def _finish_run(session: str, status: str) -> None:
+    _state_txn(lambda st: _terminal(st, session, status))
+
+
+def _start_run(session: str) -> None:
+    ts = _utcnow()
+    def _mut(st):
+        st["current_run"] = {"session": session, "run_id": ts,
+                             "pid": os.getpid(), "started_at": ts,
+                             "stage": "book", "last_progress_at": ts,
+                             "deep_total": 0, "ta_completed": 0, "ta_failed": 0}
+    _state_txn(_mut)
+
+
+def _run_progress(stage: str, **kw) -> None:
+    def _mut(st):
+        cr = st.get("current_run")
+        if cr is None:
+            return
+        cr.update(kw)
+        cr["stage"] = stage
+        cr["last_progress_at"] = _utcnow()
+    _state_txn(_mut)
+
+
+def _refresh_ta_progress(session: str) -> None:
+    """Refresh durable per-ticker counts from artifacts on disk; only real
+    movement bumps last_progress_at so staleness stays meaningful."""
+    ca = EV_DIR / "case_artifacts"
+    good = sum(1 for p in ca.glob(f"*_{session}.json")
+               if not p.name.endswith(".error.json"))
+    bad = len(list(ca.glob(f"*_{session}.error.json")))
+    def _mut(st):
+        cr = st.get("current_run")
+        if not cr:
+            return
+        if cr.get("ta_completed") != good or cr.get("ta_failed") != bad:
+            cr["ta_completed"], cr["ta_failed"] = good, bad
+            cr["last_progress_at"] = _utcnow()
+    _state_txn(_mut)
+
+
+def _reap_current_run(st: dict) -> bool:
+    """Inspect the tracked run. Returns True if a live run exists (caller
+    should return early). Dead-pid runs are marked INTERRUPTED once and the
+    record cleared so the normal due logic relaunches (resume-safe)."""
+    cr = st.get("current_run")
+    if not cr:
+        return False
+    session = cr["session"]
+    if _pid_alive(cr.get("pid")):
+        if cr.get("stage") == "ta":
+            _refresh_ta_progress(session)
+            cr = (_j(SCHED_STATE, {}) or {}).get("current_run", cr)
+        bound = STAGE_TIMEOUTS.get(cr.get("stage"), 1800) + STALE_SLACK_S
+        try:
+            age = (datetime.now(timezone.utc) -
+                   datetime.fromisoformat(cr["last_progress_at"])).total_seconds()
+        except Exception:
+            age = 0
+        if age > bound and not cr.get("stalled_notified"):
+            event("ALPHA_CYCLE_STALLED", session=session, stage=cr.get("stage"),
+                  age_s=int(age), pid=cr.get("pid"))
+            _state_txn(lambda x: x.get("current_run", {}).__setitem__("stalled_notified", True))
+        _log(f"cycle {session} RUNNING stage={cr.get('stage')} "
+             f"ta={cr.get('ta_completed', 0)}/{cr.get('deep_total', '?')} "
+             f"pid={cr.get('pid')} age={int(age)}s")
+        return True
+    # run-session process is gone — orphan, not silently
+    already = (st.get("session_status") or {}).get(session)
+    _finish_run(session, "INTERRUPTED")
+    if already != "INTERRUPTED":
+        event("ALPHA_DISCOVERY_INTERRUPTED", session=session,
+              stage=cr.get("stage"), pid=cr.get("pid"),
+              note="run-session process gone; due-check will resume "
+                   "prospectively from frozen inputs/artifacts")
+    return False
 
 
 def deep_allocation(session: str) -> list[str]:
@@ -174,103 +281,140 @@ def ensure_bridge() -> bool:
 
 
 def run_cycle(session: str) -> None:
-    """One full normal cycle for `session` (internal, holds cycle lock)."""
+    """One full normal cycle for `session` (internal, holds cycle lock).
+
+    Every exit path leaves exactly one durable terminal status in
+    session_status: COMPLETE, ERROR, or BLOCKED. STARTED-without-terminal is
+    forbidden — a crash/timeout still writes ERROR before the process exits,
+    and a vanished process is reaped INTERRUPTED by the next check() tick."""
     with CYCLE_LOCK.open("w") as lf:
         try:
             fcntl.flock(lf, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             _log(f"cycle {session} already running elsewhere; exiting")
             return
-        event("ALPHA_DISCOVERY_STARTED", session=session)
+        try:
+            _start_run(session)
+            event("ALPHA_DISCOVERY_STARTED", session=session)
+            _run_cycle(session)
+        except subprocess.TimeoutExpired as e:
+            stage = (_j(SCHED_STATE, {}) or {}).get("current_run", {}).get("stage")
+            _finish_run(session, "ERROR")
+            event("ALPHA_DISCOVERY_ERROR", session=session,
+                  stage=stage or "unknown",
+                  tail=f"stage timeout after {e.timeout}s")
+        except Exception as e:
+            stage = (_j(SCHED_STATE, {}) or {}).get("current_run", {}).get("stage")
+            _finish_run(session, "ERROR")
+            event("ALPHA_DISCOVERY_ERROR", session=session,
+                  stage=stage or "unknown", tail=repr(e)[-400:])
 
-        # 1. Existing book first — per-minute monitor bookkeeping pass.
-        subprocess.run([PY, "-m", "alpha_rnd.monitor", "--once"],
-                       cwd=ROOT, env={**os.environ, "PYTHONPATH": str(ROOT)},
-                       capture_output=True, timeout=600)
 
-        # 2. Frozen discovery pipeline.
-        r = subprocess.run([PY, str(EV_DIR / "discovery.py"), session],
-                           cwd=ROOT,
-                           env={**os.environ, "PYTHONPATH": str(ROOT)},
-                           capture_output=True, text=True, timeout=7200)
-        if r.returncode != 0 or not (EV_DIR / f"candidate_pool_frozen_{session}.json").exists():
-            event("ALPHA_DISCOVERY_ERROR", session=session,
-                  stage="discovery", tail=(r.stderr or r.stdout)[-400:])
-            return
-        deep = deep_allocation(session)
+def _run_cycle(session: str) -> None:
+    """Pipeline body; current_run progress is durable at each stage boundary."""
+    env = {**os.environ, "PYTHONPATH": str(ROOT)}
 
-        # 3. Bridge, then frozen TA pass on the deep allocation.
-        if not ensure_bridge():
-            event("ALPHA_DISCOVERY_BLOCKED_BRIDGE", session=session,
-                  deep=deep, status=bridge_status())
-            return  # retried on next tick (not marked done)
-        # Resume-safe: run_ta.run_one returns the existing artifact without a
-        # model call; pass only missing tickers to keep the subprocess cheap.
-        missing = [t for t in deep
-                   if not (EV_DIR / "case_artifacts" / f"{t}_{session}.json").exists()]
-        r = subprocess.run([TA_PY, str(EV_DIR / "run_ta.py"), session, *missing],
-                           cwd=ROOT,
-                           env={**os.environ, "PYTHONPATH": str(ROOT)},
-                           capture_output=True, text=True, timeout=14400)
-        arts = sorted((EV_DIR / "case_artifacts").glob(f"*_{session}.json"))
-        signals = {}
-        for p in arts:
-            a = _j(p, {}) or {}
-            signals[a.get("ticker") or p.stem.split("_")[0]] = a.get("signal")
-        if r.returncode != 0 and not signals:
-            event("ALPHA_DISCOVERY_ERROR", session=session,
-                  stage="ta", tail=(r.stderr or r.stdout)[-400:])
-            return
-        if not signals:
-            # silent per-ticker failures leave only .error.json artifacts —
-            # a cycle without analyses is NOT complete
-            event("ALPHA_DISCOVERY_ERROR", session=session,
-                  stage="ta_empty",
-                  tail=f"0/{len(deep)} TA artifacts produced")
-            return
-        # 4. Automatic publication synthesis (translator, not strategy):
-        #    frozen TA artifacts -> PublicationIntents -> fail-closed
-        #    validation -> canonical publish -> live watchlist.
-        r = subprocess.run([PY, "-m", "alpha_rnd.synthesize", session],
-                           cwd=ROOT,
-                           env={**os.environ, "PYTHONPATH": str(ROOT)},
-                           capture_output=True, text=True, timeout=1320)
-        idoc = _j(EV_DIR / f"publication_intents_{session}.json") or {}
-        if r.returncode != 0 and not idoc.get("validated") and not idoc.get("review_required"):
-            event("ALPHA_DISCOVERY_ERROR", session=session,
-                  stage="publication_synthesis",
-                  tail=(r.stderr or r.stdout)[-400:])
-            return
-        reviews = idoc.get("review_required") or []
-        # 5. Canonical publish (atomic, idempotent) — mixed policy: validated
-        #    intents publish now; ambiguous cases fail closed to review.
-        r = subprocess.run([PY, "-m", "alpha_rnd.publish", session],
-                           cwd=ROOT,
-                           env={**os.environ, "PYTHONPATH": str(ROOT)},
-                           capture_output=True, text=True, timeout=300)
-        if r.returncode != 0:
-            event("ALPHA_DISCOVERY_ERROR", session=session,
-                  stage="publish", tail=(r.stderr or r.stdout)[-400:])
-            return
-        pub = (_j(SCHED_STATE, {}) or {}).get("published_sessions", {}).get(session)
-        if not pub:
-            event("ALPHA_DISCOVERY_ERROR", session=session,
-                  stage="publish_marker", tail="publish ran without marker")
-            return
-        if reviews:
-            event("ALPHA_PUBLICATION_REVIEW_REQUIRED", session=session,
-                  tickers=[x["ticker"] for x in reviews],
-                  violations={x["ticker"]: x["violations"] for x in reviews},
-                  resume="feather-room")
-        summary = {"deep": deep, "ta_signals": signals,
-                   "published": pub,
-                   "validated": idoc.get("validated"),
-                   "pending_review": [x["ticker"] for x in reviews]}
-        mark_done(session, summary)
-        event("ALPHA_DISCOVERY_COMPLETE", session=session,
-              deep=deep, ta_signals=signals, published=pub,
-              pending_review=[x["ticker"] for x in reviews],
-              user_action_required="review_pending" if reviews else "none")
+    # 1. Existing book first — per-minute monitor bookkeeping pass.
+    _run_progress("book")
+    subprocess.run([PY, "-m", "alpha_rnd.monitor", "--once"],
+                   cwd=ROOT, env=env,
+                   capture_output=True, timeout=STAGE_TIMEOUTS["book"])
+
+    # 2. Frozen discovery pipeline.
+    _run_progress("discovery")
+    r = subprocess.run([PY, str(EV_DIR / "discovery.py"), session],
+                       cwd=ROOT, env=env,
+                       capture_output=True, text=True,
+                       timeout=STAGE_TIMEOUTS["discovery"])
+    if r.returncode != 0 or not (EV_DIR / f"candidate_pool_frozen_{session}.json").exists():
+        _finish_run(session, "ERROR")
+        event("ALPHA_DISCOVERY_ERROR", session=session,
+              stage="discovery", tail=(r.stderr or r.stdout)[-400:])
+        return
+    deep = deep_allocation(session)
+
+    # 3. Bridge, then frozen TA pass on the deep allocation.
+    if not ensure_bridge():
+        _finish_run(session, "BLOCKED")
+        event("ALPHA_DISCOVERY_BLOCKED_BRIDGE", session=session,
+              deep=deep, status=bridge_status())
+        return  # retried on next tick (not marked done)
+    # Resume-safe: run_ta.run_one returns the existing artifact without a
+    # model call; pass only missing tickers to keep the subprocess cheap.
+    missing = [t for t in deep
+               if not (EV_DIR / "case_artifacts" / f"{t}_{session}.json").exists()]
+    _run_progress("ta", deep_total=len(deep), deep=deep, ta_missing=missing)
+    r = subprocess.run([TA_PY, str(EV_DIR / "run_ta.py"), session, *missing],
+                       cwd=ROOT, env=env,
+                       capture_output=True, text=True,
+                       timeout=STAGE_TIMEOUTS["ta"])
+    arts = sorted((EV_DIR / "case_artifacts").glob(f"*_{session}.json"))
+    signals = {}
+    for p in arts:
+        a = _j(p, {}) or {}
+        signals[a.get("ticker") or p.stem.split("_")[0]] = a.get("signal")
+    _run_progress("ta", ta_completed=len(signals))
+    if r.returncode != 0 and not signals:
+        _finish_run(session, "ERROR")
+        event("ALPHA_DISCOVERY_ERROR", session=session,
+              stage="ta", tail=(r.stderr or r.stdout)[-400:])
+        return
+    if not signals:
+        # silent per-ticker failures leave only .error.json artifacts —
+        # a cycle without analyses is NOT complete
+        _finish_run(session, "ERROR")
+        event("ALPHA_DISCOVERY_ERROR", session=session,
+              stage="ta_empty",
+              tail=f"0/{len(deep)} TA artifacts produced")
+        return
+    # 4. Automatic publication synthesis (translator, not strategy):
+    #    frozen TA artifacts -> PublicationIntents -> fail-closed
+    #    validation -> canonical publish -> live watchlist.
+    _run_progress("synthesize")
+    r = subprocess.run([PY, "-m", "alpha_rnd.synthesize", session],
+                       cwd=ROOT, env=env,
+                       capture_output=True, text=True,
+                       timeout=STAGE_TIMEOUTS["synthesize"])
+    idoc = _j(EV_DIR / f"publication_intents_{session}.json") or {}
+    if r.returncode != 0 and not idoc.get("validated") and not idoc.get("review_required"):
+        _finish_run(session, "ERROR")
+        event("ALPHA_DISCOVERY_ERROR", session=session,
+              stage="publication_synthesis",
+              tail=(r.stderr or r.stdout)[-400:])
+        return
+    reviews = idoc.get("review_required") or []
+    # 5. Canonical publish (atomic, idempotent) — mixed policy: validated
+    #    intents publish now; ambiguous cases fail closed to review.
+    _run_progress("publish")
+    r = subprocess.run([PY, "-m", "alpha_rnd.publish", session],
+                       cwd=ROOT, env=env,
+                       capture_output=True, text=True,
+                       timeout=STAGE_TIMEOUTS["publish"])
+    if r.returncode != 0:
+        _finish_run(session, "ERROR")
+        event("ALPHA_DISCOVERY_ERROR", session=session,
+              stage="publish", tail=(r.stderr or r.stdout)[-400:])
+        return
+    pub = (_j(SCHED_STATE, {}) or {}).get("published_sessions", {}).get(session)
+    if not pub:
+        _finish_run(session, "ERROR")
+        event("ALPHA_DISCOVERY_ERROR", session=session,
+              stage="publish_marker", tail="publish ran without marker")
+        return
+    if reviews:
+        event("ALPHA_PUBLICATION_REVIEW_REQUIRED", session=session,
+              tickers=[x["ticker"] for x in reviews],
+              violations={x["ticker"]: x["violations"] for x in reviews},
+              resume="feather-room")
+    summary = {"deep": deep, "ta_signals": signals,
+               "published": pub,
+               "validated": idoc.get("validated"),
+               "pending_review": [x["ticker"] for x in reviews]}
+    mark_done(session, summary)
+    event("ALPHA_DISCOVERY_COMPLETE", session=session,
+          deep=deep, ta_signals=signals, published=pub,
+          pending_review=[x["ticker"] for x in reviews],
+          user_action_required="review_pending" if reviews else "none")
 
 
 def check() -> None:
@@ -281,6 +425,11 @@ def check() -> None:
         except BlockingIOError:
             return  # another checker tick in flight
         session = last_completed_session()
+        st = _j(SCHED_STATE, {}) or {}
+        # Watchdog: a tracked run must resolve to a terminal state or be
+        # reaped INTERRUPTED — never silently orphaned after suspend/kill.
+        if _reap_current_run(st):
+            return
         st = _j(SCHED_STATE, {}) or {}
         # Publication landed for a session whose analysis finished: close it.
         pub = (st.get("published_sessions") or {})
@@ -330,6 +479,8 @@ def status() -> None:
     print("last_cycle:", st.get("last_cycle"))
     print("latest_completed_market_session:", last_completed_session())
     print("bridge:", bridge_status())
+    print("current_run:", st.get("current_run"))
+    print("session_status:", st.get("session_status"))
 
 
 if __name__ == "__main__":
