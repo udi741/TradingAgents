@@ -82,6 +82,7 @@ ALPHA_SCHED_MAP = {
     "ALPHA_DISCOVERY_TA_COMPLETE": ("INFO", True),
     "ALPHA_PUBLICATION_REQUIRED": ("ACTION_REQUIRED", True),
     "ALPHA_PUBLICATION_REVIEW_REQUIRED": ("ACTION_REQUIRED", True),
+    "ALPHA_PUBLICATION_REVIEW_RESOLVED": ("SUCCESS", True),
     "ALPHA_DISCOVERY_COMPLETE": ("SUCCESS", True),
     "ALPHA_DISCOVERY_ERROR": ("ACTION_REQUIRED", True),
     "ALPHA_DISCOVERY_BLOCKED_BRIDGE": ("WARNING", True),
@@ -267,6 +268,14 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
                     f"Active watches published: {pub.get('watch_count', '?')}\n"
                     f"Review required: {', '.join(pr) if pr else 'none'}\n"
                     f"User action required: {'YES' if uar and uar != 'none' else 'NO'}")
+            if uar and uar != "none":
+                # keep footer consistent with the body — a review-pending
+                # cycle is genuinely ACTION_REQUIRED, never "...: NONE"
+                sev = "ACTION_REQUIRED"
+                action_required = True
+                next_action = ("Publication cases pending fail-closed review "
+                               "(see ALPHA_PUBLICATION_REVIEW_REQUIRED). Resume "
+                               "feather-room to resolve.")
             if deep:
                 body += "\n\nDeep-analyzed names:\n" + ", ".join(map(str, deep))
         return {
