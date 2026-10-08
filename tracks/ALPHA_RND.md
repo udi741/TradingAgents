@@ -683,3 +683,16 @@ entries. IOVA/TXG pending entries retired (prose-only invalidations, not
 machine-actionable): RISK_PLAN_REQUIRED, watch evidence preserved, would have
 self-blocked at fill anyway. TWST residual exit valid (155.65<164). SDGR
 exactly 27.29 -> strict < -> correctly no exit.
+
+### Oct-7 publication review + discovery stickiness audit (2026-10-08)
+
+Oct-7 cycle COMPLETE: 10/10 TA artifacts, all Sell. Publication fail-closed
+for all 10; root cause of most violations was a synthesizer evidence-binding
+normalization bug (% literals, lowercase k, scaled ranges not normalized).
+Fixed _nums_in_text; re-validated (no model calls). Verdicts: PGEN published
+as inert REANALYZE_ON_TRIGGER watch; AMPL/ASST/PTC RESEARCH_ONLY; CDNA/MRNA/
+QMCO/TEAM AMBIGUOUS; IOVA RISK_PLAN_REQUIRED (block stands); SDGR NO_ACTION
+(open-position mgmt, existing 27.29 rule unchanged). Resolutions doc:
+publication_resolutions_2026-10-07.json. Discovery stickiness proven
+legitimate: session-keyed market caches, fresh universe+scoring per session,
+real turnover, no stale reuse. Relay footer/severity consistency fixed.
