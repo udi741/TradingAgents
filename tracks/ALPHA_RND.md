@@ -666,3 +666,20 @@ economic impact (verified: cash/positions/marks/pending/events unchanged).
 main() now loads the watchlist and calls _seed_once; anti-resurrection
 invariants intact. New production-main entrypoint test (isolated paths)
 covers the class of failure helper tests missed.
+
+### Stale-research + pending-entry audit (2026-10-08)
+
+Oct-7 cycle STARTED 05:07Z, suspended mid-run, resumed on wake — process alive
+and producing TA artifacts (verified live, not inferred). Gaps found and fixed:
+run_cycle had no terminal-on-exception semantics (silent STARTED forever) and
+no progress tracking -> added current_run {session,run_id,pid,stage,
+last_progress_at,ta counts} to scheduler_state, terminal COMPLETE/ERROR/
+BLOCKED/INTERRUPTED on every path, dead-pid reaping in check() with
+resume-safe relaunch (discovery inputs are session-frozen, run_ta skips
+existing artifacts), per-stage staleness bound = subprocess timeout + 15m.
+Monitor now records data_health (PROCESS_ALIVE vs MARKET_DATA_HEALTHY) and
+confirmation-time risk guardrail blocks "ENTRY CONFIRMED" for unplanned
+entries. IOVA/TXG pending entries retired (prose-only invalidations, not
+machine-actionable): RISK_PLAN_REQUIRED, watch evidence preserved, would have
+self-blocked at fill anyway. TWST residual exit valid (155.65<164). SDGR
+exactly 27.29 -> strict < -> correctly no exit.
