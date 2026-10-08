@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-07T09:19:03.134807+00:00",
+ "generated_at": "2026-10-08T07:46:27.783599+00:00",
  "watch_expiry": "2026-10-30",
  "recommendation_freeze": "2026-10-02 (V1) / 2026-10-03 (V2)",
  "sizing": {
@@ -72,21 +72,36 @@
   },
   {
    "ticker": "PGEN",
-   "cls": "AUTO_ENTRY",
-   "v": 2,
-   "trigger": "intraday price <= $8.20 (staggered limit buys $8.00-8.20; do not chase >8.54)",
-   "trigger_type": "intraday_zone_touch",
+   "cls": "REANALYZE_ON_TRIGGER",
+   "v": "auto",
+   "trigger": "only on a favorable FDA INO-3107 ruling for PGEN plus a volume-backed reclaim of $7.83 enter a half-normal starter (~5-8% of portfolio); no entry on an adverse ruling or a mere hold of $7.16 without catalyst resolution",
+   "trigger_type": null,
    "params": {
-    "zone": [
-     8.0,
-     8.2
-    ]
+    "reclaim_level": 7.83,
+    "starter_pct_portfolio": [
+     0.05,
+     0.08
+    ],
+    "failure_line": 7.16,
+    "next_support_confluence": [
+     6.62,
+     6.68
+    ],
+    "daily_atr_pct": 0.06
    },
-   "entry_convention": "zone-top limit $8.20 (ALPHA_RND convention)",
-   "invalidation": "stop $7.75; structural <$7.03",
-   "horizon": "1-3 months through Q3 print",
-   "artifact": "PGEN_2026-10-02.json",
-   "size_frac": 1.0
+   "entry_convention": "catalyst-gated starter; scale only after a filing clarifies whether the $55M milestone revenue recurs",
+   "invalidation": "hard invalidation on a decisive close below $7.16; a decisive volume-backed close below it opens $6.62-6.68 and removes even the conditional framework until the trend resets",
+   "horizon": "2-4 weeks (pending FDA INO-3107 decision)",
+   "reevaluation": "FDA accelerated-approval determination in ~2-3 weeks; CHMP meeting starting ~Oct 12; any dilutive raise announcement triggers immediate reassessment",
+   "artifact": "PGEN_2026-10-07.json",
+   "size_frac": 0.5,
+   "stop_rule": {
+    "type": "intraday_stop",
+    "level": 7.16,
+    "label": "hard invalidation on a decisive close below $7.16; a decisive volume-backed close below it opens $6.62-6.68 and removes even the conditional framework until the trend resets"
+   },
+   "auto_execution_authorized": false,
+   "source": "auto_synth"
   },
   {
    "ticker": "SYNA",
@@ -325,5 +340,5 @@
    "artifact": "APPS_2026-10-01.json"
   }
  ],
- "sha256": "24f533b5853e42c5220c9a305ef2754b8ded15b3b7d434bf7fb8271c6f3b7702"
+ "sha256": "762b9da8d333a04cd86fa90ab3c219ff8bd91a66c835f5ff256ec055929d1225"
 }

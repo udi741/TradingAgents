@@ -123,3 +123,32 @@ class RunTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NumberNormalizationTest(unittest.TestCase):
+    """Evidence binding must match the text's OWN units: '5%' must satisfy a
+    0.05 intent field, '$83k' must satisfy 83000, '1.7-3.0M' must satisfy
+    1700000. Prior gap produced false 'unsupported number' violations."""
+
+    def test_percent_and_scaled_literals(self):
+        n = sz._nums_in_text("starter ~5-8% of portfolio; cap 2.5%; "
+                             "1.0%-1.25% band; 6%-daily-ATR")
+        for x in (0.05, 0.08, 0.025, 0.01, 0.0125, 0.06):
+            self.assertIn(round(x, 6), n, x)
+        n = sz._nums_in_text("BTC reclaims $83k; 1.7-3.0 million-share baseline")
+        self.assertIn(83000.0, n)
+        self.assertIn(1700000.0, n)
+        self.assertIn(3000000.0, n)
+
+    def test_percent_size_passes_validation(self):
+        a = art(signal="Sell",
+                text="buy the dip at 60-62 only on a volume-backed reclaim; "
+                     "size ~5-8% of portfolio; stop 55.90")
+        i = intent(size_frac=None, params={"zone": [60.0, 62.0],
+                                           "size_pct": [0.05, 0.08]})
+        self.assertEqual(sz.validate(i, a), [])
+
+    def test_truly_absent_number_still_rejected(self):
+        a = art(signal="Sell", text="watch 60-62; stop 55.90")
+        i = intent(params={"zone": [60.0, 62.0], "mystery": 0.37})
+        self.assertIn("unsupported number 0.37", sz.validate(i, a))

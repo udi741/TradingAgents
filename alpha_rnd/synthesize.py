@@ -101,11 +101,21 @@ _WORD_FRAC = {"quarter": 0.25, "third": 1 / 3, "half": 0.5}
 def _nums_in_text(text: str) -> set[float]:
     t = text.replace(",", "")
     out = {round(float(x), 4) for x in NUM.findall(t)}
-    # scaled words: "1.5M", "2 million shares" -> 1500000, 2000000
+    # percents: "5%", "1.25%" -> 0.05, 0.0125 (fraction form)
+    for m in re.finditer(r"(\d+\.?\d*)\s*%", t):
+        out.add(round(float(m.group(1)) / 100, 6))
+    # percent ranges: "5-8%", "1.0%-1.25%" -> 0.05, 0.08 / 0.01, 0.0125
+    for m in re.finditer(r"(\d+\.?\d*)\s*[-–]\s*(\d+\.?\d*)\s*%", t):
+        out.add(round(float(m.group(1)) / 100, 6))
+    # scaled words: "1.5M", "2 million shares", "83k" -> 1500000, 2000000, 83000
     for m in re.finditer(r"(\d+\.?\d*)\s*(?:M\b|million)", t, re.I):
         out.add(round(float(m.group(1)) * 1_000_000, 4))
-    for m in re.finditer(r"(\d+\.?\d*)\s*K\b", t):
+    for m in re.finditer(r"(\d+\.?\d*)\s*K\b", t, re.I):
         out.add(round(float(m.group(1)) * 1_000, 4))
+    # scaled ranges: "1.7-3.0 million-share", "83-84k" -> both endpoints scaled
+    for m in re.finditer(r"(\d+\.?\d*)\s*[-–]\s*(\d+\.?\d*)\s*(M\b|million|K\b)", t, re.I):
+        scale = 1_000_000 if m.group(3).lower().startswith(("m",)) else 1_000
+        out.add(round(float(m.group(1)) * scale, 4))
     return out
 
 

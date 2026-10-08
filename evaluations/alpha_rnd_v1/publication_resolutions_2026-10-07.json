@@ -1,0 +1,50 @@
+{
+ "session": "2026-10-07",
+ "resolved_at": "2026-10-08T07:47:03.968520+00:00",
+ "resolver": "ALPHA_RND_PUBLICATION_REVIEW_AND_DISCOVERY_STICKINESS_AUDIT_V1",
+ "note": "Frozen TA artifacts only; no reruns. All number-evidence violations were validator normalization artifacts (% / lowercase-k / scaled ranges) and were fixed in synthesize._nums_in_text; intents themselves unchanged.",
+ "resolutions": {
+  "PGEN": {
+   "verdict": "SAFE_TO_PUBLISH",
+   "as": "REANALYZE_ON_TRIGGER watch (catalyst-gated: FDA ruling + $7.83 reclaim)",
+   "basis": "all prior violations were %/range normalization artifacts; artifact unambiguously gates entry on a catalyst \u2014 published inert, no auto-execution possible"
+  },
+  "AMPL": {
+   "verdict": "RESEARCH_ONLY",
+   "basis": "size_frac 0.65 is a synthesis artifact (absent from source text) \u2014 removed as actionable input; trigger is a staged two-tranche declining-volume/reclaim plan not reducible to one mechanical watch"
+  },
+  "ASST": {
+   "verdict": "RESEARCH_ONLY",
+   "basis": "sell-limit band is hypothetical residual-exposure guidance for a position not held; BTC-$83k cross-asset trigger not evaluable"
+  },
+  "CDNA": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "frozen artifact contradicts itself on sizing (~2% vs ~3%); cannot choose without inventing"
+  },
+  "IOVA": {
+   "verdict": "RISK_PLAN_REQUIRED",
+   "basis": "entry trigger is event/news-gated (ESMO confirmation) \u2014 not machine-actionable; existing 10-01 revision block stands (the 10-07 intent supplies no executable post-entry plan either)"
+  },
+  "MRNA": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "two distinct trigger paths with different sizing; no single stop price"
+  },
+  "PTC": {
+   "verdict": "RESEARCH_ONLY",
+   "basis": "re-entry requires verified absence of adverse news \u2014 a judgment call, not reducible to a mechanical trigger; arb size unquantified"
+  },
+  "QMCO": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "contradictory sizing (1-1.5% vs 2.5%) and explicitly rejected stop level in frozen text"
+  },
+  "SDGR": {
+   "verdict": "NO_ACTION",
+   "basis": "OPEN_POSITION_MANAGEMENT intent: artifact says stay out pre-earnings; residual 61sh remain governed by existing close<27.29 rule \u2014 no new explicit management decision present"
+  },
+  "TEAM": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "two alternative trigger paths; acknowledged valuation/insider data gaps in frozen text"
+  }
+ },
+ "net_effect": "1 watch published (PGEN reanalysis, inert/catalyst-gated); 0 pending orders; 0 fills; 0 position changes"
+}

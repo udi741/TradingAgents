@@ -1,0 +1,369 @@
+{
+ "session": "2026-10-07",
+ "synthesized_at": "2026-10-08T07:46:11.148995+00:00",
+ "model": "devin-deep",
+ "temperature": 0,
+ "intents": {
+  "AMPL": {
+   "ticker": "AMPL",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "staged pullback: half size if $13.85-$14.26 holds on declining volume, second half only on a reclaim of $14.26; a pullback on expanding volume is a hard veto",
+   "params": {
+    "entry_zone": [
+     13.85,
+     14.26
+    ],
+    "reclaim_level": 14.26,
+    "reference_entry": 14.0,
+    "first_tranche_risk_usd": "500-750",
+    "max_risk_pct_portfolio": 0.01,
+    "approx_shares": 1600,
+    "approx_notional_usd": 22500
+   },
+   "entry_convention": "staged fills: half on hold of $13.85-$14.26 on declining volume, second half on reclaim of $14.26",
+   "invalidation": "hard stop at $13.40; close below $12.80 (50 SMA) or any capital-raise/buyback-halt announcement closes the re-entry window",
+   "stop_level": 13.4,
+   "target": 15.22,
+   "horizon": "mandatory flat before the Q3 filing",
+   "reevaluation": "balance-sheet stabilization (buyback ended, cash flat-to-up) or broader Street adoption of the $18 target warrants re-rating",
+   "size_frac": 0.65,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "ASST": {
+   "ticker": "ASST",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "reassess only if BTC reclaims $83k AND ASST closes back above 29.4 on rising volume; no dip-buying at 26.95-27.40",
+   "params": {
+    "residual_sell_limit_band": [
+     29.3,
+     29.4
+    ],
+    "sell_order_expiry_sessions": 5,
+    "cut_to_zero_level": 26.95,
+    "btc_trigger": 83000,
+    "next_support_50sma": 22
+   },
+   "entry_convention": null,
+   "invalidation": "decisive daily close below 26.95 is a cut-to-zero trigger for any residual exposure; next meaningful support is the 50 SMA near 22",
+   "stop_level": 26.95,
+   "target": 22.0,
+   "horizon": "4-8 weeks, or until either trigger level (26.95 breakdown or 29.4 + BTC $83k reclaim) resolves",
+   "reevaluation": "BTC reclaim of $83k plus ASST close above 29.4 on rising volume; monitor disclosure of the $855M+ asset base composition and insider Form 4 filings",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": "the 29.3-29.4 sell-limit with 5-session expiry is stated only for residual/hypothetical exposure; no position is held, so it is not an executable order"
+  },
+  "CDNA": {
+   "ticker": "CDNA",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "stage in only if $59-61 holds on declining volume AND the 10 EMA is reclaimed AND no adverse disclosure on the unresolved $292M investing inflow",
+   "params": {
+    "entry_zone": [
+     59,
+     61
+    ],
+    "size_pct_portfolio": 0.02,
+    "avoid_above": 61.4,
+    "atr_usd": 3.5,
+    "deeper_support_50sma": 52,
+    "reference_entry": 61.0
+   },
+   "entry_convention": "staged buy zone at $59-61 (Bollinger mid / 20 SMA), added only on hold + 10-EMA reclaim + information confirmation",
+   "invalidation": "if $59 breaks on volume, stay flat and reassess near the 50 SMA at ~$52; for any retained position, stops sit just under the $59 support shelf",
+   "stop_level": 59.0,
+   "target": 59.0,
+   "horizon": "1-3 months",
+   "reevaluation": "next 10-Q to identify the source of the +$292M investing inflow; benign explanation plus 10-EMA reclaim upgrades toward Overweight at $59-61",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "sizing stated as ~2% of portfolio in the executive summary/thesis but ~3% in the position-sizing section; stated price target 59.0 coincides with the buy zone and refers to the downside/entry area, not upside"
+  },
+  "IOVA": {
+   "ticker": "IOVA",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "a $13.15 reclaim on expanding volume with a stabilizing MACD permits a 1.0%-1.25% starter; reclaim plus confirmed ESMO data, a clean cash/runway update, or a sustained 10Y pullback permits the full 2.5% speculative cap",
+   "params": {
+    "reclaim_level": 13.15,
+    "starter_pct_portfolio": [
+     0.01,
+     0.0125
+    ],
+    "full_cap_pct_portfolio": 0.025,
+    "atr_usd": 0.87,
+    "gap_fill_zone": [
+     11.0,
+     11.35
+    ],
+    "support_cluster": [
+     12.77,
+     12.88
+    ]
+   },
+   "entry_convention": "starter only on technical reclaim; full speculative cap requires the reclaim plus at least one fundamental or macro confirmation",
+   "invalidation": "a daily close below $12.77 keeps the book flat and opens the $11.00-$11.35 gap-fill zone; no averaging down into a break",
+   "stop_level": 12.77,
+   "target": null,
+   "horizon": "near term through ESMO; reassess after a confirmed reclaim or catalyst",
+   "reevaluation": "ESMO data, cash/runway update, or sustained 10Y pullback; reassess the $11.00-$11.35 gap-fill zone only if the decline is orderly and unexplained by negative news",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "MRNA": {
+   "ticker": "MRNA",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "(a) pullback to the ~$130-135 50-day region that stabilizes over multiple sessions with contracting ATR permits a ~10-15% starter, scaling only on fundamental confirmation; or (b) disclosure explaining the August 19 repricing permits a small momentum entry sized against post-news structure",
+   "params": {
+    "pullback_zone": [
+     130,
+     135
+    ],
+    "starter_pct_portfolio": [
+     0.1,
+     0.15
+    ],
+    "risk_pct_capital": [
+     0.01,
+     0.02
+    ],
+    "atr_usd": 14.75,
+    "mean_reversion_confirm_level": 182
+   },
+   "entry_convention": "staged playbook; stop below the prior swing low on the technical path",
+   "invalidation": "a break below ~$182 on volume confirms mean reversion and validates staying flat indefinitely; do not dip-buy the 186-190 zone",
+   "stop_level": null,
+   "target": null,
+   "horizon": "event-driven; re-evaluate at the ~132 50-day retest, the November litigation catalyst, or the Q3 print",
+   "reevaluation": "November MRNA/ABUS appeal trial, Q3 print, or fundamental disclosure explaining the 8/19 repricing",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "two distinct trigger paths (technical vs disclosure-driven) with different sizing logic; no single stop price is stated for the re-entry"
+  },
+  "PGEN": {
+   "ticker": "PGEN",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "only on a favorable FDA INO-3107 ruling for PGEN plus a volume-backed reclaim of $7.83 enter a half-normal starter (~5-8% of portfolio); no entry on an adverse ruling or a mere hold of $7.16 without catalyst resolution",
+   "params": {
+    "reclaim_level": 7.83,
+    "starter_pct_portfolio": [
+     0.05,
+     0.08
+    ],
+    "failure_line": 7.16,
+    "next_support_confluence": [
+     6.62,
+     6.68
+    ],
+    "daily_atr_pct": 0.06
+   },
+   "entry_convention": "catalyst-gated starter; scale only after a filing clarifies whether the $55M milestone revenue recurs",
+   "invalidation": "hard invalidation on a decisive close below $7.16; a decisive volume-backed close below it opens $6.62-6.68 and removes even the conditional framework until the trend resets",
+   "stop_level": 7.16,
+   "target": null,
+   "horizon": "2-4 weeks (pending FDA INO-3107 decision)",
+   "reevaluation": "FDA accelerated-approval determination in ~2-3 weeks; CHMP meeting starting ~Oct 12; any dilutive raise announcement triggers immediate reassessment",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "PTC": {
+   "ticker": "PTC",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "re-engage only if the deal spread widens toward ~$180 or below attributable to non-deal factors, with verified absence of adverse regulatory or acquirer news, sized as a small arb allocation",
+   "params": {
+    "reentry_level": 180,
+    "deal_price": 205,
+    "deal_break_tail": 144,
+    "current_reference": 193.6,
+    "sell_band_for_holders": [
+     192,
+     194
+    ],
+    "guided_close": "Q3 2027"
+   },
+   "entry_convention": "small strictly-sized arb allocation only; stops cannot protect against an overnight binary gap",
+   "invalidation": "any confirmed adverse regulatory ruling, failed shareholder vote, or Schneider exercising termination rights permanently voids the setup",
+   "stop_level": null,
+   "target": 180.0,
+   "horizon": "~11 months (through guided Q3 2027 deal close)",
+   "reevaluation": "any confirmed deal deterioration converts the call to a permanent pass; otherwise reassess only on spread widening",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "re-entry requires verifying absence of adverse news, which is a judgment call not reducible to a mechanical price trigger; arb allocation size is not quantified"
+  },
+  "QMCO": {
+   "ticker": "QMCO",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "re-enter only on confirmed stabilization in the 28-30.5 zone with a midline reclaim and momentum follow-through, sized to ~1-1.5% of the portfolio",
+   "params": {
+    "stabilization_zone": [
+     28,
+     30.5
+    ],
+    "size_pct_portfolio_exec": [
+     0.01,
+     0.015
+    ],
+    "size_pct_portfolio_sizing_section": 0.025,
+    "atr_pct": 0.085,
+    "midline_break_level": 28.3,
+    "downside_50sma": 23
+   },
+   "entry_convention": "conditional long at the midline only after multi-session stabilization; stop below structure near $25.8 (2x-ATR buffer)",
+   "invalidation": "a clean break below $28.30 targets the 50 SMA at ~$23 and validates staying out entirely; no averaging down into the break",
+   "stop_level": 25.8,
+   "target": 23.1,
+   "horizon": "1-3 months",
+   "reevaluation": "a second consecutive positive operating-income quarter plus disclosed, aligned recap terms supports the conditional long; no short recommended on squeeze risk",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": "size stated as ~1-1.5% of portfolio in the executive summary but ~2.5% in the position-sizing section; the trader's 28.3 stop is explicitly rejected in favor of ~25.8; stated 23.1 target is a downside objective, not an upside target for the conditional long"
+  },
+  "SDGR": {
+   "ticker": "SDGR",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "re-entry requires actual stabilization: a base forming above $24 on declining sell volume with flattening MACD histogram, or a reclaim of the 10 EMA on accumulation, or confirmed strength after the 11-04 earnings print; no pre-earnings exposure",
+   "params": {
+    "base_zone": [
+     24,
+     27
+    ],
+    "break_acceleration_level": 26.87,
+    "targets_below": [
+     24,
+     22,
+     19
+    ],
+    "atr_usd": 2.16,
+    "earnings_date": "2026-11-04"
+   },
+   "entry_convention": "buy the confirmed reaction, not the anticipation; no pre-earnings entry at any size",
+   "invalidation": "a close below $26.87 on heavy volume confirms acceleration toward $24 and then the 50 SMA at ~$22, validating staying out entirely",
+   "stop_level": null,
+   "target": null,
+   "horizon": "reassess at the 2026-11-04 earnings print or on the named technical stabilization signals; no fixed holding period",
+   "reevaluation": "2026-11-04 earnings print; a genuinely positive surprise upgrades SDGR to a re-entry candidate",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "report's entry price 28.5 and stop 30.7 describe an exit/trim scenario for a hypothetical holder, not the stated re-entry plan; no stop price is specified for the conditional re-entry"
+  },
+  "TEAM": {
+   "ticker": "TEAM",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "consider only a small initial position on a decisive close above $202 with volume clearly above the recent 1.7-3.0M-share baseline, adding only after the breakout holds and MACD turns bullish; or after a defended $175.64-$176.42 retest that reclaims the $188 area",
+   "params": {
+    "breakout_level": 202,
+    "volume_baseline_shares": [
+     1700000,
+     3000000
+    ],
+    "retest_zone": [
+     175.64,
+     176.42
+    ],
+    "reclaim_area": 188,
+    "atr_usd": 9,
+    "max_size_multiple_of_standard": 0.75
+   },
+   "entry_convention": "small initial entry on confirmed breakout or defended-support retest; add only on follow-through, never exceed standard size",
+   "invalidation": "invalidation below $175; sizing must be small enough to absorb a gap through the stop given ~$9 ATR",
+   "stop_level": 175.0,
+   "target": null,
+   "horizon": "1-3 months, reassessed on a confirmed breakout above $202 or a successful retest of the $175.64-$176.42 support zone",
+   "reevaluation": "monitor cash balance, SBC dilution vs buybacks, deferred revenue/billings growth, consumption-pricing transition evidence, and Treasury yields; reassess to Hold only after valuation data is available",
+   "size_frac": 0.75,
+   "auto_execution_authorized": false,
+   "ambiguity": "two alternative trigger paths (breakout vs defended retest); unresolved valuation, insider, and news data gaps justify reduced sizing"
+  }
+ },
+ "validated": [
+  "PGEN"
+ ],
+ "review_required": [
+  {
+   "ticker": "AMPL",
+   "session": "2026-10-07",
+   "violations": [
+    "unsupported size_frac 0.65"
+   ],
+   "artifact": "case_artifacts/AMPL_2026-10-07.json"
+  },
+  {
+   "ticker": "ASST",
+   "session": "2026-10-07",
+   "violations": [
+    "ambiguous: the 29.3-29.4 sell-limit with 5-session expiry is stated only for residual/hypothetical exposure; no position is held, so it is not an executable order"
+   ],
+   "artifact": "case_artifacts/ASST_2026-10-07.json"
+  },
+  {
+   "ticker": "CDNA",
+   "session": "2026-10-07",
+   "violations": [
+    "ambiguous: sizing stated as ~2% of portfolio in the executive summary/thesis but ~3% in the position-sizing section; stated price target 59.0 coincides with the buy zone and refers to the downside/entry area, not upside"
+   ],
+   "artifact": "case_artifacts/CDNA_2026-10-07.json"
+  },
+  {
+   "ticker": "IOVA",
+   "session": "2026-10-07",
+   "violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/IOVA_2026-10-07.json"
+  },
+  {
+   "ticker": "MRNA",
+   "session": "2026-10-07",
+   "violations": [
+    "ambiguous: two distinct trigger paths (technical vs disclosure-driven) with different sizing logic; no single stop price is stated for the re-entry",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/MRNA_2026-10-07.json"
+  },
+  {
+   "ticker": "PTC",
+   "session": "2026-10-07",
+   "violations": [
+    "ambiguous: re-entry requires verifying absence of adverse news, which is a judgment call not reducible to a mechanical price trigger; arb allocation size is not quantified"
+   ],
+   "artifact": "case_artifacts/PTC_2026-10-07.json"
+  },
+  {
+   "ticker": "QMCO",
+   "session": "2026-10-07",
+   "violations": [
+    "ambiguous: size stated as ~1-1.5% of portfolio in the executive summary but ~2.5% in the position-sizing section; the trader's 28.3 stop is explicitly rejected in favor of ~25.8; stated 23.1 target is a downside objective, not an upside target for the conditional long"
+   ],
+   "artifact": "case_artifacts/QMCO_2026-10-07.json"
+  },
+  {
+   "ticker": "SDGR",
+   "session": "2026-10-07",
+   "violations": [
+    "ambiguous: report's entry price 28.5 and stop 30.7 describe an exit/trim scenario for a hypothetical holder, not the stated re-entry plan; no stop price is specified for the conditional re-entry"
+   ],
+   "artifact": "case_artifacts/SDGR_2026-10-07.json"
+  },
+  {
+   "ticker": "TEAM",
+   "session": "2026-10-07",
+   "violations": [
+    "ambiguous: two alternative trigger paths (breakout vs defended retest); unresolved valuation, insider, and news data gaps justify reduced sizing",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/TEAM_2026-10-07.json"
+  }
+ ]
+}
