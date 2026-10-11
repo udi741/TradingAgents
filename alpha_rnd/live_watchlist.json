@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-11T08:26:46.851195+00:00",
+ "generated_at": "2026-10-11T08:31:25.843454+00:00",
  "watch_expiry": "2026-10-30",
  "recommendation_freeze": "2026-10-02 (V1) / 2026-10-03 (V2)",
  "sizing": {
@@ -94,6 +94,8 @@
    "horizon": "2-4 weeks (pending FDA INO-3107 decision)",
    "reevaluation": "FDA accelerated-approval determination in ~2-3 weeks; CHMP meeting starting ~Oct 12; any dilutive raise announcement triggers immediate reassessment",
    "artifact": "PGEN_2026-10-07.json",
+   "session": "2026-10-07",
+   "published_session": "2026-10-09",
    "size_frac": 0.5,
    "stop_rule": {
     "type": "intraday_stop",
@@ -298,6 +300,8 @@
    "horizon": "3-6 months; re-evaluate after next quarterly filing",
    "reevaluation": "Next quarterly filing: second positive operating quarter plus disclosed post-restructuring cap table terms",
    "artifact": "QMCO_2026-10-01.json",
+   "session": "2026-10-01",
+   "published_session": "2026-10-09",
    "size_frac": 1.0,
    "stop_rule": null,
    "auto_execution_authorized": false,
@@ -367,5 +371,5 @@
    "artifact": "APPS_2026-10-01.json"
   }
  ],
- "sha256": "37003e1543f5d158e6104bc9c68429f5404717a26f303edcf5044e410bfcbf82"
+ "sha256": "e5941a7644b107121f925f8e100146065642073d5a4d428341209d3a8f3a5a91"
 }

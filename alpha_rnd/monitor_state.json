@@ -147,5 +147,37 @@
  "risk_blocked": {
   "IOVA": "IOVA_2026-10-01.json#1",
   "TXG": "TXG_2026-10-02.json#2"
+ },
+ "watch_lifecycle": {
+  "IOVA": {
+   "status": "RISK_PLAN_REQUIRED",
+   "rev": "IOVA_2026-10-01.json#1",
+   "session": "2026-10-01",
+   "at": "2026-10-08T06:17:14Z"
+  },
+  "TXG": {
+   "status": "RISK_PLAN_REQUIRED",
+   "rev": "TXG_2026-10-02.json#2",
+   "session": "2026-10-02",
+   "at": "2026-10-08T06:17:14Z"
+  },
+  "PGEN": {
+   "status": "TRIGGERED",
+   "rev": "PGEN_2026-10-02.json#2",
+   "session": "2026-10-02",
+   "at": "historic"
+  },
+  "TWST": {
+   "status": "TRIGGERED",
+   "rev": "TWST_2026-10-02.json#2",
+   "session": "2026-10-02",
+   "at": "historic"
+  },
+  "SDGR": {
+   "status": "TRIGGERED",
+   "rev": "SDGR_2026-10-02.json#2",
+   "session": "2026-10-02",
+   "at": "historic"
+  }
  }
 }

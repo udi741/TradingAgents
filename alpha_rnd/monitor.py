@@ -204,6 +204,27 @@ def _watch_rev(w: dict) -> str:
     return f"{w.get('artifact')}#{w.get('v', '')}"
 
 
+TERMINAL_WATCH = {"TRIGGERED", "EXPIRED", "KILLED", "RISK_PLAN_REQUIRED",
+                  "RETIRED"}
+
+
+def _set_watch_status(st: dict, w: dict, status: str) -> None:
+    """Single watch-status write path. Terminal transitions also record a
+    durable lifecycle entry {status, rev, session} keyed to the watch
+    revision — publish() uses it to block resurrection of a retired/superseded
+    revision while still allowing a genuinely NEWER one."""
+    t = w["ticker"]
+    st["watch_status"][t] = status
+    if status in TERMINAL_WATCH:
+        rev = _watch_rev(w)
+        sess = rev.split("#", 1)[0].rsplit("_", 1)[-1].split(".")[0]
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", sess or ""):
+            sess = None  # unknown revision session -> publish fails closed
+        st.setdefault("watch_lifecycle", {})[t] = {
+            "status": status, "rev": rev, "session": sess,
+            "at": now_utc().isoformat()}
+
+
 def _risk_blocked(st: dict, w: dict) -> bool:
     """True while the SAME watch revision stays blocked. A new published
     revision (different artifact/v) is evaluated again."""
@@ -233,7 +254,7 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
         return
     if not post_entry_risk_plan(watch):
-        st["watch_status"][ticker] = "RISK_PLAN_REQUIRED"
+        _set_watch_status(st, watch, "RISK_PLAN_REQUIRED")
         st.setdefault("risk_blocked", {})[ticker] = _watch_rev(watch)
         emit(st, {"ticker": ticker, "action": "RISK_PLAN_REQUIRED",
                   "event_id": f"risk_block:{ticker}:{_watch_rev(watch)}",
@@ -271,7 +292,7 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
                               "invalidation": watch["invalidation"],
                               "horizon": watch["horizon"], "stop_rule": stop,
                               "entry_session": now_utc().strftime("%Y-%m-%d")}
-    st["watch_status"][ticker] = "TRIGGERED"
+    _set_watch_status(st, watch, "TRIGGERED")
     emit(st, {"ticker": ticker, "action": ev_type, "price": price, "shares": shares,
               "cost": round(cost, 2), "cls": watch["cls"], "invalidation": watch["invalidation"]})
     notify(f"""ALPHA_RND PAPER ENTRY EXECUTED
@@ -416,7 +437,7 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                 or _risk_blocked(st, w):
             continue
         if session > EXPIRY:
-            st["watch_status"][t] = "EXPIRED"
+            _set_watch_status(st, w, "EXPIRED")
             emit(st, {"ticker": t, "action": "WATCH_EXPIRED", "session": session})
             continue
         df = daily.get(t)
@@ -428,11 +449,11 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
         prog = st["confirm"].setdefault(t, {})
 
         def triggered(how):
-            st["watch_status"][t] = "TRIGGERED"
+            _set_watch_status(st, w, "TRIGGERED")
             emit(st, {"ticker": t, "action": "CONFIRMED", "how": how, "session": session,
                       "close": c, "vol": v})
             if w["cls"] == "REANALYZE_ON_TRIGGER":
-                st["watch_status"][t] = "REANALYSIS"
+                _set_watch_status(st, w, "REANALYSIS")
                 emit(st, {"ticker": t, "action": "REANALYSIS_REQUIRED",
                           "why": how, "session": session})
                 notify(f"{t} TRIGGER\n\n{how}\n\nClass: REANALYZE_ON_TRIGGER\n\nAction: NO BUY YET — single-ticker refresh required.")
@@ -440,7 +461,7 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                 # Fill-time guardrail belongs at confirmation too: never
                 # announce "ENTRY CONFIRMED" for a plan that cannot execute.
                 if not post_entry_risk_plan(w):
-                    st["watch_status"][t] = "RISK_PLAN_REQUIRED"
+                    _set_watch_status(st, w, "RISK_PLAN_REQUIRED")
                     st.setdefault("risk_blocked", {})[t] = _watch_rev(w)
                     emit(st, {"ticker": t, "action": "RISK_PLAN_REQUIRED",
                               "event_id": f"risk_block:{t}:{_watch_rev(w)}",
@@ -503,7 +524,7 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                 triggered(f"reclaim {p['reclaim']} + hold >{p['hold']} confirmed")
         if "gapfill_probe" in tt:
             if c < p["kill"]:
-                st["watch_status"][t] = "KILLED"
+                _set_watch_status(st, w, "KILLED")
                 emit(st, {"ticker": t, "action": "NO_ACTION", "why": f"close<{p['kill']} kills triggers"})
                 continue
             z = p["probe_zone"]
@@ -532,7 +553,7 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
 
         # TWST-style veto handled by 'veto_level'
         if p.get("veto_level") and c < p["veto_level"] and v > v20 and st["watch_status"].get(t) != "TRIGGERED":
-            st["watch_status"][t] = "KILLED"
+            _set_watch_status(st, w, "KILLED")
             emit(st, {"ticker": t, "action": "NO_ACTION", "why": f"veto: close {c}<{p['veto_level']} heavy vol"})
 
 

@@ -19,6 +19,28 @@ ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / "alpha_rnd" / "scheduler_state.json"
 
 
+def _monitor_state() -> dict:
+    """Read-only lifecycle view of monitor state; absent/corrupt -> empty
+    (carry-forward then relies on spec precedence only)."""
+    try:
+        p = ROOT / "alpha_rnd" / "monitor_state.json"
+        return json.loads(p.read_text())
+    except Exception:
+        return {}
+
+
+def _watch_session(w: dict) -> str | None:
+    """Structured session provenance first; artifact filename is fallback
+    only — never sole authority."""
+    s = w.get("session") or w.get("published_session")
+    if s:
+        return s
+    art = w.get("artifact") or ""
+    cand = art.rsplit("_", 1)[-1].split(".")[0] if "_" in art else ""
+    import re as _re
+    return cand if _re.fullmatch(r"\d{4}-\d{2}-\d{2}", cand or "") else None
+
+
 def publish(session: str) -> dict:
     """Atomic, idempotent: same spec -> same live_watchlist.json (modulo
     generated_at); repeated calls overwrite, never duplicate."""
@@ -28,10 +50,13 @@ def publish(session: str) -> dict:
     doc = gw.build_doc()
     # Merge validated PublicationIntents for every session <= this one;
     # a published watch persists until a NEWER intent for the same ticker
-    # supersedes it. Latest session wins per ticker.
+    # supersedes it. Latest session wins per ticker. Terminal/revised-away
+    # watches never resurrect: monitor_state.watch_lifecycle is the authority.
     ev = ROOT / "evaluations" / "alpha_rnd_v1"
     paths = sorted(p for p in ev.glob("publication_intents_*.json")
                    if p.stem.rsplit("_", 1)[-1] <= session)
+    mst = _monitor_state()
+    lifecycle = mst.get("watch_lifecycle") or {}
     if paths:
         by_ticker = {w["ticker"]: w for w in doc["watches"]}
         for intents_path in paths:
@@ -40,13 +65,17 @@ def publish(session: str) -> dict:
                 i = idoc["intents"][t]
                 if i.get("watch_mode") in (None, "NONE"):
                     continue
-                isess = intents_path.stem.rsplit("_", 1)[-1]
-                # older intents never overwrite a NEWER curated revision:
-                # the watch's artifact name carries its session
-                cur = by_ticker.get(t, {}).get("artifact") or ""
-                curs = cur.rsplit("_", 1)[-1].split(".")[0] if "_" in cur else ""
+                # structured session first; filename is fallback only
+                isess = idoc.get("session") or \
+                    intents_path.stem.rsplit("_", 1)[-1]
+                cur_w = by_ticker.get(t) or {}
+                curs = _watch_session(cur_w)
                 if curs and isess <= curs:
-                    continue
+                    continue  # older/same intent never overwrites a newer revision
+                lc = lifecycle.get(t)
+                if lc and lc.get("status") and (
+                        not lc.get("session") or isess <= lc["session"]):
+                    continue  # terminal revision must not resurrect
                 by_ticker[t] = {
                     "ticker": t, "cls": i["watch_mode"], "v": "auto",
                     "trigger": i.get("trigger"),
@@ -57,6 +86,7 @@ def publish(session: str) -> dict:
                     "horizon": i.get("horizon"),
                     "reevaluation": i.get("reevaluation"),
                     "artifact": f"{t}_{isess}.json",
+                    "session": isess, "published_session": session,
                     "size_frac": i.get("size_frac") or 1.0,
                     "stop_rule": ({"type": "intraday_stop",
                                    "level": i["stop_level"],
