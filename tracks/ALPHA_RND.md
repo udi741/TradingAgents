@@ -709,3 +709,16 @@ publication violations were genuine frozen-text ambiguity -> 0 new watches;
 resolutions doc written. Defect found+fixed: publish.py only merged current-
 session intents, silently dropping prior published watches (PGEN 10-07) —
 now carries forward all sessions<=current with newer-wins precedence.
+
+### Missed-execution provenance + watch lifecycle hardening (2026-10-11)
+
+SDGR: 10-08 close 26.39 breached close<27.29 while machine offline; the
+resulting 10-09 open opportunity is now durably recorded as a non-economic
+MISSED_EXECUTION_REVIEW_REQUIRED (trigger_session 10-08, eligible 10-09,
+retro_provenance) — no fill fabricated. The live order
+close_below:SDGR:2026-10-09 (10-12 open) is the separate prospective
+instruction. Watch lifecycle: _set_watch_status records terminal revisions
+{status,rev,session}; publish carry-forward now consults monitor_state
+watch_lifecycle + structured session fields (artifact filename is fallback
+only), so RETIRED/EXPIRED/TRIGGERED/RISK_PLAN_REQUIRED revisions can never
+resurrect while genuinely newer intents still supersede.
