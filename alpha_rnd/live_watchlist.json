@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-08T07:46:27.783599+00:00",
+ "generated_at": "2026-10-11T08:26:46.851195+00:00",
  "watch_expiry": "2026-10-30",
  "recommendation_freeze": "2026-10-02 (V1) / 2026-10-03 (V2)",
  "sizing": {
@@ -275,6 +275,33 @@
    "horizon": "4-8 weeks",
    "artifact": "HHH_2026-10-02.json",
    "size_frac": 0.15
+  },
+  {
+   "ticker": "QMCO",
+   "cls": "REANALYZE_ON_TRIGGER",
+   "v": "auto",
+   "trigger": "Fresh evaluation only when price nears the $15-$20 consolidation shelf AND EDGAR verifies recapitalization/dilution terms AND a second consecutive quarter of positive operating income and operating cash flow is filed \u2014 evaluation gate, not automatic buy; no shorting",
+   "trigger_type": null,
+   "params": {
+    "reeval_zone": [
+     15,
+     20
+    ],
+    "ema10": 29.6,
+    "exit_sell_zone": [
+     32,
+     35
+    ]
+   },
+   "entry_convention": "zero exposure now; if holding, work limit sells in tranches toward $32-$35",
+   "invalidation": "None \u2014 no position held; shorting explicitly rejected (recap mechanically succeeded, squeeze-prone)",
+   "horizon": "3-6 months; re-evaluate after next quarterly filing",
+   "reevaluation": "Next quarterly filing: second positive operating quarter plus disclosed post-restructuring cap table terms",
+   "artifact": "QMCO_2026-10-01.json",
+   "size_frac": 1.0,
+   "stop_rule": null,
+   "auto_execution_authorized": false,
+   "source": "auto_synth"
   }
  ],
  "open_positions": [
@@ -340,5 +367,5 @@
    "artifact": "APPS_2026-10-01.json"
   }
  ],
- "sha256": "762b9da8d333a04cd86fa90ab3c219ff8bd91a66c835f5ff256ec055929d1225"
+ "sha256": "37003e1543f5d158e6104bc9c68429f5404717a26f303edcf5044e410bfcbf82"
 }

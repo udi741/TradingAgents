@@ -1,10 +1,11 @@
 {
- "last_check_utc": "2026-10-08T07:48:02.528349+00:00",
+ "last_check_utc": "2026-10-11T08:26:03.011191+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
   "2026-10-06",
-  "2026-10-07"
+  "2026-10-07",
+  "2026-10-09"
  ],
  "confirm": {
   "IOVA": {
@@ -37,10 +38,10 @@
    "seeded": true,
    "mark_source": "regular_session_close",
    "mark_status": "MARKED",
-   "mark": 83.68,
-   "mark_session": "2026-10-07",
-   "unrealized": 228.16,
-   "unrealized_pct": 4.6
+   "mark": 84.27,
+   "mark_session": "2026-10-09",
+   "unrealized": 264.74,
+   "unrealized_pct": 5.34
   },
   "SDGR": {
    "shares": 61,
@@ -57,10 +58,10 @@
    "mark_status": "MARKED",
    "mark_source": "regular_session_close",
    "cost": -1174.53,
-   "mark": 27.29,
-   "mark_session": "2026-10-07",
-   "unrealized": -226.31,
-   "unrealized_pct": -11.97
+   "mark": 27.28,
+   "mark_session": "2026-10-09",
+   "unrealized": -226.92,
+   "unrealized_pct": -12.0
   },
   "TWST": {
    "shares": 7,
@@ -77,14 +78,14 @@
    "mark_status": "MARKED",
    "mark_source": "regular_session_close",
    "cost": -533.4,
-   "mark": 155.65,
-   "mark_session": "2026-10-07",
-   "unrealized": -377.3,
-   "unrealized_pct": -25.72
+   "mark": 159.78,
+   "mark_session": "2026-10-09",
+   "unrealized": -348.39,
+   "unrealized_pct": -23.75
   }
  },
  "cash": 90203.02,
- "nav_last": 98145.42,
+ "nav_last": 98210.3,
  "watch_status": {
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED",
@@ -94,23 +95,29 @@
  },
  "pending_open_exits": [
   {
+   "ticker": "SDGR",
+   "why": "mgmt review: tightened stop just below $27.29",
+   "confirm_session": "2026-10-09",
+   "order_id": "close_below:SDGR:2026-10-09"
+  },
+  {
    "ticker": "TWST",
    "why": "mgmt review: hard exit on any close below $164",
-   "confirm_session": "2026-10-07",
-   "order_id": "close_below:TWST:2026-10-07"
+   "confirm_session": "2026-10-09",
+   "order_id": "close_below:TWST:2026-10-09"
   }
  ],
  "book": {
-  "mark_session": "2026-10-07",
-  "market_value": 7942.4,
-  "unrealized": -375.45,
-  "exposure": 7942.4,
-  "nav": 98145.42,
-  "provisional_nav_incl_unmarked_at_cost": 98145.42,
+  "mark_session": "2026-10-09",
+  "market_value": 8007.28,
+  "unrealized": -310.57,
+  "exposure": 8007.28,
+  "nav": 98210.3,
+  "provisional_nav_incl_unmarked_at_cost": 98210.3,
   "unmarked_positions": [],
   "cash": 90203.02,
   "realized": -1485.68,
-  "marked_at": "2026-10-08T04:43:03.047760+00:00"
+  "marked_at": "2026-10-10T17:11:03.968125+00:00"
  },
  "realized": -1485.68,
  "policy": {
@@ -132,7 +139,7 @@
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-08T07:48:02.523141+00:00",
+  "at": "2026-10-11T08:26:03.005238+00:00",
   "daily_ok": 16,
   "daily_req": 19,
   "status": "ok"

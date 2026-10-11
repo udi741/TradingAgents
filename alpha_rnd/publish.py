@@ -26,35 +26,46 @@ def publish(session: str) -> dict:
     import alpha_rnd.gen_watchlist as gw
 
     doc = gw.build_doc()
-    # Merge validated PublicationIntents for this session (synthesis artifact).
-    intents_path = (ROOT / "evaluations" / "alpha_rnd_v1"
-                    / f"publication_intents_{session}.json")
-    if intents_path.exists():
-        idoc = json.loads(intents_path.read_text())
+    # Merge validated PublicationIntents for every session <= this one;
+    # a published watch persists until a NEWER intent for the same ticker
+    # supersedes it. Latest session wins per ticker.
+    ev = ROOT / "evaluations" / "alpha_rnd_v1"
+    paths = sorted(p for p in ev.glob("publication_intents_*.json")
+                   if p.stem.rsplit("_", 1)[-1] <= session)
+    if paths:
         by_ticker = {w["ticker"]: w for w in doc["watches"]}
-        for t in idoc.get("validated", []):
-            i = idoc["intents"][t]
-            if i.get("watch_mode") in (None, "NONE"):
-                continue
-            by_ticker[t] = {
-                "ticker": t, "cls": i["watch_mode"], "v": "auto",
-                "trigger": i.get("trigger"),
-                "trigger_type": (i.get("params") or {}).get("type"),
-                "params": i.get("params"),
-                "entry_convention": i.get("entry_convention"),
-                "invalidation": i.get("invalidation"),
-                "horizon": i.get("horizon"),
-                "reevaluation": i.get("reevaluation"),
-                "artifact": f"{t}_{session}.json",
-                "size_frac": i.get("size_frac") or 1.0,
-                "stop_rule": ({"type": "intraday_stop",
-                               "level": i["stop_level"],
-                               "label": i.get("invalidation")}
-                              if i.get("stop_level") else None),
-                "auto_execution_authorized": bool(
-                    i.get("auto_execution_authorized")),
-                "source": "auto_synth",
-            }
+        for intents_path in paths:
+            idoc = json.loads(intents_path.read_text())
+            for t in idoc.get("validated", []):
+                i = idoc["intents"][t]
+                if i.get("watch_mode") in (None, "NONE"):
+                    continue
+                isess = intents_path.stem.rsplit("_", 1)[-1]
+                # older intents never overwrite a NEWER curated revision:
+                # the watch's artifact name carries its session
+                cur = by_ticker.get(t, {}).get("artifact") or ""
+                curs = cur.rsplit("_", 1)[-1].split(".")[0] if "_" in cur else ""
+                if curs and isess <= curs:
+                    continue
+                by_ticker[t] = {
+                    "ticker": t, "cls": i["watch_mode"], "v": "auto",
+                    "trigger": i.get("trigger"),
+                    "trigger_type": (i.get("params") or {}).get("type"),
+                    "params": i.get("params"),
+                    "entry_convention": i.get("entry_convention"),
+                    "invalidation": i.get("invalidation"),
+                    "horizon": i.get("horizon"),
+                    "reevaluation": i.get("reevaluation"),
+                    "artifact": f"{t}_{isess}.json",
+                    "size_frac": i.get("size_frac") or 1.0,
+                    "stop_rule": ({"type": "intraday_stop",
+                                   "level": i["stop_level"],
+                                   "label": i.get("invalidation")}
+                                  if i.get("stop_level") else None),
+                    "auto_execution_authorized": bool(
+                        i.get("auto_execution_authorized")),
+                    "source": "auto_synth",
+                }
         doc["watches"] = list(by_ticker.values())
         doc["sha256"] = __import__("hashlib").sha256(
             json.dumps({k: v for k, v in doc.items() if k != "sha256"},

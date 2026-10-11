@@ -1,5 +1,5 @@
 {
- "session": "2026-10-07",
+ "session": "2026-10-09",
  "sources": [
   "sp500",
   "sp400"
@@ -979,6 +979,12 @@
    "ticker": "AIN",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "AIOK",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -3341,6 +3347,12 @@
    "ticker": "BCX",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "BDAI",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -7145,6 +7157,7 @@
   {
    "ticker": "CTVA",
    "indices": [
+    "sp400",
     "other_listed"
    ]
   },
@@ -10495,6 +10508,7 @@
   {
    "ticker": "FORM",
    "indices": [
+    "sp400",
     "nasdaq_listed"
    ]
   },
@@ -12340,12 +12354,6 @@
    ]
   },
   {
-   "ticker": "HCTI",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "HCWB",
    "indices": [
     "nasdaq_listed"
@@ -12534,12 +12542,6 @@
    "ticker": "HIW",
    "indices": [
     "other_listed"
-   ]
-  },
-  {
-   "ticker": "HKIT",
-   "indices": [
-    "nasdaq_listed"
    ]
   },
   {
@@ -19575,7 +19577,6 @@
   {
    "ticker": "OLN",
    "indices": [
-    "sp400",
     "other_listed"
    ]
   },
@@ -19841,6 +19842,12 @@
    "indices": [
     "sp400",
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "ORBS",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -22898,6 +22905,12 @@
    ]
   },
   {
+   "ticker": "RTSN",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "RTX",
    "indices": [
     "sp500",
@@ -23338,6 +23351,12 @@
    "ticker": "SBXE-W",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "SCAT",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -25521,8 +25540,7 @@
   {
    "ticker": "TCBI",
    "indices": [
-    "sp400",
-    "nasdaq_listed"
+    "sp400"
    ]
   },
   {
@@ -26502,6 +26520,12 @@
    ]
   },
   {
+   "ticker": "TRXB",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "TSAT",
    "indices": [
     "nasdaq_listed"
@@ -26738,12 +26762,6 @@
    ]
   },
   {
-   "ticker": "TWG",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "TWI",
    "indices": [
     "other_listed"
@@ -26759,7 +26777,6 @@
    "ticker": "TWLO",
    "indices": [
     "sp500",
-    "sp400",
     "other_listed"
    ]
   },
@@ -27403,6 +27420,12 @@
   },
   {
    "ticker": "VECO",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
+   "ticker": "VEEA",
    "indices": [
     "nasdaq_listed"
    ]

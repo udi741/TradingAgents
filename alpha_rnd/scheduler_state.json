@@ -3,50 +3,51 @@
   "2026-10-02",
   "2026-10-05",
   "2026-10-06",
-  "2026-10-07"
+  "2026-10-07",
+  "2026-10-09"
  ],
  "last_cycle": {
-  "session": "2026-10-07",
-  "finished_at": "2026-10-08T07:12:15.577678+00:00",
+  "session": "2026-10-09",
+  "finished_at": "2026-10-10T19:24:14.646221+00:00",
   "summary": {
    "deep": [
-    "IOVA",
     "QMCO",
+    "HAE",
+    "IOVA",
     "MRNA",
+    "P",
     "TEAM",
-    "CDNA",
     "PTC",
     "SDGR",
-    "AMPL",
-    "PGEN",
-    "ASST"
+    "PENG",
+    "AMPL"
    ],
    "ta_signals": {
     "AMPL": "Sell",
-    "ASST": "Sell",
-    "CDNA": "Sell",
-    "IOVA": "Sell",
-    "MRNA": "Sell",
-    "PGEN": "Sell",
+    "HAE": "Hold",
+    "IOVA": "Overweight",
+    "MRNA": "Underweight",
+    "PENG": "Sell",
     "PTC": "Sell",
+    "P": "Sell",
     "QMCO": "Sell",
     "SDGR": "Sell",
-    "TEAM": "Sell"
+    "TEAM": "Hold"
    },
    "published": {
-    "published_at": "2026-10-08T07:12:15.561049+00:00",
+    "published_at": "2026-10-10T19:24:14.630687+00:00",
     "watch_count": 13,
-    "sha256": "7d7c8496df9e1399ee47671e9623ab20931c0f85aef36f4292bc6ed1c8615ed6"
+    "sha256": "96abf9f365aca0192bbf9a3917d689a02634fddfc4eca0532bf7198288c51380"
    },
    "validated": [],
    "pending_review": [
     "AMPL",
-    "ASST",
-    "CDNA",
+    "HAE",
     "IOVA",
     "MRNA",
-    "PGEN",
+    "PENG",
     "PTC",
+    "P",
     "QMCO",
     "SDGR",
     "TEAM"
@@ -54,7 +55,7 @@
   }
  },
  "note": "seeded at scheduler install; 2026-10-02 processed manually",
- "uptodate_reported": "2026-10-06",
+ "uptodate_reported": "2026-10-09",
  "published_sessions": {
   "2026-10-05": {
    "published_at": "2026-10-06T04:16:39.901281+00:00",
@@ -70,11 +71,17 @@
    "published_at": "2026-10-08T07:46:27.801579+00:00",
    "watch_count": 13,
    "sha256": "762b9da8d333a04cd86fa90ab3c219ff8bd91a66c835f5ff256ec055929d1225"
+  },
+  "2026-10-09": {
+   "published_at": "2026-10-11T08:26:46.867730+00:00",
+   "watch_count": 14,
+   "sha256": "37003e1543f5d158e6104bc9c68429f5404717a26f303edcf5044e410bfcbf82"
   }
  },
  "session_status": {
   "2026-10-05": "INVALID_TA_RUNTIME_FAILURE",
   "2026-10-06": "INVALID_TA_RUNTIME_FAILURE",
-  "note": "TA stage failed (py3.10 ImportError, 0 model calls, 0 artifacts); COMPLETE events false; sessions NOT re-run (no backfill); discovery/pool artifacts remain valid"
+  "note": "TA stage failed (py3.10 ImportError, 0 model calls, 0 artifacts); COMPLETE events false; sessions NOT re-run (no backfill); discovery/pool artifacts remain valid",
+  "2026-10-09": "COMPLETE"
  }
 }

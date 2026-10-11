@@ -1,0 +1,350 @@
+{
+ "session": "2026-10-09",
+ "synthesized_at": "2026-10-10T19:24:14.593862+00:00",
+ "model": "devin-deep",
+ "temperature": 0,
+ "intents": {
+  "AMPL": {
+   "ticker": "AMPL",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Orderly pullback to $14.60-$14.70 that holds, with RSI reset below 60, contracting volume, and a still-positive MACD histogram",
+   "params": {
+    "entry_zone_low": 14.6,
+    "entry_zone_high": 14.7,
+    "entry_price": 14.65,
+    "max_portfolio_pct": 2.5,
+    "existing_holder_trailing_stop": "close below 10 EMA (~$14.67)"
+   },
+   "entry_convention": "Conditional pullback starter only; do not initiate at ~$15.67; pullback plan, not a chase plan",
+   "invalidation": "A close below $13.85 invalidates the breakout thesis and prevents any re-entry until the cash and margin trajectory is clarified",
+   "stop_level": 13.85,
+   "target": 14.65,
+   "horizon": "1-3 months, subject to the next quarterly filing",
+   "reevaluation": "Next quarterly filing: gross margin recovering toward 72%+ AND cash stabilizing above ~$50M weakens the bear case (upgrade toward Hold/Overweight); cash below ~$50M or another widening loss warrants exiting the remainder, $13.07 (50 SMA) first downside target",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": "Price Target field (14.65) restates the conditional entry level, not an upside target; no explicit upside target stated"
+  },
+  "HAE": {
+   "ticker": "HAE",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Confirmed retest of the $113-116 zone requiring stabilization evidence (a close back above $115 or a clear rejection of the zone low), entry near $114.50; add a partial 1-2% tranche only on a decisive close above $121.20 on elevated volume",
+   "params": {
+    "retest_zone_low": 113,
+    "retest_zone_high": 116,
+    "entry_price": 114.5,
+    "initial_tranche_pct": 3,
+    "initial_tranche_usd": 3000,
+    "add_tranche_pct": "1-2",
+    "breakout_add_level": 121.2,
+    "target_zone": "125-127"
+   },
+   "entry_convention": "Staged entry on confirmed retest only; no trade at current levels; verify earnings calendar and EDGAR filings before any tranche executes",
+   "invalidation": "Hard invalidation at a close below $111.66 (October 8 low); below $107 the gap has fully faded and the setup is void",
+   "stop_level": 111.66,
+   "target": 127.0,
+   "horizon": "3-6 months",
+   "reevaluation": "Quantified CSL deal economics or a decisive close above $121.20 on elevated volume upgrades toward Buy/Overweight; a close below $107, deal-economics disappointment, or evidence the $1.1B 2030 refinancing faces adverse rates shifts toward Sell/avoid",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "Stop Loss field states 111.5 while executive summary sets hard invalidation at a close below 111.66; both appear in text, 111.66 used as the operative close-based invalidation. Entry additionally gated on verifying earnings calendar/EDGAR since the news/macro data layer was dark"
+  },
+  "IOVA": {
+   "ticker": "IOVA",
+   "classification": "ACTIONABLE_NOW",
+   "watch_mode": "AUTO_ENTRY",
+   "trigger": "Initiate a reduced starter position now; add near $13.30; add at $12.90 only if price stabilizes there rather than falling through it; final tranche reserved for a confirmed close above $15.30 (also stated as $14.94-15.30)",
+   "params": {
+    "add_level_1": 13.3,
+    "add_level_2": 12.9,
+    "final_tranche_trigger": 15.3,
+    "alt_final_tranche_zone": "14.94-15.30",
+    "starter_usd_exec_summary": "1250-1500",
+    "starter_pct_position_sizing": 2.5,
+    "starter_usd_position_sizing": 2500,
+    "max_exposure_pct_exec_summary": "4-5",
+    "max_exposure_pct_position_sizing": "5-7",
+    "mean_reversion_path": 11.91,
+    "daily_atr_pct": 6.3
+   },
+   "entry_convention": "Tranche-based build; do not chase $14.62; layered limit bids at $13.30 and $12.90",
+   "invalidation": "A daily close below $12.90 breaks the higher-low structure \u2014 exit or cut the position and reassess toward $11.91",
+   "stop_level": 12.8,
+   "target": null,
+   "horizon": "Weeks to approximately 3 months, with reassessment at Q3 earnings",
+   "reevaluation": "Q3 earnings checkpoint: revenue must confirm the $71M\u2192$99M jump was a durable step-change, not stocking noise; a flat print downgrades to Hold. Treat any equity raise as an expected dilution event \u2014 do not add into the announcement",
+   "size_frac": 0.5,
+   "auto_execution_authorized": true,
+   "ambiguity": "Position sizing is internally inconsistent: executive summary starter $1,250-$1,500 vs position-sizing section ~$2,500 (2.5%) now; total cap stated as both 4-5% and 5-7%. Final-tranche breakout level stated as both $15.30 and $14.94-15.30. The $12.90 add is conditional on stabilization, so only the starter and $13.30 add are unconditionally executable"
+  },
+  "MRNA": {
+   "ticker": "MRNA",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Quarter-size bid (~1.25% of portfolio, ~$1,250) at the $197-200 support zone only if reached on declining volume; permission to build to a 5% cap only on a confirmed close above $228 with MACD re-expansion",
+   "params": {
+    "bid_zone_low": 197,
+    "bid_zone_high": 200,
+    "initial_tranche_pct": 1.25,
+    "initial_tranche_usd": 1250,
+    "max_exposure_pct": 5,
+    "breakout_add_level": 228,
+    "upside_open_air": "240+",
+    "atr_usd": 15
+   },
+   "entry_convention": "Event-gated, option-like structure; do not initiate at $225; no chasing and no shorting unbroken momentum",
+   "invalidation": "A close below $197 cancels the bid and confirms the momentum unwind; a gap down through $186 on a failed headline validates full abstinence. $186 is a trigger-level stop treated as a level, not a guaranteed fill",
+   "stop_level": 186.0,
+   "target": 240.0,
+   "horizon": "4-12 weeks, through the Q3-2026 seasonal print",
+   "reevaluation": "Re-evaluate if the unknown August catalyst or the rate picture clarifies before any fill; a Q3-2026 seasonal revenue print above ~$800M or a positive pipeline readout (Merck PCV, CMV, flu/COVID combo) upgrades toward Overweight and re-prices the structure upward",
+   "size_frac": 0.25,
+   "auto_execution_authorized": false,
+   "ambiguity": "Entry bid is conditional on the pullback arriving on declining volume; existing-holder guidance (trim 30-50% into strength) coexists with the flat-position plan. Stops unreliable given $15 ATR and documented 60%+ overnight repricings \u2014 size is the only control"
+  },
+  "P": {
+   "ticker": "P",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "First tranche (~2% of the $100,000 cash book) in the 141-144 digest zone only after a stabilization session on declining sell volume; scale toward a 5% cap on a 10 EMA reclaim \u2014 explicitly no standing limit order at 142.5",
+   "params": {
+    "reentry_zone_low": 141,
+    "reentry_zone_high": 144,
+    "ten_ema": 141.5,
+    "breakout_shelf": 140.14,
+    "first_tranche_pct": 2,
+    "max_pct": 5,
+    "max_usd": 5000,
+    "atr_points": 6.5
+   },
+   "entry_convention": "Conditional staged re-entry only \u2014 no standing limit orders; do not initiate or add at ~154.49 under any circumstances",
+   "invalidation": "Stand down entirely on a close below 134; a close below the 140.14 breakout shelf impairs the thesis \u2014 Sell with no re-engagement",
+   "stop_level": 133.5,
+   "target": 142.5,
+   "horizon": "1-3 months, contingent on the pullback structure and next filing",
+   "reevaluation": "Earnings gate: if the 141-144 zone holds on stabilization volume AND the next filing shows OCF normalizing positive, upgrade toward Overweight at the rebuild; if OCF stays negative or deferred revenue unwinds, cut to zero. Any position held into the next earnings print is halved or flat beforehand to resolve the -$136M Q2 operating cash flow anomaly",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "Entry requires a stabilization session on declining sell volume \u2014 confirmation-gated, and the report explicitly forbids a standing limit at 142.5. Stop Loss field (133.5) is acknowledged as unreliable: honest risk is 12-15 points given demonstrated gap risk (Sep 18 73M-share event)"
+  },
+  "PENG": {
+   "ticker": "PENG",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Entry only conditional on stabilization at $70-72 or $64-65 with volume re-expansion (a day that holds the zone, contracting down-volume, or a reclaimed prior high); half a standard allocation per tranche; skip the $64-65 tranche entirely if it arrives via a single waterfall day",
+   "params": {
+    "zone_1_low": 70,
+    "zone_1_high": 72,
+    "zone_2_low": 64,
+    "zone_2_high": 65,
+    "breakout_shelf": "61-64",
+    "atr_usd": "4.61-6",
+    "tranche_size": "half standard allocation",
+    "total_cap": "one standard allocation"
+   },
+   "entry_convention": "No resting buy orders \u2014 limit orders at $70 or $65 rejected as pre-committed exit liquidity; conditional triggers requiring a stabilization signal only; avoid-entry call, not a short",
+   "invalidation": "Revenue stalling against the $1.1B current-liability stack, or de-rating in the AI-hardware peer complex (HPE, Dell, AMKR, KLIC, CRDO, ANET), confirms the bear case for continued avoidance at any level",
+   "stop_level": null,
+   "target": null,
+   "horizon": "Tactical; reassess at pullback zones ($70-72, $64-65) and at next 10-Q filing",
+   "reevaluation": "A 10-Q showing receivables and inventory converting to cash on sustained growth upgrades toward Overweight; demonstrated ability to gap 8% in minutes means stops will slip \u2014 size assuming a fast move through $70",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": "No explicit stop or target stated; entry zones are conditional triggers, not order levels. Stops acknowledged as unreliable given gap risk"
+  },
+  "PTC": {
+   "ticker": "PTC",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "Reassess only at regulatory milestones (US antitrust, EU merger review), on evidence confirming/disproving the reported absence of a termination fee, or on a confirmed deal break creating a dislocation far below $140 where fundamentals could make it a genuine long-term buy. Optional token ~$2,000 (2%) merger-arb sleeve as cheap optionality on a sweetened bid or competing acquirer",
+   "params": {
+    "deal_cap": 205,
+    "current_price": 194.45,
+    "gross_remaining_pct": 5.4,
+    "deal_break_rerate": 140,
+    "sleeve_usd": "2000-3000",
+    "sleeve_pct": "2-3",
+    "upside_to_cap_usd": 10.55,
+    "downside_to_prerate_usd": 54
+   },
+   "entry_convention": "No core position \u2014 fixed-payoff instrument with ~5-to-1 asymmetry against the buyer; at most a token sleeve held explicitly as expendable option premium, not an arb trade; proposed short below $192 rejected as a current action",
+   "invalidation": "Hard exit of any sleeve on a confirmed deal-negative headline or a close below $192 on elevated volume \u2014 a genuine break gaps through levels and cannot be stopped out",
+   "stop_level": 192.0,
+   "target": 205.0,
+   "horizon": "Until deal resolution (guided ~Q3 2027); token sleeve exited immediately on deal-negative headlines or close below $192",
+   "reevaluation": "A meaningful termination fee or evidence of contested bidding upgrades toward Hold; a confirmed deal break far below $140 converts to a potential long-term buy on fundamentals; regulatory review materially tightening the spread confirms staying out",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "The only forward instruction is an optional token sleeve plus milestone-based reassessment \u2014 no standard entry/exit setup. Data quality thin (30-message sentiment sample, uncorroborated 'deal cancelled' rumor). A conditional half-sized short below $192 on expanding volume is flagged but rejected as a current action"
+  },
+  "QMCO": {
+   "ticker": "QMCO",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Re-engagement: a close back above ~$31 (10 EMA) on expanding volume, OR a filed second consecutive positive operating quarter with no new dilution confirmed via SEC filings \u2014 permits a half-sized long with a stop under ~$28.97-$28.30. Separate trigger: a confirmed close below $28.30 allows re-evaluation of downside exposure only with confirmed borrow terms and a defined stop",
+   "params": {
+    "reentry_level": 31,
+    "reentry_stop_zone": "28.97-28.30",
+    "breakdown_level": 28.3,
+    "fifty_sma": 23.86,
+    "july_base": 9.56,
+    "old_high_upside_pct": 17,
+    "air_pocket_pct": 20
+   },
+   "entry_convention": "Stay flat \u2014 no long while price remains below the 10 EMA (~$31) and sell volume leads buy volume; do not press a short preemptively into twice-held $28.30 support (borrow unverified, unbounded downside in a 5x squeezer)",
+   "invalidation": "For holders: daily close below $28.30 exits the remainder \u2014 do not wait for the stop to fill well, the name can gap through (dilution filing or compliance notice could open it near $22)",
+   "stop_level": 28.3,
+   "target": null,
+   "horizon": "1-3 months",
+   "reevaluation": "Before any position in either direction: check the 8-K on the CFO transition and SEC filings for outstanding or imminent dilutive offerings. A second consecutive positive operating quarter filed AND no dilutive offering removes the bear case's sharpest tooth",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": "Triggers exist in both directions (long re-entry above $31 on confirmation; downside re-evaluation below $28.30 gated on borrow verification and filings checks) \u2014 not a single publishable directional watch. Stop Loss field (28.3) is the exit line for existing holders, while the re-entry stop is stated as a zone (~$28.97-$28.30)"
+  },
+  "SDGR": {
+   "ticker": "SDGR",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "AUTO_ENTRY",
+   "trigger": "Staged limit buys weighted toward $22.6-23.0 with a smaller tranche up to $23.5, total exposure hard-capped at ~5% ($5,000); all unfilled orders expire before the Nov 4 earnings print. Alternative entry: 10 EMA reclaim (~$28.5) on ~5M-share volume, which replaces unfilled confluence orders rather than stacking on them",
+   "params": {
+    "buy_zone_primary_low": 22.6,
+    "buy_zone_primary_high": 23.0,
+    "buy_zone_max": 23.5,
+    "reclaim_level": 28.5,
+    "reclaim_volume": "5M shares",
+    "cap_pct": 5,
+    "cap_usd": 5000,
+    "atr_usd": 2,
+    "pivot": 26.4,
+    "expiry": "before Nov 4 earnings"
+   },
+   "entry_convention": "Hold zero exposure at ~$27.28; bottom-weighted staged limit buys only at the 50 SMA/lower Bollinger confluence; reclaim is an alternative entry, not an add \u2014 5% cap inclusive of any reclaim buy",
+   "invalidation": "A daily close below ~$22.2 voids the staged structure entirely \u2014 do not average into a broken floor; below that the path runs toward the 200 SMA near $16",
+   "stop_level": 22.2,
+   "target": 30.0,
+   "horizon": "~3 weeks into the Nov 4 earnings print; staged orders expire beforehand if unfilled",
+   "reevaluation": "Post-earnings: organic revenue above the ~$59M run-rate or a new collaboration payment converts toward Overweight; a close below $22.2 confirms staying flat toward the 200 SMA near $16",
+   "size_frac": 0.5,
+   "auto_execution_authorized": true,
+   "ambiguity": "Stop Loss field states 26.37 but the report itself rebuts it (sits above the entry zone, useless against gap-through); operative invalidation is the stated daily close below ~$22.2. Strategic actions add a 'stabilizes' qualifier to fills while the executive summary states plain limit orders; whichever is used, all orders expire pre-earnings and carried size must accept a gap to $22.6"
+  },
+  "TEAM": {
+   "ticker": "TEAM",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "AUTO_ENTRY",
+   "trigger": "Staged limit buys on weakness only: ~1.5% of the $100k portfolio at the $194-196 10-EMA zone and ~2% at the $188-191 VWMA/mid-band shelf \u2014 the second tranche conditional on an orderly pullback rather than a high-volume (>5M-share) distribution break; hard cap near 3.5% until a weekly close back inside the bands or a successful $200 retest",
+   "params": {
+    "tranche_1_zone_low": 194,
+    "tranche_1_zone_high": 196,
+    "tranche_1_pct": 1.5,
+    "tranche_2_zone_low": 188,
+    "tranche_2_zone_high": 191,
+    "tranche_2_pct": 2,
+    "cap_pct": 3.5,
+    "ten_ema": 195.24,
+    "full_invalidation_shelf": "173-176",
+    "atr_usd": 8.57,
+    "gap_slippage_assumption": 165
+   },
+   "entry_convention": "Do not chase $207 and no buys above $200; let the pullback come to you \u2014 staged limit buys at defined zones only",
+   "invalidation": "For existing positions: daily close back below $200 negates the breakout (trim a quarter); close below $195 puts late-August buyers underwater (cut up to half); close below the $173-176 cluster is full invalidation \u2014 exit the tactical position. Stop reference $172.50 is unreliable \u2014 size as if a gap fills near $165 (demonstrated 32% overnight gap)",
+   "stop_level": 172.5,
+   "target": 215.0,
+   "horizon": "3-6 months",
+   "reevaluation": "Confirmed pullback fills at $195/$189 with structure intact upgrades toward Overweight; a high-volume rejection near $207, a close below the $173-176 shelf, evidence the 32% quarter was a pull-forward anomaly, or insider selling into buybacks shifts to Underweight/avoid. Verify whether the ~32% quarter is a new baseline and check insider data before next earnings",
+   "size_frac": null,
+   "auto_execution_authorized": true,
+   "ambiguity": "Tranche sizes conflict between sections: executive summary re-weights to 1.5%/2% with ~3.5% cap while the position-sizing field states ~2.5%/~2.5% reaching ~5%; the executive summary's smaller sizing is the adopted synthesis. Only the first tranche is unconditionally executable \u2014 the second requires the pullback to arrive without a >5M-share distribution break, and the $172.50 stop is stated but explicitly flagged as unfillable in a gap"
+  }
+ },
+ "validated": [],
+ "review_required": [
+  {
+   "ticker": "AMPL",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Price Target field (14.65) restates the conditional entry level, not an upside target; no explicit upside target stated"
+   ],
+   "artifact": "case_artifacts/AMPL_2026-10-09.json"
+  },
+  {
+   "ticker": "HAE",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Stop Loss field states 111.5 while executive summary sets hard invalidation at a close below 111.66; both appear in text, 111.66 used as the operative close-based invalidation. Entry additionally gated on verifying earnings calendar/EDGAR since the news/macro data layer was dark",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/HAE_2026-10-09.json"
+  },
+  {
+   "ticker": "IOVA",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Position sizing is internally inconsistent: executive summary starter $1,250-$1,500 vs position-sizing section ~$2,500 (2.5%) now; total cap stated as both 4-5% and 5-7%. Final-tranche breakout level stated as both $15.30 and $14.94-15.30. The $12.90 add is conditional on stabilization, so only the starter and $13.30 add are unconditionally executable"
+   ],
+   "artifact": "case_artifacts/IOVA_2026-10-09.json"
+  },
+  {
+   "ticker": "MRNA",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Entry bid is conditional on the pullback arriving on declining volume; existing-holder guidance (trim 30-50% into strength) coexists with the flat-position plan. Stops unreliable given $15 ATR and documented 60%+ overnight repricings \u2014 size is the only control",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/MRNA_2026-10-09.json"
+  },
+  {
+   "ticker": "PENG",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: No explicit stop or target stated; entry zones are conditional triggers, not order levels. Stops acknowledged as unreliable given gap risk"
+   ],
+   "artifact": "case_artifacts/PENG_2026-10-09.json"
+  },
+  {
+   "ticker": "PTC",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: The only forward instruction is an optional token sleeve plus milestone-based reassessment \u2014 no standard entry/exit setup. Data quality thin (30-message sentiment sample, uncorroborated 'deal cancelled' rumor). A conditional half-sized short below $192 on expanding volume is flagged but rejected as a current action"
+   ],
+   "artifact": "case_artifacts/PTC_2026-10-09.json"
+  },
+  {
+   "ticker": "P",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Entry requires a stabilization session on declining sell volume \u2014 confirmation-gated, and the report explicitly forbids a standing limit at 142.5. Stop Loss field (133.5) is acknowledged as unreliable: honest risk is 12-15 points given demonstrated gap risk (Sep 18 73M-share event)"
+   ],
+   "artifact": "case_artifacts/P_2026-10-09.json"
+  },
+  {
+   "ticker": "QMCO",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Triggers exist in both directions (long re-entry above $31 on confirmation; downside re-evaluation below $28.30 gated on borrow verification and filings checks) \u2014 not a single publishable directional watch. Stop Loss field (28.3) is the exit line for existing holders, while the re-entry stop is stated as a zone (~$28.97-$28.30)",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/QMCO_2026-10-09.json"
+  },
+  {
+   "ticker": "SDGR",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Stop Loss field states 26.37 but the report itself rebuts it (sits above the entry zone, useless against gap-through); operative invalidation is the stated daily close below ~$22.2. Strategic actions add a 'stabilizes' qualifier to fills while the executive summary states plain limit orders; whichever is used, all orders expire pre-earnings and carried size must accept a gap to $22.6",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "artifact": "case_artifacts/SDGR_2026-10-09.json"
+  },
+  {
+   "ticker": "TEAM",
+   "session": "2026-10-09",
+   "violations": [
+    "ambiguous: Tranche sizes conflict between sections: executive summary re-weights to 1.5%/2% with ~3.5% cap while the position-sizing field states ~2.5%/~2.5% reaching ~5%; the executive summary's smaller sizing is the adopted synthesis. Only the first tranche is unconditionally executable \u2014 the second requires the pullback to arrive without a >5M-share distribution break, and the $172.50 stop is stated but explicitly flagged as unfillable in a gap",
+    "auto entry contradicts TA signal Hold"
+   ],
+   "artifact": "case_artifacts/TEAM_2026-10-09.json"
+  }
+ ]
+}

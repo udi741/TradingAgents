@@ -645,3 +645,41 @@ def test_risk_block_idempotent_across_ticks_and_restart():
 
 
 test_risk_block_idempotent_across_ticks_and_restart()
+
+
+def test_missed_then_new_exit_are_distinct_orders():
+    # offline-window semantics: an order whose target open passed while the
+    # machine was off is MISSED (no fill); a LATER close re-confirming the
+    # rule creates a NEW prospective order with a different identity.
+    m.EVENTS.unlink(missing_ok=True)
+    st = fresh_state()
+    st["positions"]["T"] = {"shares": 7, "fill": 200.0,
+                            "stop_rule": {"type": "close_below", "level": 164.0,
+                                          "label": "hard exit below 164"}}
+    st["pending_open_exits"] = [{"ticker": "T", "why": "hard exit below 164",
+                                 "confirm_session": "2026-10-07",
+                                 "order_id": "close_below:T:2026-10-07"}]
+    df = mk_df([190.0, 160.0, 159.0], [1_000_000] * 3, end="2026-10-09")
+    daily = {"T": df}
+    # settle: target 10-08 open already passed (machine off) -> MISSED, no fill
+    m.resolve_pending(st, {"watches": [], "open_positions": []}, daily, "2026-10-09", live=False)
+    assert st["positions"]["T"]["shares"] == 7 and st["cash"] == 50000.0
+    assert st["pending_open_exits"] == []
+    evs = [json.loads(l) for l in Path(m.EVENTS).read_text().splitlines()]
+    assert any(e["action"] == "MISSED_EXECUTION_REVIEW_REQUIRED" for e in evs)
+    # later close 159 < 164 -> NEW order with new identity, not the missed one
+    m.close_pass(st, {"watches": [], "open_positions": []}, daily, "2026-10-09")
+    od = st["pending_open_exits"][0]
+    assert od["confirm_session"] == "2026-10-09" and od["order_id"] == "close_below:T:2026-10-09"
+    assert od["order_id"] != "close_below:T:2026-10-07"
+    # strict comparator: equality must NOT trigger
+    st2 = fresh_state()
+    st2["positions"]["S"] = {"shares": 61, "fill": 31.0,
+                             "stop_rule": {"type": "close_below", "level": 27.29, "label": "x"}}
+    df2 = mk_df([30.0] * 29 + [27.29], [1_000_000] * 30)
+    m.close_pass(st2, {"watches": [], "open_positions": []}, {"S": df2}, "2026-10-09")
+    assert st2["pending_open_exits"] == [], "equality must not trigger strict <"
+    print("missed_vs_new_exit ok")
+
+
+test_missed_then_new_exit_are_distinct_orders()

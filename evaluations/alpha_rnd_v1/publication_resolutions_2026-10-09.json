@@ -1,0 +1,49 @@
+{
+ "session": "2026-10-09",
+ "resolved_at": "2026-10-11T08:26:58.630973+00:00",
+ "resolver": "ALPHA_RND_OFFLINE_CATCHUP_INTEGRITY_AND_OCT09_REVIEW_V1",
+ "note": "Frozen 2026-10-09 artifacts only; no reruns, no post-artifact data. All 10 violations were genuine frozen-artifact ambiguity (validator normalization fix held \u2014 zero unsupported-number violations).",
+ "resolutions": {
+  "AMPL": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "stated 'price target' 14.65 restates the conditional entry level; no upside target in frozen text"
+  },
+  "HAE": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "contradictory stop levels in frozen text (111.5 vs 111.66)"
+  },
+  "IOVA": {
+   "verdict": "RISK_PLAN_REQUIRED",
+   "basis": "internally inconsistent sizing ($1.25-1.5k vs ~$2.5k/2.5%) in frozen text; existing 10-01 block stands"
+  },
+  "MRNA": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "conflicting coexisting guidance (trim vs flat-position entry) in frozen text"
+  },
+  "PENG": {
+   "verdict": "RESEARCH_ONLY",
+   "basis": "frozen text states no explicit stop or target; conditional zones only, gap-risk acknowledged"
+  },
+  "PTC": {
+   "verdict": "RESEARCH_ONLY",
+   "basis": "only an optional token sleeve + milestone reassessment; no standard executable setup"
+  },
+  "P": {
+   "verdict": "RESEARCH_ONLY",
+   "basis": "entry explicitly requires a stabilization session; frozen text forbids a standing limit at 142.5"
+  },
+  "QMCO": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "bidirectional triggers with conflicting gating in frozen text"
+  },
+  "SDGR": {
+   "verdict": "NO_ACTION",
+   "basis": "OPEN_POSITION_MANAGEMENT intent; stop field self-rebutted in frozen text; held residual remains governed by active close<27.29 rule (pending exit already queued)"
+  },
+  "TEAM": {
+   "verdict": "AMBIGUOUS_INTENT_REVIEW_REQUIRED",
+   "basis": "tranche sizes conflict between report sections in frozen text"
+  }
+ },
+ "net_effect": "0 new watches from Oct-9; 0 pending orders created; publish.py carry-forward fix restored the 10-07 PGEN reanalysis watch"
+}
