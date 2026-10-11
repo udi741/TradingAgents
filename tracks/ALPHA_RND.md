@@ -696,3 +696,16 @@ QMCO/TEAM AMBIGUOUS; IOVA RISK_PLAN_REQUIRED (block stands); SDGR NO_ACTION
 publication_resolutions_2026-10-07.json. Discovery stickiness proven
 legitimate: session-keyed market caches, fresh universe+scoring per session,
 real turnover, no stale reuse. Relay footer/severity consistency fixed.
+
+### Offline catch-up + Oct-9 review (2026-10-11)
+
+Machine off Oct-8..10. Catch-up integrity verified: TWST order (confirm 10-07,
+target 10-08 open) recorded MISSED_EXECUTION — no fabricated fill; distinct
+new prospective order close_below:TWST:2026-10-09 (10-09 close 159.78<164).
+SDGR new order close_below:SDGR:2026-10-09 (27.28<27.29 strict). Both target
+the 10-12 open. 10-08 EOD mark skipped by latest-session design (10-09 MARK
+recorded, NAV 98210.30). Oct-9 cycle valid: 10/10 artifacts, COMPLETE; all 10
+publication violations were genuine frozen-text ambiguity -> 0 new watches;
+resolutions doc written. Defect found+fixed: publish.py only merged current-
+session intents, silently dropping prior published watches (PGEN 10-07) —
+now carries forward all sessions<=current with newer-wins precedence.
