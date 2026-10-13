@@ -750,3 +750,14 @@ publish.py merges EXECUTABLE+REANALYZE dispositions (reanalysis published
 inert). Oct-12 outcome: 4 exec (CDNA/IOVA/PGEN/TEAM), 2 reanalyze
 (FRO/QMCO), 4 ambiguous-rejected. USER ACTION REQUIRED now reserved for
 integrity failures only.
+
+### Executable-disposition semantics correction (2026-10-13)
+
+EXECUTABLE_WATCH now requires production-evaluability (watch_mode +
+recognized trigger param key + machine-actionable risk plan). Validated but
+inert intents -> PUBLISHED_NON_EXECUTABLE; REANALYZE_ON_TRIGGER intents keep
+their own class. Oct-12 corrected: 0 truly executable; CDNA/IOVA/TEAM
+published-non-executable; PGEN/FRO/QMCO reanalysis; 4 ambiguous-rejected.
+IOVA effective state: new 10-12 revision legitimately superseded the 10-01
+risk block (history preserved in watch_lifecycle) but is NON-EXECUTABLE.
+Fixed latent intraday_pass crash: AUTO_ENTRY watch without params.zone.
