@@ -722,3 +722,17 @@ instruction. Watch lifecycle: _set_watch_status records terminal revisions
 watch_lifecycle + structured session fields (artifact filename is fallback
 only), so RETIRED/EXPIRED/TRIGGERED/RISK_PLAN_REQUIRED revisions can never
 resurrect while genuinely newer intents still supersede.
+
+### Third flood: crash-replay loop + global event idempotency (2026-10-13)
+
+Root cause: carry-forward publish introduced trigger_type:null watches ->
+close_pass raised TypeError EVERY tick AFTER popping/re-queueing the SDGR
+exit (MISSED+CONFIRMED emitted) but BEFORE save_state -> each cron tick
+replayed the same transition (184+183 events, file grew to 152KB; all
+consumed/delivered by relay). Economics clean: TWST filled once at Mon open,
+SDGR order legitimately re-pending for 10-13 open. Fixes: (1) trigger_type
+None-safe in both eval loops; (2) emit_once semantic event-id registry in
+canonical state for every user-visible transition class; (3) relay
+second-layer: delivered_semantic dedup (utc-free identity) + per-scan
+circuit breaker (cap 25 + one summary + persisted breaker_log).
+Acceptance: real main() x500 -> exactly 1 MISSED + 1 CONFIRMED, restart 0.
