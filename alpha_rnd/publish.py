@@ -61,7 +61,13 @@ def publish(session: str) -> dict:
         by_ticker = {w["ticker"]: w for w in doc["watches"]}
         for intents_path in paths:
             idoc = json.loads(intents_path.read_text())
-            for t in idoc.get("validated", []):
+            disps = idoc.get("dispositions") or {}
+            publishable = [t for t, d in disps.items()
+                           if d.get("disposition") in
+                           ("EXECUTABLE_WATCH", "REANALYZE_ON_TRIGGER")]
+            if not disps:
+                publishable = idoc.get("validated", [])  # pre-disposition docs
+            for t in publishable:
                 i = idoc["intents"][t]
                 if i.get("watch_mode") in (None, "NONE"):
                     continue
@@ -76,8 +82,11 @@ def publish(session: str) -> dict:
                 if lc and lc.get("status") and (
                         not lc.get("session") or isess <= lc["session"]):
                     continue  # terminal revision must not resurrect
+                cls = ("REANALYZE_ON_TRIGGER"
+                       if disps.get(t, {}).get("disposition") == "REANALYZE_ON_TRIGGER"
+                       else i["watch_mode"])
                 by_ticker[t] = {
-                    "ticker": t, "cls": i["watch_mode"], "v": "auto",
+                    "ticker": t, "cls": cls, "v": "auto",
                     "trigger": i.get("trigger"),
                     "trigger_type": (i.get("params") or {}).get("type"),
                     "params": i.get("params"),

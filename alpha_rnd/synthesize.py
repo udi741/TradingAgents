@@ -190,11 +190,56 @@ def validate(intent: dict, a: dict) -> list[str]:
     return errs
 
 
+DISPOSITIONS = ["EXECUTABLE_WATCH", "REANALYZE_ON_TRIGGER", "RISK_PLAN_REQUIRED",
+                "RESEARCH_ONLY", "AMBIGUOUS_REJECTED", "NO_ACTION",
+                "OPEN_POSITION_MANAGEMENT"]
+PUBLISHABLE = {"EXECUTABLE_WATCH", "REANALYZE_ON_TRIGGER"}
+
+
+def _has_risk_plan(i: dict) -> bool:
+    if i.get("stop_level"):
+        return True
+    inv = i.get("invalidation")
+    if isinstance(inv, dict) and inv.get("type") in (
+            "intraday_stop", "close_below", "price_below"):
+        return True
+    return bool(re.search(r"stop \$?(\d+\.?\d*)", str(inv or "")))
+
+
+def disposition(intent: dict | None, errs: list[str], held: set[str]) -> str:
+    """Deterministic fail-closed publication disposition. Normal TA ambiguity
+    maps to a non-executable class — never a user-facing emergency."""
+    if intent is None:
+        return "AMBIGUOUS_REJECTED"
+    cls = intent.get("classification")
+    if cls in ("REJECT", "NO_WATCH"):
+        return "NO_ACTION"
+    if not errs:
+        return "EXECUTABLE_WATCH"
+    if intent.get("ticker") in held:
+        return "OPEN_POSITION_MANAGEMENT"
+    text = " ".join(errs).lower()
+    if "ambiguous" in text or "unsupported" in text:
+        return "AMBIGUOUS_REJECTED"
+    if "news-gated" in text or "catalyst" in text:
+        return "REANALYZE_ON_TRIGGER"
+    if not _has_risk_plan(intent):
+        return "RISK_PLAN_REQUIRED"
+    return "RESEARCH_ONLY"
+
+
 def run(session: str) -> dict:
     arts = {}
     for p in sorted((EV / "case_artifacts").glob(f"*_{session}.json")):
         a = json.loads(p.read_text())
         arts[a["ticker"]] = a
+    held = set()
+    try:
+        held = set(json.loads(
+            (ROOT / "alpha_rnd" / "monitor_state.json").read_text()
+        ).get("positions") or {})
+    except Exception:
+        pass
     out_path = EV / f"publication_intents_{session}.json"
     cached = json.loads(out_path.read_text()) if out_path.exists() else {}
     todo = {t: a for t, a in arts.items() if t not in cached.get("intents", {})}
@@ -202,12 +247,18 @@ def run(session: str) -> dict:
     if todo:
         for i in synthesize(todo):
             intents[i.get("ticker")] = i
-    results, reviews = {}, []
+    results, reviews, disps = {}, [], {}
     for t, a in arts.items():
         i = intents.get(t)
         errs = (["no intent emitted"] if i is None else validate(i, a))
+        d = disposition(i, errs, held)
+        disps[t] = {"disposition": d, "violations": errs,
+                    "executable": d == "EXECUTABLE_WATCH",
+                    "user_action_required": False,
+                    "artifact": f"case_artifacts/{t}_{session}.json"}
         if errs:
             reviews.append({"ticker": t, "session": session,
+                            "disposition": d,
                             "violations": errs,
                             "artifact": f"case_artifacts/{t}_{session}.json"})
         else:
@@ -216,6 +267,7 @@ def run(session: str) -> dict:
            "synthesized_at": datetime.now(timezone.utc).isoformat(),
            "model": MODEL, "temperature": 0,
            "intents": intents, "validated": sorted(results),
+           "dispositions": disps,
            "review_required": reviews}
     tmp = out_path.with_suffix(".tmp")
     tmp.write_text(json.dumps(doc, indent=1))

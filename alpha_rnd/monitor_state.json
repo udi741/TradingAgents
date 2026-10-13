@@ -1,11 +1,12 @@
 {
- "last_check_utc": "2026-10-13T00:01:02.110151+00:00",
+ "last_check_utc": "2026-10-13T13:30:04.638969+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
   "2026-10-06",
   "2026-10-07",
-  "2026-10-09"
+  "2026-10-09",
+  "2026-10-12"
  ],
  "confirm": {
   "IOVA": {
@@ -26,7 +27,9 @@
   "PAYC": {},
   "XNCR": {},
   "AXGN": {},
-  "HHH": {}
+  "HHH": {},
+  "QMCO": {},
+  "TEAM": {}
  },
  "pending_open_fills": [],
  "positions": {
@@ -38,10 +41,10 @@
    "seeded": true,
    "mark_source": "regular_session_close",
    "mark_status": "MARKED",
-   "mark": 84.27,
-   "mark_session": "2026-10-09",
-   "unrealized": 264.74,
-   "unrealized_pct": 5.34
+   "mark": 85.02,
+   "mark_session": "2026-10-12",
+   "unrealized": 311.24,
+   "unrealized_pct": 6.27
   },
   "SDGR": {
    "shares": 61,
@@ -58,14 +61,14 @@
    "mark_status": "MARKED",
    "mark_source": "regular_session_close",
    "cost": -1174.53,
-   "mark": 27.28,
-   "mark_session": "2026-10-09",
-   "unrealized": -226.92,
-   "unrealized_pct": -12.0
+   "mark": 25.91,
+   "mark_session": "2026-10-12",
+   "unrealized": -310.49,
+   "unrealized_pct": -16.42
   }
  },
  "cash": 91320.0818584137,
- "nav_last": 98210.3,
+ "nav_last": 98171.83,
  "watch_status": {
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED",
@@ -77,21 +80,21 @@
   {
    "ticker": "SDGR",
    "why": "mgmt review: tightened stop just below $27.29",
-   "confirm_session": "2026-10-09",
-   "order_id": "close_below:SDGR:2026-10-09"
+   "confirm_session": "2026-10-12",
+   "order_id": "close_below:SDGR:2026-10-12"
   }
  ],
  "book": {
-  "mark_session": "2026-10-09",
-  "market_value": 8007.28,
-  "unrealized": -310.57,
-  "exposure": 8007.28,
-  "nav": 98210.3,
-  "provisional_nav_incl_unmarked_at_cost": 98210.3,
+  "mark_session": "2026-10-12",
+  "market_value": 6851.75,
+  "unrealized": 0.75,
+  "exposure": 6851.75,
+  "nav": 98171.83,
+  "provisional_nav_incl_unmarked_at_cost": 98171.83,
   "unmarked_positions": [],
-  "cash": 90203.02,
-  "realized": -1485.68,
-  "marked_at": "2026-10-10T17:11:03.968125+00:00"
+  "cash": 91320.0818584137,
+  "realized": 164.78,
+  "marked_at": "2026-10-13T04:44:02.897084+00:00"
  },
  "realized": 164.78,
  "policy": {
@@ -114,10 +117,12 @@
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-13T00:01:02.110139+00:00",
-  "daily_ok": 0,
-  "daily_req": 19,
-  "status": "down"
+  "at": "2026-10-13T13:30:04.024415+00:00",
+  "daily_ok": 18,
+  "daily_req": 20,
+  "status": "degraded_intraday",
+  "intraday_ok": 0,
+  "intraday_req": 13
  },
  "risk_blocked": {
   "IOVA": "IOVA_2026-10-01.json#1",

@@ -383,6 +383,7 @@ def _run_cycle(session: str) -> None:
               tail=(r.stderr or r.stdout)[-400:])
         return
     reviews = idoc.get("review_required") or []
+    disps = idoc.get("dispositions") or {}
     # 5. Canonical publish (atomic, idempotent) — mixed policy: validated
     #    intents publish now; ambiguous cases fail closed to review.
     _run_progress("publish")
@@ -401,20 +402,30 @@ def _run_cycle(session: str) -> None:
         event("ALPHA_DISCOVERY_ERROR", session=session,
               stage="publish_marker", tail="publish ran without marker")
         return
-    if reviews:
-        event("ALPHA_PUBLICATION_REVIEW_REQUIRED", session=session,
-              tickers=[x["ticker"] for x in reviews],
-              violations={x["ticker"]: x["violations"] for x in reviews},
-              resume="feather-room")
+    if disps:
+        counts = {}
+        for d in disps.values():
+            counts[d["disposition"]] = counts.get(d["disposition"], 0) + 1
+        # Normal ambiguity is a fail-closed classification, not an emergency:
+        # exactly one informational summary, never ACTION_REQUIRED.
+        event("ALPHA_PUBLICATION_SUMMARY", session=session,
+              dispositions=counts,
+              detail={t: d["disposition"] for t, d in disps.items()},
+              user_action_required="none")
+    elif reviews:
+        # pre-disposition docs only (legacy path; should not occur)
+        event("ALPHA_PUBLICATION_SUMMARY", session=session,
+              dispositions={"UNCLASSIFIED_REVIEW": len(reviews)},
+              user_action_required="none")
     summary = {"deep": deep, "ta_signals": signals,
                "published": pub,
                "validated": idoc.get("validated"),
-               "pending_review": [x["ticker"] for x in reviews]}
+               "dispositions": {t: d["disposition"] for t, d in disps.items()}}
     mark_done(session, summary)
     event("ALPHA_DISCOVERY_COMPLETE", session=session,
           deep=deep, ta_signals=signals, published=pub,
-          pending_review=[x["ticker"] for x in reviews],
-          user_action_required="review_pending" if reviews else "none")
+          dispositions=summary["dispositions"],
+          user_action_required="none")
 
 
 def check() -> None:

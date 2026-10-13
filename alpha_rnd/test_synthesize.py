@@ -152,3 +152,37 @@ class NumberNormalizationTest(unittest.TestCase):
         a = art(signal="Sell", text="watch 60-62; stop 55.90")
         i = intent(params={"zone": [60.0, 62.0], "mystery": 0.37})
         self.assertIn("unsupported number 0.37", sz.validate(i, a))
+
+
+class DispositionTest(unittest.TestCase):
+    """Normal ambiguity -> deterministic non-executable class, never ACTION."""
+    def _i(self, **kw):
+        return intent(**kw)
+
+    def test_contradictory_is_ambiguous_rejected(self):
+        d = sz.disposition(self._i(), ["ambiguous: sizing 2% vs 3%"], set())
+        self.assertEqual(d, "AMBIGUOUS_REJECTED")
+
+    def test_news_gated_is_reanalyze(self):
+        d = sz.disposition(self._i(),
+                           ["event/news-gated trigger must be REANALYZE_ON_TRIGGER"],
+                           set())
+        self.assertEqual(d, "REANALYZE_ON_TRIGGER")
+
+    def test_no_risk_plan_is_blocked(self):
+        i = self._i(stop_level=None, invalidation="no stop stated",
+                    watch_mode="AUTO_ENTRY")
+        d = sz.disposition(i, ["some structural issue"], set())
+        self.assertEqual(d, "RISK_PLAN_REQUIRED")
+
+    def test_held_position_is_management(self):
+        d = sz.disposition(self._i(ticker="SDGR"),
+                           ["ambiguous: x"], {"SDGR"})
+        self.assertEqual(d, "OPEN_POSITION_MANAGEMENT")
+
+    def test_clean_is_executable(self):
+        self.assertEqual(sz.disposition(self._i(), [], set()), "EXECUTABLE_WATCH")
+
+    def test_reject_is_no_action(self):
+        i = self._i(classification="REJECT")
+        self.assertEqual(sz.disposition(i, ["bad watch_mode"], set()), "NO_ACTION")

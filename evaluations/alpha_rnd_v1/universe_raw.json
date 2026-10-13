@@ -1,5 +1,5 @@
 {
- "session": "2026-10-09",
+ "session": "2026-10-12",
  "sources": [
   "sp500",
   "sp400"
@@ -4513,6 +4513,12 @@
    "ticker": "BTI",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "BTLN",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -9802,6 +9808,12 @@
   },
   {
    "ticker": "FBDT",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
+   "ticker": "FBGL",
    "indices": [
     "nasdaq_listed"
    ]
@@ -21861,12 +21873,6 @@
    ]
   },
   {
-   "ticker": "QTEX",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "QTI",
    "indices": [
     "nasdaq_listed"
@@ -29006,6 +29012,12 @@
    "ticker": "XRN",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "XRPN",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {

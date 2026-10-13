@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-11T08:31:25.843454+00:00",
+ "generated_at": "2026-10-13T16:23:34.935893+00:00",
  "watch_expiry": "2026-10-30",
  "recommendation_freeze": "2026-10-02 (V1) / 2026-10-03 (V2)",
  "sizing": {
@@ -11,40 +11,66 @@
   {
    "ticker": "IOVA",
    "cls": "DETERMINISTIC_CONFIRMATION",
-   "v": 1,
-   "trigger": "2 consecutive daily closes inside $12.20-13.00 (mechanical 'stabilization' read of 'multiple sessions of stabilization'), then staged small entry at next session open within zone; ALT: weekly close >$15.30 with weekly volume > prior week",
-   "trigger_type": "multi_close_in_zone|weekly_close_breakout",
+   "v": "auto",
+   "trigger": "Pullback into $13.30-13.50 support zone where the $12.92 stop is sub-4% risk; no fill near support = no position",
+   "trigger_type": null,
    "params": {
-    "zone": [
-     12.2,
-     13.0
+    "entry_zone": [
+     13.3,
+     13.5
     ],
-    "closes_required": 2,
-    "alt_level": 15.3
+    "upper_bollinger_no_chase": 16.15,
+    "secondary_exit": 12.18,
+    "rebuild_hold_level": 13,
+    "disappointment_reentry_50sma": 9.36
    },
-   "entry_convention": "next-session open after confirmation (zone leg, fill <= zone top)",
-   "invalidation": "hard stop below entry structure (per artifact)",
-   "horizon": "reassess ~early-Nov earnings",
-   "artifact": "IOVA_2026-10-01.json",
-   "size_frac": 1.0
+   "entry_convention": "conditional starter only near $13.30-13.50 support with working stop, never at $14.56; no entry above upper Bollinger",
+   "invalidation": "decisive close below $12.92; break below $12.18 eliminates the event-driven portion",
+   "horizon": "event-driven; reassess within days of ESMO data, full allocation decision within following weeks",
+   "reevaluation": "ESMO print plus two-session cooling-off; rebuild toward full only if data positive, price holds above $13 on expanding volume, and post-event consolidation establishes support; resolve current-assets liquidity question before full allocation",
+   "artifact": "IOVA_2026-10-12.json",
+   "session": "2026-10-12",
+   "published_session": "2026-10-12",
+   "size_frac": 0.25,
+   "stop_rule": {
+    "type": "intraday_stop",
+    "level": 12.9,
+    "label": "decisive close below $12.92; break below $12.18 eliminates the event-driven portion"
+   },
+   "auto_execution_authorized": false,
+   "source": "auto_synth"
   },
   {
    "ticker": "CDNA",
    "cls": "DETERMINISTIC_CONFIRMATION",
-   "v": 1,
-   "trigger": "daily close inside $60-62 with session volume < 20-day avg (declining-volume pullback)",
-   "trigger_type": "close_in_zone_low_vol",
+   "v": "auto",
+   "trigger": "Either (a) $53-54 stabilizes, or (b) high-volume reclaim of $65 with MACD histogram turning up",
+   "trigger_type": null,
    "params": {
-    "zone": [
-     60.0,
-     62.0
-    ]
+    "starter_zone": [
+     53,
+     54
+    ],
+    "starter_stop_below": 50,
+    "reclaim_level": 65,
+    "holder_risk_line": 60.9,
+    "next_support_50sma": 53.4
    },
-   "entry_convention": "next-session open after qualifying close",
-   "invalidation": "decisive close < 55.90",
-   "horizon": "weeks-3 months",
-   "artifact": "CDNA_2026-10-01.json",
-   "size_frac": 0.3
+   "entry_convention": "small starter (quarter-size) at $53-54 that holds, or buy on high-volume reclaim of $65",
+   "invalidation": "break of $60.9 on volume opens air pocket to 50 SMA near $53.4; core divestiture disclosure argues for staying out even at lower prices",
+   "horizon": "1-3 months (through the Q3 print)",
+   "reevaluation": "Q3 10-Q/print: verify gain-on-sale, continuing-operations revenue vs pre-divestiture base, and what the ~$292M divestiture removed",
+   "artifact": "CDNA_2026-10-12.json",
+   "session": "2026-10-12",
+   "published_session": "2026-10-12",
+   "size_frac": 0.25,
+   "stop_rule": {
+    "type": "intraday_stop",
+    "level": 60.9,
+    "label": "break of $60.9 on volume opens air pocket to 50 SMA near $53.4; core divestiture disclosure argues for staying out even at lower prices"
+   },
+   "auto_execution_authorized": false,
+   "source": "auto_synth"
   },
   {
    "ticker": "SDGR",
@@ -74,33 +100,37 @@
    "ticker": "PGEN",
    "cls": "REANALYZE_ON_TRIGGER",
    "v": "auto",
-   "trigger": "only on a favorable FDA INO-3107 ruling for PGEN plus a volume-backed reclaim of $7.83 enter a half-normal starter (~5-8% of portfolio); no entry on an adverse ruling or a mere hold of $7.16 without catalyst resolution",
+   "trigger": "~Oct 30 INO-3107 PDUFA resolution; re-evaluate Oct 31 with three-branch playbook",
    "trigger_type": null,
    "params": {
-    "reclaim_level": 7.83,
-    "starter_pct_portfolio": [
-     0.05,
-     0.08
+    "positive_outcome_starter_requires": "post-gap pullback holds above 8.50-8.56",
+    "ambiguous_outcome_entry_zone": [
+     7.27,
+     7.06
     ],
-    "failure_line": 7.16,
-    "next_support_confluence": [
-     6.62,
-     6.68
+    "consolidation_range": [
+     7.27,
+     8.5
     ],
-    "daily_atr_pct": 0.06
+    "warning_break": 7.49,
+    "squeeze_add_level": 8.56,
+    "support_ladder_no_add": [
+     7.49,
+     7.55
+    ]
    },
-   "entry_convention": "catalyst-gated starter; scale only after a filing clarifies whether the $55M milestone revenue recurs",
-   "invalidation": "hard invalidation on a decisive close below $7.16; a decisive volume-backed close below it opens $6.62-6.68 and removes even the conditional framework until the trend resets",
-   "horizon": "2-4 weeks (pending FDA INO-3107 decision)",
-   "reevaluation": "FDA accelerated-approval determination in ~2-3 weeks; CHMP meeting starting ~Oct 12; any dilutive raise announcement triggers immediate reassessment",
-   "artifact": "PGEN_2026-10-07.json",
-   "session": "2026-10-07",
-   "published_session": "2026-10-09",
-   "size_frac": 0.5,
+   "entry_convention": "post-event only: positive outcome -> 25-30% starter after post-gap pullback holds above 8.50-8.56; clean INO approval -> stay out; ambiguous outcome with continued 7.27-8.50 consolidation -> small ATR-sized long at 7.27-7.06 with tight stop",
+   "invalidation": "daily close below $7.06; break of $7.49 is a warning; clean INO label = Sell on moat compression",
+   "horizon": "event-driven: ~18 days to the Oct 30 PDUFA, re-evaluate Oct 31",
+   "reevaluation": "post-PDUFA branches; next 10-Q must show ~$55M milestone receivable converting to cash and footnote explanation of ~$123M Q1-2026 non-operating charge before any upgrade",
+   "artifact": "PGEN_2026-10-12.json",
+   "session": "2026-10-12",
+   "published_session": "2026-10-12",
+   "size_frac": 0.25,
    "stop_rule": {
     "type": "intraday_stop",
-    "level": 7.16,
-    "label": "hard invalidation on a decisive close below $7.16; a decisive volume-backed close below it opens $6.62-6.68 and removes even the conditional framework until the trend resets"
+    "level": 7.06,
+    "label": "daily close below $7.06; break of $7.49 is a warning; clean INO label = Sell on moat compression"
    },
    "auto_execution_authorized": false,
    "source": "auto_synth"
@@ -282,29 +312,103 @@
    "ticker": "QMCO",
    "cls": "REANALYZE_ON_TRIGGER",
    "v": "auto",
-   "trigger": "Fresh evaluation only when price nears the $15-$20 consolidation shelf AND EDGAR verifies recapitalization/dilution terms AND a second consecutive quarter of positive operating income and operating cash flow is filed \u2014 evaluation gate, not automatic buy; no shorting",
+   "trigger": "Short only: weak-volume bounce stalls below the 10 EMA at $30.33, or confirmed close below $24 targeting $22-23",
    "trigger_type": null,
    "params": {
-    "reeval_zone": [
-     15,
-     20
+    "side": "short",
+    "bounce_retest_zone": [
+     29,
+     30
     ],
-    "ema10": 29.6,
-    "exit_sell_zone": [
-     32,
-     35
-    ]
+    "ema10": 30.33,
+    "confirm_close_below": 24,
+    "sma50": 24.19,
+    "short_target_zone": [
+     22,
+     23
+    ],
+    "max_risk_pct": 1
    },
-   "entry_convention": "zero exposure now; if holding, work limit sells in tranches toward $32-$35",
-   "invalidation": "None \u2014 no position held; shorting explicitly rejected (recap mechanically succeeded, squeeze-prone)",
-   "horizon": "3-6 months; re-evaluate after next quarterly filing",
-   "reevaluation": "Next quarterly filing: second positive operating quarter plus disclosed post-restructuring cap table terms",
-   "artifact": "QMCO_2026-10-01.json",
-   "session": "2026-10-01",
-   "published_session": "2026-10-09",
-   "size_frac": 1.0,
+   "entry_convention": "no longs; limited short capped ~1% of portfolio at risk, only on stalled weak-volume bounce below $30.33 or confirmed close below $24; treat $29-30 bounces as exit liquidity for trapped longs",
+   "invalidation": "benign CFO disclosure plus volume reclaim of $30.33 kills the bear thesis \u2014 stand down; $30.33 is a reassessment trigger not a guaranteed stop-fill (~$2.80 ATR, gap risk)",
+   "horizon": "days to weeks, keyed to next filing/8-K on CFO departure and recap terms",
+   "reevaluation": "next quarterly filing / 8-K detail on CFO departure, recap covenant terms, going-concern language \u2014 any is a gap-down catalyst",
+   "artifact": "QMCO_2026-10-12.json",
+   "session": "2026-10-12",
+   "published_session": "2026-10-12",
+   "size_frac": 0.01,
+   "stop_rule": {
+    "type": "intraday_stop",
+    "level": 30.33,
+    "label": "benign CFO disclosure plus volume reclaim of $30.33 kills the bear thesis \u2014 stand down; $30.33 is a reassessment trigger not a guaranteed stop-fill (~$2.80 ATR, gap risk)"
+   },
+   "auto_execution_authorized": false,
+   "source": "auto_synth"
+  },
+  {
+   "ticker": "FRO",
+   "cls": "REANALYZE_ON_TRIGGER",
+   "v": "auto",
+   "trigger": "Pullback into $54-$57 that stabilizes for several sessions on contracting sell volume, or reclaim of breakout shelf, with tanker rates elevated and no de-escalation headline causing the decline",
+   "trigger_type": null,
+   "params": {
+    "first_zone": [
+     54,
+     57
+    ],
+    "second_zone": [
+     47.5,
+     49.5
+    ],
+    "first_tranche_usd": 25000,
+    "reserve_usd": 25000,
+    "thesis_break_level": 50
+   },
+   "entry_convention": "staged: ~$25,000 in $54-$57 zone; second $25,000 for $47.50-$49.50 base or resumption of highs with rate thesis intact",
+   "invalidation": "do not buy a decline driven by a ceasefire or other thesis break; confirmed ceasefire holding plus break below ~$50 = war premium unwinding",
+   "horizon": "1-3 months",
+   "reevaluation": "monitor BDTI/dirty-tanker fixtures, Hormuz transit data, peer commentary; revisit toward Overweight if record fixtures persist ~1 month without escalation news and price consolidates",
+   "artifact": "FRO_2026-10-12.json",
+   "session": "2026-10-12",
+   "published_session": "2026-10-12",
+   "size_frac": 0.5,
    "stop_rule": null,
    "auto_execution_authorized": false,
+   "source": "auto_synth"
+  },
+  {
+   "ticker": "TEAM",
+   "cls": "AUTO_ENTRY",
+   "v": "auto",
+   "trigger": "Staged limit order for primary tranche at $197.50 (10 EMA); no chasing above $200",
+   "trigger_type": null,
+   "params": {
+    "primary_limit": 197.5,
+    "alt_limit": 192,
+    "second_tranche_zone": [
+     176,
+     180
+    ],
+    "second_tranche_alt": "volume-confirmed post-earnings move materially above 1.98M shares",
+    "trim_trigger_close_below": 200,
+    "tactical_exit_below": 192,
+    "breakout_volume_reference": 1980000,
+    "august_volume_reference": 20100000
+   },
+   "entry_convention": "primary tranche = half a standard allocation via limit at $197.50 (or $192 breakout retest); second tranche reserved for $176-180 hold or volume-confirmed earnings beat; cap at half tranche through unverified earnings window",
+   "invalidation": "sustained close below $200 on expanding volume = trim toward half-position; below $192 exit the tactical tranche; no short exposure under any scenario",
+   "horizon": "3-6 months",
+   "reevaluation": "upcoming earnings print is the sizing gate \u2014 second consecutive acceleration quarter with confirmed volume justifies full allocation; verify the unexplained ~$2.1B Dec-25 cash deployment before committing second tranche",
+   "artifact": "TEAM_2026-10-12.json",
+   "session": "2026-10-12",
+   "published_session": "2026-10-12",
+   "size_frac": 0.5,
+   "stop_rule": {
+    "type": "intraday_stop",
+    "level": 190.0,
+    "label": "sustained close below $200 on expanding volume = trim toward half-position; below $192 exit the tactical tranche; no short exposure under any scenario"
+   },
+   "auto_execution_authorized": true,
    "source": "auto_synth"
   }
  ],
@@ -371,5 +475,5 @@
    "artifact": "APPS_2026-10-01.json"
   }
  ],
- "sha256": "e5941a7644b107121f925f8e100146065642073d5a4d428341209d3a8f3a5a91"
+ "sha256": "2d0c3ddea79b3d4f65dd2b4f739439a4e2fa73b6e2e512240781941ded96c6b8"
 }
