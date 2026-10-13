@@ -83,6 +83,7 @@ ALPHA_SCHED_MAP = {
     "ALPHA_PUBLICATION_REQUIRED": ("ACTION_REQUIRED", True),
     "ALPHA_PUBLICATION_REVIEW_REQUIRED": ("ACTION_REQUIRED", True),
     "ALPHA_PUBLICATION_REVIEW_RESOLVED": ("SUCCESS", True),
+    "ALPHA_PUBLICATION_SUMMARY": ("SUCCESS", True),
     "ALPHA_DISCOVERY_COMPLETE": ("SUCCESS", True),
     "ALPHA_DISCOVERY_ERROR": ("ACTION_REQUIRED", True),
     "ALPHA_DISCOVERY_BLOCKED_BRIDGE": ("WARNING", True),
@@ -281,11 +282,21 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
             deep = rec.get("deep") or []
             pub = rec.get("published") or {}
             pr = rec.get("pending_review") or []
+            disp = rec.get("dispositions") or {}
             uar = rec.get("user_action_required")
+            disp_line = ""
+            if disp:
+                cnt = {}
+                for d in disp.values():
+                    cnt[d] = cnt.get(d, 0) + 1
+                disp_line = ("Dispositions: " + ", ".join(
+                    f"{v}x {k.replace('_', ' ').lower()}" for k, v in
+                    sorted(cnt.items())) + "\n")
             body = ("ALPHA DAILY SCAN COMPLETE\n\n"
                     f"Session: {rec.get('session')}\n"
                     f"Deep-analyzed: {len(deep)}\n"
                     f"Active watches published: {pub.get('watch_count', '?')}\n"
+                    + disp_line +
                     f"Review required: {', '.join(pr) if pr else 'none'}\n"
                     f"User action required: {'YES' if uar and uar != 'none' else 'NO'}")
             if uar and uar != "none":
