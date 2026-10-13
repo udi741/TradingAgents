@@ -683,3 +683,48 @@ def test_missed_then_new_exit_are_distinct_orders():
 
 
 test_missed_then_new_exit_are_distinct_orders()
+
+
+def test_flood_acceptance_500_ticks():
+    # Acceptance: real main() entrypoint x500 on the SDGR missed/new-exit
+    # scenario -> exactly 1 MISSED + 1 CONFIRMED total; restart -> 0 new.
+    import tempfile, sys
+    td = Path(tempfile.mkdtemp())
+    m.STATE = td / "state.json"; m.STATE_LOCK = td / "lock"
+    m.WATCHLIST = td / "wl.json"; m.EVENTS = td / "ev.jsonl"
+    m.NOTIFY = td / "n.log"; m.LEDGER = td / "led.jsonl"
+    df = mk_df([30.0] * 28 + [25.91, 25.80], [1_000_000] * 30, end="2026-10-12")
+    import unittest.mock as mock
+    with mock.patch.object(m, "fetch_daily", return_value={"SDGR": df}), \
+         mock.patch.object(m, "session_open", return_value=False):
+        m.WATCHLIST.write_text(json.dumps({"watches": [], "open_positions": []}))
+        m.STATE.write_text(json.dumps({
+            "initialized": True, "cash": 90000.0, "realized": 0.0,
+            "positions": {"SDGR": {"shares": 61, "fill": 31.0,
+                          "stop_rule": {"type": "close_below", "level": 27.29,
+                                        "label": "tightened <27.29"}}},
+            "pending_open_fills": [],
+            "pending_open_exits": [{"ticker": "SDGR", "why": "tightened <27.29",
+                                    "confirm_session": "2026-10-09",
+                                    "order_id": "close_below:SDGR:2026-10-09"}],
+            "processed_close_sessions": ["2026-10-09"], "confirm": {},
+            "watch_status": {}, "emitted_ids": []}))
+        sys.argv = ["monitor", "--once"]
+        for i in range(500):
+            m.main()
+        evs = [json.loads(l) for l in Path(m.EVENTS).read_text().splitlines()]
+        miss = [e for e in evs if e["action"] == "MISSED_EXECUTION_REVIEW_REQUIRED"]
+        conf = [e for e in evs if e["action"] == "CONFIRMED_PENDING_NEXT_OPEN_EXIT"]
+        assert len(miss) == 1 and len(conf) == 1, (len(miss), len(conf))
+        st = json.loads(m.STATE.read_text())
+        assert st["cash"] == 90000.0 and st["positions"]["SDGR"]["shares"] == 61
+        assert len(st["pending_open_exits"]) == 1
+        n0 = len(evs)
+        # "restart": new process view, same persisted state -> zero new events
+        for i in range(500):
+            m.main()
+        assert len(Path(m.EVENTS).read_text().splitlines()) == n0
+    print("flood_acceptance_500_ticks ok")
+
+
+test_flood_acceptance_500_ticks()

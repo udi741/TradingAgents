@@ -104,6 +104,21 @@ def emit(st: dict, ev: dict) -> None:
         f.write(json.dumps(ev, default=str) + "\n")
 
 
+def emit_once(st: dict, ev: dict, event_id: str) -> bool:
+    """Global exactly-once for user-visible transitions: same semantic
+    transition + same immutable provenance = at most one durable event.
+    Dedup registry lives in canonical state (bounded); the stamped event_id
+    also lets the relay suppress any residual duplicate."""
+    if event_id in st.setdefault("emitted_ids", []):
+        return False
+    ev["event_id"] = event_id
+    emit(st, ev)
+    ids = st["emitted_ids"]
+    ids.append(event_id)
+    st["emitted_ids"] = ids[-5000:]
+    return True
+
+
 def notify(text: str) -> None:
     stamp = now_utc().strftime("%Y-%m-%d %H:%MZ")
     block = f"\n===== {stamp} =====\n{text}\n"
@@ -256,11 +271,11 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
     if not post_entry_risk_plan(watch):
         _set_watch_status(st, watch, "RISK_PLAN_REQUIRED")
         st.setdefault("risk_blocked", {})[ticker] = _watch_rev(watch)
-        emit(st, {"ticker": ticker, "action": "RISK_PLAN_REQUIRED",
-                  "event_id": f"risk_block:{ticker}:{_watch_rev(watch)}",
+        emit_once(st, {"ticker": ticker, "action": "RISK_PLAN_REQUIRED",
                   "why": "entry triggered but frozen plan has no explicit "
                          "machine-actionable post-entry risk/exit rule; "
-                         "interesting stock, incomplete risk plan — NOT BOUGHT"})
+                         "interesting stock, incomplete risk plan — NOT BOUGHT"},
+                  f"risk_block:{ticker}:{_watch_rev(watch)}")
         notify(f"ALPHA_RND RISK PLAN REQUIRED — NOT AUTO-EXECUTABLE\n\n{ticker}\n"
                "TA identified an entry opportunity but provided no explicit "
                "post-entry risk/exit rule.\nStatus: NOT BOUGHT.\nUSER ACTION: NONE")
@@ -293,8 +308,10 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
                               "horizon": watch["horizon"], "stop_rule": stop,
                               "entry_session": now_utc().strftime("%Y-%m-%d")}
     _set_watch_status(st, watch, "TRIGGERED")
-    emit(st, {"ticker": ticker, "action": ev_type, "price": price, "shares": shares,
-              "cost": round(cost, 2), "cls": watch["cls"], "invalidation": watch["invalidation"]})
+    emit_once(st, {"ticker": ticker, "action": ev_type, "price": price,
+              "shares": shares,
+              "cost": round(cost, 2), "cls": watch["cls"], "invalidation": watch["invalidation"]},
+              f"paper_entry:{exec_id or ticker + ':' + now_utc().strftime('%Y-%m-%d')}")
     notify(f"""ALPHA_RND PAPER ENTRY EXECUTED
 
 {ticker}
@@ -328,8 +345,9 @@ def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "",
     st["realized"] = round(st.get("realized", 0.0) + proceeds - alloc, 2)
     if pos["shares"] > 0:
         pos["cost"] = round(pos.get("cost", 0) - alloc, 2)
-    emit(st, {"ticker": ticker, "action": "PAPER_EXIT", "why": why,
-              "price": price, "shares": sell, "proceeds": round(proceeds, 2)})
+    emit_once(st, {"ticker": ticker, "action": "PAPER_EXIT", "why": why,
+              "price": price, "shares": sell, "proceeds": round(proceeds, 2)},
+              f"paper_exit:{exec_id or ticker + ':' + why}")
     notify(f"ALPHA_RND PAPER EXIT EXECUTED\n\n{ticker}\n{why}\nExit @ ${price:.2f}\nProceeds ${proceeds:,.2f}")
 
 
@@ -378,10 +396,11 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
             target = after[0]
             missed = target < current_session_date or (not live and target <= current_session_date)
             if missed:
-                emit(st, {"ticker": t, "action": "MISSED_EXECUTION_REVIEW_REQUIRED",
+                if emit_once(st, {"ticker": t, "action": "MISSED_EXECUTION_REVIEW_REQUIRED",
                           "kind": kind, "why": od.get("why"), "confirm_session": od["confirm_session"],
-                          "missed_session": target})
-                notify(f"ALPHA_RND MISSED EXECUTION\n\n{t}\nTarget open {target} already passed (machine off at open?).\nManual review required — no retroactive fill.")
+                          "missed_session": target},
+                          f"missed:{kind}:{t}:{od['confirm_session']}:{target}"):
+                    notify(f"ALPHA_RND MISSED EXECUTION\n\n{t}\nTarget open {target} already passed (machine off at open?).\nManual review required — no retroactive fill.")
                 continue
             px = float(df[df.index.strftime("%Y-%m-%d") == target]["Open"].iloc[0])
             if _exec_check(st, od["order_id"]):
@@ -409,9 +428,10 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                     {"ticker": t, "why": sr.get("label", f"close<{sr['level']}"),
                      "confirm_session": session,
                      "order_id": f"close_below:{t}:{session}"})
-                emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT",
-                          "why": sr.get("label"), "confirm_close": c, "session": session})
-                notify(f"ALPHA_RND EXIT CONFIRMED — PENDING NEXT OPEN\n\n{t}\n"
+                if emit_once(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT",
+                          "why": sr.get("label"), "confirm_close": c, "session": session},
+                          f"exit_confirmed:close_below:{t}:{session}"):
+                    notify(f"ALPHA_RND EXIT CONFIRMED — PENDING NEXT OPEN\n\n{t}\n"
                        f"{sr.get('label')}\nConfirming close ${c:.2f}")
 
     # ── position exits: close-confirmed rules -> PENDING_NEXT_OPEN exit ──
@@ -427,9 +447,10 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                 lbl = rule.get("label", f"close<{rule['level']}")
                 st["pending_open_exits"].append({"ticker": t, "why": lbl,
                                                  "confirm_session": session})
-                emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT",
-                          "why": lbl, "confirm_close": c, "session": session})
-                notify(f"ALPHA_RND EXIT CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{lbl}\nConfirming close ${c:.2f}\nExits at next regular-session open.")
+                if emit_once(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_EXIT",
+                          "why": lbl, "confirm_close": c, "session": session},
+                          f"exit_confirmed:close_below:{t}:{session}"):
+                    notify(f"ALPHA_RND EXIT CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{lbl}\nConfirming close ${c:.2f}\nExits at next regular-session open.")
 
     for w in wl["watches"]:
         t = w["ticker"]
@@ -438,24 +459,27 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
             continue
         if session > EXPIRY:
             _set_watch_status(st, w, "EXPIRED")
-            emit(st, {"ticker": t, "action": "WATCH_EXPIRED", "session": session})
+            emit_once(st, {"ticker": t, "action": "WATCH_EXPIRED", "session": session},
+                      f"expired:{t}:{session}")
             continue
         df = daily.get(t)
         if df is None or len(df) < 25:
             continue
         c = float(df["Close"].iloc[-1]); v = float(df["Volume"].iloc[-1])
         v20 = float(avgv[t].iloc[-1]) if not pd.isna(avgv[t].iloc[-1]) else 0
-        p = w["params"]; tt = w["trigger_type"]
+        p = w["params"]; tt = w.get("trigger_type") or ""
         prog = st["confirm"].setdefault(t, {})
 
         def triggered(how):
             _set_watch_status(st, w, "TRIGGERED")
-            emit(st, {"ticker": t, "action": "CONFIRMED", "how": how, "session": session,
-                      "close": c, "vol": v})
+            emit_once(st, {"ticker": t, "action": "CONFIRMED", "how": how,
+                      "session": session, "close": c, "vol": v},
+                      f"confirmed:{t}:{_watch_rev(w)}")
             if w["cls"] == "REANALYZE_ON_TRIGGER":
                 _set_watch_status(st, w, "REANALYSIS")
-                emit(st, {"ticker": t, "action": "REANALYSIS_REQUIRED",
-                          "why": how, "session": session})
+                emit_once(st, {"ticker": t, "action": "REANALYSIS_REQUIRED",
+                          "why": how, "session": session},
+                          f"reanalysis:{t}:{_watch_rev(w)}")
                 notify(f"{t} TRIGGER\n\n{how}\n\nClass: REANALYZE_ON_TRIGGER\n\nAction: NO BUY YET — single-ticker refresh required.")
             else:
                 # Fill-time guardrail belongs at confirmation too: never
@@ -463,19 +487,20 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                 if not post_entry_risk_plan(w):
                     _set_watch_status(st, w, "RISK_PLAN_REQUIRED")
                     st.setdefault("risk_blocked", {})[t] = _watch_rev(w)
-                    emit(st, {"ticker": t, "action": "RISK_PLAN_REQUIRED",
-                              "event_id": f"risk_block:{t}:{_watch_rev(w)}",
+                    emit_once(st, {"ticker": t, "action": "RISK_PLAN_REQUIRED",
                               "how": how, "session": session,
                               "why": "trigger confirmed but no machine-actionable "
-                                     "post-entry risk plan — NOT AUTO-EXECUTABLE"})
+                                     "post-entry risk plan — NOT AUTO-EXECUTABLE"},
+                              f"risk_block:{t}:{_watch_rev(w)}")
                     notify(f"ALPHA_RND TRIGGER — NOT AUTO-EXECUTABLE\n\n{t}\n{how}\n"
                            "No machine-actionable post-entry risk plan.\n"
                            "Status: NOT BOUGHT. USER ACTION: NONE")
                 else:
                     st["pending_open_fills"].append({"ticker": t, "frac": w["size_frac"],
                                                      "why": how, "confirm_session": session})
-                    emit(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY",
-                              "how": how, "session": session})
+                    emit_once(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY",
+                              "how": how, "session": session},
+                              f"entry_confirmed:{t}:{session}:{how[:24]}")
                     notify(f"ALPHA_RND ENTRY CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{how}\nClass: {w['cls']}\nEnters at next regular-session open.")
 
         # mechanical evaluators
@@ -525,7 +550,8 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
         if "gapfill_probe" in tt:
             if c < p["kill"]:
                 _set_watch_status(st, w, "KILLED")
-                emit(st, {"ticker": t, "action": "NO_ACTION", "why": f"close<{p['kill']} kills triggers"})
+                emit_once(st, {"ticker": t, "action": "NO_ACTION", "why": f"close<{p['kill']} kills triggers"},
+                          f"killed:{t}:{_watch_rev(w)}")
                 continue
             z = p["probe_zone"]
             if z[0] <= c <= z[1] and c < float(df["Close"].iloc[-2]) and v < float(df["Volume"].iloc[-2]):
@@ -554,7 +580,8 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
         # TWST-style veto handled by 'veto_level'
         if p.get("veto_level") and c < p["veto_level"] and v > v20 and st["watch_status"].get(t) != "TRIGGERED":
             _set_watch_status(st, w, "KILLED")
-            emit(st, {"ticker": t, "action": "NO_ACTION", "why": f"veto: close {c}<{p['veto_level']} heavy vol"})
+            emit_once(st, {"ticker": t, "action": "NO_ACTION", "why": f"veto: close {c}<{p['veto_level']} heavy vol"},
+                          f"veto:{t}:{_watch_rev(w)}")
 
 
 def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
@@ -587,8 +614,9 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
             it = inv.get("type") if isinstance(inv, dict) else None
             if it != "intraday_stop":
                 if it is None and isinstance(inv, dict) and inv.get("level") is not None:
-                    emit(st, {"ticker": t, "action": "NO_ACTION",
-                              "why": "unsupported_rule_schema (has level, no type)"})
+                    emit_once(st, {"ticker": t, "action": "NO_ACTION",
+                              "why": "unsupported_rule_schema (has level, no type)"},
+                              f"schema:{t}:{inv.get('level')}")
                 continue  # {} / close-based / veto rules -> not intraday stops
             low = float(df["Low"].min())
             first_open = float(df["Open"].iloc[0])
@@ -600,8 +628,9 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
                 do_exit(st, t, inv["level"], f"intraday stop {inv['level']}",
                         exec_id=f"intraday_stop:{t}:{today_sess}")
         except Exception as e:
-            emit(st, {"ticker": t, "action": "NO_ACTION",
-                      "why": f"rule_eval_error {e!r}"})
+            emit_once(st, {"ticker": t, "action": "NO_ACTION",
+                      "why": f"rule_eval_error {e!r}"},
+                      f"evalerr:{t}:{e!r}"[:80])
 
     for w in wl["watches"]:
         t = w["ticker"]
@@ -619,7 +648,7 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
             do_fill(st, wl, t, p["zone"][1], w["size_frac"])
             continue
         # deterministic intraday legs
-        if "intraday_zone_touch" in w["trigger_type"] and w["cls"] == "DETERMINISTIC_CONFIRMATION":
+        if "intraday_zone_touch" in (w.get("trigger_type") or "") and w["cls"] == "DETERMINISTIC_CONFIRMATION":
             if low <= p["pb_zone"][1]:
                 do_fill(st, wl, t, p["pb_zone"][1], w["size_frac"])
                 continue
@@ -691,8 +720,8 @@ def eod_marks(st: dict, daily: dict[str, pd.DataFrame], session: str) -> None:
         "marked_at": now_utc().isoformat(),
     }
     if stale:
-        emit(st, {"action": "EOD_MARK_UNAVAILABLE", "tickers": stale,
-                  "session": session})
+        emit_once(st, {"action": "EOD_MARK_UNAVAILABLE", "tickers": stale,
+                  "session": session}, f"mark_unavail:{session}")
         notify(f"ALPHA_RND EOD MARK UNAVAILABLE\n{', '.join(stale)} — left STALE, no price invented.")
     # Canonical ledger MARK record (append-only; dedup by session+content so
     # repeated ticks never duplicate, but a later same-session fill re-marks).
@@ -819,7 +848,8 @@ def main() -> None:
                 run_once(wl)
             except Exception as e:
                 with locked_state() as sx:
-                    emit(sx, {"action": "NO_ACTION", "why": f"monitor_error {e!r}"})
+                    emit_once(sx, {"action": "NO_ACTION", "why": f"monitor_error {e!r}"},
+                              f"monitor_error:{e!r}"[:80])
             time.sleep(60)
     else:
         run_once(wl)
