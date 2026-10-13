@@ -186,3 +186,17 @@ class DispositionTest(unittest.TestCase):
     def test_reject_is_no_action(self):
         i = self._i(classification="REJECT")
         self.assertEqual(sz.disposition(i, ["bad watch_mode"], set()), "NO_ACTION")
+
+    def test_validated_but_inert_is_not_executable(self):
+        # complete prose plan but params carry no monitor-evaluable trigger key
+        i = self._i(params={"primary_limit": 197.5}, trigger_type=None)
+        self.assertEqual(sz.disposition(i, [], set()), "PUBLISHED_NON_EXECUTABLE")
+
+    def test_reanalyze_intent_maps_to_reanalyze(self):
+        i = self._i(classification="REANALYZE_ON_TRIGGER",
+                    watch_mode="REANALYZE_ON_TRIGGER")
+        self.assertEqual(sz.disposition(i, [], set()), "REANALYZE_ON_TRIGGER")
+
+    def test_machine_trigger_and_plan_is_executable(self):
+        # params contain a real monitor key (zone) + typed stop
+        self.assertEqual(sz.disposition(self._i(), [], set()), "EXECUTABLE_WATCH")

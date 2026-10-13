@@ -728,3 +728,20 @@ def test_flood_acceptance_500_ticks():
 
 
 test_flood_acceptance_500_ticks()
+
+
+def test_auto_entry_without_zone_no_crash():
+    # inert AUTO_ENTRY watch lacking params.zone must not crash intraday_pass
+    st = fresh_state()
+    wl = {"watches": [{"ticker": "TM", "cls": "AUTO_ENTRY",
+                       "trigger_type": None, "params": {"primary_limit": 197.5},
+                       "size_frac": 1.0, "invalidation": "s", "horizon": "h",
+                       "artifact": "TM_x.json"}],
+          "open_positions": []}
+    df = mk_df([190.0] * 5, [1_000_000] * 5)
+    n = m.intraday_pass(st, wl, {"TM": df})
+    assert "TM" not in st["positions"] and st["pending_open_fills"] == []
+    print("auto_entry_no_zone ok")
+
+
+test_auto_entry_without_zone_no_crash()

@@ -644,7 +644,7 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
             continue
         low = float(df["Low"].min()); p = w["params"]
         # AUTO_ENTRY zone touch -> immediate fill at zone top
-        if w["cls"] == "AUTO_ENTRY" and low <= p["zone"][1]:
+        if w["cls"] == "AUTO_ENTRY" and p.get("zone") and low <= p["zone"][1]:
             do_fill(st, wl, t, p["zone"][1], w["size_frac"])
             continue
         # deterministic intraday legs

@@ -192,8 +192,28 @@ def validate(intent: dict, a: dict) -> list[str]:
 
 DISPOSITIONS = ["EXECUTABLE_WATCH", "REANALYZE_ON_TRIGGER", "RISK_PLAN_REQUIRED",
                 "RESEARCH_ONLY", "AMBIGUOUS_REJECTED", "NO_ACTION",
-                "OPEN_POSITION_MANAGEMENT"]
-PUBLISHABLE = {"EXECUTABLE_WATCH", "REANALYZE_ON_TRIGGER"}
+                "OPEN_POSITION_MANAGEMENT", "PUBLISHED_NON_EXECUTABLE"]
+PUBLISHABLE = {"EXECUTABLE_WATCH", "REANALYZE_ON_TRIGGER",
+               "PUBLISHED_NON_EXECUTABLE"}
+
+# Param keys the production monitor can mechanically evaluate (see
+# close_pass/intraday_pass). An intent without one is descriptive, not
+# executable — regardless of validation status.
+_EXECUTABLE_PARAM_KEYS = {
+    "zone", "zone1", "zone2", "pb_zone", "retest_zone", "bo_level",
+    "levels", "kill", "probe_zone", "gate_date", "reclaim", "hold",
+    "alt_level", "veto_level"}
+
+
+def _machine_executable(i: dict) -> bool:
+    """EXECUTABLE_WATCH == the production monitor can actually evaluate the
+    entry mechanically AND a machine-actionable post-entry risk plan exists."""
+    if i.get("watch_mode") not in ("AUTO_ENTRY", "DETERMINISTIC_CONFIRMATION"):
+        return False
+    p = i.get("params") or {}
+    if not _EXECUTABLE_PARAM_KEYS & set(p):
+        return False
+    return _has_risk_plan(i)
 
 
 def _has_risk_plan(i: dict) -> bool:
@@ -214,8 +234,14 @@ def disposition(intent: dict | None, errs: list[str], held: set[str]) -> str:
     cls = intent.get("classification")
     if cls in ("REJECT", "NO_WATCH"):
         return "NO_ACTION"
+    if cls == "REANALYZE_ON_TRIGGER" or intent.get("watch_mode") == "REANALYZE_ON_TRIGGER":
+        if errs:
+            pass  # falls through to error mapping below
+        else:
+            return "REANALYZE_ON_TRIGGER"
     if not errs:
-        return "EXECUTABLE_WATCH"
+        return "EXECUTABLE_WATCH" if _machine_executable(intent) \
+            else "PUBLISHED_NON_EXECUTABLE"
     if intent.get("ticker") in held:
         return "OPEN_POSITION_MANAGEMENT"
     text = " ".join(errs).lower()

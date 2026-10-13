@@ -1,6 +1,6 @@
 {
  "session": "2026-10-12",
- "synthesized_at": "2026-10-13T16:23:34.893670+00:00",
+ "synthesized_at": "2026-10-13T16:32:09.589966+00:00",
  "model": "devin-deep",
  "temperature": 0,
  "intents": {
@@ -317,9 +317,9 @@
  ],
  "dispositions": {
   "CDNA": {
-   "disposition": "EXECUTABLE_WATCH",
+   "disposition": "PUBLISHED_NON_EXECUTABLE",
    "violations": [],
-   "executable": true,
+   "executable": false,
    "user_action_required": false,
    "artifact": "case_artifacts/CDNA_2026-10-12.json"
   },
@@ -342,9 +342,9 @@
    "artifact": "case_artifacts/HAE_2026-10-12.json"
   },
   "IOVA": {
-   "disposition": "EXECUTABLE_WATCH",
+   "disposition": "PUBLISHED_NON_EXECUTABLE",
    "violations": [],
-   "executable": true,
+   "executable": false,
    "user_action_required": false,
    "artifact": "case_artifacts/IOVA_2026-10-12.json"
   },
@@ -369,9 +369,9 @@
    "artifact": "case_artifacts/PENG_2026-10-12.json"
   },
   "PGEN": {
-   "disposition": "EXECUTABLE_WATCH",
+   "disposition": "REANALYZE_ON_TRIGGER",
    "violations": [],
-   "executable": true,
+   "executable": false,
    "user_action_required": false,
    "artifact": "case_artifacts/PGEN_2026-10-12.json"
   },
@@ -395,9 +395,9 @@
    "artifact": "case_artifacts/QMCO_2026-10-12.json"
   },
   "TEAM": {
-   "disposition": "EXECUTABLE_WATCH",
+   "disposition": "PUBLISHED_NON_EXECUTABLE",
    "violations": [],
-   "executable": true,
+   "executable": false,
    "user_action_required": false,
    "artifact": "case_artifacts/TEAM_2026-10-12.json"
   }
