@@ -141,6 +141,25 @@ def _event_id(track: str, raw_line: str) -> str:
     return hashlib.sha256(f"{track}|{raw_line.strip()}".encode()).hexdigest()[:24]
 
 
+# Second-layer flood defense. Semantic identity ignores wall-clock fields so
+# the same transition can never be delivered twice, even if the producer
+# rewrites it; the circuit breaker bounds any remaining pathological burst.
+CB_MAX_PER_SCAN = 25
+
+
+def _semantic_id(track: str, rec: dict, event_id: str) -> str:
+    """Transition identity for dedup: producer-stamped event_id first, else
+    the semantic fields (action/kind/ticker/session/rule) — never utc/ts."""
+    if rec.get("event_id"):
+        return f"{track}:{rec['event_id']}"
+    parts = [rec.get("action") or rec.get("kind") or "",
+             rec.get("ticker") or "",
+             rec.get("confirm_session") or rec.get("session") or "",
+             rec.get("order_id") or rec.get("signal_id") or "",
+             (rec.get("why") or rec.get("how") or "")[:48]]
+    return f"{track}:" + ":".join(str(x) for x in parts)
+
+
 def _tail_jsonl(path: Path, cursor: int) -> tuple[list[dict], int]:
     """Return (records, new_cursor). Skips nothing committed yet."""
     if not path.exists():
@@ -227,6 +246,7 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
             "action_required": action_required,
             "recommended_next_action": next_action,
             "source_ref": str(ALPHA_EVENTS), "event_id": _event_id("ALPHA", raw),
+            "semantic_id": _semantic_id("ALPHA", rec, rec.get("event_id")),
             "send": send,
         }
     if track == "ALPHA_SCHED":
@@ -286,6 +306,7 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
             "recommended_next_action": next_action,
             "source_ref": str(ALPHA_SCHED_EVENTS),
             "event_id": _event_id("ALPHA_SCHED", raw),
+            "semantic_id": _semantic_id("ALPHA_SCHED", rec, rec.get("event_id")),
             "send": send,
         }
     # C12
@@ -327,6 +348,7 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
         "action_required": action_required,
         "recommended_next_action": next_action,
         "source_ref": str(C12_NOTIF), "event_id": _event_id("C12", raw),
+        "semantic_id": _semantic_id("C12", rec, rec.get("event_id")),
         "send": send,
     }
 
@@ -365,35 +387,77 @@ async def _send(bot, chat_id: str, text: str) -> None:
 
 
 def scan_sources(st: dict) -> list[dict]:
-    """Advance cursors; return normalized events worth sending."""
+    """Advance cursors; return normalized events worth sending.
+    Per-source per-scan cap: >CB_MAX_PER_SCAN sendable events is never
+    legitimate for this system; overflow is suppressed + summarized."""
     out = []
     for track, path in (("ALPHA", ALPHA_EVENTS),
                         ("ALPHA_SCHED", ALPHA_SCHED_EVENTS),
                         ("C12", C12_NOTIF)):
         cur = st["cursors"].get(str(path), 0)
         recs, new_cur = _tail_jsonl(path, cur)
+        batch = []
         for rec, raw in recs:
             ev = normalize(track, rec, raw)
             if ev and ev["send"]:
-                out.append(ev)
+                batch.append(ev)
+        if len(batch) > CB_MAX_PER_SCAN:
+            suppressed = len(batch) - CB_MAX_PER_SCAN
+            kinds = {}
+            for e in batch[CB_MAX_PER_SCAN:]:
+                kinds[e["event_type"]] = kinds.get(e["event_type"], 0) + 1
+            st.setdefault("breaker_log", []).append(
+                {"track": track, "suppressed": suppressed,
+                 "kinds": kinds, "at": datetime.now(timezone.utc).isoformat()})
+            st["breaker_log"] = st["breaker_log"][-100:]
+            out.extend(batch[:CB_MAX_PER_SCAN])
+            out.append({
+                "source_track": track, "event_type": "CIRCUIT_BREAKER",
+                "severity": "ACTION_REQUIRED",
+                "event_timestamp": datetime.now(timezone.utc).isoformat(),
+                "ticker": None,
+                "summary": f"{track} NOTIFICATION CIRCUIT BREAKER — "
+                           f"{len(batch)} events in one poll",
+                "body": (f"{track} NOTIFICATION CIRCUIT BREAKER ACTIVATED\n\n"
+                         f"{suppressed} repeated/suppressed notifications "
+                         f"(kinds: {kinds}).\nTrading engine state unchanged. "
+                         "Check the producer for an event loop."),
+                "action_required": True,
+                "recommended_next_action":
+                    "Inspect the producing track's event log before restarting.",
+                "source_ref": str(path),
+                "event_id": _event_id(track, f"breaker:{track}:{recs[-1][1][:80]}" if recs else "breaker"),
+                "semantic_id": f"{track}:breaker:{recs[-1][1][:80] if recs else 'x'}",
+                "send": True,
+            })
+        else:
+            out.extend(batch)
         st["cursors"][str(path)] = new_cur
     return out
 
 
 async def deliver_pending(bot, chat_id: str, st: dict) -> tuple[int, int]:
     """Send queued + newly scanned events. Returns (sent, failed)."""
+    sem_seen = st.setdefault("delivered_semantic", [])
+    pend_sem = {p.get("semantic_id") for p in st["pending"]}
     for ev in scan_sources(st):
-        if ev["event_id"] in st["delivered"]:
+        sid = ev.get("semantic_id") or ev["event_id"]
+        if ev["event_id"] in st["delivered"] or sid in sem_seen:
             continue
-        if ev["event_id"] not in [p["event_id"] for p in st["pending"]]:
+        if ev["event_id"] not in [p["event_id"] for p in st["pending"]] \
+                and sid not in pend_sem:
             st["pending"].append({"event_id": ev["event_id"],
+                                  "semantic_id": sid,
                                   "text": format_message(ev)})
+            pend_sem.add(sid)
     sent = failed = 0
     still = []
     for p in st["pending"]:
         try:
             await _send(bot, chat_id, p["text"])
             st["delivered"].append(p["event_id"])
+            if p.get("semantic_id"):
+                st["delivered_semantic"].append(p["semantic_id"])
             sent += 1
         except Exception as e:
             print(f"[relay] send failed ({e!r}); will retry", file=sys.stderr)
@@ -402,6 +466,7 @@ async def deliver_pending(bot, chat_id: str, st: dict) -> tuple[int, int]:
         await asyncio.sleep(0.3)
     st["pending"] = still
     st["delivered"] = st["delivered"][-5000:]
+    st["delivered_semantic"] = st["delivered_semantic"][-5000:]
     return sent, failed
 
 

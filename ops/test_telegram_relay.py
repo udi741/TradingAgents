@@ -263,3 +263,55 @@ tr._alpha_nav_headline(st_mixed); tr._alpha_positions_view(pos_mixed, wl_p)
 assert st_mixed == snap
 
 print("ALL TESTS PASSED")
+
+
+# --- flood defense: semantic dedup + circuit breaker ---
+
+F2 = TMP / "flood_events.jsonl"
+tr.ALPHA_EVENTS = F2
+
+# A/B: 500 records, same semantic transition, different timestamps -> 1 delivery
+st = tr.load_state()
+st["cursors"] = {}
+for i in range(500):
+    w(F2, {"ticker": "SDGR", "action": "MISSED_EXECUTION_REVIEW_REQUIRED",
+           "kind": "exit", "why": "rule", "confirm_session": "2026-10-09",
+           "missed_session": "2026-10-12", "utc": f"2026-10-13T04:{i:02d}Z"})
+bot = FakeBot()
+sent, _ = asyncio.run(tr.deliver_pending(bot, "CHAT", st))
+assert sent <= tr.CB_MAX_PER_SCAN + 1, sent
+sdgr_msgs = [t for _, t in bot.sent if "SDGR" in t and "MISSED" in t]
+assert len(sdgr_msgs) == 1, f"expected 1 SDGR missed msg, got {len(sdgr_msgs)}"
+# breaker summary exists
+assert any("CIRCUIT BREAKER" in t for _, t in bot.sent), "breaker msg missing"
+# restart persistence: same source again -> only suppressed residual, no dup
+bot2 = FakeBot()
+sent2, _ = asyncio.run(tr.deliver_pending(bot2, "CHAT", st))
+assert not any("MISSED" in t for _, t in bot2.sent), "restart replayed semantic dup"
+
+# C: a few genuinely different events below volume -> all delivered
+F3 = TMP / "varied.jsonl"
+tr.ALPHA_EVENTS = F3
+st3 = tr.load_state(); st3["cursors"] = {}
+for i, t in enumerate(["AAA", "BBB", "CCC"]):
+    w(F3, {"ticker": t, "action": "PAPER_EXIT", "why": f"rule{i}",
+           "price": 1.0, "shares": 1, "proceeds": 1.0, "utc": f"2026-10-13T05:0{i}Z"})
+bot3 = FakeBot()
+sent3, _ = asyncio.run(tr.deliver_pending(bot3, "CHAT", st3))
+assert sent3 == 3, sent3
+
+# D: pathological burst of UNIQUE events -> capped + one breaker message
+F4 = TMP / "burst.jsonl"
+tr.ALPHA_EVENTS = F4
+st4 = tr.load_state(); st4["cursors"] = {}
+for i in range(100):
+    w(F4, {"ticker": f"T{i:03d}", "action": "PAPER_EXIT", "why": f"r{i}",
+           "price": 1.0, "shares": 1, "proceeds": 1.0, "utc": f"2026-10-13T06:{i:02d}Z"})
+bot4 = FakeBot()
+sent4, _ = asyncio.run(tr.deliver_pending(bot4, "CHAT", st4))
+assert sent4 <= tr.CB_MAX_PER_SCAN + 1, sent4
+assert sum("CIRCUIT BREAKER" in t for _, t in bot4.sent) == 1
+assert st4["breaker_log"], "breaker not persisted"
+
+tr.ALPHA_EVENTS = ALPHA_FIXTURE
+print("relay flood defense ok")
