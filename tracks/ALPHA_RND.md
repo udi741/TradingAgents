@@ -736,3 +736,17 @@ canonical state for every user-visible transition class; (3) relay
 second-layer: delivered_semantic dedup (utc-free identity) + per-scan
 circuit breaker (cap 25 + one summary + persisted breaker_log).
 Acceptance: real main() x500 -> exactly 1 MISSED + 1 CONFIRMED, restart 0.
+
+### Autonomous publication dispositions (2026-10-13)
+
+Publication review no longer escalates normal TA ambiguity. synthesize now
+assigns every analyzed ticker a deterministic disposition
+(EXECUTABLE_WATCH / REANALYZE_ON_TRIGGER / RISK_PLAN_REQUIRED /
+RESEARCH_ONLY / AMBIGUOUS_REJECTED / NO_ACTION / OPEN_POSITION_MANAGEMENT)
+recorded durably in the intents doc. Scheduler emits one
+ALPHA_PUBLICATION_SUMMARY (info) instead of ACTION_REQUIRED review events;
+COMPLETE always carries user_action_required=none + disposition counts.
+publish.py merges EXECUTABLE+REANALYZE dispositions (reanalysis published
+inert). Oct-12 outcome: 4 exec (CDNA/IOVA/PGEN/TEAM), 2 reanalyze
+(FRO/QMCO), 4 ambiguous-rejected. USER ACTION REQUIRED now reserved for
+integrity failures only.
