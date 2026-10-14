@@ -1,9 +1,9 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
 updated_at: "2026-10-14"
-current_task: R2
+current_task: R3
 current_subtask: null
-next_task: R2
+next_task: R3
 items:
   R0:
     title: ROADMAP CONTROL
@@ -31,16 +31,16 @@ items:
     next_action: none
   R2:
     title: RANK COHORT OUTCOME TRACKING
-    status: NOT_STARTED
+    status: WAITING_FOR_DATA
     objective: prospective rank cohorts 1-10/11-25/26-50/51-100/101+ returns, benchmark-relative, MFE/MAE
     dependencies: []
-    started_at: null
+    started_at: "2026-10-14"
     completed_at: null
     blockers: []
-    bugs: []
-    evidence: []
-    commits: []
-    next_action: define cohort capture + horizon marks
+    bugs: [R2-B1: fetch end-exclusive empty window burned DATA_UNAVAILABLE on transient failure; fixed (end+1d, fetch-fail stays PENDING)]
+    evidence: [alpha_rnd/cohort_outcomes.py, alpha_rnd/test_cohort_outcomes.py, evaluations/alpha_rnd_v1/rank_cohort_outcomes/]
+    commits: [alpha:4d8975da]
+    next_action: first clean prospective funnel session 2026-10-14 (schema v2) -> R2 evidence matures as horizons complete
   R3:
     title: TA ACCEPT/REJECT OUTCOME TRACKING
     status: NOT_STARTED

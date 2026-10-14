@@ -761,3 +761,14 @@ published-non-executable; PGEN/FRO/QMCO reanalysis; 4 ambiguous-rejected.
 IOVA effective state: new 10-12 revision legitimately superseded the 10-01
 risk block (history preserved in watch_lifecycle) but is NON-EXECUTABLE.
 Fixed latent intraday_pass crash: AUTO_ENTRY watch without params.zone.
+
+### R2 rank-cohort outcome tracking (2026-10-14)
+
+Ex-post observational layer: alpha_rnd/cohort_outcomes.py joins frozen R1
+funnel artifacts to forward market data. Entry ref = next regular open;
+horizons H1/H5/H20/H60 trading sessions; MFE/MAE; SPY excess; append-only
+per (session,ticker,horizon). Stage cohorts DEEP/POOL-NOT-DEEP/NOT-POOL and
+primary_rank cohorts preserved — no fabricated global rank. 10-12 backfill
+(labeled) matured H1. R2 status WAITING_FOR_DATA; first clean session =
+2026-10-14 funnel (schema v2). Standalone evaluator; not wired into trading
+paths.
