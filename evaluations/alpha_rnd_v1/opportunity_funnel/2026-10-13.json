@@ -1,5 +1,5 @@
 {
- "created_at": "2026-10-14T05:25:55.177675+00:00",
+ "created_at": "2026-10-14T06:41:03.721146+00:00",
  "deep_quota": 10,
  "deep_selected_count": 10,
  "eligible_count": 1847,
@@ -12,11 +12,23 @@
    "exclusions",
    "eligible_features"
   ],
-  "intents_doc_sha256": null
+  "intents_doc_sha256": "989b79539d02e95c"
  },
- "publication_disposition_counts": {},
+ "publication_disposition_counts": {
+  "AMBIGUOUS_REJECTED": 5,
+  "PUBLISHED_NON_EXECUTABLE": 2,
+  "REANALYZE_ON_TRIGGER": 2,
+  "RESEARCH_ONLY": 1
+ },
+ "rank_semantics": {
+  "cohort": "bucketed by primary_rank (best lane rank) \u2014 observational, not a single total ordering",
+  "full_universe_rank": "null \u2014 no single global score exists; selection is multi-lane with per-lane quotas",
+  "lane_ranks": "rank within each lane's own eligible set",
+  "pool_rank": "position in frozen candidate pool by deep_score",
+  "primary_rank": "best rank achieved in any selection lane (lane eligibility is per-lane filtered)"
+ },
  "raw_universe_count": 4762,
- "schema_version": 1,
+ "schema_version": 2,
  "session": "2026-10-13",
  "source_universe": "wikipedia_indices+nasdaqtrader_common_stock",
  "summary": {
@@ -40,7 +52,7 @@
    "TOP_1_10": 10
   }
  },
- "ta_completed_count": null,
+ "ta_completed_count": 10,
  "tickers": {
   "ABCL": {
    "deep": {
@@ -62,8 +74,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 13,
     "price": 12.61,
-    "rank": 13,
+    "primary_rank": null,
     "ret_5": -0.0411,
     "rs_60": 1.1231,
     "score": 22.2462,
@@ -98,11 +113,21 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/AMPL_2026-10-13.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: The secondary token-short plan on a sustained $13.33 break has no concrete size or execution instruction."
+    ]
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 9,
     "price": 15.61,
-    "rank": 9,
+    "primary_rank": null,
     "ret_5": 0.0554,
     "rs_60": 0.537,
     "score": 31.074,
@@ -115,7 +140,12 @@
     "vol_ratio_5_20": 1.24
    },
    "session": "2026-10-13",
-   "ta": null,
+   "ta": {
+    "artifact": "case_artifacts/AMPL_2026-10-13.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
    "ticker": "AMPL",
    "universe": {
     "present": true,
@@ -142,8 +172,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 16,
     "price": 22.44,
-    "rank": 16,
+    "primary_rank": null,
     "ret_5": -0.1144,
     "rs_60": -0.2453,
     "score": 21,
@@ -181,8 +214,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 24,
     "price": 38.71,
-    "rank": 24,
+    "primary_rank": null,
     "ret_5": 0.0392,
     "rs_60": 0.4361,
     "score": 20.8722,
@@ -220,8 +256,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_26_50",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 27,
     "price": 7.82,
-    "rank": 27,
+    "primary_rank": null,
     "ret_5": 0.1759,
     "rs_60": 0.1982,
     "score": 20.3964,
@@ -261,11 +300,19 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/CDNA_2026-10-13.json",
+    "disposition": "PUBLISHED_NON_EXECUTABLE",
+    "executable": false,
+    "reason": []
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 7,
     "price": 65.43,
-    "rank": 7,
+    "primary_rank": null,
     "ret_5": 0.0257,
     "rs_60": 0.6542,
     "score": 31.3084,
@@ -282,7 +329,7 @@
     "artifact": "case_artifacts/CDNA_2026-10-13.json",
     "attempted": true,
     "final_signal": "Sell",
-    "valid": false
+    "valid": true
    },
    "ticker": "CDNA",
    "universe": {
@@ -310,8 +357,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 17,
     "price": 11.34,
-    "rank": 17,
+    "primary_rank": null,
     "ret_5": -0.2684,
     "rs_60": -0.4989,
     "score": 21,
@@ -349,8 +399,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 14,
     "price": 99.26,
-    "rank": 14,
+    "primary_rank": null,
     "ret_5": 0.1429,
     "rs_60": 0.9457,
     "score": 21.8914,
@@ -388,8 +441,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 25,
     "price": 36.65,
-    "rank": 25,
+    "primary_rank": null,
     "ret_5": -0.0337,
     "rs_60": 0.4092,
     "score": 20.8184,
@@ -424,11 +480,19 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/HAE_2026-10-13.json",
+    "disposition": "PUBLISHED_NON_EXECUTABLE",
+    "executable": false,
+    "reason": []
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 3,
     "price": 121.72,
-    "rank": 3,
+    "primary_rank": null,
     "ret_5": 0.1758,
     "rs_60": 0.5061,
     "score": 42.0122,
@@ -446,7 +510,7 @@
     "artifact": "case_artifacts/HAE_2026-10-13.json",
     "attempted": true,
     "final_signal": "Sell",
-    "valid": false
+    "valid": true
    },
    "ticker": "HAE",
    "universe": {
@@ -474,8 +538,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 11,
     "price": 109.62,
-    "rank": 11,
+    "primary_rank": null,
     "ret_5": -0.0009,
     "rs_60": 0.371,
     "score": 30.742,
@@ -515,8 +582,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 18,
     "price": 31.2,
-    "rank": 18,
+    "primary_rank": null,
     "ret_5": -0.1936,
     "rs_60": -0.2593,
     "score": 21,
@@ -551,11 +621,21 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/HPE_2026-10-13.json",
+    "disposition": "RESEARCH_ONLY",
+    "executable": false,
+    "reason": [
+     "auto entry contradicts TA signal Sell"
+    ]
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 10,
     "price": 68.81,
-    "rank": 10,
+    "primary_rank": null,
     "ret_5": -0.0237,
     "rs_60": 0.4971,
     "score": 30.9942,
@@ -568,7 +648,12 @@
     "vol_ratio_5_20": 1.07
    },
    "session": "2026-10-13",
-   "ta": null,
+   "ta": {
+    "artifact": "case_artifacts/HPE_2026-10-13.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
    "ticker": "HPE",
    "universe": {
     "present": true,
@@ -595,8 +680,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 19,
     "price": 280.04,
-    "rank": 19,
+    "primary_rank": null,
     "ret_5": -0.1808,
     "rs_60": -0.1492,
     "score": 21,
@@ -636,11 +724,22 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/IOVA_2026-10-13.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: The alternative second-tranche condition says several sessions above $12.92 without defining the session count.",
+     "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+    ]
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 1,
     "price": 14.5,
-    "rank": 1,
+    "primary_rank": null,
     "ret_5": 0.1188,
     "rs_60": 1.8374,
     "score": 44.6748,
@@ -658,7 +757,7 @@
     "artifact": "case_artifacts/IOVA_2026-10-13.json",
     "attempted": true,
     "final_signal": "Buy",
-    "valid": false
+    "valid": true
    },
    "ticker": "IOVA",
    "universe": {
@@ -686,8 +785,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_26_50",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 26,
     "price": 260.68,
-    "rank": 26,
+    "primary_rank": null,
     "ret_5": 0.0027,
     "rs_60": 0.2275,
     "score": 20.455,
@@ -730,8 +832,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 12,
     "price": 91.63,
-    "rank": 12,
+    "primary_rank": null,
     "ret_5": -0.0077,
     "rs_60": 1.191,
     "score": 22.382,
@@ -760,17 +865,30 @@
     "exclusion_details": null,
     "exclusion_reason": null
    },
-   "monitor": null,
+   "monitor": {
+    "blocked_reason": null,
+    "trigger_type": null,
+    "triggerable": false,
+    "triggered": null
+   },
    "portfolio": {
     "existing_position": false,
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/MRNA_2026-10-13.json",
+    "disposition": "REANALYZE_ON_TRIGGER",
+    "executable": false,
+    "reason": []
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 4,
     "price": 216.25,
-    "rank": 4,
+    "primary_rank": null,
     "ret_5": 0.1536,
     "rs_60": 2.5841,
     "score": 34,
@@ -787,7 +905,7 @@
     "artifact": "case_artifacts/MRNA_2026-10-13.json",
     "attempted": true,
     "final_signal": "Sell",
-    "valid": false
+    "valid": true
    },
    "ticker": "MRNA",
    "universe": {
@@ -815,8 +933,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 20,
     "price": 22.13,
-    "rank": 20,
+    "primary_rank": null,
     "ret_5": -0.0208,
     "rs_60": -0.0765,
     "score": 21,
@@ -854,8 +975,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 21,
     "price": 6.71,
-    "rank": 21,
+    "primary_rank": null,
     "ret_5": -0.0945,
     "rs_60": -0.0743,
     "score": 21,
@@ -890,11 +1014,21 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/P_2026-10-13.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: Starter size is stated only as a 25%-33% range of intended size, not as a single fraction."
+    ]
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 5,
     "price": 156.97,
-    "rank": 5,
+    "primary_rank": null,
     "ret_5": 0.0664,
     "rs_60": 1.1937,
     "score": 32.3874,
@@ -911,7 +1045,7 @@
     "artifact": "case_artifacts/P_2026-10-13.json",
     "attempted": true,
     "final_signal": "Sell",
-    "valid": false
+    "valid": true
    },
    "ticker": "P",
    "universe": {
@@ -936,11 +1070,22 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/PD_2026-10-13.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: Sizing is described both as quarter-size (~$25k) and as no more than one-third of standard allocation (~$33k).",
+     "auto entry contradicts TA signal Sell"
+    ]
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 8,
     "price": 16.68,
-    "rank": 8,
+    "primary_rank": null,
     "ret_5": 0.0803,
     "rs_60": 0.5621,
     "score": 31.1242,
@@ -953,7 +1098,12 @@
     "vol_ratio_5_20": 1.08
    },
    "session": "2026-10-13",
-   "ta": null,
+   "ta": {
+    "artifact": "case_artifacts/PD_2026-10-13.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
    "ticker": "PD",
    "universe": {
     "present": true,
@@ -977,11 +1127,21 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/PENG_2026-10-13.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: The stated $73.40 stop applies to any established position but is above the $70-$72.61 first-entry zone, so its application to a new pullback fill is unclear."
+    ]
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 6,
     "price": 78.2,
-    "rank": 6,
+    "primary_rank": null,
     "ret_5": 0.2179,
     "rs_60": 0.4181,
     "score": 31.8362,
@@ -998,7 +1158,7 @@
     "artifact": "case_artifacts/PENG_2026-10-13.json",
     "attempted": true,
     "final_signal": "Hold",
-    "valid": false
+    "valid": true
    },
    "ticker": "PENG",
    "universe": {
@@ -1026,8 +1186,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_26_50",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 28,
     "price": 15.85,
-    "rank": 28,
+    "primary_rank": null,
     "ret_5": -0.0112,
     "rs_60": 0.1371,
     "score": 20.2742,
@@ -1067,11 +1230,19 @@
     "paper_entry_created": null,
     "paper_entry_filled": null
    },
-   "publication": null,
+   "publication": {
+    "artifact": "case_artifacts/QMCO_2026-10-13.json",
+    "disposition": "REANALYZE_ON_TRIGGER",
+    "executable": false,
+    "reason": []
+   },
    "screen": {
     "cohort": "TOP_1_10",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 2,
     "price": 26.52,
-    "rank": 2,
+    "primary_rank": null,
     "ret_5": -0.2076,
     "rs_60": 1.3621,
     "score": 43.7242,
@@ -1089,7 +1260,7 @@
     "artifact": "case_artifacts/QMCO_2026-10-13.json",
     "attempted": true,
     "final_signal": "Sell",
-    "valid": false
+    "valid": true
    },
    "ticker": "QMCO",
    "universe": {
@@ -1117,8 +1288,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 22,
     "price": 6.87,
-    "rank": 22,
+    "primary_rank": null,
     "ret_5": -0.126,
     "rs_60": -0.1836,
     "score": 21,
@@ -1156,8 +1330,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 15,
     "price": 19.44,
-    "rank": 15,
+    "primary_rank": null,
     "ret_5": -0.1306,
     "rs_60": 0.0675,
     "score": 21.135,
@@ -1195,8 +1372,11 @@
    "publication": null,
    "screen": {
     "cohort": "RANK_11_25",
+    "full_universe_rank": null,
+    "lane_ranks": {},
+    "pool_rank": 23,
     "price": 9.27,
-    "rank": 23,
+    "primary_rank": null,
     "ret_5": -0.1767,
     "rs_60": -0.2614,
     "score": 21,
