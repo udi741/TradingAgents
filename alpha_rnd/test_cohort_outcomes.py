@@ -116,3 +116,65 @@ class CohortTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SchedulerTest(unittest.TestCase):
+    def setUp(self):
+        self.d = tempfile.TemporaryDirectory()
+        root = Path(self.d.name)
+        fixture(root)
+        self.ev, self.od = co.EV, co.OUT_DIR
+        self.log, self.lk, self.hf = co.LOG, co.LOCK, co.HEALTH
+        co.EV = root / "evaluations" / "alpha_rnd_v1"
+        co.OUT_DIR = co.EV / "rank_cohort_outcomes"
+        co.LOG = root / "alpha_rnd" / "co.log"
+        co.LOCK = root / "alpha_rnd" / "co.lock"
+        co.HEALTH = root / "alpha_rnd" / "co_state.json"
+        self.md = {"SPY": _df({d: 100 + i for i, d in enumerate(CAL[1:])}),
+                   "A": _df({d: 10 + i * 0.1 for i, d in enumerate(CAL[1:])}),
+                   "B": _df({d: 20 for d in CAL[1:]}),
+                   "C": _df({d: 5 for d in CAL[1:]})}
+
+    def tearDown(self):
+        co.EV, co.OUT_DIR = self.ev, self.od
+        co.LOG, co.LOCK, co.HEALTH = self.log, self.lk, self.hf
+
+    def test_lock_excludes_overlap(self):
+        with mock.patch.object(co, "_sessions_index", return_value=CAL), \
+             mock.patch.object(co, "_fetch", return_value=(self.md, [])):
+            import fcntl as _f
+            co.LOCK.parent.mkdir(parents=True, exist_ok=True)
+            with open(co.LOCK, "w") as lf:
+                _f.flock(lf, _f.LOCK_EX)
+                r = co.run_locked()
+                self.assertEqual(r, {"skipped": "locked"})
+
+    def test_catchup_and_health(self):
+        with mock.patch.object(co, "_sessions_index", return_value=CAL), \
+             mock.patch.object(co, "_fetch", return_value=(self.md, [])):
+            r = co.run_locked()
+            self.assertEqual(r["sessions_touched"], [SESS])
+            out = json.loads((co.OUT_DIR / f"{SESS}.json").read_text())
+            self.assertEqual(out["tickers"]["A"]["horizons"]["H5"]["status"],
+                             "MATURED")
+            h = json.loads(co.HEALTH.read_text())
+            self.assertEqual(h["status"], "OK")
+            r2 = co.run_locked()  # idempotent second run
+            self.assertEqual(r2["sessions_touched"], [])
+
+    def test_transient_failure_stays_pending(self):
+        with mock.patch.object(co, "_sessions_index", return_value=CAL), \
+             mock.patch.object(co, "_fetch",
+                               return_value=({"SPY": self.md["SPY"]},
+                                             ["A", "B", "C", "GONE"])):
+            co.run_locked()
+            out = json.loads((co.OUT_DIR / f"{SESS}.json").read_text())
+            self.assertEqual(out["tickers"]["A"]["horizons"]["H1"]["status"],
+                             "PENDING")  # retryable, not burned
+        # retry succeeds later
+        with mock.patch.object(co, "_sessions_index", return_value=CAL), \
+             mock.patch.object(co, "_fetch", return_value=(self.md, [])):
+            co.run_locked()
+            out = json.loads((co.OUT_DIR / f"{SESS}.json").read_text())
+            self.assertEqual(out["tickers"]["A"]["horizons"]["H1"]["status"],
+                             "MATURED")

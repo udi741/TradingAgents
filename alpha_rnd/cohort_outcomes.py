@@ -14,6 +14,7 @@ Usage:
 Prices: canonical yfinance auto_adjust=True (split/dividend-adjusted),
 same convention as the discovery screener.
 """
+import fcntl
 import json
 import sys
 import time
@@ -29,8 +30,55 @@ from alpha_rnd import funnel  # noqa: E402
 
 EV = ROOT / "evaluations" / "alpha_rnd_v1"
 OUT_DIR = EV / "rank_cohort_outcomes"
+LOG = ROOT / "alpha_rnd" / "cohort_outcomes.log"
+LOCK = ROOT / "alpha_rnd" / "cohort_outcomes.lock"
+HEALTH = ROOT / "alpha_rnd" / "cohort_outcomes_state.json"
 BENCH = "SPY"
 HORIZONS = {"H1": 1, "H5": 5, "H20": 20, "H60": 60}
+
+
+def _log(msg: str) -> None:
+    with open(LOG, "a") as f:
+        f.write(f"{datetime.now(timezone.utc).isoformat()} {msg}\n")
+
+
+def _health(**kw) -> None:
+    try:
+        h = json.loads(HEALTH.read_text()) if HEALTH.exists() else {}
+    except Exception:
+        h = {}
+    h.update(kw)
+    h["updated_at"] = datetime.now(timezone.utc).isoformat()
+    tmp = HEALTH.with_suffix(".tmp")
+    tmp.write_text(json.dumps(h, indent=1))
+    tmp.replace(HEALTH)
+
+
+def run_locked() -> dict:
+    """Updater entrypoint for scheduled execution: non-blocking flock so an
+    overlapping invocation exits cleanly; catch-up across offline gaps is
+    inherent — update() walks every frozen session and matures all horizons
+    whose target session has completed."""
+    LOCK.parent.mkdir(parents=True, exist_ok=True)
+    with LOCK.open("w") as lf:
+        try:
+            fcntl.flock(lf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            _log("update skipped: another run holds the lock")
+            return {"skipped": "locked"}
+        try:
+            res = update()
+            _health(last_run=res.get("latest_completed"),
+                    last_success=datetime.now(timezone.utc).isoformat(),
+                    sessions_touched=res.get("sessions_touched"),
+                    status="OK")
+            _log(f"update ok sessions={res['sessions_touched']}")
+            return res
+        except Exception as e:
+            _health(last_run=datetime.now(timezone.utc).isoformat(),
+                    status=f"ERROR {e!r}")
+            _log(f"update ERROR {e!r}")
+            raise
 
 
 def _sessions_index() -> list[str]:
@@ -129,6 +177,7 @@ def update(verbose=True) -> dict:
             out = json.loads(op.read_text())
         else:
             out = build_skeleton(session, doc, cal)
+            op.write_text(json.dumps(out, indent=1, sort_keys=True))
         tickers = [t for t, r in out["tickers"].items()
                    if any(h["status"] == "PENDING" and h["target_session"]
                           and h["target_session"] <= latest
@@ -246,10 +295,34 @@ def session_report(session: str) -> str:
     return "\n".join(lines)
 
 
+def tracker_status() -> str:
+    h = json.loads(HEALTH.read_text()) if HEALTH.exists() else {}
+    stats = {"MATURED": 0, "PENDING": 0, "DATA_UNAVAILABLE": 0}
+    sessions = [p.stem for p in OUT_DIR.glob("*.json")]
+    clean = 0
+    for p in OUT_DIR.glob("*.json"):
+        d = json.loads(p.read_text())
+        clean += 0 if d.get("funnel_backfilled") else 1
+        for r in d["tickers"].values():
+            for hr in r["horizons"].values():
+                stats[hr["status"]] = stats.get(hr["status"], 0) + 1
+    return "\n".join([
+        "R2 OUTCOME TRACKER", "",
+        f"scheduler: {h.get('status', 'NEVER_RUN')}",
+        f"last successful run: {h.get('last_success')}",
+        f"prospective sessions: {len(sessions)} (clean: {clean})",
+        f"pending horizons: {stats.get('PENDING', 0)}",
+        f"matured records: {stats.get('MATURED', 0)}",
+        f"permanent unavailable: {stats.get('DATA_UNAVAILABLE', 0)}",
+        "first clean session: (first schema-v2 funnel session)"])
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
     if cmd == "update":
-        print(json.dumps(update(), indent=1))
+        print(json.dumps(run_locked(), indent=1))
+    elif cmd == "health":
+        print(tracker_status())
     elif cmd == "session":
         print(session_report(sys.argv[2]))
     else:
