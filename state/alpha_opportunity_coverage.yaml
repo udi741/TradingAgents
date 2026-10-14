@@ -70,6 +70,9 @@ items:
     status: IN_PROGRESS
     objective: shadow-only deep analysis beyond top-10
     status_detail: PAUSED_RESUMABLE (R5B checkpoint in alpha evaluations/alpha_rnd_v1/replays/R5B_CHECKPOINT.json)
+    interrupted_by: LIVE_ALPHA_PRODUCTION_INCIDENT (interrupt manifest replays/R5B_PRODUCTION_INTERRUPT_CHECKPOINT.json)
+    completed: 57
+    remaining: 27
     dependencies: [R2]
     started_at: null
     completed_at: null
