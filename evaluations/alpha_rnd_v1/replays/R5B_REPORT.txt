@@ -1,0 +1,33 @@
+ALPHA R5B — CURRENT_PRODUCTION vs ANALYZE_ALL_CANDIDATES
+RETROSPECTIVE_RESEARCH (not prospective evidence)
+
+=== 2026-10-07 pool=28 ta_complete=28/28
+  selected_agg H1: {'N': 10, 'matured': 10, 'mean_ret': 1.17, 'median_ret': 1.47, 'mean_excess': 1.29, 'mean_MFE': 3.11, 'mean_MAE': -1.7}
+  selected_agg H5: {'N': 10, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  excluded_agg H1: {'N': 18, 'matured': 18, 'mean_ret': -0.09, 'median_ret': 0.0, 'mean_excess': 0.03, 'mean_MFE': 2.04, 'mean_MAE': -2.78}
+  excluded_agg H5: {'N': 18, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  excluded_positive_agg H1: {'N': 2, 'matured': 2, 'mean_ret': -1.28, 'median_ret': -1.24, 'mean_excess': -1.16, 'mean_MFE': 2.59, 'mean_MAE': -2.68}
+  excluded_positive_agg H5: {'N': 2, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  top5 H5: [] (captured by current: [])
+  top10 H5: [] (captured: [])
+=== 2026-10-09 pool=28 ta_complete=28/28
+  selected_agg H1: {'N': 10, 'matured': 10, 'mean_ret': -0.97, 'median_ret': -0.25, 'mean_excess': -0.88, 'mean_MFE': 2.09, 'mean_MAE': -3.42}
+  selected_agg H5: {'N': 10, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  excluded_agg H1: {'N': 18, 'matured': 18, 'mean_ret': -1.4, 'median_ret': -0.6, 'mean_excess': -1.31, 'mean_MFE': 1.47, 'mean_MAE': -2.82}
+  excluded_agg H5: {'N': 18, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  excluded_positive_agg H1: {'N': 3, 'matured': 3, 'mean_ret': -1.18, 'median_ret': -0.45, 'mean_excess': -1.1, 'mean_MFE': 1.88, 'mean_MAE': -1.5}
+  excluded_positive_agg H5: {'N': 3, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  top5 H5: [] (captured by current: [])
+  top10 H5: [] (captured: [])
+=== 2026-10-12 pool=28 ta_complete=28/28
+  selected_agg H1: {'N': 10, 'matured': 10, 'mean_ret': 1.52, 'median_ret': 1.92, 'mean_excess': 1.44, 'mean_MFE': 4.0, 'mean_MAE': -1.03}
+  selected_agg H5: {'N': 10, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  excluded_agg H1: {'N': 18, 'matured': 18, 'mean_ret': -1.41, 'median_ret': -0.69, 'mean_excess': -1.49, 'mean_MFE': 1.51, 'mean_MAE': -3.06}
+  excluded_agg H5: {'N': 18, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  excluded_positive_agg H1: {'N': 5, 'matured': 5, 'mean_ret': 0.26, 'median_ret': -0.6, 'mean_excess': 0.17, 'mean_MFE': 2.46, 'mean_MAE': -1.89}
+  excluded_positive_agg H5: {'N': 5, 'matured': 0, 'mean_ret': None, 'median_ret': None, 'mean_excess': None, 'mean_MFE': None, 'mean_MAE': None}
+  top5 H5: [] (captured by current: [])
+  top10 H5: [] (captured: [])
+
+AGGREGATE:
+  pool total 84, TA selected 30, top5 captured 0/15, top10 0/30

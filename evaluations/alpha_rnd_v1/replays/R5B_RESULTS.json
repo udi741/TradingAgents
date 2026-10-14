@@ -1,0 +1,639 @@
+{
+ "2026-10-07": {
+  "session": "2026-10-07",
+  "pool": 28,
+  "current_production_selected": [
+   "AMPL",
+   "ASST",
+   "CDNA",
+   "IOVA",
+   "MRNA",
+   "PGEN",
+   "PTC",
+   "QMCO",
+   "SDGR",
+   "TEAM"
+  ],
+  "excluded": [
+   "OPCH",
+   "ABCL",
+   "PCVX",
+   "TWST",
+   "UMAC",
+   "CTVA",
+   "XNCR",
+   "FLY",
+   "NKTR",
+   "PENG",
+   "QUBT",
+   "RXO",
+   "SYNA",
+   "ETON",
+   "HAE",
+   "NTAP",
+   "MANH",
+   "IQV"
+  ],
+  "ta_complete": 28,
+  "ta_not_run": [],
+  "selected_agg": {
+   "H1": {
+    "N": 10,
+    "matured": 10,
+    "mean_ret": 1.17,
+    "median_ret": 1.47,
+    "mean_excess": 1.29,
+    "mean_MFE": 3.11,
+    "mean_MAE": -1.7
+   },
+   "H5": {
+    "N": 10,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "excluded_agg": {
+   "H1": {
+    "N": 18,
+    "matured": 18,
+    "mean_ret": -0.09,
+    "median_ret": 0.0,
+    "mean_excess": 0.03,
+    "mean_MFE": 2.04,
+    "mean_MAE": -2.78
+   },
+   "H5": {
+    "N": 18,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "excluded_positive": [
+   "PENG",
+   "NTAP"
+  ],
+  "excluded_positive_agg": {
+   "H1": {
+    "N": 2,
+    "matured": 2,
+    "mean_ret": -1.28,
+    "median_ret": -1.24,
+    "mean_excess": -1.16,
+    "mean_MFE": 2.59,
+    "mean_MAE": -2.68
+   },
+   "H5": {
+    "N": 2,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "signals_excluded": {
+   "OPCH": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "ABCL": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "PCVX": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "TWST": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "UMAC": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "CTVA": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "XNCR": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "FLY": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "NKTR": {
+    "signal": "Hold",
+    "group": "NEUTRAL"
+   },
+   "PENG": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "QUBT": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "RXO": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "SYNA": {
+    "signal": "Hold",
+    "group": "NEUTRAL"
+   },
+   "ETON": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "HAE": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "NTAP": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "MANH": {
+    "signal": "Underweight",
+    "group": "NEGATIVE"
+   },
+   "IQV": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   }
+  },
+  "dispositions": {
+   "IOVA": "REANALYZE_ON_TRIGGER",
+   "QMCO": "REANALYZE_ON_TRIGGER",
+   "MRNA": "REANALYZE_ON_TRIGGER",
+   "TEAM": "PUBLISHED_NON_EXECUTABLE",
+   "CDNA": "REANALYZE_ON_TRIGGER",
+   "PTC": "REANALYZE_ON_TRIGGER",
+   "SDGR": "REANALYZE_ON_TRIGGER",
+   "AMPL": "EXECUTABLE_WATCH",
+   "PGEN": "REANALYZE_ON_TRIGGER",
+   "ASST": "REANALYZE_ON_TRIGGER",
+   "OPCH": "REANALYZE_ON_TRIGGER",
+   "ABCL": "REANALYZE_ON_TRIGGER",
+   "PCVX": "EXECUTABLE_WATCH",
+   "TWST": "PUBLISHED_NON_EXECUTABLE",
+   "UMAC": "PUBLISHED_NON_EXECUTABLE",
+   "CTVA": "REANALYZE_ON_TRIGGER",
+   "XNCR": "REANALYZE_ON_TRIGGER",
+   "FLY": "REANALYZE_ON_TRIGGER",
+   "NKTR": "REANALYZE_ON_TRIGGER",
+   "PENG": "PUBLISHED_NON_EXECUTABLE",
+   "QUBT": "PUBLISHED_NON_EXECUTABLE",
+   "RXO": "REANALYZE_ON_TRIGGER",
+   "SYNA": "REANALYZE_ON_TRIGGER",
+   "ETON": "REANALYZE_ON_TRIGGER",
+   "HAE": "REANALYZE_ON_TRIGGER",
+   "NTAP": "PUBLISHED_NON_EXECUTABLE",
+   "MANH": "PUBLISHED_NON_EXECUTABLE",
+   "IQV": "PUBLISHED_NON_EXECUTABLE"
+  },
+  "top5_h5": [],
+  "top10_h5": [],
+  "top5_captured": [],
+  "top10_captured": [],
+  "h5_ranked": []
+ },
+ "2026-10-09": {
+  "session": "2026-10-09",
+  "pool": 28,
+  "current_production_selected": [
+   "AMPL",
+   "HAE",
+   "IOVA",
+   "MRNA",
+   "P",
+   "PENG",
+   "PTC",
+   "QMCO",
+   "SDGR",
+   "TEAM"
+  ],
+  "excluded": [
+   "CDNA",
+   "PGEN",
+   "RXO",
+   "HALO",
+   "KOD",
+   "XP",
+   "OPCH",
+   "TXG",
+   "PCVX",
+   "UMAC",
+   "TWST",
+   "XNCR",
+   "VST",
+   "HESM",
+   "QUBT",
+   "ETON",
+   "IQV",
+   "BIO"
+  ],
+  "ta_complete": 28,
+  "ta_not_run": [],
+  "selected_agg": {
+   "H1": {
+    "N": 10,
+    "matured": 10,
+    "mean_ret": -0.97,
+    "median_ret": -0.25,
+    "mean_excess": -0.88,
+    "mean_MFE": 2.09,
+    "mean_MAE": -3.42
+   },
+   "H5": {
+    "N": 10,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "excluded_agg": {
+   "H1": {
+    "N": 18,
+    "matured": 18,
+    "mean_ret": -1.4,
+    "median_ret": -0.6,
+    "mean_excess": -1.31,
+    "mean_MFE": 1.47,
+    "mean_MAE": -2.82
+   },
+   "H5": {
+    "N": 18,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "excluded_positive": [
+   "VST",
+   "HESM",
+   "ETON"
+  ],
+  "excluded_positive_agg": {
+   "H1": {
+    "N": 3,
+    "matured": 3,
+    "mean_ret": -1.18,
+    "median_ret": -0.45,
+    "mean_excess": -1.1,
+    "mean_MFE": 1.88,
+    "mean_MAE": -1.5
+   },
+   "H5": {
+    "N": 3,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "signals_excluded": {
+   "CDNA": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "PGEN": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "RXO": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "HALO": {
+    "signal": "Hold",
+    "group": "NEUTRAL"
+   },
+   "KOD": {
+    "signal": "Underweight",
+    "group": "NEGATIVE"
+   },
+   "XP": {
+    "signal": "Hold",
+    "group": "NEUTRAL"
+   },
+   "OPCH": {
+    "signal": "Hold",
+    "group": "NEUTRAL"
+   },
+   "TXG": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "PCVX": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "UMAC": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "TWST": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "XNCR": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "VST": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "HESM": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "QUBT": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "ETON": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "IQV": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "BIO": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   }
+  },
+  "dispositions": {
+   "QMCO": "PUBLISHED_NON_EXECUTABLE",
+   "HAE": "PUBLISHED_NON_EXECUTABLE",
+   "IOVA": "PUBLISHED_NON_EXECUTABLE",
+   "MRNA": "PUBLISHED_NON_EXECUTABLE",
+   "P": "PUBLISHED_NON_EXECUTABLE",
+   "TEAM": "PUBLISHED_NON_EXECUTABLE",
+   "PTC": "REANALYZE_ON_TRIGGER",
+   "SDGR": "PUBLISHED_NON_EXECUTABLE",
+   "PENG": "PUBLISHED_NON_EXECUTABLE",
+   "AMPL": "PUBLISHED_NON_EXECUTABLE",
+   "CDNA": "PUBLISHED_NON_EXECUTABLE",
+   "PGEN": "PUBLISHED_NON_EXECUTABLE",
+   "RXO": "PUBLISHED_NON_EXECUTABLE",
+   "HALO": "REANALYZE_ON_TRIGGER",
+   "KOD": "EXECUTABLE_WATCH",
+   "XP": "PUBLISHED_NON_EXECUTABLE",
+   "OPCH": "REANALYZE_ON_TRIGGER",
+   "TXG": "PUBLISHED_NON_EXECUTABLE",
+   "PCVX": "PUBLISHED_NON_EXECUTABLE",
+   "UMAC": "PUBLISHED_NON_EXECUTABLE",
+   "TWST": "EXECUTABLE_WATCH",
+   "XNCR": "PUBLISHED_NON_EXECUTABLE",
+   "VST": "PUBLISHED_NON_EXECUTABLE",
+   "HESM": "PUBLISHED_NON_EXECUTABLE",
+   "QUBT": "PUBLISHED_NON_EXECUTABLE",
+   "ETON": "PUBLISHED_NON_EXECUTABLE",
+   "IQV": "PUBLISHED_NON_EXECUTABLE",
+   "BIO": "PUBLISHED_NON_EXECUTABLE"
+  },
+  "top5_h5": [],
+  "top10_h5": [],
+  "top5_captured": [],
+  "top10_captured": [],
+  "h5_ranked": []
+ },
+ "2026-10-12": {
+  "session": "2026-10-12",
+  "pool": 28,
+  "current_production_selected": [
+   "CDNA",
+   "FRO",
+   "HAE",
+   "IOVA",
+   "MRNA",
+   "P",
+   "PENG",
+   "PGEN",
+   "QMCO",
+   "TEAM"
+  ],
+  "excluded": [
+   "HPE",
+   "MGNI",
+   "KOD",
+   "ECO",
+   "XP",
+   "OPCH",
+   "UMAC",
+   "LW",
+   "FLY",
+   "HESM",
+   "IESC",
+   "QUBT",
+   "SEZL",
+   "STZ",
+   "XNCR",
+   "ETON",
+   "WDAY",
+   "REPL"
+  ],
+  "ta_complete": 28,
+  "ta_not_run": [],
+  "selected_agg": {
+   "H1": {
+    "N": 10,
+    "matured": 10,
+    "mean_ret": 1.52,
+    "median_ret": 1.92,
+    "mean_excess": 1.44,
+    "mean_MFE": 4.0,
+    "mean_MAE": -1.03
+   },
+   "H5": {
+    "N": 10,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "excluded_agg": {
+   "H1": {
+    "N": 18,
+    "matured": 18,
+    "mean_ret": -1.41,
+    "median_ret": -0.69,
+    "mean_excess": -1.49,
+    "mean_MFE": 1.51,
+    "mean_MAE": -3.06
+   },
+   "H5": {
+    "N": 18,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "excluded_positive": [
+   "MGNI",
+   "XP",
+   "LW",
+   "IESC",
+   "SEZL"
+  ],
+  "excluded_positive_agg": {
+   "H1": {
+    "N": 5,
+    "matured": 5,
+    "mean_ret": 0.26,
+    "median_ret": -0.6,
+    "mean_excess": 0.17,
+    "mean_MFE": 2.46,
+    "mean_MAE": -1.89
+   },
+   "H5": {
+    "N": 5,
+    "matured": 0,
+    "mean_ret": null,
+    "median_ret": null,
+    "mean_excess": null,
+    "mean_MFE": null,
+    "mean_MAE": null
+   }
+  },
+  "signals_excluded": {
+   "HPE": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "MGNI": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "KOD": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "ECO": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "XP": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "OPCH": {
+    "signal": "Hold",
+    "group": "NEUTRAL"
+   },
+   "UMAC": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "LW": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "FLY": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "HESM": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "IESC": {
+    "signal": "Overweight",
+    "group": "POSITIVE"
+   },
+   "QUBT": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "SEZL": {
+    "signal": "Buy",
+    "group": "POSITIVE"
+   },
+   "STZ": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "XNCR": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "ETON": {
+    "signal": "Hold",
+    "group": "NEUTRAL"
+   },
+   "WDAY": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   },
+   "REPL": {
+    "signal": "Sell",
+    "group": "NEGATIVE"
+   }
+  },
+  "dispositions": {
+   "QMCO": "REANALYZE_ON_TRIGGER",
+   "HAE": "PUBLISHED_NON_EXECUTABLE",
+   "MRNA": "REANALYZE_ON_TRIGGER",
+   "IOVA": "PUBLISHED_NON_EXECUTABLE",
+   "P": "EXECUTABLE_WATCH",
+   "TEAM": "PUBLISHED_NON_EXECUTABLE",
+   "PENG": "PUBLISHED_NON_EXECUTABLE",
+   "FRO": "REANALYZE_ON_TRIGGER",
+   "CDNA": "PUBLISHED_NON_EXECUTABLE",
+   "PGEN": "REANALYZE_ON_TRIGGER",
+   "HPE": "PUBLISHED_NON_EXECUTABLE",
+   "MGNI": "PUBLISHED_NON_EXECUTABLE",
+   "KOD": "PUBLISHED_NON_EXECUTABLE",
+   "ECO": "PUBLISHED_NON_EXECUTABLE",
+   "XP": "PUBLISHED_NON_EXECUTABLE",
+   "OPCH": "REANALYZE_ON_TRIGGER",
+   "UMAC": "EXECUTABLE_WATCH",
+   "LW": "PUBLISHED_NON_EXECUTABLE",
+   "FLY": "PUBLISHED_NON_EXECUTABLE",
+   "HESM": "EXECUTABLE_WATCH",
+   "IESC": "PUBLISHED_NON_EXECUTABLE",
+   "QUBT": "PUBLISHED_NON_EXECUTABLE",
+   "SEZL": "PUBLISHED_NON_EXECUTABLE",
+   "STZ": "PUBLISHED_NON_EXECUTABLE",
+   "XNCR": "PUBLISHED_NON_EXECUTABLE",
+   "ETON": "EXECUTABLE_WATCH",
+   "WDAY": "PUBLISHED_NON_EXECUTABLE",
+   "REPL": "REANALYZE_ON_TRIGGER"
+  },
+  "top5_h5": [],
+  "top10_h5": [],
+  "top5_captured": [],
+  "top10_captured": [],
+  "h5_ranked": []
+ }
+}

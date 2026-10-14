@@ -36,11 +36,16 @@ def session_compare(session: str) -> dict:
     pub = json.loads((adir / "publication.json").read_text())
     res = json.loads((adir / "run_result.json").read_text())
     members = man["candidate_pool_members"]
-    # production-selected subset = funnel deep.selected (frozen evidence)
-    fdoc = json.loads(
-        (EV / "opportunity_funnel" / f"{session}.json").read_text())
-    prod = {t for t, r in (fdoc["tickers"]).items()
-            if (r.get("deep") or {}).get("selected")}
+    # production-selected subset = funnel deep.selected (frozen evidence);
+    # fallback: production case artifacts = the set TA actually ran
+    fdoc_p = EV / "opportunity_funnel" / f"{session}.json"
+    if fdoc_p.exists():
+        fdoc = json.loads(fdoc_p.read_text())
+        prod = {t for t, r in (fdoc["tickers"]).items()
+                if (r.get("deep") or {}).get("selected")}
+    else:
+        prod = {p.stem.rsplit("_", 1)[0]
+                for p in (EV / "case_artifacts").glob(f"*_{session}.json")}
     excluded = [t for t in members if t not in prod]
     arts = {}
     for t in members:
@@ -54,7 +59,7 @@ def session_compare(session: str) -> dict:
     et = co._entry_and_targets(session, cal)
     outc = {}
     if et:
-        entry = et["entry_session"]
+        entry = et["entry"]
         targets = {h: et["targets"].get(h) for h in ("H1", "H5", "H20")}
         md, _ = co._fetch(members + ["SPY"], entry,
                           (pd.Timestamp(cal[-1]) + pd.Timedelta(days=1)

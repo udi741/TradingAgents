@@ -4,7 +4,7 @@
  "decision_cutoff": "2026-10-12T20:00:00Z",
  "pool": 28,
  "ta_required": 28,
- "ta_completed": 21,
+ "ta_completed": 28,
  "ta_cached": [
   "QMCO",
   "HAE",
@@ -17,10 +17,6 @@
   "CDNA",
   "PGEN",
   "HPE",
-  "ETON",
-  "WDAY"
- ],
- "ta_ran_now": [
   "MGNI",
   "HESM",
   "IESC",
@@ -28,9 +24,11 @@
   "SEZL",
   "STZ",
   "XNCR",
+  "ETON",
+  "WDAY",
   "REPL"
  ],
- "ta_failed": [
+ "ta_ran_now": [
   "KOD",
   "ECO",
   "XP",
@@ -39,17 +37,17 @@
   "LW",
   "FLY"
  ],
+ "ta_failed": [],
  "ta_not_run": [],
- "replay_complete": false,
+ "replay_complete": true,
  "news_pit_postcheck": {
-  "MGNI": false,
-  "HESM": true,
-  "IESC": true,
-  "QUBT": true,
-  "SEZL": true,
-  "STZ": true,
-  "XNCR": true,
-  "REPL": true,
+  "KOD": true,
+  "ECO": true,
+  "XP": true,
+  "OPCH": true,
+  "UMAC": true,
+  "LW": true,
+  "FLY": true,
   "QMCO": true,
   "HAE": true,
   "MRNA": true,
@@ -61,7 +59,15 @@
   "CDNA": true,
   "PGEN": true,
   "HPE": false,
+  "MGNI": false,
+  "HESM": true,
+  "IESC": true,
+  "QUBT": true,
+  "SEZL": true,
+  "STZ": true,
+  "XNCR": true,
   "ETON": true,
-  "WDAY": false
+  "WDAY": false,
+  "REPL": true
  }
 }

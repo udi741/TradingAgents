@@ -4,7 +4,7 @@
  "decision_cutoff": "2026-10-09T20:00:00Z",
  "pool": 28,
  "ta_required": 28,
- "ta_completed": 16,
+ "ta_completed": 28,
  "ta_cached": [
   "QMCO",
   "HAE",
@@ -17,15 +17,13 @@
   "PENG",
   "AMPL",
   "CDNA",
+  "PGEN",
+  "RXO",
+  "HALO",
   "ETON",
   "IQV"
  ],
  "ta_ran_now": [
-  "PGEN",
-  "RXO",
-  "HALO"
- ],
- "ta_failed": [
   "KOD",
   "XP",
   "OPCH",
@@ -39,12 +37,22 @@
   "QUBT",
   "BIO"
  ],
+ "ta_failed": [],
  "ta_not_run": [],
- "replay_complete": false,
+ "replay_complete": true,
  "news_pit_postcheck": {
-  "PGEN": true,
-  "RXO": true,
-  "HALO": true,
+  "KOD": true,
+  "XP": true,
+  "OPCH": true,
+  "TXG": true,
+  "PCVX": true,
+  "UMAC": true,
+  "TWST": true,
+  "XNCR": true,
+  "VST": true,
+  "HESM": true,
+  "QUBT": true,
+  "BIO": true,
   "QMCO": true,
   "HAE": true,
   "IOVA": true,
@@ -56,6 +64,9 @@
   "PENG": true,
   "AMPL": true,
   "CDNA": true,
+  "PGEN": true,
+  "RXO": true,
+  "HALO": true,
   "ETON": true,
   "IQV": true
  }
