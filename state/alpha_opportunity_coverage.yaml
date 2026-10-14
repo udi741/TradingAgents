@@ -76,7 +76,7 @@ items:
     bugs: []
     evidence: []
     commits: []
-    next_action: WAIT_FOR_DATA — run paired replay experiments once reviewed + R2 evidence context exists
+    next_action: WAIT_FOR_DATA — R5A replay engine validated (R5A-B1 resolved); paired runs deferred pending review + R2 evidence maturity
   R6:
     title: LOW-PRICE OPPORTUNITY SHADOW LANE
     status: WAITING_FOR_DATA
