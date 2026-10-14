@@ -69,11 +69,12 @@ items:
     title: SHADOW DEEP-COVERAGE EXPANSION
     status: IN_PROGRESS
     objective: shadow-only deep analysis beyond top-10
+    status_detail: PAUSED_RESUMABLE (R5B checkpoint in alpha evaluations/alpha_rnd_v1/replays/R5B_CHECKPOINT.json)
     dependencies: [R2]
     started_at: null
     completed_at: null
     blockers: [insufficient clean prospective R2 cohort evidence]
-    bugs: []
+    bugs: [R5B-B1: replay run() lets synthesis-bridge HTTP 502 escape and abort the run before run_result is written; per-ticker artifacts persist so resume is safe; wrapped by retry driver, engine fix deferred]
     evidence: []
     commits: []
     next_action: WAIT_FOR_DATA — R5A replay engine validated (R5A-B1 resolved); paired runs deferred pending review + R2 evidence maturity
