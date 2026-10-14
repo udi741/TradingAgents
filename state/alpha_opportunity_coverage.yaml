@@ -1,9 +1,9 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
 updated_at: "2026-10-14"
-current_task: R1
+current_task: R2
 current_subtask: null
-next_task: R1
+next_task: R2
 items:
   R0:
     title: ROADMAP CONTROL
@@ -19,16 +19,16 @@ items:
     next_action: none
   R1:
     title: OPPORTUNITY FUNNEL INSTRUMENTATION
-    status: NOT_STARTED
+    status: DONE
     objective: persist where stocks disappear universe->eligibility->ranking->deep TA->decision->publication->executability->trigger->paper trade
     dependencies: []
-    started_at: null
-    completed_at: null
+    started_at: "2026-10-14"
+    completed_at: "2026-10-14"
     blockers: []
-    bugs: []
-    evidence: []
-    commits: []
-    next_action: instrument funnel stage counts/IDs in ALPHA pipeline outputs
+    bugs: [R1-B1: candidate pool persisted exclusion counts only; fixed by persisting per-ticker exclusions + eligible_features + deep_score/rank (instrumentation-only)]
+    evidence: [alpha_rnd/funnel.py, alpha_rnd/funnel_status.py, evaluations/alpha_rnd_v1/opportunity_funnel/, alpha_rnd/test_funnel.py]
+    commits: [alpha:49389628]
+    next_action: none
   R2:
     title: RANK COHORT OUTCOME TRACKING
     status: NOT_STARTED
