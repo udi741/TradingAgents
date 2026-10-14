@@ -21,7 +21,7 @@ EV = ROOT / "evaluations" / "alpha_rnd_v1"
 OUT = EV / "trade_postmortems"
 EVENTS = ROOT / "alpha_rnd" / "trigger_events.jsonl"
 STATE = ROOT / "alpha_rnd" / "monitor_state.json"
-COST_BPS = 0.0007
+COST_BPS = 0.001  # canonical production fee (monitor.py:49)
 TICKERS = ["PBF", "ACN", "APPS", "PGEN", "TWST", "SDGR"]
 
 # known integrity incidents, established by prior forensic gates

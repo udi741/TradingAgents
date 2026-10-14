@@ -1,0 +1,13 @@
+{
+ "schema": "R7-B1 reconciliation",
+ "computed": "2026-10-14",
+ "formula": "exit: proceeds=shares*price*0.999; alloc=remaining_cost*sell/remaining_shares; entry cost: monitor fill=shares*price*1.001, seeded=ledger cost (feeless)",
+ "packet_sum_closed": -2141.0,
+ "canonical_realized": -2140.99,
+ "diff": -0.01,
+ "diff_cause": "per-exit round(...,2) accumulation \u2014 exact to project monetary precision",
+ "cash_reconstruction": 92899.0081,
+ "cash_actual": 92899.0113,
+ "cash_diff": -0.0032,
+ "correction": "REALIZED_CORRECTION r7b1: canonical realized -2144.24 -> -2140.99 (earlier correction was an estimate, ~.25 off)"
+}

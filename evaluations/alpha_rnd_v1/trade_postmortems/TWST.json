@@ -9,7 +9,7 @@
   ],
   "primary_failure_attribution": "MULTIPLE_FACTORS"
  },
- "built_at": "2026-10-14T08:00:53.590468+00:00",
+ "built_at": "2026-10-14T08:08:28.306164+00:00",
  "ex_ante": {
   "artifact": "TWST_mgmt_review_2026-10-06.json",
   "error_artifacts": [],
@@ -34,7 +34,7 @@
   ]
  },
  "execution": {
-  "cost_basis_alloc": 2306.66,
+  "cost_basis_alloc": 2307.36,
   "entries": [
    {
     "price": 209.5500030517578,
@@ -58,8 +58,8 @@
     "why": "mgmt review: hard exit on any close below $164"
    }
   ],
-  "gross_proceeds": 1749.99,
-  "realized_pnl": -556.67,
+  "gross_proceeds": 1749.47,
+  "realized_pnl": -557.89,
   "remaining_shares": 0
  },
  "identity": {
@@ -69,7 +69,7 @@
    "shares": 11,
    "source": "PAPER_ENTRY event"
   },
-  "initial_notional": 2306.66,
+  "initial_notional": 2307.36,
   "status": "CLOSED"
  },
  "integrity": {

@@ -8,7 +8,7 @@
   ],
   "primary_failure_attribution": "MULTIPLE_FACTORS"
  },
- "built_at": "2026-10-14T08:00:42.957805+00:00",
+ "built_at": "2026-10-14T08:08:26.915842+00:00",
  "ex_ante": {
   "artifact": "ACN_2026-10-01.json",
   "error_artifacts": [],
@@ -58,8 +58,8 @@
     "why": "close<194.0"
    }
   ],
-  "gross_proceeds": 4682.24,
-  "realized_pnl": -237.76,
+  "gross_proceeds": 4680.83,
+  "realized_pnl": -239.17,
   "remaining_shares": 0
  },
  "identity": {

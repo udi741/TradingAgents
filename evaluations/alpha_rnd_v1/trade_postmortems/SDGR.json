@@ -8,7 +8,7 @@
   ],
   "primary_failure_attribution": "MULTIPLE_FACTORS"
  },
- "built_at": "2026-10-14T08:00:53.902825+00:00",
+ "built_at": "2026-10-14T08:08:29.059646+00:00",
  "ex_ante": {
   "artifact": "SDGR_mgmt_review_2026-10-06.json",
   "error_artifacts": [
@@ -38,7 +38,7 @@
   ]
  },
  "execution": {
-  "cost_basis_alloc": 4994.49,
+  "cost_basis_alloc": 4995.99,
   "entries": [
    {
     "price": 31.0,
@@ -70,8 +70,8 @@
     "why": "mgmt review: tightened stop just below $27.29"
    }
   ],
-  "gross_proceeds": 4358.46,
-  "realized_pnl": -636.04,
+  "gross_proceeds": 4357.15,
+  "realized_pnl": -638.84,
   "remaining_shares": 0
  },
  "identity": {
@@ -81,7 +81,7 @@
    "shares": 161,
    "source": "PAPER_ENTRY event"
   },
-  "initial_notional": 4994.49,
+  "initial_notional": 4995.99,
   "status": "CLOSED"
  },
  "integrity": {

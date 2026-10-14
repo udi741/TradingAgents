@@ -7,7 +7,7 @@
   ],
   "primary_failure_attribution": "MULTIPLE_FACTORS"
  },
- "built_at": "2026-10-14T08:00:52.977236+00:00",
+ "built_at": "2026-10-14T08:08:27.295046+00:00",
  "ex_ante": {
   "artifact": "APPS_2026-10-01.json",
   "error_artifacts": [],
@@ -49,8 +49,8 @@
     "why": "gap-through open below stop 10.42"
    }
   ],
-  "gross_proceeds": 4550.3,
-  "realized_pnl": -444.3,
+  "gross_proceeds": 4548.93,
+  "realized_pnl": -445.67,
   "remaining_shares": 0
  },
  "identity": {
