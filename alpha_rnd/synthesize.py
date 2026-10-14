@@ -25,6 +25,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from alpha_rnd import infra_status as inf
+
 ROOT = Path(__file__).resolve().parents[1]
 EV = ROOT / "evaluations" / "alpha_rnd_v1"
 BRIDGE = "http://127.0.0.1:8765/v1/chat/completions"
@@ -67,12 +69,29 @@ def artifact_text(a: dict) -> str:
                       "risk_judge_decision", "investment_plan"))
 
 
+class TranslatorInfra(Exception):
+    """Transport/provider failure of the translator call: no valid model result."""
+
+    def __init__(self, reason: str, raw: str):
+        super().__init__(reason)
+        self.reason, self.raw = reason, raw
+
+
 def call_bridge(payload: dict) -> str:
     req = urllib.request.Request(
         BRIDGE, data=json.dumps(payload).encode(),
         headers={"Content-Type": "application/json"})
-    resp = urllib.request.urlopen(req, timeout=TIMEOUT_S)
-    return json.loads(resp.read())["choices"][0]["message"]["content"]
+    try:
+        resp = urllib.request.urlopen(req, timeout=TIMEOUT_S)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", "replace")[:2000]
+        raise TranslatorInfra(inf.classify(f"HTTP {e.code} {body}"), f"HTTP {e.code}: {body}") from e
+    except (urllib.error.URLError, OSError) as e:
+        raise TranslatorInfra(inf.classify(repr(e)), repr(e)) from e
+    try:
+        return json.loads(resp.read())["choices"][0]["message"]["content"]
+    except (KeyError, IndexError, ValueError) as e:
+        raise TranslatorInfra("MALFORMED_MODEL_OUTPUT", repr(e)) from e
 
 
 def synthesize(arts: dict[str, dict]) -> list[dict]:
@@ -88,8 +107,13 @@ def synthesize(arts: dict[str, dict]) -> list[dict]:
                        "messages": [{"role": "user", "content": msg}]})
     m = re.search(r"\[.*\]", out, re.S)
     if not m:
-        raise ValueError("synthesizer returned no JSON array")
-    return json.loads(m.group(0))
+        reason = inf.classify(out)  # provider error text returned as content
+        raise TranslatorInfra(
+            reason if reason != "UNKNOWN_MODEL_FAILURE" else "MALFORMED_MODEL_OUTPUT", out[:500])
+    try:
+        return json.loads(m.group(0))
+    except ValueError as e:
+        raise TranslatorInfra("MALFORMED_MODEL_OUTPUT", repr(e)) from e
 
 
 NUM = re.compile(r"\d+\.?\d*")  # unsigned: "60-62" is a range, not -62
@@ -270,13 +294,29 @@ def run(session: str) -> dict:
     cached = json.loads(out_path.read_text()) if out_path.exists() else {}
     todo = {t: a for t, a in arts.items() if t not in cached.get("intents", {})}
     intents = dict(cached.get("intents", {}))
+    status_path = EV / f"publication_status_{session}.json"
     if todo:
-        for i in synthesize(todo):
-            intents[i.get("ticker")] = i
+        try:
+            for i in synthesize(todo):
+                intents[i.get("ticker")] = i
+        except TranslatorInfra as e:
+            rec = inf.failure_record(session, None, "publication_synthesis", e.raw,
+                                     reason=e.reason)
+            rec["tickers"] = sorted(todo)
+            status_path.write_text(json.dumps(rec, indent=1, sort_keys=True))
+            print(f"session={session} translator INFRASTRUCTURE_FAILED {e.reason}")
+            return {"session": session, **rec, "validated": [], "dispositions": {},
+                    "review_required": []}
+    status_path.unlink(missing_ok=True)
     results, reviews, disps = {}, [], {}
     for t, a in arts.items():
         i = intents.get(t)
-        errs = (["no intent emitted"] if i is None else validate(i, a))
+        if i is None:  # translator returned a valid array that omits this ticker
+            disps[t] = {"disposition": inf.ANALYSIS_STATUS, "reason_code": "MALFORMED_MODEL_OUTPUT",
+                        "violations": ["translator output omitted ticker"], "executable": False,
+                        "user_action_required": False, "artifact": f"case_artifacts/{t}_{session}.json"}
+            continue
+        errs = validate(i, a)
         d = disposition(i, errs, held)
         disps[t] = {"disposition": d, "violations": errs,
                     "executable": d == "EXECUTABLE_WATCH",

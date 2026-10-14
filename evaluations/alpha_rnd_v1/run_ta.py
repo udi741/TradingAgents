@@ -131,10 +131,13 @@ def main() -> None:
                   f"dur={a['duration_s']}s", flush=True)
         except Exception as e:
             print(f"{t}: FAILED {e!r}", flush=True)
+            from alpha_rnd import infra_status as inf
+            up = inf.status_report()
+            rec = inf.failure_record(session, t, "ta", repr(e), exc_name=type(e).__name__,
+                                     upstream=up["upstream"], bridge=up["bridge_process"])
+            rec["error"] = rec["raw_error"]  # legacy key kept for existing readers
             (D / "case_artifacts").mkdir(parents=True, exist_ok=True)
-            (D / "case_artifacts" / f"{t}_{session}.error.json").write_text(
-                json.dumps({"ticker": t, "error": repr(e),
-                            "at": datetime.now(timezone.utc).isoformat()}))
+            (D / "case_artifacts" / f"{t}_{session}.error.json").write_text(json.dumps(rec, indent=1))
 
 
 if __name__ == "__main__":

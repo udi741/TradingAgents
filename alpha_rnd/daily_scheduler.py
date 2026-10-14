@@ -26,6 +26,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from alpha_rnd import infra_status as inf
+
 ROOT = Path(__file__).resolve().parents[1]
 AR = ROOT / "alpha_rnd"
 EV_DIR = ROOT / "evaluations" / "alpha_rnd_v1"
@@ -280,6 +282,65 @@ def ensure_bridge() -> bool:
     return False
 
 
+def _upstream_snapshot() -> dict:
+    """Bridge process + upstream model status, derived from executor evidence."""
+    return inf.status_report()
+
+
+def _analysis_fields(a: dict) -> dict:
+    return {k: a.get(k) for k in ("analysis_complete", "ta_requested", "ta_succeeded",
+                                  "ta_failed", "failed_tickers", "ta_failure_reasons",
+                                  "dominant_reason")}
+
+
+def _write_failure(session: str, t: str, up: dict, raw: str, reason: str | None = None) -> None:
+    rec = inf.failure_record(session, t, "ta", raw, reason=reason, upstream=up["upstream"],
+                             bridge=up["bridge_process"])
+    rec["error"] = rec["raw_error"]
+    p = EV_DIR / "case_artifacts" / f"{t}_{session}.error.json"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(rec, indent=1))
+
+
+def _analysis_summary(session: str, deep: list[str]) -> dict:
+    ca = EV_DIR / "case_artifacts"
+    ok, bad = [], {}
+    for t in deep:
+        a = _j(ca / f"{t}_{session}.json", None)
+        if a is not None and a.get("signal"):
+            ok.append(t)
+            continue
+        if a is not None:
+            bad[t] = {"reason_code": "TA_RUNTIME_FAILURE", "retryable": False,
+                      "raw_error": "artifact without signal"}
+            continue
+        e = _j(ca / f"{t}_{session}.error.json", None) or {}
+        bad[t] = {"reason_code": e.get("reason_code") or "UNKNOWN_MODEL_FAILURE",
+                  "retryable": e.get("retryable", True),
+                  "raw_error": (e.get("raw_error") or e.get("error") or "no artifact produced")[:300]}
+    summ = inf.analysis_summary(session, deep, ok, bad)
+    (EV_DIR / f"analysis_status_{session}.json").write_text(
+        json.dumps({**summ, "checked_at": _utcnow()}, indent=1, default=str))
+    return summ
+
+
+def _alert_analysis(session: str, summ: dict, kind: str | None = None, stage: str = "ta") -> None:
+    """At most one bounded operational alert per session per distinct status."""
+    kind = kind or ("ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED" if summ["ta_succeeded"] == 0
+                    else "ALPHA_ANALYSIS_DEGRADED")
+    sig = "|".join([kind, str(summ.get("dominant_reason")), str(summ.get("ta_succeeded")),
+                    ",".join(summ.get("failed_tickers") or [])])
+    if ((_j(SCHED_STATE, {}) or {}).get("analysis_alerts") or {}).get(session) == sig:
+        return
+    event(kind, session=session, stage=stage,
+          reason_code=summ.get("dominant_reason"),
+          ta_requested=summ.get("ta_requested"), ta_succeeded=summ.get("ta_succeeded"),
+          ta_failed=summ.get("ta_failed"), failed_tickers=summ.get("failed_tickers"),
+          user_action_required=("REQUIRED" if summ.get("dominant_reason") in inf.USER_ACTION_REASONS
+                                else "NONE"))
+    _state_txn(lambda st: st.setdefault("analysis_alerts", {}).__setitem__(session, sig))
+
+
 def run_cycle(session: str) -> None:
     """One full normal cycle for `session` (internal, holds cycle lock).
 
@@ -344,37 +405,61 @@ def _run_cycle(session: str) -> None:
     missing = [t for t in deep
                if not (EV_DIR / "case_artifacts" / f"{t}_{session}.json").exists()]
     _run_progress("ta", deep_total=len(deep), deep=deep, ta_missing=missing)
-    r = subprocess.run([TA_PY, str(EV_DIR / "run_ta.py"), session, *missing],
-                       cwd=ROOT, env=env,
-                       capture_output=True, text=True,
+    up = _upstream_snapshot()
+    known_block = {"RATE_LIMITED": "MODEL_RATE_LIMITED",
+                   "QUOTA_EXHAUSTED": "MODEL_QUOTA_EXHAUSTED"}.get(up["upstream"]["status"])
+    if missing and known_block:
+        # Upstream is known rate-limited/exhausted: make NO model calls; each
+        # missing ticker is recorded as an infrastructure failure (retryable).
+        for t in missing:
+            _write_failure(session, t, up,
+                           f"not attempted: upstream {up['upstream']['status']} until "
+                           f"{up['upstream']['reset_at']} (no SWE call made)", reason=known_block)
+    else:
+        subprocess.run([TA_PY, str(EV_DIR / "run_ta.py"), session, *missing],
+                       cwd=ROOT, env=env, capture_output=True, text=True,
                        timeout=STAGE_TIMEOUTS["ta"])
+    analysis = _analysis_summary(session, deep)
+    _run_progress("ta", ta_completed=analysis["ta_succeeded"], ta_failed=analysis["ta_failed"])
+    if analysis["ta_succeeded"] == 0:
+        _finish_run(session, "ERROR")
+        _alert_analysis(session, analysis)
+        return
+    if not analysis["analysis_complete"]:
+        _alert_analysis(session, analysis)
     arts = sorted((EV_DIR / "case_artifacts").glob(f"*_{session}.json"))
     signals = {}
     for p in arts:
         a = _j(p, {}) or {}
-        signals[a.get("ticker") or p.stem.split("_")[0]] = a.get("signal")
-    _run_progress("ta", ta_completed=len(signals))
-    if r.returncode != 0 and not signals:
-        _finish_run(session, "ERROR")
-        event("ALPHA_DISCOVERY_ERROR", session=session,
-              stage="ta", tail=(r.stderr or r.stdout)[-400:])
-        return
-    if not signals:
-        # silent per-ticker failures leave only .error.json artifacts —
-        # a cycle without analyses is NOT complete
-        _finish_run(session, "ERROR")
-        event("ALPHA_DISCOVERY_ERROR", session=session,
-              stage="ta_empty",
-              tail=f"0/{len(deep)} TA artifacts produced")
-        return
+        if a.get("signal"):
+            signals[a.get("ticker") or p.stem.split("_")[0]] = a.get("signal")
+
     # 4. Automatic publication synthesis (translator, not strategy):
     #    frozen TA artifacts -> PublicationIntents -> fail-closed
     #    validation -> canonical publish -> live watchlist.
     _run_progress("synthesize")
+    cached = (_j(EV_DIR / f"publication_intents_{session}.json") or {}).get("intents") or {}
+    todo = [t for t in signals if t not in cached]
+    if todo and known_block:
+        status = {"status": inf.ANALYSIS_STATUS, "stage": "publication_synthesis",
+                  "reason_code": known_block, "tickers": sorted(todo),
+                  "raw_error": "not attempted: upstream known unavailable (no translator call)"}
+        (EV_DIR / f"publication_status_{session}.json").write_text(json.dumps(status, indent=1))
+        _alert_analysis(session, {**analysis, "dominant_reason": known_block},
+                        kind="ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED", stage="publication_synthesis")
+        _finish_run(session, "ERROR")
+        return
     r = subprocess.run([PY, "-m", "alpha_rnd.synthesize", session],
                        cwd=ROOT, env=env,
                        capture_output=True, text=True,
                        timeout=STAGE_TIMEOUTS["synthesize"])
+    pstat = _j(EV_DIR / f"publication_status_{session}.json") or {}
+    if pstat.get("status") == inf.ANALYSIS_STATUS:
+        _alert_analysis(session, {**analysis, "dominant_reason": pstat.get("reason_code"),
+                                  "ta_succeeded": max(analysis["ta_succeeded"], 1)},
+                        kind="ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED", stage="publication_synthesis")
+        _finish_run(session, "ERROR")
+        return
     idoc = _j(EV_DIR / f"publication_intents_{session}.json") or {}
     if r.returncode != 0 and not idoc.get("validated") and not idoc.get("review_required"):
         _finish_run(session, "ERROR")
@@ -409,7 +494,7 @@ def _run_cycle(session: str) -> None:
         # Normal ambiguity is a fail-closed classification, not an emergency:
         # exactly one informational summary, never ACTION_REQUIRED.
         event("ALPHA_PUBLICATION_SUMMARY", session=session,
-              dispositions=counts,
+              dispositions=counts, **_analysis_fields(analysis),
               detail={t: d["disposition"] for t, d in disps.items()},
               user_action_required="none")
     elif reviews:
@@ -429,14 +514,14 @@ def _run_cycle(session: str) -> None:
                         session], cwd=ROOT, env=env, timeout=300)
     except Exception:
         pass
-    summary = {"deep": deep, "ta_signals": signals,
+    summary = {"deep": deep, "ta_signals": signals, "analysis": _analysis_fields(analysis),
                "published": pub,
                "validated": idoc.get("validated"),
                "dispositions": {t: d["disposition"] for t, d in disps.items()}}
     mark_done(session, summary)
     event("ALPHA_DISCOVERY_COMPLETE", session=session,
           deep=deep, ta_signals=signals, published=pub,
-          dispositions=summary["dispositions"],
+          dispositions=summary["dispositions"], **_analysis_fields(analysis),
           user_action_required="none")
 
 
