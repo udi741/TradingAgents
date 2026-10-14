@@ -1,5 +1,5 @@
 {
- "session": "2026-10-12",
+ "session": "2026-10-13",
  "sources": [
   "sp500",
   "sp400"
@@ -2886,6 +2886,12 @@
    ]
   },
   {
+   "ticker": "AXNX",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "AXON",
    "indices": [
     "sp500",
@@ -3161,12 +3167,6 @@
   },
   {
    "ticker": "BBIO",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "BBLGW",
    "indices": [
     "nasdaq_listed"
    ]
@@ -8013,6 +8013,12 @@
    ]
   },
   {
+   "ticker": "DLXY",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "DMAC",
    "indices": [
     "nasdaq_listed"
@@ -11175,12 +11181,6 @@
   },
   {
    "ticker": "GDRX",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
-   "ticker": "GDTC",
    "indices": [
     "nasdaq_listed"
    ]
@@ -17035,12 +17035,6 @@
    ]
   },
   {
-   "ticker": "MIMI",
-   "indices": [
-    "nasdaq_listed"
-   ]
-  },
-  {
    "ticker": "MIND",
    "indices": [
     "nasdaq_listed"
@@ -19320,12 +19314,6 @@
    ]
   },
   {
-   "ticker": "OBK",
-   "indices": [
-    "other_listed"
-   ]
-  },
-  {
    "ticker": "OBT",
    "indices": [
     "nasdaq_listed"
@@ -19707,6 +19695,12 @@
    "ticker": "ONL",
    "indices": [
     "other_listed"
+   ]
+  },
+  {
+   "ticker": "ONMD",
+   "indices": [
+    "nasdaq_listed"
    ]
   },
   {
@@ -22696,6 +22690,12 @@
    ]
   },
   {
+   "ticker": "RNTZ",
+   "indices": [
+    "nasdaq_listed"
+   ]
+  },
+  {
    "ticker": "RNW",
    "indices": [
     "nasdaq_listed"
@@ -24005,12 +24005,6 @@
    "ticker": "SKIL",
    "indices": [
     "other_listed"
-   ]
-  },
-  {
-   "ticker": "SKK",
-   "indices": [
-    "nasdaq_listed"
    ]
   },
   {

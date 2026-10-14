@@ -1,0 +1,1319 @@
+{
+ "created_at": "2026-10-14T05:27:05.343369+00:00",
+ "deep_quota": 10,
+ "deep_selected_count": 10,
+ "eligible_count": 1858,
+ "executable_watch_count": 0,
+ "paper_entry_count": null,
+ "provenance": {
+  "backfilled": true,
+  "candidate_pool_sha256": "6d3d2cda29fc566d63f81ecabe96bfa607a742e7a854088516fff0b0a7f00a08",
+  "incomplete_fields": [
+   "exclusions",
+   "eligible_features"
+  ],
+  "intents_doc_sha256": "e4337a8682bcf2cf"
+ },
+ "publication_disposition_counts": {
+  "AMBIGUOUS_REJECTED": 4,
+  "PUBLISHED_NON_EXECUTABLE": 3,
+  "REANALYZE_ON_TRIGGER": 3
+ },
+ "raw_universe_count": 4763,
+ "schema_version": 1,
+ "session": "2026-10-12",
+ "source_universe": "wikipedia_indices+nasdaqtrader_common_stock",
+ "summary": {
+  "deep_selected": [
+   "QMCO",
+   "HAE",
+   "MRNA",
+   "IOVA",
+   "P",
+   "TEAM",
+   "PENG",
+   "FRO",
+   "CDNA",
+   "PGEN"
+  ],
+  "eligible": 1858,
+  "excluded": {},
+  "rank_cohorts": {
+   "RANK_11_25": 15,
+   "RANK_26_50": 3,
+   "TOP_1_10": 10
+  }
+ },
+ "ta_completed_count": 10,
+ "tickers": {
+  "CDNA": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 9 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": {
+    "blocked_reason": null,
+    "trigger_type": "close_in_zone_low_vol",
+    "triggerable": true,
+    "triggered": null
+   },
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/CDNA_2026-10-12.json",
+    "disposition": "PUBLISHED_NON_EXECUTABLE",
+    "executable": false,
+    "reason": []
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 63.12,
+    "rank": 9,
+    "ret_5": -0.0963,
+    "rs_60": 0.5393,
+    "score": 31.0786,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 1.05
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/CDNA_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "CDNA",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "ECO": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 14 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 98.63,
+    "rank": 14,
+    "ret_5": 0.1132,
+    "rs_60": 0.9479,
+    "score": 21.8958,
+    "signal_flags": [
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 1.01
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "ECO",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "ETON": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 26 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_26_50",
+    "price": 55.25,
+    "rank": 26,
+    "ret_5": -0.0067,
+    "rs_60": 0.2561,
+    "score": 20.5122,
+    "signal_flags": [
+     "FUNDAMENTAL_ACCELERATION",
+     "QUALITY_PULLBACK"
+    ],
+    "vol_ratio_5_20": 0.83
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "ETON",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "FLY": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 19 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 19.37,
+    "rank": 19,
+    "ret_5": -0.1425,
+    "rs_60": -0.0442,
+    "score": 21,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 0.82
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "FLY",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "FRO": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 8 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": {
+    "blocked_reason": null,
+    "trigger_type": null,
+    "triggerable": false,
+    "triggered": null
+   },
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/FRO_2026-10-12.json",
+    "disposition": "REANALYZE_ON_TRIGGER",
+    "executable": false,
+    "reason": [
+     "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+    ]
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 59.19,
+    "rank": 8,
+    "ret_5": 0.1012,
+    "rs_60": 0.6819,
+    "score": 31.3638,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 1.08
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/FRO_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "FRO",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "HAE": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 2 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/HAE_2026-10-12.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: first-tranche size inconsistent: ~$20-22K (~20% of cash) in summary vs ~$33K (~1/3 of standard allocation) in position sizing"
+    ]
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 122.06,
+    "rank": 2,
+    "ret_5": 0.166,
+    "rs_60": 0.5183,
+    "score": 42.0366,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 1.8
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/HAE_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Buy",
+    "valid": true
+   },
+   "ticker": "HAE",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "HESM": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 20 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 32.37,
+    "rank": 20,
+    "ret_5": -0.1573,
+    "rs_60": -0.2309,
+    "score": 21,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 1.97
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "HESM",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "HPE": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 11 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 70.33,
+    "rank": 11,
+    "ret_5": 0.0288,
+    "rs_60": 0.4894,
+    "score": 30.9788,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 1.01
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "HPE",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "IESC": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 21 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 287.79,
+    "rank": 21,
+    "ret_5": -0.1526,
+    "rs_60": -0.1105,
+    "score": 21,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 1.16
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "IESC",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "IOVA": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 4 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": {
+    "blocked_reason": "IOVA_2026-10-01.json#1",
+    "trigger_type": "multi_close_in_zone|weekly_close_breakout",
+    "triggerable": true,
+    "triggered": null
+   },
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/IOVA_2026-10-12.json",
+    "disposition": "PUBLISHED_NON_EXECUTABLE",
+    "executable": false,
+    "reason": []
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 14.56,
+    "rank": 4,
+    "ret_5": 0.029,
+    "rs_60": 1.8626,
+    "score": 33.7252,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 0.85
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/IOVA_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "IOVA",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "KOD": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 13 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": {
+    "blocked_reason": null,
+    "trigger_type": "event_only",
+    "triggerable": true,
+    "triggered": null
+   },
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 99.26,
+    "rank": 13,
+    "ret_5": 0.0581,
+    "rs_60": 1.2784,
+    "score": 22.5568,
+    "signal_flags": [
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 0.44
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "KOD",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "LW": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 18 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 50.18,
+    "rank": 18,
+    "ret_5": 0.1259,
+    "rs_60": 0.0309,
+    "score": 21.0618,
+    "signal_flags": [
+     "CATALYST",
+     "MOMENTUM"
+    ],
+    "vol_ratio_5_20": 1.68
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "LW",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "MGNI": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 12 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 25.08,
+    "rank": 12,
+    "ret_5": 0.0048,
+    "rs_60": 0.2706,
+    "score": 30.5412,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "QUALITY_PULLBACK"
+    ],
+    "vol_ratio_5_20": 0.78
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "MGNI",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "MRNA": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 3 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/MRNA_2026-10-12.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: stated Stop Loss 225.5 applies to the rejected short side / holder management, not the long re-entry plan (whose stop is below $183); stated Price Target 186 is a downside target while the starter plan targets $225",
+     "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+    ]
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 213.74,
+    "rank": 3,
+    "ret_5": 0.0518,
+    "rs_60": 2.408,
+    "score": 34,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 1.37
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/MRNA_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "MRNA",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "OPCH": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 16 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 31.1,
+    "rank": 16,
+    "ret_5": 0.3308,
+    "rs_60": 0.3811,
+    "score": 21.7622,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 3.17
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "OPCH",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "P": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 5 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/P_2026-10-12.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: initial tranche stated as ~2.5% (~$2,500) in final summary vs ~5% (~$5,000) in position sizing field; only the first tranche is a plain limit \u2014 later tranches need demonstrated hold / cash-flow confirmation",
+     "auto entry contradicts TA signal Sell"
+    ]
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 155.31,
+    "rank": 5,
+    "ret_5": 0.0794,
+    "rs_60": 1.1891,
+    "score": 32.3782,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 0.7
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/P_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "P",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "PENG": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 7 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/PENG_2026-10-12.json",
+    "disposition": "AMBIGUOUS_REJECTED",
+    "executable": false,
+    "reason": [
+     "ambiguous: stop for staged entries is ATR-relative (~1.5x ATR below fills), not a fixed price; $67/$59 levels govern existing-share protection, not the new tranches",
+     "auto entry contradicts TA signal Sell"
+    ]
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 79.15,
+    "rank": 7,
+    "ret_5": 0.3038,
+    "rs_60": 0.2609,
+    "score": 31.5218,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM"
+    ],
+    "vol_ratio_5_20": 2.93
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/PENG_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "PENG",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "PGEN": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 10 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": {
+    "blocked_reason": null,
+    "trigger_type": null,
+    "triggerable": false,
+    "triggered": null
+   },
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/PGEN_2026-10-12.json",
+    "disposition": "REANALYZE_ON_TRIGGER",
+    "executable": false,
+    "reason": []
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 7.66,
+    "rank": 10,
+    "ret_5": -0.0103,
+    "rs_60": 0.498,
+    "score": 30.996,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 0.63
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/PGEN_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "PGEN",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "QMCO": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 1 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": {
+    "blocked_reason": null,
+    "trigger_type": null,
+    "triggerable": false,
+    "triggered": null
+   },
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/QMCO_2026-10-12.json",
+    "disposition": "REANALYZE_ON_TRIGGER",
+    "executable": false,
+    "reason": [
+     "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+    ]
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 27.51,
+    "rank": 1,
+    "ret_5": -0.1911,
+    "rs_60": 1.5385,
+    "score": 44.077,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 0.83
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/QMCO_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Sell",
+    "valid": true
+   },
+   "ticker": "QMCO",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "QUBT": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 22 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 6.93,
+    "rank": 22,
+    "ret_5": -0.1272,
+    "rs_60": -0.161,
+    "score": 21,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 0.86
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "QUBT",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "REPL": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 28 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_26_50",
+    "price": 13.07,
+    "rank": 28,
+    "ret_5": -0.0061,
+    "rs_60": 0.2282,
+    "score": 20.4564,
+    "signal_flags": [
+     "FUNDAMENTAL_ACCELERATION",
+     "QUALITY_PULLBACK"
+    ],
+    "vol_ratio_5_20": 0.9
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "REPL",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "SEZL": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 23 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 130.48,
+    "rank": 23,
+    "ret_5": 0.1771,
+    "rs_60": -0.3024,
+    "score": 21,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 0.95
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "SEZL",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "STZ": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 24 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 126.4,
+    "rank": 24,
+    "ret_5": 0.1155,
+    "rs_60": -0.0906,
+    "score": 21,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 1.67
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "STZ",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "TEAM": {
+   "deep": {
+    "quota": 10,
+    "selected": true,
+    "selection_reason": "deep_score rank 6 <= quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": {
+    "artifact": "case_artifacts/TEAM_2026-10-12.json",
+    "disposition": "PUBLISHED_NON_EXECUTABLE",
+    "executable": false,
+    "reason": []
+   },
+   "screen": {
+    "cohort": "TOP_1_10",
+    "price": 207.75,
+    "rank": 6,
+    "ret_5": 0.0564,
+    "rs_60": 1.1775,
+    "score": 32.355,
+    "signal_flags": [
+     "MULTI_SIGNAL",
+     "FUNDAMENTAL_ACCELERATION",
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 0.79
+   },
+   "session": "2026-10-12",
+   "ta": {
+    "artifact": "case_artifacts/TEAM_2026-10-12.json",
+    "attempted": true,
+    "final_signal": "Overweight",
+    "valid": true
+   },
+   "ticker": "TEAM",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "UMAC": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 17 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 19.64,
+    "rank": 17,
+    "ret_5": -0.1003,
+    "rs_60": 0.1106,
+    "score": 21.2212,
+    "signal_flags": [
+     "CATALYST",
+     "FUNDAMENTAL_ACCELERATION"
+    ],
+    "vol_ratio_5_20": 0.93
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "UMAC",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "WDAY": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 27 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_26_50",
+    "price": 188.25,
+    "rank": 27,
+    "ret_5": -0.0038,
+    "rs_60": 0.2508,
+    "score": 20.5016,
+    "signal_flags": [
+     "FUNDAMENTAL_ACCELERATION",
+     "QUALITY_PULLBACK"
+    ],
+    "vol_ratio_5_20": 0.83
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "WDAY",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "XNCR": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 25 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": {
+    "blocked_reason": null,
+    "trigger_type": "close_breakout_vol",
+    "triggerable": true,
+    "triggered": null
+   },
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 25.04,
+    "rank": 25,
+    "ret_5": -0.023,
+    "rs_60": 0.3839,
+    "score": 20.7678,
+    "signal_flags": [
+     "FUNDAMENTAL_ACCELERATION",
+     "QUALITY_PULLBACK"
+    ],
+    "vol_ratio_5_20": 0.92
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "XNCR",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  },
+  "XP": {
+   "deep": {
+    "quota": 10,
+    "selected": false,
+    "selection_reason": "deep_score rank 15 > quota 10"
+   },
+   "eligibility": {
+    "eligible": true,
+    "exclusion_details": null,
+    "exclusion_reason": null
+   },
+   "monitor": null,
+   "portfolio": {
+    "existing_position": false,
+    "paper_entry_created": null,
+    "paper_entry_filled": null
+   },
+   "publication": null,
+   "screen": {
+    "cohort": "RANK_11_25",
+    "price": 32.6,
+    "rank": 15,
+    "ret_5": 0.1581,
+    "rs_60": 0.9062,
+    "score": 21.8124,
+    "signal_flags": [
+     "MOMENTUM",
+     "RELATIVE_STRENGTH"
+    ],
+    "vol_ratio_5_20": 1.49
+   },
+   "session": "2026-10-12",
+   "ta": null,
+   "ticker": "XP",
+   "universe": {
+    "present": true,
+    "source": "discovery_universe"
+   }
+  }
+ },
+ "triggered_count": null
+}

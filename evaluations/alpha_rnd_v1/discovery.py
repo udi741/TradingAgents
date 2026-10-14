@@ -39,6 +39,7 @@ SEC_UA = {"User-Agent": "ResearchAgent admin@openai.com", "Accept-Encoding": "id
 MIN_PRICE = 5.0
 MIN_MEDIAN_DV20 = 20_000_000
 MIN_HISTORY = 252
+DEEP_QUOTA = 10  # must match daily_scheduler.DEEP_QUOTA
 
 WIKI_SOURCES = [
     ("sp500", "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", "Symbol"),
@@ -424,8 +425,25 @@ def main() -> None:
         "exclusion_counts": {k: len(v) for k, v in reasons.items()},
         "lane_counts": {"A_momentum": len(laneA), "B_pullback": len(laneB), "C_breakout": len(laneC), "RS_leaders": len(rs_leaders), "catalyst": len(catalyst), "fund_acc": sum(1 for v in fund.values() if v["acceleration_flags"])},
         "candidates": pool,
+        # R1 instrumentation (observability only; does not affect selection):
+        # per-ticker eligibility evidence + compact feature snapshot so the
+        # funnel artifact can explain every exclusion.
+        "exclusions": {k: sorted(v) for k, v in reasons.items()},
+        "eligible_features": {t: {"close": round(f["close"], 2),
+                                  "rs_60": round(f["rs_60"], 4)}
+                              for t, f in feats.items()},
+        "deep_quota": DEEP_QUOTA,
         "artifact_sha256": None,
     }
+    # annotate deep-selection rank/score (order unchanged)
+    for c in pool:
+        labs = [x for x in (c.get("labels") or []) if x != "MULTI_SIGNAL"]
+        c["deep_score"] = round(10 * len(labs)
+                                + 2 * min(max(c.get("rs_60") or 0, 0), 2)
+                                + (1 if "CATALYST" in labs else 0), 4)
+    for rank, c in enumerate(sorted(pool, key=lambda x: (-x["deep_score"], x["ticker"])), 1):
+        c["rank"] = rank
+    pool.sort(key=lambda x: x["rank"])
     result["artifact_sha256"] = sha(json.dumps(result["candidates"], sort_keys=True))
     (OUT / f"candidate_pool_frozen_{session}.json").write_text(json.dumps(result, indent=1, default=str))
     print(json.dumps(result["lane_counts"]))

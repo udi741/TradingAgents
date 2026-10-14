@@ -91,5 +91,40 @@
   "note": "TA stage failed (py3.10 ImportError, 0 model calls, 0 artifacts); COMPLETE events false; sessions NOT re-run (no backfill); discovery/pool artifacts remain valid",
   "2026-10-09": "COMPLETE",
   "2026-10-12": "COMPLETE"
+ },
+ "current_run": {
+  "session": "2026-10-13",
+  "run_id": "2026-10-14T04:07:03.576080+00:00",
+  "pid": 667084,
+  "started_at": "2026-10-14T04:07:03.576080+00:00",
+  "stage": "ta",
+  "last_progress_at": "2026-10-14T05:07:03.225991+00:00",
+  "deep_total": 10,
+  "ta_completed": 3,
+  "ta_failed": 0,
+  "deep": [
+   "IOVA",
+   "QMCO",
+   "HAE",
+   "MRNA",
+   "P",
+   "PENG",
+   "CDNA",
+   "PD",
+   "AMPL",
+   "HPE"
+  ],
+  "ta_missing": [
+   "IOVA",
+   "QMCO",
+   "HAE",
+   "MRNA",
+   "P",
+   "PENG",
+   "CDNA",
+   "PD",
+   "AMPL",
+   "HPE"
+  ]
  }
 }

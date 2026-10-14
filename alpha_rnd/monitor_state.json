@@ -1,12 +1,13 @@
 {
- "last_check_utc": "2026-10-13T13:30:04.638969+00:00",
+ "last_check_utc": "2026-10-14T05:27:03.306800+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
   "2026-10-06",
   "2026-10-07",
   "2026-10-09",
-  "2026-10-12"
+  "2026-10-12",
+  "2026-10-13"
  ],
  "confirm": {
   "IOVA": {
@@ -29,7 +30,8 @@
   "AXGN": {},
   "HHH": {},
   "QMCO": {},
-  "TEAM": {}
+  "TEAM": {},
+  "FRO": {}
  },
  "pending_open_fills": [],
  "positions": {
@@ -41,34 +43,14 @@
    "seeded": true,
    "mark_source": "regular_session_close",
    "mark_status": "MARKED",
-   "mark": 85.02,
-   "mark_session": "2026-10-12",
-   "unrealized": 311.24,
-   "unrealized_pct": 6.27
-  },
-  "SDGR": {
-   "shares": 61,
-   "fill": 31.0,
-   "frac": 1.0,
-   "invalidation": "NOT_STATED",
-   "horizon": "trigger-event driven",
-   "stop_rule": {
-    "type": "close_below",
-    "level": 27.29,
-    "label": "mgmt review: tightened stop just below $27.29"
-   },
-   "entry_session": "2026-10-06",
-   "mark_status": "MARKED",
-   "mark_source": "regular_session_close",
-   "cost": -1174.53,
-   "mark": 25.91,
-   "mark_session": "2026-10-12",
-   "unrealized": -310.49,
-   "unrealized_pct": -16.42
+   "mark": 91.17,
+   "mark_session": "2026-10-13",
+   "unrealized": 692.54,
+   "unrealized_pct": 13.96
   }
  },
- "cash": 91320.0818584137,
- "nav_last": 98171.83,
+ "cash": 92899.01133911515,
+ "nav_last": 98551.55,
  "watch_status": {
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED",
@@ -76,27 +58,20 @@
   "IOVA": "RISK_PLAN_REQUIRED",
   "TXG": "RISK_PLAN_REQUIRED"
  },
- "pending_open_exits": [
-  {
-   "ticker": "SDGR",
-   "why": "mgmt review: tightened stop just below $27.29",
-   "confirm_session": "2026-10-12",
-   "order_id": "close_below:SDGR:2026-10-12"
-  }
- ],
+ "pending_open_exits": [],
  "book": {
-  "mark_session": "2026-10-12",
-  "market_value": 6851.75,
-  "unrealized": 0.75,
-  "exposure": 6851.75,
-  "nav": 98171.83,
-  "provisional_nav_incl_unmarked_at_cost": 98171.83,
+  "mark_session": "2026-10-13",
+  "market_value": 5652.54,
+  "unrealized": 692.54,
+  "exposure": 5652.54,
+  "nav": 98551.55,
+  "provisional_nav_incl_unmarked_at_cost": 98551.55,
   "unmarked_positions": [],
-  "cash": 91320.0818584137,
-  "realized": 164.78,
-  "marked_at": "2026-10-13T04:44:02.897084+00:00"
+  "cash": 92899.01133911515,
+  "realized": 2918.24,
+  "marked_at": "2026-10-14T01:57:03.808096+00:00"
  },
- "realized": 164.78,
+ "realized": 2918.24,
  "policy": {
   "RISK_GUARDRAIL_V1": {
    "active_from": "2026-10-07",
@@ -113,16 +88,15 @@
   "intraday_stop:APPS:2026-10-07",
   "exit:TWST:2026-10-06:MGMT_REVIEW_2026-10-06: Underwei",
   "exit:SDGR:2026-10-06:MGMT_REVIEW_2026-10-06: Underwei",
-  "close_below:TWST:2026-10-09"
+  "close_below:TWST:2026-10-09",
+  "close_below:SDGR:2026-10-12"
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-13T13:30:04.024415+00:00",
+  "at": "2026-10-14T05:27:03.300805+00:00",
   "daily_ok": 18,
-  "daily_req": 20,
-  "status": "degraded_intraday",
-  "intraday_ok": 0,
-  "intraday_req": 13
+  "daily_req": 19,
+  "status": "ok"
  },
  "risk_blocked": {
   "IOVA": "IOVA_2026-10-01.json#1",
@@ -162,6 +136,7 @@
  },
  "emitted_ids": [
   "missed:exit:SDGR:2026-10-09:2026-10-12",
-  "exit_confirmed:close_below:SDGR:2026-10-12"
+  "exit_confirmed:close_below:SDGR:2026-10-12",
+  "paper_exit:SDGR:mgmt review: tightened stop just below $27.29"
  ]
 }

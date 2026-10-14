@@ -417,6 +417,12 @@ def _run_cycle(session: str) -> None:
         event("ALPHA_PUBLICATION_SUMMARY", session=session,
               dispositions={"UNCLASSIFIED_REVIEW": len(reviews)},
               user_action_required="none")
+    # R1: immutable opportunity-funnel artifact (observability; never fatal)
+    try:
+        subprocess.run([PY, "-m", "alpha_rnd.funnel", "build", session],
+                       cwd=ROOT, env=env, timeout=120)
+    except Exception:
+        pass
     summary = {"deep": deep, "ta_signals": signals,
                "published": pub,
                "validated": idoc.get("validated"),
