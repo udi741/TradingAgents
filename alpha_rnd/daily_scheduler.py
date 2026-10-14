@@ -23,7 +23,7 @@ import subprocess
 import sys
 import time
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from alpha_rnd import infra_status as inf
@@ -50,6 +50,14 @@ PY = sys.executable
 STAGE_TIMEOUTS = {"book": 600, "discovery": 7200, "ta": 14400,
                   "synthesize": 1320, "publish": 300}
 STALE_SLACK_S = 900
+# Operational lifecycle controls (not trading parameters).
+# RETRY_LIFETIME: a retryable infrastructure failure keeps a ticker RETRY_PENDING for at
+# most this long after its first observed failure (~5 trading sessions); then it becomes
+# FAILED_TERMINAL / RETRY_WINDOW_EXPIRED.
+RETRY_LIFETIME = timedelta(days=7)
+# RETRY_BUDGET: a background retry run attempts at most this many pending tickers
+# (least recently attempted first), so it cannot hold the cycle lock for hours.
+RETRY_BUDGET = 2
 # TA needs Python >=3.11 (official code uses datetime.UTC/StrEnum); the repo
 # venv is the canonical interpreter, falling back to the system python.
 _TA_PY = ROOT / ".venv312" / "bin" / "python"
@@ -288,9 +296,10 @@ def _upstream_snapshot() -> dict:
 
 
 def _analysis_fields(a: dict) -> dict:
-    return {k: a.get(k) for k in ("analysis_complete", "ta_requested", "ta_succeeded",
-                                  "ta_failed", "failed_tickers", "ta_failure_reasons",
-                                  "dominant_reason")}
+    return {k: a.get(k) for k in ("analysis_complete", "session_terminal", "ta_requested",
+                                  "ta_succeeded", "ta_failed", "failed_tickers",
+                                  "ta_failure_reasons", "dominant_reason", "retry_pending",
+                                  "failed_terminal")}
 
 
 def _write_failure(session: str, t: str, up: dict, raw: str, reason: str | None = None) -> None:
@@ -302,8 +311,13 @@ def _write_failure(session: str, t: str, up: dict, raw: str, reason: str | None 
     p.write_text(json.dumps(rec, indent=1))
 
 
-def _analysis_summary(session: str, deep: list[str]) -> dict:
+def _analysis_summary(session: str, deep: list[str], attempted=()) -> dict:
+    """Per-ticker terminal state from disk evidence, plus a per-session retry ledger
+    (first_failure_at / attempts / last_attempt_at). Expires retry lifetimes."""
     ca = EV_DIR / "case_artifacts"
+    now = datetime.now(timezone.utc)
+    ledger_p = EV_DIR / f"analysis_ledger_{session}.json"
+    ledger = _j(ledger_p, {}) or {}
     ok, bad = [], {}
     for t in deep:
         a = _j(ca / f"{t}_{session}.json", None)
@@ -311,17 +325,36 @@ def _analysis_summary(session: str, deep: list[str]) -> dict:
             ok.append(t)
             continue
         if a is not None:
-            bad[t] = {"reason_code": "TA_RUNTIME_FAILURE", "retryable": False,
-                      "raw_error": "artifact without signal"}
-            continue
-        e = _j(ca / f"{t}_{session}.error.json", None) or {}
-        bad[t] = {"reason_code": e.get("reason_code") or "UNKNOWN_MODEL_FAILURE",
-                  "retryable": e.get("retryable", True),
-                  "raw_error": (e.get("raw_error") or e.get("error") or "no artifact produced")[:300]}
+            reason, retryable, raw = "TA_RUNTIME_FAILURE", False, "artifact without signal"
+        else:
+            e = _j(ca / f"{t}_{session}.error.json", None) or {}
+            reason = e.get("reason_code") or "UNKNOWN_MODEL_FAILURE"
+            retryable = e.get("retryable", True)
+            raw = (e.get("raw_error") or e.get("error") or "no artifact produced")[:300]
+        rec = ledger.setdefault(t, {})
+        rec.setdefault("first_failure_at", now.isoformat())
+        if t in attempted:
+            rec["attempts"] = rec.get("attempts", 0) + 1
+            rec["last_attempt_at"] = now.isoformat()
+        rec["reason_code"] = reason
+        info = {"reason_code": reason, "retryable": bool(retryable), "raw_error": raw,
+                "attempts": rec.get("attempts", 0), "first_failure_at": rec["first_failure_at"],
+                "last_attempt_at": rec.get("last_attempt_at")}
+        if retryable and now - datetime.fromisoformat(rec["first_failure_at"]) > RETRY_LIFETIME:
+            info.update({"reason_code": "RETRY_WINDOW_EXPIRED", "retryable": False,
+                         "original_reason_code": reason})
+        bad[t] = info
+    ledger_p.write_text(json.dumps(ledger, indent=1, sort_keys=True))
     summ = inf.analysis_summary(session, deep, ok, bad)
     (EV_DIR / f"analysis_status_{session}.json").write_text(
         json.dumps({**summ, "checked_at": _utcnow()}, indent=1, default=str))
     return summ
+
+
+def _fair_retry_order(session: str, pending: list[str]) -> list[str]:
+    """Least recently attempted first (never-attempted first), then ticker order."""
+    led = _j(EV_DIR / f"analysis_ledger_{session}.json", {}) or {}
+    return sorted(pending, key=lambda t: ((led.get(t) or {}).get("last_attempt_at") or "", t))
 
 
 def _alert_analysis(session: str, summ: dict, kind: str | None = None, stage: str = "ta") -> None:
@@ -371,14 +404,17 @@ def _publication_summary_new(session: str, counts: dict, analysis: dict) -> bool
 
 
 def _pending_sessions() -> list[str]:
-    done = set((_j(SCHED_STATE, {}) or {}).get("completed_sessions") or [])
+    """Sessions with RETRY_PENDING tickers, least recently retried first (fairness)."""
+    st = _j(SCHED_STATE, {}) or {}
+    done = set(st.get("completed_sessions") or [])
+    launched = st.get("retry_launched") or {}
     out = []
-    for p in sorted(EV_DIR.glob("analysis_status_*.json")):
+    for p in EV_DIR.glob("analysis_status_*.json"):
         s_ = p.stem[len("analysis_status_"):]
         a = _j(p, {}) or {}
         if s_ not in done and a.get("retry_pending"):
             out.append(s_)
-    return out
+    return sorted(out, key=lambda x: (launched.get(x, ""), x))
 
 
 def run_cycle(session: str) -> None:
@@ -415,6 +451,7 @@ def run_cycle(session: str) -> None:
 def _run_cycle(session: str) -> None:
     """Pipeline body; current_run progress is durable at each stage boundary."""
     env = {**os.environ, "PYTHONPATH": str(ROOT)}
+    resume = _resuming(session)  # decided before this cycle writes anything
 
     # 1. Existing book first — per-minute monitor bookkeeping pass.
     _run_progress("book")
@@ -445,7 +482,12 @@ def _run_cycle(session: str) -> None:
     # Per-ticker terminal state: SUCCESS is never re-run; FAILED_TERMINAL is
     # never retried automatically; only RETRY_PENDING tickers are attempted.
     pre = _analysis_summary(session, deep)
-    missing = pre["retry_pending"]
+    pending = pre["retry_pending"]
+    if resume and session != last_completed_session():
+        missing = _fair_retry_order(session, pending)[:RETRY_BUDGET]  # background retry: bounded
+    else:
+        missing = pending  # the current session gets its normal full cycle
+    attempted = ()
     _run_progress("ta", deep_total=len(deep), deep=deep, ta_missing=missing)
     up = _upstream_snapshot()
     known_block = {"RATE_LIMITED": "MODEL_RATE_LIMITED",
@@ -460,7 +502,8 @@ def _run_cycle(session: str) -> None:
         subprocess.run([TA_PY, str(EV_DIR / "run_ta.py"), session, *missing],
                        cwd=ROOT, env=env, capture_output=True, text=True,
                        timeout=STAGE_TIMEOUTS["ta"])
-    analysis = _analysis_summary(session, deep)
+        attempted = tuple(missing)
+    analysis = _analysis_summary(session, deep, attempted)
     _run_progress("ta", ta_completed=analysis["ta_succeeded"], ta_failed=analysis["ta_failed"])
     if analysis["ta_succeeded"] == 0 and analysis["retry_pending"]:
         _finish_run(session, "ERROR")
@@ -612,6 +655,8 @@ def check() -> None:
         if cycle_done(session):
             pend = _pending_sessions()
             if pend and not _cycle_lock_busy():
+                _state_txn(lambda x: x.setdefault("retry_launched", {}).__setitem__(
+                    pend[0], _utcnow()))
                 _log(f"retrying pending analysis session={pend[0]}")
                 subprocess.Popen(
                     [PY, "-m", "alpha_rnd.daily_scheduler", "--run-session", pend[0]],

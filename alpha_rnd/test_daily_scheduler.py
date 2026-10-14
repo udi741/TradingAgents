@@ -13,6 +13,9 @@ import alpha_rnd.daily_scheduler as ds
 
 class SchedTest(unittest.TestCase):
     def setUp(self):
+        self._lcs = mock.patch.object(ds, "last_completed_session", return_value="2026-10-05")
+        self._lcs.start()
+        self.addCleanup(self._lcs.stop)
         self.tmp = Path(tempfile.mkdtemp())
         for attr in ("SCHED_LOCK", "CYCLE_LOCK", "SCHED_STATE", "EVENTS", "LOG",
                      "SCHED_STATE_LOCK"):

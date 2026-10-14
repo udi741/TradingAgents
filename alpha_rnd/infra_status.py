@@ -195,8 +195,9 @@ def analysis_summary(session: str, requested: list[str], succeeded: list[str],
             reasons[r] = reasons.get(r, 0) + 1
     pending = sorted(t for t, v in states.items() if v == "RETRY_PENDING")
     terminal = sorted(t for t, v in states.items() if v == "FAILED_TERMINAL")
-    complete = bool(requested) and not pending
     all_ok = bool(requested) and len(succeeded) == len(requested)
+    complete = all_ok  # fully analysed: every ticker SUCCESS
+    session_terminal = bool(requested) and not pending  # nothing left to retry
     if all_ok:
         status = "COMPLETE"
     elif pending:
@@ -205,7 +206,7 @@ def analysis_summary(session: str, requested: list[str], succeeded: list[str],
         status = "COMPLETE_WITH_TERMINAL_FAILURES"
     dominant = max(reasons, key=lambda k: (reasons[k], k)) if reasons else None
     return {"session": session, "status": status, "analysis_complete": complete,
-            "all_succeeded": all_ok,
+            "session_terminal": session_terminal, "all_succeeded": all_ok,
             "ta_requested": len(requested), "ta_succeeded": len(succeeded),
             "ta_failed": len(pending) + len(terminal),
             "failed_tickers": sorted(pending + terminal),

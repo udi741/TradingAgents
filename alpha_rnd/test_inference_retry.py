@@ -77,7 +77,8 @@ class InferenceRetry(unittest.TestCase):
             {"candidates": [{"ticker": t, "labels": ["MOMENTUM"], "rs_60": 1} for t in DEEP]}))
         self.ca = ds.EV_DIR / "case_artifacts"
         self.patches = [mock.patch.object(ds, "ensure_bridge", return_value=True),
-                        mock.patch.object(ds, "deep_allocation", return_value=DEEP)]
+                        mock.patch.object(ds, "deep_allocation", return_value=DEEP),
+                        mock.patch.object(ds, "last_completed_session", return_value=SESS)]
         for p in self.patches:
             p.start()
         self.up = _up("UNKNOWN")
@@ -163,7 +164,8 @@ class InferenceRetry(unittest.TestCase):
         self.assertEqual(self._analysis()["ticker_states"]["J"], "FAILED_TERMINAL")
         prov = self._cycle(out)
         self.assertNotIn("J", prov.calls)
-        self.assertTrue(self._analysis()["analysis_complete"])
+        self.assertTrue(self._analysis()["session_terminal"])
+        self.assertFalse(self._analysis()["analysis_complete"])  # terminal failure: not fully analysed
         self.assertTrue(ds.cycle_done(SESS))
 
     def test_7_successful_tickers_never_resent_or_rewritten(self):

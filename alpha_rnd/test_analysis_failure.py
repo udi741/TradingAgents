@@ -32,7 +32,8 @@ class AnalysisFailureCycle(unittest.TestCase):
         (ds.EV_DIR / f"candidate_pool_frozen_{SESS}.json").write_text(json.dumps(
             {"candidates": [{"ticker": t, "labels": ["MOMENTUM"], "rs_60": 1} for t in DEEP + ["K"]]}))
         self.patches = [mock.patch.object(ds, "ensure_bridge", return_value=True),
-                        mock.patch.object(ds, "deep_allocation", return_value=DEEP)]
+                        mock.patch.object(ds, "deep_allocation", return_value=DEEP),
+                        mock.patch.object(ds, "last_completed_session", return_value=SESS)]
         for p in self.patches:
             p.start()
 
