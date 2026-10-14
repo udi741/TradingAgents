@@ -328,7 +328,9 @@ def _alert_analysis(session: str, summ: dict, kind: str | None = None, stage: st
     """At most one bounded operational alert per session per distinct status."""
     kind = kind or ("ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED" if summ["ta_succeeded"] == 0
                     else "ALPHA_ANALYSIS_DEGRADED")
-    sig = "|".join([kind, str(summ.get("dominant_reason")), str(summ.get("ta_succeeded")),
+    # One signature per session, independent of which stage reports it: the same
+    # outage seen from the TA stage and the translator stage is one notification.
+    sig = "|".join([str(summ.get("dominant_reason")), str(summ.get("ta_succeeded")),
                     ",".join(summ.get("failed_tickers") or [])])
     if ((_j(SCHED_STATE, {}) or {}).get("analysis_alerts") or {}).get(session) == sig:
         return
@@ -339,6 +341,44 @@ def _alert_analysis(session: str, summ: dict, kind: str | None = None, stage: st
           user_action_required=("REQUIRED" if summ.get("dominant_reason") in inf.USER_ACTION_REASONS
                                 else "NONE"))
     _state_txn(lambda st: st.setdefault("analysis_alerts", {}).__setitem__(session, sig))
+
+
+def _cycle_lock_busy() -> bool:
+    if not CYCLE_LOCK.exists():
+        return False
+    try:
+        with CYCLE_LOCK.open("r") as cf:
+            fcntl.flock(cf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            fcntl.flock(cf, fcntl.LOCK_UN)
+        return False
+    except BlockingIOError:
+        return True
+
+
+def _resuming(session: str) -> bool:
+    """A session with a frozen pool and an analysis record is a resume: never re-run discovery."""
+    return ((EV_DIR / f"analysis_status_{session}.json").exists()
+            and (EV_DIR / f"candidate_pool_frozen_{session}.json").exists())
+
+
+def _publication_summary_new(session: str, counts: dict, analysis: dict) -> bool:
+    sig = json.dumps([counts, analysis.get("failed_tickers"), analysis.get("ta_succeeded")],
+                     sort_keys=True)
+    if ((_j(SCHED_STATE, {}) or {}).get("publication_summary") or {}).get(session) == sig:
+        return False
+    _state_txn(lambda st: st.setdefault("publication_summary", {}).__setitem__(session, sig))
+    return True
+
+
+def _pending_sessions() -> list[str]:
+    done = set((_j(SCHED_STATE, {}) or {}).get("completed_sessions") or [])
+    out = []
+    for p in sorted(EV_DIR.glob("analysis_status_*.json")):
+        s_ = p.stem[len("analysis_status_"):]
+        a = _j(p, {}) or {}
+        if s_ not in done and a.get("retry_pending"):
+            out.append(s_)
+    return out
 
 
 def run_cycle(session: str) -> None:
@@ -356,7 +396,8 @@ def run_cycle(session: str) -> None:
             return
         try:
             _start_run(session)
-            event("ALPHA_DISCOVERY_STARTED", session=session)
+            if not _resuming(session):
+                event("ALPHA_DISCOVERY_STARTED", session=session)
             _run_cycle(session)
         except subprocess.TimeoutExpired as e:
             stage = (_j(SCHED_STATE, {}) or {}).get("current_run", {}).get("stage")
@@ -383,15 +424,16 @@ def _run_cycle(session: str) -> None:
 
     # 2. Frozen discovery pipeline.
     _run_progress("discovery")
-    r = subprocess.run([PY, str(EV_DIR / "discovery.py"), session],
-                       cwd=ROOT, env=env,
-                       capture_output=True, text=True,
-                       timeout=STAGE_TIMEOUTS["discovery"])
-    if r.returncode != 0 or not (EV_DIR / f"candidate_pool_frozen_{session}.json").exists():
-        _finish_run(session, "ERROR")
-        event("ALPHA_DISCOVERY_ERROR", session=session,
-              stage="discovery", tail=(r.stderr or r.stdout)[-400:])
-        return
+    if not _resuming(session):  # frozen pool is authoritative once it exists
+        r = subprocess.run([PY, str(EV_DIR / "discovery.py"), session],
+                           cwd=ROOT, env=env,
+                           capture_output=True, text=True,
+                           timeout=STAGE_TIMEOUTS["discovery"])
+        if r.returncode != 0 or not (EV_DIR / f"candidate_pool_frozen_{session}.json").exists():
+            _finish_run(session, "ERROR")
+            event("ALPHA_DISCOVERY_ERROR", session=session,
+                  stage="discovery", tail=(r.stderr or r.stdout)[-400:])
+            return
     deep = deep_allocation(session)
 
     # 3. Bridge, then frozen TA pass on the deep allocation.
@@ -400,17 +442,16 @@ def _run_cycle(session: str) -> None:
         event("ALPHA_DISCOVERY_BLOCKED_BRIDGE", session=session,
               deep=deep, status=bridge_status())
         return  # retried on next tick (not marked done)
-    # Resume-safe: run_ta.run_one returns the existing artifact without a
-    # model call; pass only missing tickers to keep the subprocess cheap.
-    missing = [t for t in deep
-               if not (EV_DIR / "case_artifacts" / f"{t}_{session}.json").exists()]
+    # Per-ticker terminal state: SUCCESS is never re-run; FAILED_TERMINAL is
+    # never retried automatically; only RETRY_PENDING tickers are attempted.
+    pre = _analysis_summary(session, deep)
+    missing = pre["retry_pending"]
     _run_progress("ta", deep_total=len(deep), deep=deep, ta_missing=missing)
     up = _upstream_snapshot()
     known_block = {"RATE_LIMITED": "MODEL_RATE_LIMITED",
                    "QUOTA_EXHAUSTED": "MODEL_QUOTA_EXHAUSTED"}.get(up["upstream"]["status"])
     if missing and known_block:
-        # Upstream is known rate-limited/exhausted: make NO model calls; each
-        # missing ticker is recorded as an infrastructure failure (retryable).
+        # Backend known rate-limited/exhausted: zero model calls; pending stays pending.
         for t in missing:
             _write_failure(session, t, up,
                            f"not attempted: upstream {up['upstream']['status']} until "
@@ -421,11 +462,17 @@ def _run_cycle(session: str) -> None:
                        timeout=STAGE_TIMEOUTS["ta"])
     analysis = _analysis_summary(session, deep)
     _run_progress("ta", ta_completed=analysis["ta_succeeded"], ta_failed=analysis["ta_failed"])
-    if analysis["ta_succeeded"] == 0:
+    if analysis["ta_succeeded"] == 0 and analysis["retry_pending"]:
         _finish_run(session, "ERROR")
         _alert_analysis(session, analysis)
         return
-    if not analysis["analysis_complete"]:
+    if analysis["ta_succeeded"] == 0:  # every ticker terminal, none usable: nothing to publish
+        mark_done(session, {"deep": deep, "analysis": _analysis_fields(analysis), "published": None})
+        event("ALPHA_DISCOVERY_COMPLETE", session=session, deep=deep, ta_signals={},
+              published=None, dispositions={}, **_analysis_fields(analysis),
+              user_action_required="none")
+        return
+    if analysis["retry_pending"]:
         _alert_analysis(session, analysis)
     arts = sorted((EV_DIR / "case_artifacts").glob(f"*_{session}.json"))
     signals = {}
@@ -493,8 +540,9 @@ def _run_cycle(session: str) -> None:
             counts[d["disposition"]] = counts.get(d["disposition"], 0) + 1
         # Normal ambiguity is a fail-closed classification, not an emergency:
         # exactly one informational summary, never ACTION_REQUIRED.
-        event("ALPHA_PUBLICATION_SUMMARY", session=session,
-              dispositions=counts, **_analysis_fields(analysis),
+        if _publication_summary_new(session, counts, analysis):
+            event("ALPHA_PUBLICATION_SUMMARY", session=session,
+                  dispositions=counts, **_analysis_fields(analysis),
               detail={t: d["disposition"] for t, d in disps.items()},
               user_action_required="none")
     elif reviews:
@@ -514,6 +562,10 @@ def _run_cycle(session: str) -> None:
                         session], cwd=ROOT, env=env, timeout=300)
     except Exception:
         pass
+    if analysis["retry_pending"]:  # partial: publish what is valid, stay retryable
+        _finish_run(session, "ERROR")
+        _alert_analysis(session, analysis)
+        return
     summary = {"deep": deep, "ta_signals": signals, "analysis": _analysis_fields(analysis),
                "published": pub,
                "validated": idoc.get("validated"),
@@ -558,6 +610,14 @@ def check() -> None:
         if session in ad and session in pub:
             return  # just closed above
         if cycle_done(session):
+            pend = _pending_sessions()
+            if pend and not _cycle_lock_busy():
+                _log(f"retrying pending analysis session={pend[0]}")
+                subprocess.Popen(
+                    [PY, "-m", "alpha_rnd.daily_scheduler", "--run-session", pend[0]],
+                    cwd=ROOT, env={**os.environ, "PYTHONPATH": str(ROOT)},
+                    stdout=LOG.open("a"), stderr=subprocess.STDOUT, start_new_session=True)
+                return
             if st.get("uptodate_reported") != session:
                 _state_txn(lambda x: x.__setitem__("uptodate_reported", session))
                 _log(f"ALPHA_DISCOVERY_UP_TO_DATE session={session}")

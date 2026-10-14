@@ -82,8 +82,9 @@ class SchedTest(unittest.TestCase):
         (ds.EV_DIR / "candidate_pool_frozen_2026-10-05.json").write_text(json.dumps(
             {"candidates": [{"ticker": t, "labels": ["MOMENTUM"], "rs_60": 1}
                             for t in "ABCDEFGHIJK"]}))
-        (ds.EV_DIR / "case_artifacts" / "A_2026-10-05.json").write_text(
-            json.dumps({"ticker": "A", "signal": "BUY"}))
+        for t in "ABCDEFGHIJ":  # complete analysis: every deep ticker has a valid artifact
+            (ds.EV_DIR / "case_artifacts" / f"{t}_2026-10-05.json").write_text(
+                json.dumps({"ticker": t, "signal": "BUY"}))
         def fake_run(cmd, **kw):
             cmd = [str(x) for x in cmd]
             if "synthesize" in " ".join(cmd):

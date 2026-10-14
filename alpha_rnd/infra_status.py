@@ -181,21 +181,36 @@ def failure_record(session: str, ticker: str | None, stage: str, raw: str,
 
 def analysis_summary(session: str, requested: list[str], succeeded: list[str],
                      failures: dict[str, dict]) -> dict:
-    reasons: dict[str, int] = {}
-    for f in failures.values():
-        r = f.get("reason_code") or "UNKNOWN_MODEL_FAILURE"
-        reasons[r] = reasons.get(r, 0) + 1
-    complete = bool(requested) and not failures and len(succeeded) == len(requested)
-    if not succeeded and requested:
-        status = ANALYSIS_STATUS
-    elif complete:
+    """Per-ticker terminal model: SUCCESS, FAILED_TERMINAL (non-retryable), or
+    RETRY_PENDING (retryable, or never attempted). Session complete = no RETRY_PENDING."""
+    states, reasons = {}, {}
+    for t in requested:
+        if t in succeeded:
+            states[t] = "SUCCESS"
+            continue
+        f = failures.get(t) or {}
+        states[t] = "FAILED_TERMINAL" if f.get("retryable") is False else "RETRY_PENDING"
+        if f:
+            r = f.get("reason_code") or "UNKNOWN_MODEL_FAILURE"
+            reasons[r] = reasons.get(r, 0) + 1
+    pending = sorted(t for t, v in states.items() if v == "RETRY_PENDING")
+    terminal = sorted(t for t, v in states.items() if v == "FAILED_TERMINAL")
+    complete = bool(requested) and not pending
+    all_ok = bool(requested) and len(succeeded) == len(requested)
+    if all_ok:
         status = "COMPLETE"
+    elif pending:
+        status = "DEGRADED" if succeeded else ANALYSIS_STATUS
     else:
-        status = "DEGRADED"
+        status = "COMPLETE_WITH_TERMINAL_FAILURES"
     dominant = max(reasons, key=lambda k: (reasons[k], k)) if reasons else None
     return {"session": session, "status": status, "analysis_complete": complete,
+            "all_succeeded": all_ok,
             "ta_requested": len(requested), "ta_succeeded": len(succeeded),
-            "ta_failed": len(failures), "failed_tickers": sorted(failures),
+            "ta_failed": len(pending) + len(terminal),
+            "failed_tickers": sorted(pending + terminal),
+            "retry_pending": pending, "failed_terminal": terminal,
+            "ticker_states": states,
             "ta_failure_reasons": reasons, "dominant_reason": dominant,
             "failures": failures}
 
