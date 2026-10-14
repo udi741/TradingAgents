@@ -249,6 +249,41 @@ def acceleration(session: str, cik: int) -> dict | None:
     return {"facts": out, "acceleration_flags": sorted(set(acc))}
 
 
+def eligible_features(laneA, laneB, laneC, rs_leaders, catalyst, fund, feats,
+                      pool_tickers) -> dict:
+    """Compact per-eligible-ticker observational record: real per-lane
+    score/rank (rank within that lane's own eligible set), RS-leader rank,
+    event flags, primary_rank (best lane rank). No fabricated global score."""
+    rank_maps = {}
+    for name, series in (("A", laneA), ("B", laneB), ("C", laneC),
+                         ("RS", rs_leaders)):
+        rank_maps[name] = {t: i + 1 for i, t in
+                           enumerate(series.sort_values(ascending=False).index)}
+    lane_scores = {"A": laneA, "B": laneB, "C": laneC}
+    out = {}
+    for t, f in feats.items():
+        lanes = {}
+        for ln in ("A", "B", "C"):
+            if t in rank_maps[ln]:
+                lanes[ln] = [round(float(lane_scores[ln][t]), 4),
+                             rank_maps[ln][t]]
+        if t in rank_maps["RS"]:
+            lanes["RS"] = [round(float(rs_leaders[t]), 4), rank_maps["RS"][t]]
+        pr = min((v[1] for v in lanes.values()), default=None)
+        out[t] = {
+            "close": round(f["close"], 2), "rs_60": round(f["rs_60"], 4),
+            "ret_5": round(f["ret_5"], 4), "ret_20": round(f["ret_20"], 4),
+            "rsi_14": round(f["rsi_14"], 1),
+            "pullback_20": round(f["pullback_20"], 3),
+            "vol_ratio_5_20": round(f["volume_ratio_5_20"], 2),
+            "median_dv20": int(f["median_dollar_volume_20"]),
+            "lanes": lanes, "primary_rank": pr,
+            "catalyst": t in catalyst,
+            "fund_acc": bool((fund.get(t) or {}).get("acceleration_flags")),
+            "in_pool": t in pool_tickers}
+    return out
+
+
 def select_deep_candidates(candidates: list[dict], quota: int = 10) -> list[str]:
     """Canonical deep-allocation selection (single implementation, used by
     manual workflow AND daily_scheduler — do not reimplement elsewhere).
@@ -429,9 +464,13 @@ def main() -> None:
         # per-ticker eligibility evidence + compact feature snapshot so the
         # funnel artifact can explain every exclusion.
         "exclusions": {k: sorted(v) for k, v in reasons.items()},
-        "eligible_features": {t: {"close": round(f["close"], 2),
-                                  "rs_60": round(f["rs_60"], 4)}
-                              for t, f in feats.items()},
+        # R1-B2: full eligible-universe observational provenance. There is no
+        # single global score — selection is multi-lane with per-lane quotas —
+        # so persist every ticker's REAL per-lane score/rank plus primary_rank
+        # (best rank in any lane) for cohort studies. Instrumentation only.
+        "eligible_features": eligible_features(laneA, laneB, laneC,
+                                               rs_leaders, catalyst, fund,
+                                               feats, {c["ticker"] for c in pool}),
         "deep_quota": DEEP_QUOTA,
         "artifact_sha256": None,
     }

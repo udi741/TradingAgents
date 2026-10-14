@@ -18,9 +18,17 @@ def fixture(root: Path):
                     "min_median_dv20": 20000000},
         "exclusion_counts": {"price_below_5": 2},
         "exclusions": {"price_below_5": ["AAA", "BBB"]},
-        "eligible_features": {"A1": {"close": 12.0, "rs_60": 1.0},
-                              "A2": {"close": 20.0, "rs_60": 1.5},
-                              "A3": {"close": 9.0, "rs_60": 0.5}},
+        "eligible_features": {
+            "A1": {"close": 12.0, "rs_60": 1.0,
+                   "lanes": {"A": [0.9, 1]}, "primary_rank": 1},
+            "A2": {"close": 20.0, "rs_60": 1.5,
+                   "lanes": {"A": [0.8, 2], "RS": [2.4, 1]}, "primary_rank": 1},
+            "A3": {"close": 9.0, "rs_60": 0.5,
+                   "lanes": {"B": [0.7, 3]}, "primary_rank": 3},
+            **{f"X{i:03d}": {"close": 10.0 + i * 0.01, "rs_60": 0.1,
+                             "lanes": {"A": [0.5 - i * 0.001, 10 + i]},
+                             "primary_rank": 10 + i}
+               for i in range(1, 201)}},
         "deep_quota": 2,
         "candidates": [
             {"ticker": "A1", "labels": ["MOMENTUM"], "close": 12.0,
@@ -94,6 +102,19 @@ class FunnelTest(unittest.TestCase):
         again = F.build(S, root=self.root)
         self.assertEqual(p.read_text(), before)
         self.assertEqual(again["created_at"], self.doc["created_at"])
+
+    def test_full_universe_cohort_coverage(self):
+        # >150 eligible; every eligible gets authentic provenance or a cohort
+        tk = self.doc["tickers"]
+        self.assertEqual(tk["X004"]["screen"]["cohort"], "RANK_11_25")   # pr 14
+        self.assertEqual(tk["X030"]["screen"]["cohort"], "RANK_26_50")   # pr 40
+        self.assertEqual(tk["X065"]["screen"]["cohort"], "RANK_51_100")  # pr 75
+        self.assertEqual(tk["X140"]["screen"]["cohort"], "RANK_101_PLUS")# pr 150
+        self.assertFalse(tk["X004"]["screen"]["pool_selected"])
+        self.assertEqual(tk["X004"]["screen"]["lane_ranks"], {"A": 14})
+        self.assertIsNone(tk["X004"]["screen"]["full_universe_rank"])
+        c = self.doc["summary"]["rank_cohorts"]
+        self.assertGreater(c["RANK_101_PLUS"], 0)
 
     def test_inputs_unchanged(self):
         after = json.loads((self.root / "evaluations" / "alpha_rnd_v1" /

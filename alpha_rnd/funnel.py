@@ -99,20 +99,29 @@ def build(session: str, root: Path | None = None) -> dict:
                                          "selection_reason": "not eligible"},
                 "ta": None, "publication": None, "monitor": None,
                 "portfolio": None}
-    # eligible non-pool
+    # eligible non-pool (R1-B2: authentic per-lane provenance, not pool-rank)
     for t, f in elig_feats.items():
         if t in tickers:
             continue
+        pr = f.get("primary_rank")
+        lanes = f.get("lanes") or {}
+        reason = ("no lane eligibility"
+                  if pr is None else
+                  f"best lane rank {pr} exceeds lane quota / pool cap")
         tickers[t] = {
             "ticker": t, "session": session,
             "universe": {"present": True, "source": "discovery_universe"},
             "eligibility": {"eligible": True, "exclusion_reason": None,
                             "exclusion_details": None},
-            "screen": {"score": None, "rank": None,
-                       "cohort": None,
+            "screen": {"score": None,
+                       "full_universe_rank": None,
+                       "primary_rank": pr,
+                       "lane_ranks": {k: v[1] for k, v in lanes.items()},
+                       "cohort": _cohort(pr) if pr else None,
                        "price": f.get("close"), "rs_60": f.get("rs_60"),
                        "signal_flags": None,
-                       "note": "eligible; below frozen-pool cutoff"},
+                       "pool_selected": False,
+                       "pool_selection_reason": reason},
             "deep": {"selected": False, "quota": quota,
                      "selection_reason": "not in candidate pool"},
             "ta": None, "publication": None, "monitor": None,
@@ -123,13 +132,20 @@ def build(session: str, root: Path | None = None) -> dict:
         disp = (disps.get(t) or {})
         w = watch_by_t.get(t)
         triggerable = bool((w or {}).get("trigger_type"))
+        f = elig_feats.get(t) or {}
+        pr = f.get("primary_rank")
+        lanes = f.get("lanes") or {}
         rec = {
             "ticker": t, "session": session,
             "universe": {"present": True, "source": "discovery_universe"},
             "eligibility": {"eligible": True, "exclusion_reason": None,
                             "exclusion_details": None},
-            "screen": {"score": c.get("deep_score"), "rank": rank_of[t],
-                       "cohort": _cohort(rank_of[t]),
+            "screen": {"score": c.get("deep_score"),
+                       "full_universe_rank": None,
+                       "primary_rank": pr,
+                       "lane_ranks": {k: v[1] for k, v in lanes.items()},
+                       "pool_rank": rank_of[t],
+                       "cohort": _cohort(pr) if pr else _cohort(rank_of[t]),
                        "price": c.get("close"),
                        "signal_flags": c.get("labels"),
                        "ret_5": c.get("ret_5"), "rs_60": c.get("rs_60"),
@@ -174,13 +190,21 @@ def build(session: str, root: Path | None = None) -> dict:
         counts[d["disposition"]] = counts.get(d["disposition"], 0) + 1
     excl_counts = {EXCLUSION_TAXONOMY.get(k, k.upper()): len(v)
                    for k, v in exclusions.items()}
+    # cohorts over the FULL eligible universe via primary_rank (best lane
+    # rank); pool-rank fallback only for legacy artifacts without features
     cohorts = {}
+    for t, f in elig_feats.items():
+        pr = f.get("primary_rank")
+        if pr:
+            co = _cohort(pr)
+            cohorts[co] = cohorts.get(co, 0) + 1
     for c in ranked:
-        co = _cohort(rank_of[c["ticker"]])
-        cohorts[co] = cohorts.get(co, 0) + 1
+        if c["ticker"] not in elig_feats:
+            co = _cohort(rank_of[c["ticker"]])
+            cohorts[co] = cohorts.get(co, 0) + 1
 
     doc = {
-        "schema_version": 1,
+        "schema_version": 2,
         "session": session,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "source_universe": "wikipedia_indices+nasdaqtrader_common_stock",
@@ -193,6 +217,15 @@ def build(session: str, root: Path | None = None) -> dict:
         "executable_watch_count": counts.get("EXECUTABLE_WATCH", 0),
         "triggered_count": None,   # prospective; filled by outcome layer (R2)
         "paper_entry_count": None,  # prospective; filled by outcome layer (R2)
+        "rank_semantics": {
+            "full_universe_rank": "null — no single global score exists; "
+                "selection is multi-lane with per-lane quotas",
+            "primary_rank": "best rank achieved in any selection lane "
+                "(lane eligibility is per-lane filtered)",
+            "lane_ranks": "rank within each lane's own eligible set",
+            "pool_rank": "position in frozen candidate pool by deep_score",
+            "cohort": "bucketed by primary_rank (best lane rank) — "
+                "observational, not a single total ordering"},
         "provenance": {
             "candidate_pool_sha256": pool.get("artifact_sha256"),
             "intents_doc_sha256": _sha(intents_path.read_text())[:16]
