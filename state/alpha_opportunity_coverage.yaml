@@ -63,7 +63,7 @@ items:
     blockers: []
     bugs: []
     evidence: [alpha_rnd/translator_gap.py, alpha_rnd/test_translator_gap.py]
-    commits: [alpha:'"'"'placeholder'"'"']
+    commits: [alpha:ecc6e0bf]
     next_action: none — derived view, current-by-construction; first clean session 2026-10-14
   R5:
     title: SHADOW DEEP-COVERAGE EXPANSION
