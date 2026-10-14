@@ -1,0 +1,10 @@
+{
+ "session": "2026-10-13",
+ "policy": "CURRENT_PRODUCTION",
+ "ta_completed": 1,
+ "ta_ran_now": [
+  "AMPL"
+ ],
+ "ta_cached": [],
+ "pool": 28
+}

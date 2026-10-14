@@ -1,0 +1,59 @@
+{
+ "candidate_pool_count": 28,
+ "candidate_pool_members": [
+  "MRNA",
+  "IOVA",
+  "ECO",
+  "HPE",
+  "CDNA",
+  "PENG",
+  "P",
+  "AMPL",
+  "QMCO",
+  "KOD",
+  "ABCL",
+  "HALO",
+  "PSNL",
+  "IQV",
+  "APPN",
+  "ERO",
+  "HAE",
+  "PD",
+  "CCC",
+  "HESM",
+  "CIFR",
+  "IESC",
+  "UUUU",
+  "APLD",
+  "QUBT",
+  "NRIX",
+  "ONDS",
+  "UMAC"
+ ],
+ "context": {
+  "cutoff": "2026-10-13T23:59:59Z",
+  "memory": "EMPTY_REPLAY_MEMORY",
+  "mode": "HISTORICAL_REPLAY",
+  "policy": "CURRENT_PRODUCTION",
+  "portfolio": "NEUTRAL_RESEARCH_PORTFOLIO",
+  "session": "2026-10-13"
+ },
+ "ta_selected": [
+  "AMPL",
+  "CDNA",
+  "HAE",
+  "HPE",
+  "IOVA",
+  "MRNA",
+  "P",
+  "PD",
+  "PENG",
+  "QMCO"
+ ],
+ "ta_selected_count": 10,
+ "upstream": {
+  "note": "frozen contemporaneous evidence \u2014 identical for all policies by construction",
+  "recomputed": false,
+  "source": "candidate_pool_frozen_2026-10-13.json"
+ }
+}
