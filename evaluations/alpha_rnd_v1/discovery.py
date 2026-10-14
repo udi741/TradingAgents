@@ -300,33 +300,14 @@ def select_deep_candidates(candidates: list[dict], quota: int = 10) -> list[str]
     return [t for t, _ in scored[:quota]]
 
 
-def main() -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
-    session = sys.argv[1] if len(sys.argv) > 1 else last_completed_session()
-    print("latest completed session:", session)
+def compute_result(session: str, tickers: list[str], md: dict,
+                   failures: list) -> tuple[dict, list[dict]]:
+    """Deterministic eligibility->features->lanes->pool pipeline.
 
-    universe = build_universe()
-    tickers = [u["ticker"] for u in universe]
-    print("universe raw:", len(tickers))
-    (OUT / "universe_raw.json").write_text(json.dumps({"session": session, "sources": [s[0] for s in WIKI_SOURCES], "constituents": universe}, indent=1))
-
-    start = (pd.Timestamp(session) - pd.Timedelta(days=560)).strftime("%Y-%m-%d")
-    end = (pd.Timestamp(session) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
-    import pickle
-    mcache = OUT / f"market_cache_{session}.pkl"
-    if mcache.exists():
-        md, failures = pickle.loads(mcache.read_bytes())
-    else:
-        md, failures = {}, []
-        CH = 250
-        all_t = ["SPY"] + tickers
-        for i in range(0, len(all_t), CH):
-            d, f = e17.fetch_batch_ohlcv(all_t[i:i + CH], start, end)
-            md.update(d)
-            failures += f
-            print(f"fetch {i + CH}/{len(all_t)} ok={len(md)}", flush=True)
-            time.sleep(15)
-        mcache.write_bytes(pickle.dumps((md, failures)))
+    Replayable: operates only on the inputs given (PIT-bounded md, frozen
+    universe). Used by main() for live runs and by alpha_rnd.replay for
+    as-of recomputation.
+    """
     spy_close = md["SPY"]["Close"]
     spy_close = spy_close[spy_close.index <= pd.Timestamp(session)]
 
@@ -484,6 +465,37 @@ def main() -> None:
         c["rank"] = rank
     pool.sort(key=lambda x: x["rank"])
     result["artifact_sha256"] = sha(json.dumps(result["candidates"], sort_keys=True))
+    return result, pool
+
+
+def main() -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    session = sys.argv[1] if len(sys.argv) > 1 else last_completed_session()
+    print("latest completed session:", session)
+
+    universe = build_universe()
+    tickers = [u["ticker"] for u in universe]
+    print("universe raw:", len(tickers))
+    (OUT / "universe_raw.json").write_text(json.dumps({"session": session, "sources": [s[0] for s in WIKI_SOURCES], "constituents": universe}, indent=1))
+
+    start = (pd.Timestamp(session) - pd.Timedelta(days=560)).strftime("%Y-%m-%d")
+    end = (pd.Timestamp(session) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+    import pickle
+    mcache = OUT / f"market_cache_{session}.pkl"
+    if mcache.exists():
+        md, failures = pickle.loads(mcache.read_bytes())
+    else:
+        md, failures = {}, []
+        CH = 250
+        all_t = ["SPY"] + tickers
+        for i in range(0, len(all_t), CH):
+            d, f = e17.fetch_batch_ohlcv(all_t[i:i + CH], start, end)
+            md.update(d)
+            failures += f
+            print(f"fetch {i + CH}/{len(all_t)} ok={len(md)}", flush=True)
+            time.sleep(15)
+        mcache.write_bytes(pickle.dumps((md, failures)))
+    result, pool = compute_result(session, tickers, md, failures)
     (OUT / f"candidate_pool_frozen_{session}.json").write_text(json.dumps(result, indent=1, default=str))
     print(json.dumps(result["lane_counts"]))
     for c in pool:
