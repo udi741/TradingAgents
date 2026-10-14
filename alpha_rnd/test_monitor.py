@@ -14,6 +14,9 @@ from alpha_rnd import monitor as m  # noqa: E402
 m.EVENTS = Path("/tmp/alpha_test_events.jsonl")
 m.NOTIFY = Path("/tmp/alpha_test_notify.log")
 m.LEDGER = Path("/tmp/alpha_test_ledger.jsonl")
+def _flush(st):
+    m._flush_outbox(st)  # drain durable outbox -> JSONL like locked_state does
+
 for p in (m.EVENTS, m.NOTIFY):
     if p.exists():
         p.unlink()
@@ -272,6 +275,7 @@ def test_watch_fill_stop_enforcement():
                                                   return_value=True):
         m.intraday_pass(st, wl, {})
     assert "ZZZ" not in st["positions"]
+    _flush(st)
     evs = [json.loads(l) for l in m.EVENTS.read_text().splitlines()[evs_before:]]
     exits = [e for e in evs if e.get("action") == "PAPER_EXIT" and e.get("ticker") == "ZZZ"]
     assert len(exits) == 1 and exits[0]["price"] == 7.75
@@ -282,6 +286,7 @@ def test_watch_fill_stop_enforcement():
          mock.patch.object(m, "session_open",
                                                   return_value=True):
         m.intraday_pass(st, wl, {})
+    _flush(st)
     evs = m.EVENTS.read_text().splitlines()
     assert len([l for l in evs if '"PAPER_EXIT"' in l and "ZZZ" in l]) == 1
     print("watch_fill_stop_enforcement ok")
@@ -302,6 +307,7 @@ def test_corrective_exit_and_blocked():
              "BLK": mk_df([5.0], [1], end="2026-10-06")}
     m.resolve_pending(st, {"watches": [{"ticker": "BLK"}]}, daily, "2026-10-06", live=True)
     assert "PGEN" not in st["positions"]
+    _flush(st)
     ev = [json.loads(l) for l in m.EVENTS.read_text().splitlines()
           if json.loads(l).get("ticker") == "PGEN"][-1]
     assert ev["action"] == "PAPER_EXIT" and ev["price"] == 9.0  # actual open, not 7.75
@@ -309,6 +315,7 @@ def test_corrective_exit_and_blocked():
     # blocked entry stays queued, no fill
     assert len(st["pending_open_fills"]) == 1 and st["pending_open_fills"][0]["blocked"]
     # repeat -> no duplicate exit
+    _flush(st)
     n = len(m.EVENTS.read_text().splitlines())
     m.resolve_pending(st, {"watches": []}, daily, "2026-10-06", live=True)
     assert len(m.EVENTS.read_text().splitlines()) == n
@@ -359,6 +366,7 @@ def test_schema_safe_dispatch_and_pending_via_intraday_open():
                                         "trigger": "t", "size_frac": 0.5}]},
                       daily, "2026-10-06", live=True, intraday=intra)
     assert "PGEN" not in st["positions"] and "TWST" in st["positions"]
+    _flush(st)
     evs = [json.loads(l) for l in m.EVENTS.read_text().splitlines()]
     assert any(e.get("action") == "PAPER_EXIT" and e.get("ticker") == "PGEN"
                and e.get("price") == 7.79 for e in evs)
@@ -419,6 +427,7 @@ def test_decision_session_eligibility():
     daily = {"A": mk_df([5.0] * 3, [1] * 3, end="2026-10-07")}
     m.resolve_pending(st, {"watches": []}, daily, "2026-10-07", live=True)
     assert "A" not in st["positions"]  # today's open used, not 10-08
+    _flush(st)
     ev = [json.loads(l) for l in m.EVENTS.read_text().splitlines()][-1]
     assert ev["price"] == 5.0
     # exactly-at-open boundary: decision timestamp == open -> NOT eligible same open
@@ -594,6 +603,7 @@ def test_confirm_blocked_without_risk_plan():
     m.close_pass(st, wl, {"TX": df}, "2026-10-07")
     assert st["pending_open_fills"] == [], "unriskplanned entry must not queue"
     assert st["watch_status"]["TX"] == "RISK_PLAN_REQUIRED"
+    _flush(st)
     evs = [json.loads(l) for l in Path(m.EVENTS).read_text().splitlines()]
     assert any(e.get("action") == "RISK_PLAN_REQUIRED" and e.get("ticker") == "TX" for e in evs)
     # a typed stop on the same trigger DOES queue normally
@@ -623,6 +633,7 @@ def test_risk_block_idempotent_across_ticks_and_restart():
     before = len(Path(m.EVENTS).read_text().splitlines()) if Path(m.EVENTS).exists() else 0
     for i in range(3):  # repeated ticks, same revision
         m.close_pass(st, wl, {"TX": df}, "2026-10-07")
+    _flush(st)
     evs = Path(m.EVENTS).read_text().splitlines()
     new = [json.loads(l) for l in evs[before:]]
     blocks = [e for e in new if e.get("action") == "RISK_PLAN_REQUIRED"]
@@ -631,15 +642,18 @@ def test_risk_block_idempotent_across_ticks_and_restart():
     assert st["watch_status"]["TX"] == "RISK_PLAN_REQUIRED"
     # restart: fresh process view, same persisted state -> still silent
     m.close_pass(st, wl, {"TX": df}, "2026-10-07")
+    _flush(st)
     assert len(Path(m.EVENTS).read_text().splitlines()) == before + 2  # CONFIRMED+block only
     # new published revision -> eligible for re-evaluation; still unsafe -> ONE new block event
     wl["watches"][0]["v"] = 3
     wl["watches"][0]["artifact"] = "TX_2026-10-08.json"
     m.close_pass(st, wl, {"TX": df}, "2026-10-08")
+    _flush(st)
     evs = Path(m.EVENTS).read_text().splitlines()
     blocks = [json.loads(l) for l in evs[before:] if json.loads(l).get("action") == "RISK_PLAN_REQUIRED"]
     assert len(blocks) == 2 and blocks[-1]["event_id"].endswith("TX_2026-10-08.json#3")
     m.close_pass(st, wl, {"TX": df}, "2026-10-08")  # same new revision again -> silent
+    _flush(st)
     assert len(Path(m.EVENTS).read_text().splitlines()) == before + 4
     print("risk_block_idempotency ok")
 
@@ -665,6 +679,7 @@ def test_missed_then_new_exit_are_distinct_orders():
     m.resolve_pending(st, {"watches": [], "open_positions": []}, daily, "2026-10-09", live=False)
     assert st["positions"]["T"]["shares"] == 7 and st["cash"] == 50000.0
     assert st["pending_open_exits"] == []
+    _flush(st)
     evs = [json.loads(l) for l in Path(m.EVENTS).read_text().splitlines()]
     assert any(e["action"] == "MISSED_EXECUTION_REVIEW_REQUIRED" for e in evs)
     # later close 159 < 164 -> NEW order with new identity, not the missed one
@@ -745,3 +760,77 @@ def test_auto_entry_without_zone_no_crash():
 
 
 test_auto_entry_without_zone_no_crash()
+
+
+def test_transactional_outbox_crash_safety():
+    """Crash at any boundary -> at most one durable event, zero phantom econ."""
+    import tempfile
+    td = Path(tempfile.mkdtemp())
+    m.STATE = td / "s.json"; m.STATE_LOCK = td / "l"; m.EVENTS = td / "e.jsonl"
+    m.STATE.write_text(json.dumps({"cash": 1.0}))
+    # crash between transition+outbox-queue and save: nothing escapes
+    try:
+        with m.locked_state() as st:
+            m.emit_once(st, {"action": "X", "ticker": "T"}, "x:1")
+            raise RuntimeError("crash before save")
+    except RuntimeError:
+        pass
+    assert not m.EVENTS.exists(), "event leaked without committed state"
+    # clean commit -> exactly one durable record
+    with m.locked_state() as st:
+        m.emit_once(st, {"action": "X", "ticker": "T"}, "x:1")
+    assert len(m.EVENTS.read_text().splitlines()) == 1
+    # crash after JSONL append but before outbox-clear-save -> replay dedupes
+    st = json.loads(m.STATE.read_text())
+    st["event_outbox"] = [{"action": "X", "ticker": "T", "event_id": "x:1"}]
+    m.STATE.write_text(json.dumps(st))
+    with m.locked_state() as st2:
+        pass
+    assert len(m.EVENTS.read_text().splitlines()) == 1
+    print("outbox_crash_safety ok")
+
+
+def test_exit_consumes_competing_pending_exits():
+    st = fresh_state()
+    st["positions"]["T"] = {"shares": 10, "fill": 100.0, "cost": 1000.0}
+    st["pending_open_exits"] = [
+        {"ticker": "T", "why": "w", "confirm_session": "2026-10-09"},
+        {"ticker": "O", "why": "x", "confirm_session": "2026-10-09"}]
+    m.do_exit(st, "T", 110.0, "test exit")
+    assert [o["ticker"] for o in st["pending_open_exits"]] == ["O"]
+    # intraday stop must defer to an existing next-open pending exit
+    st2 = fresh_state()
+    st2["positions"]["T"] = {"shares": 10, "fill": 100.0,
+                             "stop_rule": {"type": "intraday_stop", "level": 90.0}}
+    st2["pending_open_exits"] = [{"ticker": "T", "why": "w",
+                                  "confirm_session": "2026-10-09"}]
+    df = mk_intraday([80.0])  # low smashes the stop
+    import unittest.mock as _m2
+    with _m2.patch.object(m, "session_open", return_value=True), \
+         _m2.patch.object(m, "fetch_intraday", return_value={"T": df}):
+        m.intraday_pass(st2, {"watches": [], "open_positions": []}, {})
+    assert st2["positions"]["T"]["shares"] == 10  # no double/intent-stealing exit
+    print("exit_precedence ok")
+
+
+def test_missing_trigger_params_no_crash():
+    st = fresh_state()
+    df = mk_df([100.0] * 30, [1_000_000] * 30)
+    wl = {"watches": [{"ticker": "TM", "cls": "DETERMINISTIC_CONFIRMATION",
+                       "trigger_type": "close_breakout_vol",
+                       "params": {},  # bo_level absent -> skip, not crash
+                       "size_frac": 0.5, "invalidation": "s", "horizon": "h",
+                       "trigger": "t", "artifact": "TM_x.json"}],
+          "open_positions": []}
+    for _ in range(3):
+        m.close_pass(st, wl, {"TM": df}, "2026-10-09")  # must not raise
+    _flush(st)
+    evs = [json.loads(l) for l in Path(m.EVENTS).read_text().splitlines()]
+    miss = [e for e in evs if "missing_trigger_params" in str(e.get("why"))]
+    assert len(miss) == 1 and st["pending_open_fills"] == []
+    print("missing_params_no_crash ok")
+
+
+test_transactional_outbox_crash_safety()
+test_exit_consumes_competing_pending_exits()
+test_missing_trigger_params_no_crash()

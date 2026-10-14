@@ -5,55 +5,60 @@
   "2026-10-06",
   "2026-10-07",
   "2026-10-09",
-  "2026-10-12"
+  "2026-10-12",
+  "2026-10-13"
  ],
  "last_cycle": {
-  "session": "2026-10-12",
-  "finished_at": "2026-10-13T05:21:03.142419+00:00",
+  "session": "2026-10-13",
+  "finished_at": "2026-10-14T05:43:18.502300+00:00",
   "summary": {
    "deep": [
+    "IOVA",
     "QMCO",
     "HAE",
     "MRNA",
-    "IOVA",
     "P",
-    "TEAM",
     "PENG",
-    "FRO",
     "CDNA",
-    "PGEN"
+    "PD",
+    "AMPL",
+    "HPE"
    ],
    "ta_signals": {
+    "AMPL": "Sell",
     "CDNA": "Sell",
-    "FRO": "Sell",
-    "HAE": "Buy",
-    "IOVA": "Sell",
+    "HAE": "Sell",
+    "HPE": "Sell",
+    "IOVA": "Buy",
     "MRNA": "Sell",
-    "PENG": "Sell",
-    "PGEN": "Sell",
+    "PD": "Sell",
+    "PENG": "Hold",
     "P": "Sell",
-    "QMCO": "Sell",
-    "TEAM": "Overweight"
+    "QMCO": "Sell"
    },
    "published": {
-    "published_at": "2026-10-13T05:21:03.126532+00:00",
-    "watch_count": 15,
-    "sha256": "eeb0f0d74fc7e4cc16d3101d4eca31a7e2c90abe67ae92b86a40804dc0716cd3"
+    "published_at": "2026-10-14T05:43:18.487304+00:00",
+    "watch_count": 16,
+    "sha256": "e731caa64144d773c1e3bd6204aa58cf4b828dd9b94dc2feb9881016289f4e48"
    },
    "validated": [
     "CDNA",
-    "IOVA",
-    "PGEN",
-    "TEAM"
-   ],
-   "pending_review": [
-    "FRO",
     "HAE",
     "MRNA",
-    "PENG",
-    "P",
     "QMCO"
-   ]
+   ],
+   "dispositions": {
+    "AMPL": "AMBIGUOUS_REJECTED",
+    "CDNA": "PUBLISHED_NON_EXECUTABLE",
+    "HAE": "PUBLISHED_NON_EXECUTABLE",
+    "HPE": "RESEARCH_ONLY",
+    "IOVA": "AMBIGUOUS_REJECTED",
+    "MRNA": "REANALYZE_ON_TRIGGER",
+    "PD": "AMBIGUOUS_REJECTED",
+    "PENG": "AMBIGUOUS_REJECTED",
+    "P": "AMBIGUOUS_REJECTED",
+    "QMCO": "REANALYZE_ON_TRIGGER"
+   }
   }
  },
  "note": "seeded at scheduler install; 2026-10-02 processed manually",
@@ -83,6 +88,11 @@
    "published_at": "2026-10-13T16:32:09.650571+00:00",
    "watch_count": 15,
    "sha256": "e27e263470cce7a68619a3149d58628d954450668a7306fdcc89b8f44ad44b62"
+  },
+  "2026-10-13": {
+   "published_at": "2026-10-14T05:43:18.487304+00:00",
+   "watch_count": 16,
+   "sha256": "e731caa64144d773c1e3bd6204aa58cf4b828dd9b94dc2feb9881016289f4e48"
   }
  },
  "session_status": {
@@ -90,41 +100,7 @@
   "2026-10-06": "INVALID_TA_RUNTIME_FAILURE",
   "note": "TA stage failed (py3.10 ImportError, 0 model calls, 0 artifacts); COMPLETE events false; sessions NOT re-run (no backfill); discovery/pool artifacts remain valid",
   "2026-10-09": "COMPLETE",
-  "2026-10-12": "COMPLETE"
- },
- "current_run": {
-  "session": "2026-10-13",
-  "run_id": "2026-10-14T04:07:03.576080+00:00",
-  "pid": 667084,
-  "started_at": "2026-10-14T04:07:03.576080+00:00",
-  "stage": "ta",
-  "last_progress_at": "2026-10-14T05:07:03.225991+00:00",
-  "deep_total": 10,
-  "ta_completed": 3,
-  "ta_failed": 0,
-  "deep": [
-   "IOVA",
-   "QMCO",
-   "HAE",
-   "MRNA",
-   "P",
-   "PENG",
-   "CDNA",
-   "PD",
-   "AMPL",
-   "HPE"
-  ],
-  "ta_missing": [
-   "IOVA",
-   "QMCO",
-   "HAE",
-   "MRNA",
-   "P",
-   "PENG",
-   "CDNA",
-   "PD",
-   "AMPL",
-   "HPE"
-  ]
+  "2026-10-12": "COMPLETE",
+  "2026-10-13": "COMPLETE"
  }
 }

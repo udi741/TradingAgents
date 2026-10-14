@@ -27,6 +27,7 @@ from pathlib import Path
 import re
 from contextlib import contextmanager
 import fcntl
+import hashlib
 
 import pandas as pd
 import yfinance as yf
@@ -90,18 +91,54 @@ def locked_state():
     """Single canonical mutation path: kernel flock serializes every
     read-modify-write of monitor_state.json (cron ticks, pending-order
     resolution, EOD marks, AND manual ops utilities). Yield the state; the
-    (possibly mutated) dict is atomically written back on clean exit."""
+    (possibly mutated) dict is atomically written back on clean exit.
+    Event records are queued in a durable outbox INSIDE the state, so a
+    crash between transition and log-write cannot replay duplicates."""
     with STATE_LOCK.open("w") as lf:
         fcntl.flock(lf, fcntl.LOCK_EX)
         st = load_state()
         yield st
         save_state(st)
+        if _flush_outbox(st):
+            save_state(st)
+
+
+def _ev_hash(ev: dict) -> str:
+    return "sha:" + hashlib.sha256(
+        json.dumps(ev, sort_keys=True, default=str).encode()).hexdigest()[:24]
+
+
+def _flush_outbox(st: dict) -> bool:
+    """Append queued event records to the immutable JSONL — idempotent.
+    A crash between JSONL append and outbox-clear re-attempts the same
+    records; the tail dedup (bounded scan, guard only) prevents any
+    duplicate durable line. Returns True if the outbox was consumed."""
+    ob = st.get("event_outbox") or []
+    if not ob:
+        return False
+    known_ids, known_hashes = set(), set()
+    if EVENTS.exists():
+        for line in EVENTS.read_text().splitlines()[-500:]:
+            try:
+                e = json.loads(line)
+            except Exception:
+                continue
+            if e.get("event_id"):
+                known_ids.add(e["event_id"])
+            known_hashes.add(_ev_hash(e))
+    with open(EVENTS, "a") as f:
+        for ev in ob:
+            if (ev.get("event_id") and ev["event_id"] in known_ids) \
+                    or _ev_hash(ev) in known_hashes:
+                continue
+            f.write(json.dumps(ev, default=str) + "\n")
+    st["event_outbox"] = []
+    return True
 
 
 def emit(st: dict, ev: dict) -> None:
     ev["utc"] = now_utc().isoformat()
-    with open(EVENTS, "a") as f:
-        f.write(json.dumps(ev, default=str) + "\n")
+    st.setdefault("event_outbox", []).append(ev)
 
 
 def emit_once(st: dict, ev: dict, event_id: str) -> bool:
@@ -341,10 +378,19 @@ def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "",
         st["positions"].pop(ticker)
         if pos.get("seeded"):
             st.setdefault("retired_seeds", []).append(ticker)
-    alloc = pos.get("cost", pos["shares"] * pos["fill"]) * (sell / (pos["shares"] + sell))
+        # consume any competing pending exits for this ticker: one position
+        # => one authoritative exit intent; no orphan orders after close
+        st["pending_open_exits"] = [
+            o for o in st["pending_open_exits"] if o["ticker"] != ticker]
+    # alloc = pro-rata cost of the shares being sold. For cost-less positions
+    # (seeded/legacy) the default must be ORIGINAL shares x fill, else a
+    # negative basis gets written back and realized P&L inflates on the next
+    # exit (SDGR incident 2026-10-13).
+    orig = pos.get("cost", pos["fill"] * (pos["shares"] + sell))
+    alloc = orig * (sell / (pos["shares"] + sell))
     st["realized"] = round(st.get("realized", 0.0) + proceeds - alloc, 2)
     if pos["shares"] > 0:
-        pos["cost"] = round(pos.get("cost", 0) - alloc, 2)
+        pos["cost"] = round(orig - alloc, 2)
     emit_once(st, {"ticker": ticker, "action": "PAPER_EXIT", "why": why,
               "price": price, "shares": sell, "proceeds": round(proceeds, 2)},
               f"paper_exit:{exec_id or ticker + ':' + why}")
@@ -469,6 +515,23 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
         v20 = float(avgv[t].iloc[-1]) if not pd.isna(avgv[t].iloc[-1]) else 0
         p = w["params"]; tt = w.get("trigger_type") or ""
         prog = st["confirm"].setdefault(t, {})
+
+        # malformed watch: evaluator named in trigger_type needs these params;
+        # missing params => skip the watch fail-closed, never crash the pass
+        _REQ = {"multi_close_in_zone": ("zone",),
+                "close_breakout_vol": ("bo_level",),
+                "close_breakout_retest": ("bo_level",),
+                "orderly_pullback_close": ("pb_zone",),
+                "reclaim_2step": ("reclaim", "hold"),
+                "gapfill_probe": ("kill", "probe_zone"),
+                "event_gated_multi_close": ("gate_date", "level")}
+        _missing = [f"{tt_}:{k}" for tt_, ks in _REQ.items() if tt_ in tt
+                    for k in ks if k not in p]
+        if _missing:
+            emit_once(st, {"ticker": t, "action": "NO_ACTION",
+                      "why": f"missing_trigger_params {_missing}"},
+                      f"schema:{t}:{_watch_rev(w)}:{','.join(_missing)}"[:100])
+            continue
 
         def triggered(how):
             _set_watch_status(st, w, "TRIGGERED")
@@ -612,6 +675,9 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
             if df is None:
                 continue
             it = inv.get("type") if isinstance(inv, dict) else None
+            if it == "intraday_stop" and any(
+                    o["ticker"] == t for o in st["pending_open_exits"]):
+                continue  # close-confirmed next-open order is authoritative
             if it != "intraday_stop":
                 if it is None and isinstance(inv, dict) and inv.get("level") is not None:
                     emit_once(st, {"ticker": t, "action": "NO_ACTION",
@@ -649,7 +715,7 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
             continue
         # deterministic intraday legs
         if "intraday_zone_touch" in (w.get("trigger_type") or "") and w["cls"] == "DETERMINISTIC_CONFIRMATION":
-            if low <= p["pb_zone"][1]:
+            if p.get("pb_zone") and low <= p["pb_zone"][1]:
                 do_fill(st, wl, t, p["pb_zone"][1], w["size_frac"])
                 continue
         prog = st["confirm"].get(t, {})

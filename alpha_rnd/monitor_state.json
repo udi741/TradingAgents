@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-14T05:34:03.447770+00:00",
+ "last_check_utc": "2026-10-14T06:03:03.536204+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
@@ -31,7 +31,8 @@
   "HHH": {},
   "QMCO": {},
   "TEAM": {},
-  "FRO": {}
+  "FRO": {},
+  "MRNA": {}
  },
  "pending_open_fills": [],
  "positions": {
@@ -71,7 +72,7 @@
   "realized": 2918.24,
   "marked_at": "2026-10-14T01:57:03.808096+00:00"
  },
- "realized": 2918.24,
+ "realized": -2144.24,
  "policy": {
   "RISK_GUARDRAIL_V1": {
    "active_from": "2026-10-07",
@@ -93,9 +94,9 @@
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-14T05:34:03.440664+00:00",
-  "daily_ok": 18,
-  "daily_req": 19,
+  "at": "2026-10-14T06:03:03.530178+00:00",
+  "daily_ok": 19,
+  "daily_req": 20,
   "status": "ok"
  },
  "risk_blocked": {
@@ -137,6 +138,8 @@
  "emitted_ids": [
   "missed:exit:SDGR:2026-10-09:2026-10-12",
   "exit_confirmed:close_below:SDGR:2026-10-12",
-  "paper_exit:SDGR:mgmt review: tightened stop just below $27.29"
- ]
+  "paper_exit:SDGR:mgmt review: tightened stop just below $27.29",
+  "realized_correction:2026-10-14"
+ ],
+ "event_outbox": []
 }

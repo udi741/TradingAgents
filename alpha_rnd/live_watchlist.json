@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-13T16:32:09.634097+00:00",
+ "generated_at": "2026-10-14T05:43:18.467198+00:00",
  "watch_expiry": "2026-10-30",
  "recommendation_freeze": "2026-10-02 (V1) / 2026-10-03 (V2)",
  "sizing": {
@@ -99,7 +99,7 @@
    "reevaluation": "post-PDUFA branches; next 10-Q must show ~$55M milestone receivable converting to cash and footnote explanation of ~$123M Q1-2026 non-operating charge before any upgrade",
    "artifact": "PGEN_2026-10-12.json",
    "session": "2026-10-12",
-   "published_session": "2026-10-12",
+   "published_session": "2026-10-13",
    "size_frac": 0.25,
    "stop_rule": {
     "type": "intraday_stop",
@@ -286,35 +286,32 @@
    "ticker": "QMCO",
    "cls": "REANALYZE_ON_TRIGGER",
    "v": "auto",
-   "trigger": "Short only: weak-volume bounce stalls below the 10 EMA at $30.33, or confirmed close below $24 targeting $22-23",
+   "trigger": "Re-enter only after a completed financial close with no adverse disclosure plus tape stabilization: the $24.50-$25.10 shelf holding on declining volume or RSI tagging the low 30s near the $22.58 lower band.",
    "trigger_type": null,
    "params": {
-    "side": "short",
-    "bounce_retest_zone": [
-     29,
-     30
+    "support_shelf": [
+     24.5,
+     25.1
     ],
-    "ema10": 30.33,
-    "confirm_close_below": 24,
-    "sma50": 24.19,
-    "short_target_zone": [
-     22,
-     23
-    ],
-    "max_risk_pct": 1
+    "lower_band": 22.58,
+    "starter_portfolio_pct": 0.017,
+    "starter_notional_usd": 1700,
+    "hard_exit_close": 24.5,
+    "ema10_reference": 29.63,
+    "gap_fill_reference": 20
    },
-   "entry_convention": "no longs; limited short capped ~1% of portfolio at risk, only on stalled weak-volume bounce below $30.33 or confirmed close below $24; treat $29-30 bounces as exit liquidity for trapped longs",
-   "invalidation": "benign CFO disclosure plus volume reclaim of $30.33 kills the bear thesis \u2014 stand down; $30.33 is a reassessment trigger not a guaranteed stop-fill (~$2.80 ATR, gap risk)",
-   "horizon": "days to weeks, keyed to next filing/8-K on CFO departure and recap terms",
-   "reevaluation": "next quarterly filing / 8-K detail on CFO departure, recap covenant terms, going-concern language \u2014 any is a gap-down catalyst",
-   "artifact": "QMCO_2026-10-12.json",
-   "session": "2026-10-12",
-   "published_session": "2026-10-12",
-   "size_frac": 0.01,
+   "entry_convention": "small starter only after event resolution and tape stabilization",
+   "invalidation": "Exit decisively on a close below $24.50; any adverse CFO-related disclosure, including restatement, control deficiency, delayed filing, or going-concern language, requires immediate full exit.",
+   "horizon": "Re-evaluate on CFO disclosure resolution and financial-close completion; staged re-entry window over the next 1-3 months if triggers are met",
+   "reevaluation": "Reassess after the CFO issue and financial close resolve, the recap terms and dilution cost are verified in the 10-Q, and the 10 EMA is reclaimed with the MACD histogram contracting.",
+   "artifact": "QMCO_2026-10-13.json",
+   "session": "2026-10-13",
+   "published_session": "2026-10-13",
+   "size_frac": 0.3333333333333333,
    "stop_rule": {
     "type": "intraday_stop",
-    "level": 30.33,
-    "label": "benign CFO disclosure plus volume reclaim of $30.33 kills the bear thesis \u2014 stand down; $30.33 is a reassessment trigger not a guaranteed stop-fill (~$2.80 ATR, gap risk)"
+    "level": 24.5,
+    "label": "Exit decisively on a close below $24.50; any adverse CFO-related disclosure, including restatement, control deficiency, delayed filing, or going-concern language, requires immediate full exit."
    },
    "auto_execution_authorized": false,
    "source": "auto_synth"
@@ -344,9 +341,52 @@
    "reevaluation": "monitor BDTI/dirty-tanker fixtures, Hormuz transit data, peer commentary; revisit toward Overweight if record fixtures persist ~1 month without escalation news and price consolidates",
    "artifact": "FRO_2026-10-12.json",
    "session": "2026-10-12",
-   "published_session": "2026-10-12",
+   "published_session": "2026-10-13",
    "size_frac": 0.5,
    "stop_rule": null,
+   "auto_execution_authorized": false,
+   "source": "auto_synth"
+  },
+  {
+   "ticker": "MRNA",
+   "cls": "REANALYZE_ON_TRIGGER",
+   "v": "auto",
+   "trigger": "Re-evaluate on a daily close below $187, which confirms the correction, or a close above $227.46 on volume, which invalidates the bearish divergence and reopens a reduced-size long.",
+   "trigger_type": null,
+   "params": {
+    "correction_trigger": 187,
+    "next_support": 182,
+    "sma50_zone": [
+     144,
+     150
+    ],
+    "bullish_invalidation": 227.46,
+    "resistance_zone": [
+     225,
+     227.46
+    ],
+    "optional_put_strikes": [
+     190,
+     200
+    ],
+    "optional_premium_portfolio_pct": [
+     0.01,
+     0.015
+    ]
+   },
+   "entry_convention": "stay flat; bearish exposure only through defined-risk OTM puts",
+   "invalidation": "A confirmed close above $227.46 on volume invalidates the bearish case.",
+   "horizon": "1-3 months, keyed to the $187/$227.46 resolution levels and the next 10-Q",
+   "reevaluation": "Reassess on the next 10-Q, especially the unexplained ~$1B current-liability build, or if a verified catalyst for the August gap is identified.",
+   "artifact": "MRNA_2026-10-13.json",
+   "session": "2026-10-13",
+   "published_session": "2026-10-13",
+   "size_frac": 1.0,
+   "stop_rule": {
+    "type": "intraday_stop",
+    "level": 227.46,
+    "label": "A confirmed close above $227.46 on volume invalidates the bearish case."
+   },
    "auto_execution_authorized": false,
    "source": "auto_synth"
   }
@@ -414,5 +454,5 @@
    "artifact": "APPS_2026-10-01.json"
   }
  ],
- "sha256": "e27e263470cce7a68619a3149d58628d954450668a7306fdcc89b8f44ad44b62"
+ "sha256": "e731caa64144d773c1e3bd6204aa58cf4b828dd9b94dc2feb9881016289f4e48"
 }

@@ -1,0 +1,12 @@
+{
+ "incident": "R1-B3 crash-replay event duplication",
+ "semantic_event_id": "paper_exit:SDGR:mgmt review: tightened stop just below $27.29",
+ "count": 183,
+ "first_utc": "2026-10-13T13:31:05.421216+00:00",
+ "last_utc": "2026-10-13T16:33:08.219087+00:00",
+ "economic_mutations": 1,
+ "telegram_deliveries": 1,
+ "root_cause": "TEAM AUTO_ENTRY watch params.zone missing -> KeyError in intraday_pass AFTER resolve_pending executed SDGR next-open exit and queued PAPER_EXIT but BEFORE save_state -> next tick replayed transition",
+ "status": "preserved as incident evidence; producer fixed via durable in-state event outbox",
+ "additional_finding": "do_exit alloc bug: cost-less positions (seeded/legacy fills) got alloc=remaining_shares*fill*sell/orig_shares and cost write-back 0-alloc -> negative basis -1174.53 -> realized inflated +5062 over SDGR partial+final exits; corrected realized 2918.24 -> -2144.24 via REALIZED_CORRECTION event (NAV-consistency check within ~$3)"
+}
