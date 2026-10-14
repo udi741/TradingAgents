@@ -1,0 +1,140 @@
+roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
+roadmap_version: 1
+updated_at: "2026-10-14"
+current_task: R1
+current_subtask: null
+next_task: R1
+items:
+  R0:
+    title: ROADMAP CONTROL
+    status: DONE
+    objective: durable roadmap/state/task tracking
+    dependencies: []
+    started_at: "2026-10-14"
+    completed_at: "2026-10-14"
+    blockers: []
+    bugs: []
+    evidence: [docs/ALPHA_OPPORTUNITY_COVERAGE_ROADMAP.md, docs/ROADMAP_OPERATING_RULES.md, docs/ROADMAP_TASK_TEMPLATE.md, ops/roadmap_status.py]
+    commits: []
+    next_action: none
+  R1:
+    title: OPPORTUNITY FUNNEL INSTRUMENTATION
+    status: NOT_STARTED
+    objective: persist where stocks disappear universe->eligibility->ranking->deep TA->decision->publication->executability->trigger->paper trade
+    dependencies: []
+    started_at: null
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: instrument funnel stage counts/IDs in ALPHA pipeline outputs
+  R2:
+    title: RANK COHORT OUTCOME TRACKING
+    status: NOT_STARTED
+    objective: prospective rank cohorts 1-10/11-25/26-50/51-100/101+ returns, benchmark-relative, MFE/MAE
+    dependencies: []
+    started_at: null
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: define cohort capture + horizon marks
+  R3:
+    title: TA ACCEPT/REJECT OUTCOME TRACKING
+    status: NOT_STARTED
+    objective: outcome comparison across TA dispositions
+    dependencies: []
+    started_at: null
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: persist disposition labels for outcome join
+  R4:
+    title: TRANSLATOR GAP MEASUREMENT
+    status: NOT_STARTED
+    objective: why valid TA research becomes PUBLISHED_NON_EXECUTABLE
+    dependencies: [R1]
+    started_at: null
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: classify non-executable publications by cause
+  R5:
+    title: SHADOW DEEP-QUOTA EXPANSION
+    status: NOT_STARTED
+    objective: shadow-only deep analysis beyond top-10
+    dependencies: [R2]
+    started_at: null
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: design shadow lane, no trading
+  R6:
+    title: LOW-PRICE OPPORTUNITY SHADOW LANE
+    status: NOT_STARTED
+    objective: sub-$5 under strict constraints, isolated from ALPHA V1
+    dependencies: []
+    started_at: null
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: define liquidity/dilution/listing gate spec
+  R7:
+    title: EXISTING TRADE POSTMORTEMS
+    status: NOT_STARTED
+    objective: standardized packets PBF/ACN/APPS/PGEN/TWST/SDGR
+    dependencies: []
+    started_at: null
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: create packet template
+  R8:
+    title: EVIDENCE REVIEW
+    status: BLOCKED
+    objective: decide which bottlenecks cost opportunities; justify changes
+    dependencies: [R1, R2, R3, R4, R7]
+    started_at: null
+    completed_at: null
+    blockers: [needs R1-R4/R7 evidence]
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: wait for evidence items
+  R9:
+    title: ALPHA V2
+    status: BLOCKED
+    objective: evidence-supported challenger; ALPHA V1 remains baseline
+    dependencies: [R8]
+    started_at: null
+    completed_at: null
+    blockers: [needs R8]
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: wait for R8
+  R10:
+    title: REAL-MONEY READINESS
+    status: BLOCKED
+    objective: formal gate before any supervised pilot
+    dependencies: [R9]
+    started_at: null
+    completed_at: null
+    blockers: [needs R8/R9 + mature prospective data]
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: wait for R8/R9 and outcome maturity
+backlog: []

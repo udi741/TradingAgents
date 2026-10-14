@@ -33,11 +33,25 @@ artifacts.
 5. `docs/OPERATING_RULES.md` — durable project rules
 6. `runbooks/<relevant>.md` — how to actually run/resume things
 
+Development roadmap / where the project stands:
+`python -m ops.roadmap_status` (deterministic, no network/LLM).
+Canonical roadmap: `docs/ALPHA_OPPORTUNITY_COVERAGE_ROADMAP.md` +
+`state/alpha_opportunity_coverage.yaml`; task rules:
+`docs/ROADMAP_OPERATING_RULES.md`, `docs/ROADMAP_TASK_TEMPLATE.md`.
+
 Workspace layout and directory retirement rules:
 `docs/WORKSPACE_INVENTORY.md` + `docs/WORKTREE_LIFECYCLE.md`.
 
 ## Source-of-truth order (when facts conflict)
 
+For development roadmap/status specifically:
+1. `state/alpha_opportunity_coverage.yaml`
+2. `docs/ALPHA_OPPORTUNITY_COVERAGE_ROADMAP.md`
+3. per-task committed evidence
+4. `TRACKS.md` / `CURRENT_STATE.md`
+5. Chat history (**last resort — never authoritative**)
+
+General facts:
 1. Immutable artifact / ledger / committed experiment result
 2. Per-track canonical Markdown + `state/<TRACK>.yaml`
 3. `TRACKS.md`
