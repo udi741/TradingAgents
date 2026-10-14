@@ -315,3 +315,11 @@ assert st4["breaker_log"], "breaker not persisted"
 
 tr.ALPHA_EVENTS = ALPHA_FIXTURE
 print("relay flood defense ok")
+for act, want in (("RISK_PLAN_REQUIRED", False), ("PAPER_EXIT", True), ("monitor_error", True)):
+    rec = {"ticker": "ASST", "action": act if act != "monitor_error" else "NO_ACTION",
+           "why": "monitor_error x" if act == "monitor_error" else "r", "utc": "2026-10-14T13:31Z",
+           "event_id": f"e:{act}"}
+    ev = tr.normalize("ALPHA", rec, json.dumps(rec))
+    assert ev["send"] is want, (act, ev["send"])
+print("relay policy ok")
+
