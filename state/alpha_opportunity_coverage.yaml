@@ -1,9 +1,9 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
 updated_at: "2026-10-14"
-current_task: R3
+current_task: R4
 current_subtask: null
-next_task: R3
+next_task: R4
 items:
   R0:
     title: ROADMAP CONTROL
@@ -43,16 +43,16 @@ items:
     next_action: first clean prospective funnel session 2026-10-14 (schema v2) -> R2 evidence matures as horizons complete
   R3:
     title: TA ACCEPT/REJECT OUTCOME TRACKING
-    status: NOT_STARTED
+    status: WAITING_FOR_DATA
     objective: outcome comparison across TA dispositions
     dependencies: []
-    started_at: null
+    started_at: "2026-10-14"
     completed_at: null
     blockers: []
     bugs: []
-    evidence: []
-    commits: []
-    next_action: persist disposition labels for outcome join
+    evidence: [alpha_rnd/ta_outcomes.py, alpha_rnd/test_ta_outcomes.py]
+    commits: [alpha:b7f7f8e6]
+    next_action: none — derived view is current-by-construction over R2 collector; first clean session 2026-10-14
   R4:
     title: TRANSLATOR GAP MEASUREMENT
     status: NOT_STARTED
