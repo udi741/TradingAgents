@@ -810,3 +810,11 @@ diagnostic example classified (excluded from clean headline).
 - Telegram (tracks): ALPHA_ANALYSIS_DEGRADED / ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED, one per session+status; USER ACTION only for quota exhaustion; scan header INCOMPLETE when analysis incomplete.
 - Fail-closed: failed/unanalysed tickers create no publication disposition and no entry authority.
 - Status CLI: `python -m alpha_rnd.infra_status`.
+
+### PROD-2026-10-14-INFERENCE_RETRY_COMPLETION (fix record)
+
+- Per-ticker state derived from disk each cycle: SUCCESS (valid artifact, never re-sent), FAILED_TERMINAL (non-retryable reason, never auto-retried), RETRY_PENDING (retryable or never attempted; only these are attempted).
+- A session with any RETRY_PENDING ticker is not done (session ERROR); the hourly check revisits pending sessions oldest-first, skipping discovery (frozen pool is authoritative). analysis_complete = no RETRY_PENDING.
+- Zero model calls while the backend's known rate-limit window is active; after reset (no newer evidence) one normal attempt is allowed.
+- Dedup: one start event per session, one degraded/infrastructure alert per session+status, one publication summary per distinct outcome.
+- Model-agnostic: scheduler reasons only on backend status, reason_code, retryable, reset_at.
