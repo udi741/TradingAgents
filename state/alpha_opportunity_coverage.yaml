@@ -1,9 +1,9 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
 updated_at: "2026-10-14"
-current_task: R5
+current_task: R7
 current_subtask: null
-next_task: R5
+next_task: R7
 items:
   R0:
     title: ROADMAP CONTROL
@@ -67,28 +67,28 @@ items:
     next_action: none — derived view, current-by-construction; first clean session 2026-10-14
   R5:
     title: SHADOW DEEP-QUOTA EXPANSION
-    status: NOT_STARTED
+    status: WAITING_FOR_DATA
     objective: shadow-only deep analysis beyond top-10
     dependencies: [R2]
     started_at: null
     completed_at: null
-    blockers: []
+    blockers: [insufficient clean prospective R2 cohort evidence]
     bugs: []
     evidence: []
     commits: []
     next_action: design shadow lane, no trading
   R6:
     title: LOW-PRICE OPPORTUNITY SHADOW LANE
-    status: NOT_STARTED
+    status: WAITING_FOR_DATA
     objective: sub-$5 under strict constraints, isolated from ALPHA V1
     dependencies: []
-    started_at: null
+    started_at: "2026-10-14"
     completed_at: null
     blockers: []
     bugs: []
-    evidence: []
-    commits: []
-    next_action: define liquidity/dilution/listing gate spec
+    evidence: [alpha_rnd/low_price_shadow.py, alpha_rnd/test_low_price_shadow.py, evaluations/alpha_rnd_v1/low_price_shadow/2026-10-13.json]
+    commits: [alpha:ae78d721]
+    next_action: none — collector matures via hourly R2 update; 10-13 diagnostic built from frozen cache
   R7:
     title: EXISTING TRADE POSTMORTEMS
     status: NOT_STARTED
