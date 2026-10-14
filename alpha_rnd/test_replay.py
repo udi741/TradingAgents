@@ -50,8 +50,9 @@ class ReplayTest(unittest.TestCase):
         def fake(t, s):
             calls.append(t)
             return {"ticker": t, "signal": "Hold"}
-        r = rp.run(rp.ReplayContext.make(S, "ANALYZE_ALL_CANDIDATES"),
-                   max_ta=2, ta_fn=fake, upstream="frozen")
+        with mock.patch("alpha_rnd.synthesize.synthesize", return_value=[]):  # never reach the bridge
+            r = rp.run(rp.ReplayContext.make(S, "ANALYZE_ALL_CANDIDATES"),
+                       max_ta=2, ta_fn=fake, upstream="frozen")
         self.assertEqual(r["decision_cutoff"], f"{S}T20:00:00Z")
         self.assertEqual(r["ta_not_run"], ["C", "D", "E", "F"])
         self.assertFalse(r["replay_complete"])
