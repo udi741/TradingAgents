@@ -772,3 +772,12 @@ primary_rank cohorts preserved — no fabricated global rank. 10-12 backfill
 (labeled) matured H1. R2 status WAITING_FOR_DATA; first clean session =
 2026-10-14 funnel (schema v2). Standalone evaluator; not wired into trading
 paths.
+
+### R2-B2 autonomous outcome collection (2026-10-14)
+
+cohort_outcomes update now scheduled hourly (cron minute 23), flock-protected,
+health in alpha_rnd/cohort_outcomes_state.json + .log. Skeleton persisted on
+funnel discovery; transient fetch failures stay PENDING and retry; offline
+gaps catch up in one run. Read-only to trading. Health: `python -m
+alpha_rnd.cohort_outcomes health`. R2 = WAITING_FOR_DATA (impl complete,
+collector active); first clean schema-v2 session = 2026-10-14.

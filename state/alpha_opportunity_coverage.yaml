@@ -37,7 +37,7 @@ items:
     started_at: "2026-10-14"
     completed_at: null
     blockers: []
-    bugs: [R2-B1: fetch end-exclusive empty window burned DATA_UNAVAILABLE on transient failure; fixed (end+1d, fetch-fail stays PENDING)]
+    bugs: [R2-B2: DONE hourly cron 23 * * * *, flock, health file, catch-up built-in, R2-B1: fetch end-exclusive empty window burned DATA_UNAVAILABLE on transient failure; fixed (end+1d, fetch-fail stays PENDING)]
     evidence: [alpha_rnd/cohort_outcomes.py, alpha_rnd/test_cohort_outcomes.py, evaluations/alpha_rnd_v1/rank_cohort_outcomes/]
     commits: [alpha:4d8975da]
     next_action: first clean prospective funnel session 2026-10-14 (schema v2) -> R2 evidence matures as horizons complete
