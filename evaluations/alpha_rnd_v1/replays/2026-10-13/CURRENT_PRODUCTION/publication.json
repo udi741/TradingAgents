@@ -4,92 +4,88 @@
    "ticker": "AMPL",
    "classification": "WATCH_FOR_ENTRY",
    "watch_mode": "DETERMINISTIC_CONFIRMATION",
-   "trigger": "Short only: confirmed daily close below $14.20 on rising volume; no longs at ~$15.61, and $16.20 zone is distribution not breakout entry",
+   "trigger": "Confirmed daily close below $14.20 on rising volume (short-side probe only)",
    "params": {
-    "direction": "short",
-    "entry_trigger": 14.2,
-    "confirmation": "daily close below 14.20 on rising volume",
-    "add_condition": "add only after the $13.30-13.85 shelf breaks",
-    "size_pct_of_portfolio": "3-5",
-    "size_notional_usd": "3000-5000",
-    "bear_thesis_invalidation_level": 16.2,
-    "hard_exit_for_residual_longs": 14.2
+    "short_trigger": 14.2,
+    "confirmation": "daily close + rising volume",
+    "first_target": 13.3,
+    "add_condition": "break of the $13.30-13.85 shelf",
+    "distribution_zone": 16.2,
+    "bear_invalidation": 16.2
    },
-   "entry_convention": "Volume-confirmed daily close below $14.20; do not short into an intact uptrend",
-   "invalidation": "Hard stop above $14.97 (10 EMA reclaim); decisive close above $16.20 on expanding volume voids the bear posture entirely",
+   "entry_convention": "Short probe after volume-confirmed daily close below $14.20; add only after the $13.30-13.85 shelf breaks. Longs explicitly forbidden; push toward $16.20 is a distribution zone, not a breakout entry.",
+   "invalidation": "Hard stop above $14.97 (10 EMA reclaim); a decisive close above $16.20 on expanding volume invalidates the bear posture entirely",
    "stop_level": 14.97,
    "target": 13.3,
    "horizon": "1-2 quarters (until the liquidity event \u2014 buyback halt or capital raise \u2014 resolves)",
-   "reevaluation": "Revisit thesis if Q3 shows genuine gross margin recovery, operating cash flow repeats Q2's level, and buyback paused without a capital raise; close above $16.20 on expanding volume \u2014 stay flat and revisit on next pullback",
+   "reevaluation": "Revisit if Q3 shows genuine gross margin recovery, operating cash flow repeats Q2's level, and buyback is paused without a capital raise; or on decisive close above $16.20",
    "size_frac": 0.05,
    "auto_execution_authorized": false,
-   "ambiguity": "Headline is Sell with zero current exposure; the only usable forward instruction is a conditional SHORT entry \u2014 probe size stated as a range (3-5% of portfolio notional, ~$3,000-5,000), no specific limit price given for entry itself"
+   "ambiguity": "Short-only plan, contingent on short exposure being permitted; stated size is a range of 3-5% of portfolio notional (~$3,000-5,000), recorded at the 5% cap. Trigger requires a confirmed daily close, not an executable intraday/limit order."
   }
  ],
  "dispositions": {
+  "IOVA": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
+  "QMCO": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
+  "HAE": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
+  "MRNA": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
+  "P": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
+  "PENG": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
+  "CDNA": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
+  "PD": {
+   "intent": null,
+   "disposition": "NOT_RUN"
+  },
   "AMPL": {
    "intent": {
     "ticker": "AMPL",
     "classification": "WATCH_FOR_ENTRY",
     "watch_mode": "DETERMINISTIC_CONFIRMATION",
-    "trigger": "Short only: confirmed daily close below $14.20 on rising volume; no longs at ~$15.61, and $16.20 zone is distribution not breakout entry",
+    "trigger": "Confirmed daily close below $14.20 on rising volume (short-side probe only)",
     "params": {
-     "direction": "short",
-     "entry_trigger": 14.2,
-     "confirmation": "daily close below 14.20 on rising volume",
-     "add_condition": "add only after the $13.30-13.85 shelf breaks",
-     "size_pct_of_portfolio": "3-5",
-     "size_notional_usd": "3000-5000",
-     "bear_thesis_invalidation_level": 16.2,
-     "hard_exit_for_residual_longs": 14.2
+     "short_trigger": 14.2,
+     "confirmation": "daily close + rising volume",
+     "first_target": 13.3,
+     "add_condition": "break of the $13.30-13.85 shelf",
+     "distribution_zone": 16.2,
+     "bear_invalidation": 16.2
     },
-    "entry_convention": "Volume-confirmed daily close below $14.20; do not short into an intact uptrend",
-    "invalidation": "Hard stop above $14.97 (10 EMA reclaim); decisive close above $16.20 on expanding volume voids the bear posture entirely",
+    "entry_convention": "Short probe after volume-confirmed daily close below $14.20; add only after the $13.30-13.85 shelf breaks. Longs explicitly forbidden; push toward $16.20 is a distribution zone, not a breakout entry.",
+    "invalidation": "Hard stop above $14.97 (10 EMA reclaim); a decisive close above $16.20 on expanding volume invalidates the bear posture entirely",
     "stop_level": 14.97,
     "target": 13.3,
     "horizon": "1-2 quarters (until the liquidity event \u2014 buyback halt or capital raise \u2014 resolves)",
-    "reevaluation": "Revisit thesis if Q3 shows genuine gross margin recovery, operating cash flow repeats Q2's level, and buyback paused without a capital raise; close above $16.20 on expanding volume \u2014 stay flat and revisit on next pullback",
+    "reevaluation": "Revisit if Q3 shows genuine gross margin recovery, operating cash flow repeats Q2's level, and buyback is paused without a capital raise; or on decisive close above $16.20",
     "size_frac": 0.05,
     "auto_execution_authorized": false,
-    "ambiguity": "Headline is Sell with zero current exposure; the only usable forward instruction is a conditional SHORT entry \u2014 probe size stated as a range (3-5% of portfolio notional, ~$3,000-5,000), no specific limit price given for entry itself"
+    "ambiguity": "Short-only plan, contingent on short exposure being permitted; stated size is a range of 3-5% of portfolio notional (~$3,000-5,000), recorded at the 5% cap. Trigger requires a confirmed daily close, not an executable intraday/limit order."
    },
    "disposition": "PUBLISHED_NON_EXECUTABLE"
   },
-  "CDNA": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
-  "HAE": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
   "HPE": {
    "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
-  "IOVA": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
-  "MRNA": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
-  "P": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
-  "PD": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
-  "PENG": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
-  },
-  "QMCO": {
-   "intent": null,
-   "disposition": "AMBIGUOUS_REJECTED"
+   "disposition": "NOT_RUN"
   }
  }
 }

@@ -21,11 +21,15 @@ frozen PIT inputs (universe_raw / market_cache / candidate_pool / SEC caches)
 """
 import hashlib
 import json
+import pickle
+import re
 import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -45,9 +49,51 @@ class ReplayContext:
 
     @staticmethod
     def make(session: str, policy: str) -> "ReplayContext":
+        # Production semantics: discovery runs post-close and consumes only
+        # the completed regular session -> cutoff = US regular close 20:00Z.
         assert policy in POLICIES
         return ReplayContext(session=session,
-                             cutoff=f"{session}T23:59:59Z", policy=policy)
+                             cutoff=f"{session}T20:00:00Z", policy=policy)
+
+
+def recompute_upstream(session: str) -> dict:
+    """Actually re-run the deterministic upstream pipeline on frozen PIT
+    inputs. Universe = frozen universe_raw for the session, else market-cache
+    keys (already security-filtered at fetch time — provenance recorded).
+    Market data = frozen market_cache truncated to <= session (hard-fails if
+    any bar postdates the session)."""
+    import evaluations.alpha_rnd_v1.discovery as disc
+    mc = EV / f"market_cache_{session}.pkl"
+    if not mc.exists():
+        raise RuntimeError(f"no market cache for {session}")
+    uni_path = EV / "universe_raw.json"
+    uni = json.loads(uni_path.read_text()) if uni_path.exists() else {}
+    if uni.get("session") == session:
+        tickers = [u["ticker"] for u in uni["constituents"]]
+        src = "universe_raw"
+    else:
+        md0, _ = pickle.loads(mc.read_bytes())
+        tickers = sorted(t for t in md0 if t != "SPY")
+        src = "market_cache_keys"
+    md, failures = pickle.loads(mc.read_bytes())
+    # hard PIT gate: no bar may postdate the decision session
+    for t, df in md.items():
+        if df is not None and len(df) and str(df.index.max().date()) > session:
+            raise RuntimeError(f"PIT violation: {t} has data past {session}")
+    result, pool = disc.compute_result(session, tickers, md, failures)
+    ref = _frozen_pool(session)
+    ref_members = _pool_members(ref) if ref else []
+    cmp_ = {"original_pool_n": len(ref_members),
+            "recomputed_pool_n": len([c["ticker"] for c in pool]),
+            "set_overlap": len(set(ref_members) &
+                               {c["ticker"] for c in pool}),
+            "eligible_orig": ref.get("universe_size_eligible") if ref else None,
+            "eligible_recomputed": result["universe_size_eligible"]}
+    return {"session": session, "universe_source": src,
+            "universe_n": len(tickers),
+            "recomputed": result, "pool": pool,
+            "reference": {"frozen_pool": ref_members,
+                          "comparison": cmp_}}
 
 
 def _frozen_pool(session: str) -> dict | None:
@@ -115,54 +161,92 @@ def audit(session: str) -> str:
     return "\n".join(lines)
 
 
-def run(ctx: ReplayContext, max_ta: int | None = None,
-        ta_fn=None) -> dict:
-    """Execute one replay. ta_fn defaults to the production graph.propagate
-    path (injectable for tests). Decision phase writes frozen artifacts;
-    outcome evaluation is a separate later phase by design."""
+def run(ctx: ReplayContext, max_ta: int | None = None, ta_fn=None,
+        upstream: str = "recompute") -> dict:
+    """Execute one replay. Decision phase only — outcome evaluation is a
+    separate later phase. upstream=recompute actually re-runs the discovery
+    pipeline on frozen PIT inputs (authoritative); 'frozen' consumes the
+    contemporaneous pool artifact directly (fast path)."""
     out_dir = REPLAYS / ctx.session / ctx.policy
     (out_dir / "case_artifacts").mkdir(parents=True, exist_ok=True)
-    pool_doc = _frozen_pool(ctx.session)
-    if not pool_doc:
-        raise RuntimeError(f"no frozen candidate pool for {ctx.session} "
-                           "— cannot replay without PIT evidence")
-    members = _pool_members(pool_doc)
-    ta_set = select_for_ta(ctx, pool_doc)
+    if upstream == "recompute":
+        up = recompute_upstream(ctx.session)
+        members = [c["ticker"] for c in up["pool"]]
+        (out_dir / "upstream_recompute.json").write_text(json.dumps(
+            {"reference": up["reference"],
+             "eligible": up["recomputed"]["universe_size_eligible"],
+             "lane_counts": up["recomputed"]["lane_counts"],
+             "exclusion_counts": up["recomputed"]["exclusion_counts"]},
+            indent=1))
+    else:
+        pool_doc = _frozen_pool(ctx.session)
+        if not pool_doc:
+            raise RuntimeError(f"no frozen candidate pool for {ctx.session}")
+        members = _pool_members(pool_doc)
+        up = {"reference": {"note": "upstream consumed from frozen artifact"}}
+    pool_for_ta = {"candidates": [{"ticker": t} for t in members],
+                   "deep_selected": None}
+    # CURRENT_PRODUCTION deep set comes from the frozen funnel evidence
+    ta_set = select_for_ta(ctx, pool_doc=pool_for_ta if upstream == "frozen"
+                           else {**pool_for_ta, "deep_selected":
+                                 None}, )
+    if upstream == "recompute" and ctx.policy == "CURRENT_PRODUCTION":
+        import evaluations.alpha_rnd_v1.discovery as disc
+        ta_set = [c["ticker"] for c in sorted(
+            up["pool"], key=lambda c: c.get("rank", 999))[:disc.DEEP_QUOTA]]
     man = {"context": ctx.__dict__,
-           "upstream": {"source": f"candidate_pool_frozen_{ctx.session}.json",
-                        "recomputed": False,
-                        "note": "frozen contemporaneous evidence — identical "
-                                "for all policies by construction"},
+           "upstream": {"mode": upstream,
+                        "reference_comparison":
+                            (up.get("reference") or {}).get("comparison")},
            "candidate_pool_count": len(members),
            "candidate_pool_members": members,
-           "ta_selected_count": len(ta_set),
-           "ta_selected": ta_set}
+           "ta_selected_count": len(ta_set), "ta_selected": ta_set}
     (out_dir / "manifest.json").write_text(json.dumps(man, indent=1,
                                                     sort_keys=True))
-    # TA phase — resume via manifest-hash cache
-    import evaluations.alpha_rnd_v1.run_ta as rt
-    done, ran = [], []
-    for i, t in enumerate(ta_set):
-        m = manifest(ctx, t, {"artifact_src": f"{t}_{ctx.session}"})
+    done, ran, failed, not_run = [], [], [], []
+    rt = None
+    if any(True for _ in ta_set):
+        if ta_fn is None:
+            if sys.version_info < (3, 11):
+                raise RuntimeError("replay TA requires .venv312 python "
+                                   "(production runtime); system python3.10 "
+                                   "lacks datetime.UTC")
+            import evaluations.alpha_rnd_v1.run_ta as rt
+            def ta_fn(tt, sess):
+                d0 = rt.D
+                rt.D = out_dir
+                try:
+                    return rt.run_one(tt, sess)
+                finally:
+                    rt.D = d0
+    for t in ta_set:
         cache = out_dir / "case_artifacts" / f"{t}_{ctx.session}.json"
         if cache.exists():
             done.append(t)
             continue
         if max_ta is not None and len(ran) >= max_ta:
-            break
-        if ta_fn is None:
-            def ta_fn(tt, sess):
-                d0 = rt.D
-                rt.D = out_dir  # run_one writes D/case_artifacts — isolate
-                try:
-                    return rt.run_one(tt, sess)
-                finally:
-                    rt.D = d0
-        art = ta_fn(t, ctx.session)
-        if not cache.exists() and art:
-            cache.write_text(json.dumps(art, indent=1, default=str))
-        ran.append(t)
-    # shadow publication: production synthesize/disposition on replay artifacts
+            not_run.append(t)
+            continue
+        try:
+            art = ta_fn(t, ctx.session)
+            if not cache.exists() and art:
+                cache.write_text(json.dumps(art, indent=1, default=str))
+            ran.append(t)
+        except Exception:
+            failed.append(t)
+    # PIT news post-check: artifact text must not contain dates > session
+    DATE_RX = re.compile(r"20\d\d-\d\d-\d\d")
+    pit_flags = {}
+    for t in ran + done:
+        p = out_dir / "case_artifacts" / f"{t}_{ctx.session}.json"
+        if not p.exists():
+            continue
+        dates = DATE_RX.findall(p.read_text())
+        pit_flags[t] = max(dates) <= ctx.session if dates else None
+        if pit_flags[t] is False:
+            (out_dir / "pit_violation.json").write_text(json.dumps(
+                {"ticker": t, "max_date_seen": max(dates)}))
+    # shadow publication: disposition ONLY for tickers with valid artifacts
     import alpha_rnd.synthesize as syn
     arts = {}
     for t in ta_set:
@@ -171,15 +255,24 @@ def run(ctx: ReplayContext, max_ta: int | None = None,
             arts[t] = json.loads(p.read_text())
     intents = syn.synthesize(arts) if arts else []
     by_t = {i["ticker"]: i for i in intents}
-    pub = {t: {"intent": by_t.get(t),
-               "disposition": syn.disposition(
-                   by_t.get(t), [], set())}  # neutral portfolio -> held=∅
-           for t in ta_set}
+    pub = {}
+    for t in ta_set:
+        if t in arts:
+            pub[t] = {"intent": by_t.get(t),
+                      "disposition": syn.disposition(by_t.get(t), [], set())}
+        else:
+            pub[t] = {"intent": None, "disposition": "NOT_RUN"}
     (out_dir / "publication.json").write_text(json.dumps(
         {"intents": intents, "dispositions": pub}, indent=1, default=str))
+    complete = not (failed or not_run or
+                    [t for t in ta_set if t not in done + ran])
     result = {"session": ctx.session, "policy": ctx.policy,
-              "ta_completed": len(done) + len(ran), "ta_ran_now": ran,
-              "ta_cached": done, "pool": len(members)}
+              "decision_cutoff": ctx.cutoff,
+              "pool": len(members), "ta_required": len(ta_set),
+              "ta_completed": len(done) + len(ran), "ta_cached": done,
+              "ta_ran_now": ran, "ta_failed": failed, "ta_not_run": not_run,
+              "replay_complete": complete,
+              "news_pit_postcheck": pit_flags}
     (out_dir / "run_result.json").write_text(json.dumps(result, indent=1))
     return result
 

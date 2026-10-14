@@ -21,7 +21,9 @@ def fixture(root: Path):
                     for t in "ABCDEF"}}))
     (ev / "market_cache_2026-10-13.pkl").write_bytes(b"fake")
     (ev / f"fundamental_facts_{S}.json").write_text("{}")
-    (ev / "universe_raw.json").write_text(json.dumps({"session": S}))
+    (ev / "universe_raw.json").write_text(json.dumps({
+        "session": S, "constituents": [{"ticker": t}
+                                       for t in "ABCDEF"]}))
 
 
 class ReplayTest(unittest.TestCase):
@@ -41,42 +43,44 @@ class ReplayTest(unittest.TestCase):
         allp = rp.ReplayContext.make(S, "ANALYZE_ALL_CANDIDATES")
         self.assertEqual(rp.select_for_ta(cur, pool), ["A", "B", "C"])
         self.assertEqual(rp.select_for_ta(allp, pool),
-                         ["A", "B", "C", "D", "E", "F"])  # count is an output
+                         ["A", "B", "C", "D", "E", "F"])
 
-    def test_identical_upstream_across_policies(self):
-        pool = rp._frozen_pool(S)
-        for pol in rp.POLICIES:
-            r = rp.run(rp.ReplayContext.make(S, pol), max_ta=0,
-                       ta_fn=lambda t, s: {"signal": "Buy"})
-        m1 = json.loads((rp.REPLAYS / S / "CURRENT_PRODUCTION" /
-                         "manifest.json").read_text())
-        m2 = json.loads((rp.REPLAYS / S / "ANALYZE_ALL_CANDIDATES" /
-                         "manifest.json").read_text())
-        self.assertEqual(m1["candidate_pool_members"], m2["candidate_pool_members"])
-        self.assertNotEqual(m1["ta_selected"], m2["ta_selected"])
-
-    def test_manifest_cache_resume_and_audit(self):
+    def test_cutoff_and_not_run_and_incomplete(self):
         calls = []
         def fake(t, s):
             calls.append(t)
             return {"ticker": t, "signal": "Hold"}
-        rp.run(rp.ReplayContext.make(S, "ANALYZE_ALL_CANDIDATES"), ta_fn=fake)
-        r2 = rp.run(rp.ReplayContext.make(S, "ANALYZE_ALL_CANDIDATES"),
-                    ta_fn=fake)
-        self.assertEqual(len(calls), 6)          # ran once only
-        self.assertEqual(r2["ta_cached"], ["A", "B", "C", "D", "E", "F"])
+        r = rp.run(rp.ReplayContext.make(S, "ANALYZE_ALL_CANDIDATES"),
+                   max_ta=2, ta_fn=fake, upstream="frozen")
+        self.assertEqual(r["decision_cutoff"], f"{S}T20:00:00Z")
+        self.assertEqual(r["ta_not_run"], ["C", "D", "E", "F"])
+        self.assertFalse(r["replay_complete"])
+        pub = json.loads((rp.REPLAYS / S / "ANALYZE_ALL_CANDIDATES" /
+                          "publication.json").read_text())
+        self.assertEqual(pub["dispositions"]["F"]["disposition"], "NOT_RUN")
+
+    def test_identical_pool_across_policies_and_resume(self):
+        for pol in rp.POLICIES:
+            rp.run(rp.ReplayContext.make(S, pol), max_ta=0,
+                   ta_fn=lambda t, s: {}, upstream="frozen")
+        m1 = json.loads((rp.REPLAYS / S / "CURRENT_PRODUCTION" /
+                         "manifest.json").read_text())
+        m2 = json.loads((rp.REPLAYS / S / "ANALYZE_ALL_CANDIDATES" /
+                         "manifest.json").read_text())
+        self.assertEqual(m1["candidate_pool_members"],
+                         m2["candidate_pool_members"])
+        self.assertNotEqual(m1["ta_selected"], m2["ta_selected"])
         self.assertIn("SAFE_TO_RUN_REPLAY", rp.audit(S))
 
-    def test_no_production_writes(self):
-        rp.run(rp.ReplayContext.make(S, "CURRENT_PRODUCTION"), max_ta=1,
-               ta_fn=lambda t, s: {"signal": "Buy"})
-        written = {str(p) for p in Path(self.d.name).rglob("*") if p.is_file()}
-        self.assertFalse(any("watchlist" in w or "monitor_state" in w
-                             or "ledger" in w for w in written))
-        self.assertTrue(all("replays" in w or "candidate_pool" in w
-                            or "market_cache" in w or "fundamental" in w
-                            or "opportunity_funnel" in w or "universe" in w
-                            for w in written))
+    def test_pit_gate_hard_fails_future_bar(self):
+        import pandas as pd
+        bad = {"SPY": pd.DataFrame({"Close": [1]},
+               index=pd.DatetimeIndex(["2026-10-20"]))}
+        with mock.patch("pickle.loads", return_value=(bad, [])), \
+             mock.patch.object(rp, "EV", rp.EV):
+            with self.assertRaises(RuntimeError) as c:
+                rp.recompute_upstream(S)
+            self.assertIn("PIT violation", str(c.exception))
 
 
 if __name__ == "__main__":

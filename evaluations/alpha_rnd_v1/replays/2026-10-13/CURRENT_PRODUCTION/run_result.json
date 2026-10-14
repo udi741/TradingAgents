@@ -1,10 +1,28 @@
 {
  "session": "2026-10-13",
  "policy": "CURRENT_PRODUCTION",
+ "decision_cutoff": "2026-10-13T20:00:00Z",
+ "pool": 28,
+ "ta_required": 10,
  "ta_completed": 1,
- "ta_ran_now": [
+ "ta_cached": [
   "AMPL"
  ],
- "ta_cached": [],
- "pool": 28
+ "ta_ran_now": [],
+ "ta_failed": [],
+ "ta_not_run": [
+  "IOVA",
+  "QMCO",
+  "HAE",
+  "MRNA",
+  "P",
+  "PENG",
+  "CDNA",
+  "PD",
+  "HPE"
+ ],
+ "replay_complete": false,
+ "news_pit_postcheck": {
+  "AMPL": true
+ }
 }
