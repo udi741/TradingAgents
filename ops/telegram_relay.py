@@ -314,7 +314,8 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
                     f"{v}x {k.replace('_', ' ').lower()}" for k, v in
                     sorted(cnt.items())) + "\n")
             head = ("ALPHA DAILY SCAN COMPLETE" if rec.get("analysis_complete") is not False
-                    else "ALPHA DAILY SCAN — ANALYSIS INCOMPLETE")
+                    else ("ALPHA DAILY SCAN — ANALYSIS INCOMPLETE — TERMINAL FAILURES"
+                          if rec.get("session_terminal") else "ALPHA DAILY SCAN — ANALYSIS INCOMPLETE"))
             body = (head + "\n\n"
                     f"Session: {rec.get('session')}\n"
                     f"Deep-analyzed: {len(deep)}\n"

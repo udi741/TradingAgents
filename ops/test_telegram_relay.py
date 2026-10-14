@@ -343,6 +343,9 @@ done = {"ts": "x", "kind": "ALPHA_DISCOVERY_COMPLETE", "session": "2026-10-12", 
         "published": {"watch_count": 1}, "analysis_complete": False, "ta_requested": 10,
         "ta_succeeded": 7, "user_action_required": "none"}
 assert "ANALYSIS INCOMPLETE" in _sched(done)["body"]
+term = dict(done, session_terminal=True)
+assert "ANALYSIS INCOMPLETE — TERMINAL FAILURES" in _sched(term)["body"]
+assert "ANALYSIS INCOMPLETE — TERMINAL FAILURES" not in _sched(done)["body"]
 print("relay analysis messages ok")
 
 
