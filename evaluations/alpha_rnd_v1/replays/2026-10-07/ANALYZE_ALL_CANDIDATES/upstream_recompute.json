@@ -1,0 +1,56 @@
+{
+ "reference": {
+  "frozen_pool": [
+   "MRNA",
+   "QMCO",
+   "CDNA",
+   "SDGR",
+   "IOVA",
+   "TWST",
+   "ABCL",
+   "AMPL",
+   "ASST",
+   "TEAM",
+   "XNCR",
+   "MANH",
+   "HAE",
+   "IQV",
+   "ETON",
+   "NTAP",
+   "PTC",
+   "CTVA",
+   "OPCH",
+   "RXO",
+   "PENG",
+   "PCVX",
+   "SYNA",
+   "NKTR",
+   "QUBT",
+   "PGEN",
+   "UMAC",
+   "FLY"
+  ],
+  "comparison": {
+   "original_pool_n": 28,
+   "recomputed_pool_n": 28,
+   "set_overlap": 28,
+   "eligible_orig": 1757,
+   "eligible_recomputed": 1757
+  }
+ },
+ "eligible": 1757,
+ "lane_counts": {
+  "A_momentum": 206,
+  "B_pullback": 189,
+  "C_breakout": 17,
+  "RS_leaders": 40,
+  "catalyst": 110,
+  "fund_acc": 181
+ },
+ "exclusion_counts": {
+  "fetch_failed": 283,
+  "insufficient_history": 278,
+  "illiquid": 1319,
+  "price_below_5": 1120
+ }
+}

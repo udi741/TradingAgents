@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-14T09:41:03.555465+00:00",
+ "last_check_utc": "2026-10-14T14:13:04.296532+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
@@ -57,7 +57,8 @@
   "TWST": "TRIGGERED",
   "SDGR": "TRIGGERED",
   "IOVA": "RISK_PLAN_REQUIRED",
-  "TXG": "RISK_PLAN_REQUIRED"
+  "TXG": "RISK_PLAN_REQUIRED",
+  "ASST": "RISK_PLAN_REQUIRED"
  },
  "pending_open_exits": [],
  "book": {
@@ -94,14 +95,17 @@
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-14T09:41:03.549298+00:00",
+  "at": "2026-10-14T14:13:03.771872+00:00",
   "daily_ok": 19,
   "daily_req": 20,
-  "status": "ok"
+  "status": "ok",
+  "intraday_ok": 11,
+  "intraday_req": 11
  },
  "risk_blocked": {
   "IOVA": "IOVA_2026-10-01.json#1",
-  "TXG": "TXG_2026-10-02.json#2"
+  "TXG": "TXG_2026-10-02.json#2",
+  "ASST": "ASST_2026-10-02.json#2"
  },
  "watch_lifecycle": {
   "IOVA": {
@@ -133,6 +137,12 @@
    "rev": "SDGR_2026-10-02.json#2",
    "session": "2026-10-02",
    "at": "historic"
+  },
+  "ASST": {
+   "status": "RISK_PLAN_REQUIRED",
+   "rev": "ASST_2026-10-02.json#2",
+   "session": "2026-10-02",
+   "at": "2026-10-14T13:31:06.776212+00:00"
   }
  },
  "emitted_ids": [
@@ -140,7 +150,8 @@
   "exit_confirmed:close_below:SDGR:2026-10-12",
   "paper_exit:SDGR:mgmt review: tightened stop just below $27.29",
   "realized_correction:2026-10-14",
-  "realized_correction:r7b1"
+  "realized_correction:r7b1",
+  "risk_block:ASST:ASST_2026-10-02.json#2"
  ],
  "event_outbox": []
 }

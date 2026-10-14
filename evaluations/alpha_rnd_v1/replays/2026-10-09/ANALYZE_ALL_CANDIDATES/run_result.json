@@ -1,0 +1,62 @@
+{
+ "session": "2026-10-09",
+ "policy": "ANALYZE_ALL_CANDIDATES",
+ "decision_cutoff": "2026-10-09T20:00:00Z",
+ "pool": 28,
+ "ta_required": 28,
+ "ta_completed": 16,
+ "ta_cached": [
+  "QMCO",
+  "HAE",
+  "IOVA",
+  "MRNA",
+  "P",
+  "TEAM",
+  "PTC",
+  "SDGR",
+  "PENG",
+  "AMPL",
+  "CDNA",
+  "ETON",
+  "IQV"
+ ],
+ "ta_ran_now": [
+  "PGEN",
+  "RXO",
+  "HALO"
+ ],
+ "ta_failed": [
+  "KOD",
+  "XP",
+  "OPCH",
+  "TXG",
+  "PCVX",
+  "UMAC",
+  "TWST",
+  "XNCR",
+  "VST",
+  "HESM",
+  "QUBT",
+  "BIO"
+ ],
+ "ta_not_run": [],
+ "replay_complete": false,
+ "news_pit_postcheck": {
+  "PGEN": true,
+  "RXO": true,
+  "HALO": true,
+  "QMCO": true,
+  "HAE": true,
+  "IOVA": true,
+  "MRNA": true,
+  "P": true,
+  "TEAM": true,
+  "PTC": true,
+  "SDGR": true,
+  "PENG": true,
+  "AMPL": true,
+  "CDNA": true,
+  "ETON": true,
+  "IQV": true
+ }
+}
