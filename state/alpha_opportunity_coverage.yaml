@@ -1,9 +1,9 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
 updated_at: "2026-10-14"
-current_task: R4
+current_task: R5
 current_subtask: null
-next_task: R4
+next_task: R5
 items:
   R0:
     title: ROADMAP CONTROL
@@ -55,16 +55,16 @@ items:
     next_action: none — derived view is current-by-construction over R2 collector; first clean session 2026-10-14
   R4:
     title: TRANSLATOR GAP MEASUREMENT
-    status: NOT_STARTED
+    status: WAITING_FOR_DATA
     objective: why valid TA research becomes PUBLISHED_NON_EXECUTABLE
     dependencies: [R1]
-    started_at: null
+    started_at: "2026-10-14"
     completed_at: null
     blockers: []
     bugs: []
-    evidence: []
-    commits: []
-    next_action: classify non-executable publications by cause
+    evidence: [alpha_rnd/translator_gap.py, alpha_rnd/test_translator_gap.py]
+    commits: [alpha:'"'"'placeholder'"'"']
+    next_action: none — derived view, current-by-construction; first clean session 2026-10-14
   R5:
     title: SHADOW DEEP-QUOTA EXPANSION
     status: NOT_STARTED
