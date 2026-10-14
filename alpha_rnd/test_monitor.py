@@ -14,6 +14,9 @@ from alpha_rnd import monitor as m  # noqa: E402
 m.EVENTS = Path("/tmp/alpha_test_events.jsonl")
 m.NOTIFY = Path("/tmp/alpha_test_notify.log")
 m.LEDGER = Path("/tmp/alpha_test_ledger.jsonl")
+# fill-mechanics tests assume an authorized watch; gate itself is tested in test_entry_gate
+from unittest import mock as _mock  # noqa: E402
+_mock.patch.object(m, "authorized", return_value=True).start()
 def _flush(st):
     m._flush_outbox(st)  # drain durable outbox -> JSONL like locked_state does
 

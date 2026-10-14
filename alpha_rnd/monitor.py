@@ -32,6 +32,8 @@ import hashlib
 import pandas as pd
 import yfinance as yf
 
+from alpha_rnd.entry_gate import authorized
+
 ROOT = Path(__file__).resolve().parents[1]
 D = ROOT / "alpha_rnd"
 WATCHLIST = D / "live_watchlist.json"
@@ -302,6 +304,11 @@ def _exec_commit(st: dict, exec_id: str) -> None:
 
 def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type="PAPER_ENTRY", exec_id: str | None = None) -> None:
     watch = next(w for w in wl["watches"] if w["ticker"] == ticker)
+    if watch["cls"] != "REANALYZE_ON_TRIGGER" and not authorized(watch):
+        emit_once(st, {"ticker": ticker, "action": "NO_ACTION",
+                  "why": "entry_not_authorized: fill refused"},
+                  f"entry_gate_fill:{ticker}:{_watch_rev(watch)}")
+        return
     if ticker in st["positions"]:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
         return
@@ -502,6 +509,11 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
         t = w["ticker"]
         if st["watch_status"].get(t) in ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS") \
                 or _risk_blocked(st, w):
+            continue
+        if w["cls"] != "REANALYZE_ON_TRIGGER" and not authorized(w):
+            emit_once(st, {"ticker": t, "action": "NO_ACTION",
+                      "why": "entry_not_authorized: watch revision is not the latest EXECUTABLE_WATCH decision"},
+                      f"entry_gate:{t}:{_watch_rev(w)}")
             continue
         if session > EXPIRY:
             _set_watch_status(st, w, "EXPIRED")
@@ -704,6 +716,8 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
                 or _risk_blocked(st, w):
             continue
         if now_utc().strftime("%Y-%m-%d") > EXPIRY:
+            continue
+        if w["cls"] != "REANALYZE_ON_TRIGGER" and not authorized(w):
             continue
         df = data.get(t)
         if df is None:
