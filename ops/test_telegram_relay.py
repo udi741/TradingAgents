@@ -322,4 +322,27 @@ for act, want in (("RISK_PLAN_REQUIRED", False), ("PAPER_EXIT", True), ("monitor
     ev = tr.normalize("ALPHA", rec, json.dumps(rec))
     assert ev["send"] is want, (act, ev["send"])
 print("relay policy ok")
+def _sched(rec):
+    raw = json.dumps(rec)
+    return tr.normalize("ALPHA_SCHED", rec, raw)
+
+deg = {"ts": "2026-10-14T14:50:00+00:00", "kind": "ALPHA_ANALYSIS_DEGRADED", "session": "2026-10-12",
+       "stage": "ta", "reason_code": "MODEL_RATE_LIMITED", "ta_requested": 10, "ta_succeeded": 7,
+       "ta_failed": 3, "failed_tickers": ["H", "I", "J"], "user_action_required": "NONE"}
+ev = _sched(deg)
+assert ev["send"] is True and ev["severity"] == "WARNING", ev
+assert "ANALYSIS DEGRADED" in ev["body"] and "Successful: 7/10" in ev["body"]
+assert "Failed: 3/10" in ev["body"] and "USER ACTION: NONE" in ev["body"]
+assert "treated as an investment rejection" in ev["body"]
+assert _sched(dict(deg, ts="2026-10-14T15:50:00+00:00"))["semantic_id"] == ev["semantic_id"], "repeat must dedup"
+q = dict(deg, kind="ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED", reason_code="MODEL_QUOTA_EXHAUSTED",
+         ta_succeeded=0, ta_failed=10, user_action_required="REQUIRED")
+qe = _sched(q)
+assert "USER ACTION: REQUIRED" in qe["body"] and "Successful: 0/10" in qe["body"]
+done = {"ts": "x", "kind": "ALPHA_DISCOVERY_COMPLETE", "session": "2026-10-12", "deep": list("ABC"),
+        "published": {"watch_count": 1}, "analysis_complete": False, "ta_requested": 10,
+        "ta_succeeded": 7, "user_action_required": "none"}
+assert "ANALYSIS INCOMPLETE" in _sched(done)["body"]
+print("relay analysis messages ok")
+
 

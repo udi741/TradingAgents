@@ -87,7 +87,26 @@ ALPHA_SCHED_MAP = {
     "ALPHA_DISCOVERY_COMPLETE": ("SUCCESS", True),
     "ALPHA_DISCOVERY_ERROR": ("ACTION_REQUIRED", True),
     "ALPHA_DISCOVERY_BLOCKED_BRIDGE": ("WARNING", True),
+    "ALPHA_ANALYSIS_DEGRADED": ("WARNING", True),
+    "ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED": ("WARNING", True),
 }
+
+
+def _analysis_body(kind: str, rec: dict) -> str:
+    """One bounded operational message per cycle; never a per-ticker alert."""
+    infra = kind == "ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED"
+    n = rec.get("ta_requested")
+    lines = ["ALPHA — ANALYSIS INFRASTRUCTURE FAILED" if infra else "ALPHA — ANALYSIS DEGRADED", "",
+             "SWE analysis could not run for this cycle." if infra
+             else "SWE analysis incomplete for this cycle.",
+             f"Reason: {rec.get('reason_code') or 'UNKNOWN_MODEL_FAILURE'}",
+             f"Successful: {rec.get('ta_succeeded')}/{n}",
+             f"Failed: {rec.get('ta_failed')}/{n}",
+             "No failed ticker was treated as an investment rejection.",
+             "Existing positions remain monitored.", ""]
+    user = rec.get("user_action_required") == "REQUIRED"
+    lines.append("USER ACTION: REQUIRED — restore model quota/service." if user else "USER ACTION: NONE")
+    return "\n".join(lines)
 C12_MAP = {
     "C12_CYCLE_STARTED": ("INFO", True),
     "C12_CYCLE_SCOREABLE_COMPLETE": ("SUCCESS", True),
@@ -278,6 +297,8 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
                            "automatically on the next hourly tick — no action "
                            "needed unless this persists.")
         body = None
+        if kind in ("ALPHA_ANALYSIS_DEGRADED", "ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED"):
+            body = _analysis_body(kind, rec)
         if kind == "ALPHA_DISCOVERY_COMPLETE":
             deep = rec.get("deep") or []
             pub = rec.get("published") or {}
@@ -292,7 +313,9 @@ def normalize(track: str, rec: dict, raw: str) -> dict | None:
                 disp_line = ("Dispositions: " + ", ".join(
                     f"{v}x {k.replace('_', ' ').lower()}" for k, v in
                     sorted(cnt.items())) + "\n")
-            body = ("ALPHA DAILY SCAN COMPLETE\n\n"
+            head = ("ALPHA DAILY SCAN COMPLETE" if rec.get("analysis_complete") is not False
+                    else "ALPHA DAILY SCAN — ANALYSIS INCOMPLETE")
+            body = (head + "\n\n"
                     f"Session: {rec.get('session')}\n"
                     f"Deep-analyzed: {len(deep)}\n"
                     f"Active watches published: {pub.get('watch_count', '?')}\n"

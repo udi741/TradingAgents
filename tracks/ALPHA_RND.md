@@ -802,3 +802,11 @@ diagnostic example classified (excluded from clean headline).
 - Fix (tracks d459a806): RISK_PLAN_REQUIRED relay send=False; audit events retained.
 - Audit: 16 live watches; 0 entry-authorized after fix. No EXECUTABLE_WATCH publication exists since 10-12.
 - Economics: unchanged (cash 92899.01, realized -2140.99, PBF 62, pending 0/0, executed 6).
+
+### PROD-2026-10-14-SWE_FAILURE_CLASSIFICATION (fix record)
+
+- Defects: DEF-1 bridge health read as upstream health; DEF-2 failure reason unclassified, partial TA failures silent; DEF-3 translator transport failure could yield AMBIGUOUS_REJECTED.
+- Fix (alpha): alpha_rnd/infra_status.py — bridge process vs upstream status (derived from executor journal; UNKNOWN without evidence); reason codes MODEL_RATE_LIMITED/QUOTA_EXHAUSTED/UNAVAILABLE/TIMEOUT, BRIDGE_FAILURE, TA_RUNTIME_FAILURE, MALFORMED_MODEL_OUTPUT, UNKNOWN_MODEL_FAILURE. Structured failure records (raw error kept). analysis_status_<session>.json with requested/succeeded/failed/analysis_complete. No SWE calls while upstream known rate-limited/exhausted. Translator transport failure -> publication_status file, publication_intents untouched.
+- Telegram (tracks): ALPHA_ANALYSIS_DEGRADED / ALPHA_ANALYSIS_INFRASTRUCTURE_FAILED, one per session+status; USER ACTION only for quota exhaustion; scan header INCOMPLETE when analysis incomplete.
+- Fail-closed: failed/unanalysed tickers create no publication disposition and no entry authority.
+- Status CLI: `python -m alpha_rnd.infra_status`.
