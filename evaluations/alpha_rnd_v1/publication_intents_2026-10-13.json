@@ -1,0 +1,481 @@
+{
+ "session": "2026-10-13",
+ "synthesized_at": "2026-10-14T05:43:18.442511+00:00",
+ "model": "devin-deep",
+ "temperature": 0,
+ "intents": {
+  "AMPL": {
+   "ticker": "AMPL",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "After the Q3 print resolves the margin question, re-enter only on a pullback that holds $14.97/$14.20.",
+   "params": {
+    "pullback_zone": [
+     14.97,
+     14.2
+    ],
+    "invalidation_level": 13.33,
+    "allocation_usd": [
+     2000,
+     3000
+    ],
+    "allocation_portfolio_pct": [
+     0.02,
+     0.03
+    ],
+    "macro_tripwire_10y": 5.9
+   },
+   "entry_convention": "half-standard conditional long re-entry",
+   "invalidation": "A sustained break of the 50-day near $13.33, or a close below $13.33 on heavy volume, invalidates the long.",
+   "stop_level": 13.33,
+   "target": 13.33,
+   "horizon": "Through the Q3 earnings gate; 3-6 months",
+   "reevaluation": "Re-upgrade only if Q3 revenue growth holds above 20%, net loss narrows, and gross margin stabilizes toward ~70%; stay flat or press a small short if losses widen, margins compress further, or price closes below $13.33 on heavy volume.",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": "The secondary token-short plan on a sustained $13.33 break has no concrete size or execution instruction."
+  },
+  "CDNA": {
+   "ticker": "CDNA",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Short only a rejection candle on elevated volume of roughly 1.5M+ shares with a decisive upper wick in the $67.4-$69.8 resistance zone; a mere touch does not qualify.",
+   "params": {
+    "short_zone": [
+     67.4,
+     69.8
+    ],
+    "volume_trigger_shares": 1500000,
+    "stop": 72.5,
+    "support_shelf": [
+     62.2,
+     63
+    ],
+    "breakdown_level": 61.5,
+    "downside_reference": 53.8
+   },
+   "entry_convention": "quarter-size tactical short for aggressive accounts only",
+   "invalidation": "Cover on a close back above $67.4 on volume; stop above $72.5; position must be flat or reduced to a runner before the confirmed November earnings date.",
+   "stop_level": 72.5,
+   "target": null,
+   "horizon": "Flat or reduced to a runner before the confirmed November earnings date",
+   "reevaluation": "Reassess after the November Q3 print or benign divestiture disclosure; a close above $67.4 on volume negates the short trigger.",
+   "size_frac": 0.25,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "HAE": {
+   "ticker": "HAE",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Take a first half-size tranche at $116-$119 only if the retest of the $118-$119 breakout shelf holds on stable volume; add at $108-$110.",
+   "params": {
+    "first_entry_zone": [
+     116,
+     119
+    ],
+    "retest_shelf": [
+     118,
+     119
+    ],
+    "add_zone": [
+     108,
+     110
+    ],
+    "invalidation_close": 110,
+    "gap_fill_reference": 101
+   },
+   "entry_convention": "staged conditional re-entry limits",
+   "invalidation": "A close below $110 invalidates the breakout structure and shifts bias toward a gap-fill near $101.",
+   "stop_level": 110,
+   "target": 110,
+   "horizon": "1-3 months",
+   "reevaluation": "Revisit toward Buy if $118-$119 holds or price reaches $108-$110 together with a guidance raise quantifying NexSys revenue or a filing explaining the EPS dip; further margin erosion with elevated-price buybacks hardens avoidance.",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "HPE": {
+   "ticker": "HPE",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "AUTO_ENTRY",
+   "trigger": "Place a first buy tranche near $65.50; a second tranche belongs in the $61.50-$63.90 shelf only after the first fills and the uptrend holds; alternatively buy an above-average-volume close above $73.46.",
+   "params": {
+    "first_entry": 65.5,
+    "first_entry_zone": [
+     65,
+     66
+    ],
+    "second_entry_zone": [
+     61.5,
+     63.9
+    ],
+    "first_tranche_portfolio_pct": 0.05,
+    "breakout_trigger": 73.46,
+    "stop": 61.5
+   },
+   "entry_convention": "staged pullback tranches plus a volume-confirmed breakout alternative",
+   "invalidation": "A close below $61.50 means dip-buying support failed; reassess rather than average down.",
+   "stop_level": 61.5,
+   "target": 74.76,
+   "horizon": "3-6 months",
+   "reevaluation": "A high-volume close above $73.46 cancels the cautious timing stance and restores momentum participation.",
+   "size_frac": null,
+   "auto_execution_authorized": true,
+   "ambiguity": null
+  },
+  "IOVA": {
+   "ticker": "IOVA",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Initiate the first tranche only on a pullback into $12.90-$13.70 that holds above $12.92; add on a decisive close above $15.30 on volume or after several sessions above $12.92 with no offering or adverse filing.",
+   "params": {
+    "entry_zone": [
+     12.9,
+     13.7
+    ],
+    "hold_level": 12.92,
+    "first_tranche_portfolio_pct": [
+     0.015,
+     0.02
+    ],
+    "first_tranche_notional_usd": [
+     1500,
+     2000
+    ],
+    "first_tranche_shares": [
+     110,
+     150
+    ],
+    "full_risk_budget_portfolio_pct": 0.03,
+    "add_trigger": 15.3,
+    "stop": 12.4,
+    "gap_fill_reference": 11,
+    "sma50_reference": 9.57,
+    "cash_checkpoint_usd_mn": 80
+   },
+   "entry_convention": "staged long with reduced first tranche",
+   "invalidation": "Any announced equity offering voids the setup before entry; any daily close below $12.92 kills the idea outright.",
+   "stop_level": 12.4,
+   "target": 17.5,
+   "horizon": "3-6 months",
+   "reevaluation": "Check pending filings before fills where practicable; re-underwrite if the position fills but momentum stays flat; keep reduced size if Q3 10-Q cash is materially below ~$80M.",
+   "size_frac": 0.5,
+   "auto_execution_authorized": false,
+   "ambiguity": "The alternative second-tranche condition says several sessions above $12.92 without defining the session count."
+  },
+  "MRNA": {
+   "ticker": "MRNA",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "Re-evaluate on a daily close below $187, which confirms the correction, or a close above $227.46 on volume, which invalidates the bearish divergence and reopens a reduced-size long.",
+   "params": {
+    "correction_trigger": 187,
+    "next_support": 182,
+    "sma50_zone": [
+     144,
+     150
+    ],
+    "bullish_invalidation": 227.46,
+    "resistance_zone": [
+     225,
+     227.46
+    ],
+    "optional_put_strikes": [
+     190,
+     200
+    ],
+    "optional_premium_portfolio_pct": [
+     0.01,
+     0.015
+    ]
+   },
+   "entry_convention": "stay flat; bearish exposure only through defined-risk OTM puts",
+   "invalidation": "A confirmed close above $227.46 on volume invalidates the bearish case.",
+   "stop_level": 227.46,
+   "target": 187,
+   "horizon": "1-3 months, keyed to the $187/$227.46 resolution levels and the next 10-Q",
+   "reevaluation": "Reassess on the next 10-Q, especially the unexplained ~$1B current-liability build, or if a verified catalyst for the August gap is identified.",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  },
+  "P": {
+   "ticker": "P",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "After verifying the August 10-Q explains the ~$450M cash drawdown and ~$590M current-liability spike, take a starter tranche only on confirmed stabilization in the $128-$140 zone, or after a clean filing plus a failed breakdown.",
+   "params": {
+    "stabilization_zone": [
+     128,
+     140
+    ],
+    "starter_intended_size_frac": [
+     0.25,
+     0.33
+    ],
+    "starter_notional_usd": [
+     25000,
+     33000
+    ],
+    "stop": 127,
+    "structural_warning": 146,
+    "structural_break": 131,
+    "retracement_scenario_zone": [
+     124,
+     128
+    ]
+   },
+   "entry_convention": "verified-filing conditional starter tranche; no resting $140 limit order",
+   "invalidation": "A close below ~$131 breaks the October structure and opens the $124-$128 retracement scenario; genuine cash-flow deterioration in the filing argues for structural avoidance.",
+   "stop_level": 127,
+   "target": 140,
+   "horizon": "3-6 months",
+   "reevaluation": "Read the August 10-Q before sizing; upgrade toward Buy on a benign filing plus confirmed stabilization or failed breakdown, and downgrade to avoidance on genuine cash-flow deterioration.",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "Starter size is stated only as a 25%-33% range of intended size, not as a single fraction."
+  },
+  "PD": {
+   "ticker": "PD",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "AUTO_ENTRY",
+   "trigger": "Place quarter-size limit bids only in the $15.4-$15.8 support band.",
+   "params": {
+    "bid_zone": [
+     15.4,
+     15.8
+    ],
+    "quarter_size_notional_usd": 25000,
+    "max_starter_notional_usd": 33000,
+    "invalidation_close": 15.1,
+    "post_earnings_reentry_zone": [
+     13.7,
+     15.1
+    ]
+   },
+   "entry_convention": "starter-size limit bids with a price-conditional earnings rule",
+   "invalidation": "Exit on a close below ~$15.1; if profitable going into earnings, trim half and let the rest ride; if flat-to-losing, exit before the print.",
+   "stop_level": 15.1,
+   "target": null,
+   "horizon": "Approximately 3 weeks into the earnings print; reassess post-print",
+   "reevaluation": "Revisit upgrading after earnings if revenue re-accelerates and guidance confirms the AI-ops narrative; evaluate the $13.7-$15.1 zone after a flat-print gap down rather than panic-selling.",
+   "size_frac": 0.25,
+   "auto_execution_authorized": true,
+   "ambiguity": "Sizing is described both as quarter-size (~$25k) and as no more than one-third of standard allocation (~$33k)."
+  },
+  "PENG": {
+   "ticker": "PENG",
+   "classification": "WATCH_FOR_ENTRY",
+   "watch_mode": "DETERMINISTIC_CONFIRMATION",
+   "trigger": "Take a first tranche at the $70-$72.61 breakout pivot only if it holds on falling volume; use the $60-$68 zone as the backstop if the shelf fails; take a small breakout tranche only on a confirmed hold above $80.47 with sustained volume.",
+   "params": {
+    "first_entry_zone": [
+     70,
+     72.61
+    ],
+    "first_tranche_book_pct": [
+     0.02,
+     0.03
+    ],
+    "backstop_zone": [
+     60,
+     68
+    ],
+    "breakout_trigger": 80.47,
+    "stop": 73.4,
+    "max_pullback_position_portfolio_pct": [
+     0.03,
+     0.05
+    ],
+    "atr": 4.81
+   },
+   "entry_convention": "staged pullback and confirmed-breakout re-engagement",
+   "invalidation": "A stop discipline near $73.40 applies to any established position; failure of the $70-$72.61 shelf moves re-engagement to the $60-$68 backstop.",
+   "stop_level": 73.4,
+   "target": null,
+   "horizon": "3-6 months, contingent on the next earnings resolving the inventory question",
+   "reevaluation": "The next earnings print decides whether the $498M inventory build converts to revenue; rebuild toward overweight if it does, or exit if inventory sits or compresses margins.",
+   "size_frac": null,
+   "auto_execution_authorized": false,
+   "ambiguity": "The stated $73.40 stop applies to any established position but is above the $70-$72.61 first-entry zone, so its application to a new pullback fill is unclear."
+  },
+  "QMCO": {
+   "ticker": "QMCO",
+   "classification": "REANALYZE_ON_TRIGGER",
+   "watch_mode": "REANALYZE_ON_TRIGGER",
+   "trigger": "Re-enter only after a completed financial close with no adverse disclosure plus tape stabilization: the $24.50-$25.10 shelf holding on declining volume or RSI tagging the low 30s near the $22.58 lower band.",
+   "params": {
+    "support_shelf": [
+     24.5,
+     25.1
+    ],
+    "lower_band": 22.58,
+    "starter_portfolio_pct": 0.017,
+    "starter_notional_usd": 1700,
+    "hard_exit_close": 24.5,
+    "ema10_reference": 29.63,
+    "gap_fill_reference": 20
+   },
+   "entry_convention": "small starter only after event resolution and tape stabilization",
+   "invalidation": "Exit decisively on a close below $24.50; any adverse CFO-related disclosure, including restatement, control deficiency, delayed filing, or going-concern language, requires immediate full exit.",
+   "stop_level": 24.5,
+   "target": 22.58,
+   "horizon": "Re-evaluate on CFO disclosure resolution and financial-close completion; staged re-entry window over the next 1-3 months if triggers are met",
+   "reevaluation": "Reassess after the CFO issue and financial close resolve, the recap terms and dilution cost are verified in the 10-Q, and the 10 EMA is reclaimed with the MACD histogram contracting.",
+   "size_frac": 0.3333333333333333,
+   "auto_execution_authorized": false,
+   "ambiguity": null
+  }
+ },
+ "validated": [
+  "CDNA",
+  "HAE",
+  "MRNA",
+  "QMCO"
+ ],
+ "dispositions": {
+  "AMPL": {
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: The secondary token-short plan on a sustained $13.33 break has no concrete size or execution instruction."
+   ],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/AMPL_2026-10-13.json"
+  },
+  "CDNA": {
+   "disposition": "PUBLISHED_NON_EXECUTABLE",
+   "violations": [],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/CDNA_2026-10-13.json"
+  },
+  "HAE": {
+   "disposition": "PUBLISHED_NON_EXECUTABLE",
+   "violations": [],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/HAE_2026-10-13.json"
+  },
+  "HPE": {
+   "disposition": "RESEARCH_ONLY",
+   "violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/HPE_2026-10-13.json"
+  },
+  "IOVA": {
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: The alternative second-tranche condition says several sessions above $12.92 without defining the session count.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/IOVA_2026-10-13.json"
+  },
+  "MRNA": {
+   "disposition": "REANALYZE_ON_TRIGGER",
+   "violations": [],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/MRNA_2026-10-13.json"
+  },
+  "PD": {
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: Sizing is described both as quarter-size (~$25k) and as no more than one-third of standard allocation (~$33k).",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/PD_2026-10-13.json"
+  },
+  "PENG": {
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: The stated $73.40 stop applies to any established position but is above the $70-$72.61 first-entry zone, so its application to a new pullback fill is unclear."
+   ],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/PENG_2026-10-13.json"
+  },
+  "P": {
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: Starter size is stated only as a 25%-33% range of intended size, not as a single fraction."
+   ],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/P_2026-10-13.json"
+  },
+  "QMCO": {
+   "disposition": "REANALYZE_ON_TRIGGER",
+   "violations": [],
+   "executable": false,
+   "user_action_required": false,
+   "artifact": "case_artifacts/QMCO_2026-10-13.json"
+  }
+ },
+ "review_required": [
+  {
+   "ticker": "AMPL",
+   "session": "2026-10-13",
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: The secondary token-short plan on a sustained $13.33 break has no concrete size or execution instruction."
+   ],
+   "artifact": "case_artifacts/AMPL_2026-10-13.json"
+  },
+  {
+   "ticker": "HPE",
+   "session": "2026-10-13",
+   "disposition": "RESEARCH_ONLY",
+   "violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "artifact": "case_artifacts/HPE_2026-10-13.json"
+  },
+  {
+   "ticker": "IOVA",
+   "session": "2026-10-13",
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: The alternative second-tranche condition says several sessions above $12.92 without defining the session count.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "artifact": "case_artifacts/IOVA_2026-10-13.json"
+  },
+  {
+   "ticker": "PD",
+   "session": "2026-10-13",
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: Sizing is described both as quarter-size (~$25k) and as no more than one-third of standard allocation (~$33k).",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "artifact": "case_artifacts/PD_2026-10-13.json"
+  },
+  {
+   "ticker": "PENG",
+   "session": "2026-10-13",
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: The stated $73.40 stop applies to any established position but is above the $70-$72.61 first-entry zone, so its application to a new pullback fill is unclear."
+   ],
+   "artifact": "case_artifacts/PENG_2026-10-13.json"
+  },
+  {
+   "ticker": "P",
+   "session": "2026-10-13",
+   "disposition": "AMBIGUOUS_REJECTED",
+   "violations": [
+    "ambiguous: Starter size is stated only as a 25%-33% range of intended size, not as a single fraction."
+   ],
+   "artifact": "case_artifacts/P_2026-10-13.json"
+  }
+ ]
+}
