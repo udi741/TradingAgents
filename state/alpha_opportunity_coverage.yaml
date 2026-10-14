@@ -91,15 +91,15 @@ items:
     next_action: none — collector matures via hourly R2 update; 10-13 diagnostic built from frozen cache
   R7:
     title: EXISTING TRADE POSTMORTEMS
-    status: NOT_STARTED
+    status: DONE
     objective: standardized packets PBF/ACN/APPS/PGEN/TWST/SDGR
     dependencies: []
-    started_at: null
-    completed_at: null
+    started_at: "2026-10-14"
+    completed_at: "2026-10-14"
     blockers: []
-    bugs: []
-    evidence: []
-    commits: []
+    bugs: [R7-B1: DONE — packet realized sum vs canonical diverged $12.96; root cause = postmortem fee hardcoded 0.0007 vs canonical 0.001 + canonical correction had ~$3.25 rounding error; canonical realized corrected to -2140.99 via auditable REALIZED_CORRECTION; packets reconcile to 1c]
+    evidence: [alpha_rnd/postmortems.py, alpha_rnd/investigate.py, evaluations/alpha_rnd_v1/trade_postmortems/, reconciliation.json]
+    commits: [alpha:e083a06d, alpha:f3bc2af3]
     next_action: create packet template
   R8:
     title: EVIDENCE REVIEW
