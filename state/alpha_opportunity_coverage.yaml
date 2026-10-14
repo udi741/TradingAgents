@@ -1,7 +1,7 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
 updated_at: "2026-10-14"
-current_task: R5
+current_task: R5B
 current_subtask: null
 next_task: R5
 items:
@@ -66,7 +66,7 @@ items:
     commits: [alpha:'"'"'placeholder'"'"']
     next_action: none — derived view, current-by-construction; first clean session 2026-10-14
   R5:
-    title: SHADOW DEEP-QUOTA EXPANSION
+    title: SHADOW DEEP-COVERAGE EXPANSION
     status: WAITING_FOR_DATA
     objective: shadow-only deep analysis beyond top-10
     dependencies: [R2]
@@ -76,7 +76,7 @@ items:
     bugs: []
     evidence: []
     commits: []
-    next_action: design shadow lane, no trading
+    next_action: WAIT_FOR_DATA — run paired replay experiments once reviewed + R2 evidence context exists
   R6:
     title: LOW-PRICE OPPORTUNITY SHADOW LANE
     status: WAITING_FOR_DATA
