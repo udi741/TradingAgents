@@ -1,0 +1,1076 @@
+{
+ "benchmark": "SPY",
+ "created_at": "2026-10-14T06:20:19.190879+00:00",
+ "entry_reference": "NEXT_REGULAR_OPEN",
+ "funnel_backfilled": true,
+ "last_update": "2026-10-14T06:22:16.279843+00:00",
+ "price_convention": "auto_adjusted",
+ "schema_version": 1,
+ "session": "2026-10-12",
+ "tickers": {
+  "CDNA": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -0.551,
+     "MFE_pct": 7.703,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 62.57,
+     "evaluated_at": "2026-10-14T06:22:16.260671+00:00",
+     "excess_return_pct": 4.485,
+     "max_high": 67.39,
+     "min_low": 62.225,
+     "raw_return_pct": 4.571,
+     "status": "MATURED",
+     "target_close": 65.43,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "ECO": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -0.46,
+     "MFE_pct": 3.002,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 97.75,
+     "evaluated_at": "2026-10-14T06:22:16.261448+00:00",
+     "excess_return_pct": 1.459,
+     "max_high": 100.684,
+     "min_low": 97.3,
+     "raw_return_pct": 1.545,
+     "status": "MATURED",
+     "target_close": 99.26,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "ETON": {
+   "cohort": "RANK_26_50",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -4.94,
+     "MFE_pct": 0.144,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 55.46,
+     "evaluated_at": "2026-10-14T06:22:16.262140+00:00",
+     "excess_return_pct": -3.927,
+     "max_high": 55.54,
+     "min_low": 52.72,
+     "raw_return_pct": -3.841,
+     "status": "MATURED",
+     "target_close": 53.33,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "FLY": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -3.365,
+     "MFE_pct": 0.583,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 18.87,
+     "evaluated_at": "2026-10-14T06:22:16.262861+00:00",
+     "excess_return_pct": -2.895,
+     "max_high": 18.98,
+     "min_low": 18.235,
+     "raw_return_pct": -2.809,
+     "status": "MATURED",
+     "target_close": 18.34,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "FRO": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -0.188,
+     "MFE_pct": 2.102,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 58.52,
+     "evaluated_at": "2026-10-14T06:22:16.263549+00:00",
+     "excess_return_pct": 0.803,
+     "max_high": 59.75,
+     "min_low": 58.41,
+     "raw_return_pct": 0.889,
+     "status": "MATURED",
+     "target_close": 59.04,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "HAE": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.425,
+     "MFE_pct": 0.79,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 122.8,
+     "evaluated_at": "2026-10-14T06:22:16.264263+00:00",
+     "excess_return_pct": -0.965,
+     "max_high": 123.77,
+     "min_low": 121.05,
+     "raw_return_pct": -0.879,
+     "status": "MATURED",
+     "target_close": 121.72,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "HESM": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -4.183,
+     "MFE_pct": 0.093,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 32.27,
+     "evaluated_at": "2026-10-14T06:22:16.264935+00:00",
+     "excess_return_pct": -3.402,
+     "max_high": 32.3,
+     "min_low": 30.92,
+     "raw_return_pct": -3.316,
+     "status": "MATURED",
+     "target_close": 31.2,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "HPE": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -0.755,
+     "MFE_pct": 5.358,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 67.56,
+     "evaluated_at": "2026-10-14T06:22:16.265683+00:00",
+     "excess_return_pct": 1.764,
+     "max_high": 71.18,
+     "min_low": 67.05,
+     "raw_return_pct": 1.85,
+     "status": "MATURED",
+     "target_close": 68.81,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "IESC": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -3.209,
+     "MFE_pct": 2.351,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 282.0,
+     "evaluated_at": "2026-10-14T06:22:16.266382+00:00",
+     "excess_return_pct": -0.781,
+     "max_high": 288.63,
+     "min_low": 272.95,
+     "raw_return_pct": -0.695,
+     "status": "MATURED",
+     "target_close": 280.04,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "IOVA": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.174,
+     "MFE_pct": 2.21,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 14.48,
+     "evaluated_at": "2026-10-14T06:22:16.267062+00:00",
+     "excess_return_pct": 0.052,
+     "max_high": 14.8,
+     "min_low": 14.31,
+     "raw_return_pct": 0.138,
+     "status": "MATURED",
+     "target_close": 14.5,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "KOD": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -8.077,
+     "MFE_pct": 0.262,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 99.29,
+     "evaluated_at": "2026-10-14T06:22:16.267737+00:00",
+     "excess_return_pct": -7.801,
+     "max_high": 99.55,
+     "min_low": 91.27,
+     "raw_return_pct": -7.715,
+     "status": "MATURED",
+     "target_close": 91.63,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "LW": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.554,
+     "MFE_pct": 3.305,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 50.83,
+     "evaluated_at": "2026-10-14T06:22:16.268420+00:00",
+     "excess_return_pct": 2.137,
+     "max_high": 52.51,
+     "min_low": 50.04,
+     "raw_return_pct": 2.223,
+     "status": "MATURED",
+     "target_close": 51.96,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "MGNI": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": 0.0,
+     "MFE_pct": 3.12,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 25.0,
+     "evaluated_at": "2026-10-14T06:22:16.269096+00:00",
+     "excess_return_pct": 1.194,
+     "max_high": 25.78,
+     "min_low": 25.0,
+     "raw_return_pct": 1.28,
+     "status": "MATURED",
+     "target_close": 25.32,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "MRNA": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.411,
+     "MFE_pct": 5.226,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 207.63,
+     "evaluated_at": "2026-10-14T06:22:16.269765+00:00",
+     "excess_return_pct": 4.066,
+     "max_high": 218.48,
+     "min_low": 204.7,
+     "raw_return_pct": 4.152,
+     "status": "MATURED",
+     "target_close": 216.25,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "OPCH": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -0.128,
+     "MFE_pct": 0.128,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 31.13,
+     "evaluated_at": "2026-10-14T06:22:16.270435+00:00",
+     "excess_return_pct": -0.182,
+     "max_high": 31.17,
+     "min_low": 31.09,
+     "raw_return_pct": -0.096,
+     "status": "MATURED",
+     "target_close": 31.1,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "P": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.109,
+     "MFE_pct": 4.614,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 150.62,
+     "evaluated_at": "2026-10-14T06:22:16.271098+00:00",
+     "excess_return_pct": 4.13,
+     "max_high": 157.57,
+     "min_low": 148.95,
+     "raw_return_pct": 4.216,
+     "status": "MATURED",
+     "target_close": 156.97,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "PENG": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.127,
+     "MFE_pct": 5.424,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 76.33,
+     "evaluated_at": "2026-10-14T06:22:16.271788+00:00",
+     "excess_return_pct": 2.364,
+     "max_high": 80.47,
+     "min_low": 75.47,
+     "raw_return_pct": 2.45,
+     "status": "MATURED",
+     "target_close": 78.2,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "PGEN": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.579,
+     "MFE_pct": 1.447,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 7.6,
+     "evaluated_at": "2026-10-14T06:22:16.272504+00:00",
+     "excess_return_pct": -1.665,
+     "max_high": 7.71,
+     "min_low": 7.48,
+     "raw_return_pct": -1.579,
+     "status": "MATURED",
+     "target_close": 7.48,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "QMCO": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -0.922,
+     "MFE_pct": 7.879,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 26.02,
+     "evaluated_at": "2026-10-14T06:22:16.273181+00:00",
+     "excess_return_pct": 1.836,
+     "max_high": 28.07,
+     "min_low": 25.78,
+     "raw_return_pct": 1.922,
+     "status": "MATURED",
+     "target_close": 26.52,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "QUBT": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.92,
+     "MFE_pct": 2.363,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 6.77,
+     "evaluated_at": "2026-10-14T06:22:16.273930+00:00",
+     "excess_return_pct": 1.391,
+     "max_high": 6.93,
+     "min_low": 6.64,
+     "raw_return_pct": 1.477,
+     "status": "MATURED",
+     "target_close": 6.87,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "REPL": {
+   "cohort": "RANK_26_50",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -6.507,
+     "MFE_pct": 0.155,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 12.91,
+     "evaluated_at": "2026-10-14T06:22:16.274658+00:00",
+     "excess_return_pct": -6.283,
+     "max_high": 12.93,
+     "min_low": 12.07,
+     "raw_return_pct": -6.197,
+     "status": "MATURED",
+     "target_close": 12.11,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "SEZL": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -3.371,
+     "MFE_pct": 1.445,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 130.84,
+     "evaluated_at": "2026-10-14T06:22:16.275378+00:00",
+     "excess_return_pct": -0.69,
+     "max_high": 132.73,
+     "min_low": 126.43,
+     "raw_return_pct": -0.604,
+     "status": "MATURED",
+     "target_close": 130.05,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "STZ": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.992,
+     "MFE_pct": 0.156,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 128.0,
+     "evaluated_at": "2026-10-14T06:22:16.276099+00:00",
+     "excess_return_pct": -0.82,
+     "max_high": 128.2,
+     "min_low": 125.45,
+     "raw_return_pct": -0.734,
+     "status": "MATURED",
+     "target_close": 127.06,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "TEAM": {
+   "cohort": "TOP_1_10",
+   "deep_selected": true,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -0.809,
+     "MFE_pct": 2.562,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 209.405,
+     "evaluated_at": "2026-10-14T06:22:16.276849+00:00",
+     "excess_return_pct": -0.738,
+     "max_high": 214.77,
+     "min_low": 207.71,
+     "raw_return_pct": -0.652,
+     "status": "MATURED",
+     "target_close": 208.04,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "DEEP_SELECTED"
+  },
+  "UMAC": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -4.557,
+     "MFE_pct": 1.398,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 19.31,
+     "evaluated_at": "2026-10-14T06:22:16.277577+00:00",
+     "excess_return_pct": 0.587,
+     "max_high": 19.58,
+     "min_low": 18.43,
+     "raw_return_pct": 0.673,
+     "status": "MATURED",
+     "target_close": 19.44,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "WDAY": {
+   "cohort": "RANK_26_50",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -2.027,
+     "MFE_pct": 0.524,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 188.98,
+     "evaluated_at": "2026-10-14T06:22:16.278301+00:00",
+     "excess_return_pct": -1.652,
+     "max_high": 189.97,
+     "min_low": 185.15,
+     "raw_return_pct": -1.566,
+     "status": "MATURED",
+     "target_close": 186.02,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "XNCR": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -6.68,
+     "MFE_pct": 0.64,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 25.0,
+     "evaluated_at": "2026-10-14T06:22:16.279162+00:00",
+     "excess_return_pct": -6.006,
+     "max_high": 25.16,
+     "min_low": 23.33,
+     "raw_return_pct": -5.92,
+     "status": "MATURED",
+     "target_close": 23.52,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  },
+  "XP": {
+   "cohort": "RANK_11_25",
+   "deep_selected": false,
+   "entry_session": "2026-10-13",
+   "horizons": {
+    "H1": {
+     "MAE_pct": -1.326,
+     "MFE_pct": 2.081,
+     "benchmark_return_pct": 0.086,
+     "entry_open": 31.67,
+     "evaluated_at": "2026-10-14T06:22:16.279837+00:00",
+     "excess_return_pct": -1.002,
+     "max_high": 32.329,
+     "min_low": 31.25,
+     "raw_return_pct": -0.916,
+     "status": "MATURED",
+     "target_close": 31.38,
+     "target_session": "2026-10-13"
+    },
+    "H20": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H5": {
+     "status": "PENDING",
+     "target_session": null
+    },
+    "H60": {
+     "status": "PENDING",
+     "target_session": null
+    }
+   },
+   "lane_ranks": null,
+   "pool_rank": null,
+   "pool_selected": false,
+   "primary_rank": null,
+   "stage": "POOL_SELECTED_NOT_DEEP"
+  }
+ }
+}
