@@ -781,3 +781,13 @@ funnel discovery; transient fetch failures stay PENDING and retry; offline
 gaps catch up in one run. Read-only to trading. Health: `python -m
 alpha_rnd.cohort_outcomes health`. R2 = WAITING_FOR_DATA (impl complete,
 collector active); first clean schema-v2 session = 2026-10-14.
+
+### R3 TA outcome evaluation (2026-10-14)
+
+alpha_rnd/ta_outcomes.py: derived read-only view joining frozen funnel
+(disposition + TA signal) to R2 outcomes. Groups: POSITIVE(Buy,Overweight)
+NEUTRAL(Hold) NEGATIVE(Sell,Underweight); publication dispositions kept
+separate; OPEN_POSITION_MANAGEMENT/held excluded from new-entry stats.
+On-demand computation — current-by-construction as R2 collector matures;
+no separate scheduler/fetch needed. status + session CLIs. 10-12
+diagnostic example classified (excluded from clean headline).
