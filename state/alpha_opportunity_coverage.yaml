@@ -1,9 +1,9 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
 updated_at: "2026-10-14"
-current_task: R5B
+current_task: R5BB
 current_subtask: null
-next_task: R5
+next_task: R5B
 items:
   R0:
     title: ROADMAP CONTROL
@@ -67,7 +67,7 @@ items:
     next_action: none — derived view, current-by-construction; first clean session 2026-10-14
   R5:
     title: SHADOW DEEP-COVERAGE EXPANSION
-    status: WAITING_FOR_DATA
+    status: IN_PROGRESS
     objective: shadow-only deep analysis beyond top-10
     dependencies: [R2]
     started_at: null
