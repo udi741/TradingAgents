@@ -791,3 +791,14 @@ separate; OPEN_POSITION_MANAGEMENT/held excluded from new-entry stats.
 On-demand computation — current-by-construction as R2 collector matures;
 no separate scheduler/fetch needed. status + session CLIs. 10-12
 diagnostic example classified (excluded from clean headline).
+
+### PROD-2026-10-14-ASST-RISK_NOTIFICATION_AND_WATCH_LIFECYCLE (incident record)
+
+- Symptom: ℹ️ ALPHA INFO Telegram for ASST RISK_PLAN_REQUIRED at 13:31Z, no fill.
+- Root causes:
+  1. Legacy triggerable watch: ASST `DETERMINISTIC_CONFIRMATION` v2 was seeded in the V1/V2 watchlist (933dbba4, 2026-10-03) with no publication provenance. Later ASST intents (10-02, 10-07) were REANALYZE_ON_TRIGGER / no disposition, and publish() never retires a watch on a non-publishable revision. Monitor entry gating only checked terminal/blocked status, so the watch stayed entry-capable.
+  2. Relay policy: ALPHA_MAP mapped RISK_PLAN_REQUIRED to telegram-sendable INFO.
+- Fix (alpha 81a6cb00): alpha_rnd/entry_gate.py — a watch may create entries only if it is the latest frozen decision for its ticker AND that decision is EXECUTABLE_WATCH from the same session. Applied in close_pass, intraday_pass, and do_fill. REANALYZE_ON_TRIGGER unaffected.
+- Fix (tracks d459a806): RISK_PLAN_REQUIRED relay send=False; audit events retained.
+- Audit: 16 live watches; 0 entry-authorized after fix. No EXECUTABLE_WATCH publication exists since 10-12.
+- Economics: unchanged (cash 92899.01, realized -2140.99, PBF 62, pending 0/0, executed 6).
