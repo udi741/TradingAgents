@@ -1,0 +1,88 @@
+{
+ "attribution": {
+  "confidence": "LOW",
+  "lesson_tags": [
+   "STALE_TA_AT_ENTRY",
+   "INCIDENT"
+  ],
+  "primary_failure_attribution": "MULTIPLE_FACTORS"
+ },
+ "built_at": "2026-10-14T08:00:52.977236+00:00",
+ "ex_ante": {
+  "artifact": "APPS_2026-10-01.json",
+  "error_artifacts": [],
+  "final_signal": "Hold",
+  "ta_evidence_status": "VALID_STALE",
+  "valid_artifacts": [
+   "APPS_2026-10-01.json"
+  ]
+ },
+ "ex_post": {
+  "MAE_pct": -9.03,
+  "MFE_pct": 5.93,
+  "max_high": 11.97,
+  "min_low": 10.28,
+  "open_position": false,
+  "sessions": 4,
+  "status": "MATURED",
+  "window": [
+   "2026-10-02",
+   "2026-10-07"
+  ]
+ },
+ "execution": {
+  "cost_basis_alloc": 4994.6,
+  "entries": [
+   {
+    "price": 11.3,
+    "session": "2026-10-02",
+    "shares": 442,
+    "source": "ledger POSITION_RULES"
+   }
+  ],
+  "exits": [
+   {
+    "price": 10.302000045776367,
+    "session": "2026-10-07",
+    "shares": 442,
+    "utc": "2026-10-07T13:32:04.769456+00:00",
+    "why": "gap-through open below stop 10.42"
+   }
+  ],
+  "gross_proceeds": 4550.3,
+  "realized_pnl": -444.3,
+  "remaining_shares": 0
+ },
+ "identity": {
+  "entry": {
+   "price": 11.3,
+   "session": "2026-10-02",
+   "shares": 442,
+   "source": "ledger POSITION_RULES"
+  },
+  "initial_notional": 4994.6,
+  "status": "CLOSED"
+ },
+ "integrity": {
+  "execution_integrity": "CLEAN",
+  "incidents": [
+   "INCIDENT_DUPLICATE_EXIT_2026-10-07 (shared mechanism)"
+  ]
+ },
+ "management": {
+  "incidents": [
+   "INCIDENT_DUPLICATE_EXIT_2026-10-07 (shared mechanism)"
+  ]
+ },
+ "provenance": {
+  "price_convention": "auto_adjusted",
+  "sources": [
+   "trigger_events.jsonl",
+   "monitor_state.json",
+   "alpha_paper_ledger.jsonl",
+   "case_artifacts/"
+  ]
+ },
+ "schema_version": 1,
+ "ticker": "APPS"
+}

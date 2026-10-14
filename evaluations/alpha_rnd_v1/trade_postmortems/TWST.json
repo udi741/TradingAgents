@@ -1,0 +1,97 @@
+{
+ "attribution": {
+  "confidence": "LOW",
+  "lesson_tags": [
+   "STALE_TA_AT_ENTRY",
+   "PARTIAL_EXIT",
+   "STATE_INTEGRITY_INCIDENT",
+   "MISSED_EXECUTION"
+  ],
+  "primary_failure_attribution": "MULTIPLE_FACTORS"
+ },
+ "built_at": "2026-10-14T08:00:53.590468+00:00",
+ "ex_ante": {
+  "artifact": "TWST_mgmt_review_2026-10-06.json",
+  "error_artifacts": [],
+  "final_signal": "Underweight",
+  "ta_evidence_status": "VALID_STALE",
+  "valid_artifacts": [
+   "TWST_2026-10-02.json",
+   "TWST_mgmt_review_2026-10-06.json"
+  ]
+ },
+ "ex_post": {
+  "MAE_pct": -30.99,
+  "MFE_pct": 4.85,
+  "max_high": 219.71,
+  "min_low": 144.6,
+  "open_position": false,
+  "sessions": 5,
+  "status": "MATURED",
+  "window": [
+   "2026-10-06",
+   "2026-10-12"
+  ]
+ },
+ "execution": {
+  "cost_basis_alloc": 2306.66,
+  "entries": [
+   {
+    "price": 209.5500030517578,
+    "shares": 11,
+    "utc": "2026-10-06T14:18:54.441540+00:00"
+   }
+  ],
+  "exits": [
+   {
+    "price": 158.25999450683594,
+    "session": "2026-10-07",
+    "shares": 4,
+    "utc": "2026-10-07T13:31:05.372225+00:00",
+    "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~4 of 11 at next open; residual hard exit on close<164"
+   },
+   {
+    "price": 159.74000549316406,
+    "session": "2026-10-12",
+    "shares": 7,
+    "utc": "2026-10-12T19:16:53.817584+00:00",
+    "why": "mgmt review: hard exit on any close below $164"
+   }
+  ],
+  "gross_proceeds": 1749.99,
+  "realized_pnl": -556.67,
+  "remaining_shares": 0
+ },
+ "identity": {
+  "entry": {
+   "price": 209.5500030517578,
+   "session": "2026-10-06",
+   "shares": 11,
+   "source": "PAPER_ENTRY event"
+  },
+  "initial_notional": 2306.66,
+  "status": "CLOSED"
+ },
+ "integrity": {
+  "execution_integrity": "INCIDENT_WITH_NO_ECONOMIC_EFFECT",
+  "incidents": [
+   "missed 10-08 open exit while machine off; distinct prospective re-confirmation 10-09 -> filled 10-12"
+  ]
+ },
+ "management": {
+  "incidents": [
+   "missed 10-08 open exit while machine off; distinct prospective re-confirmation 10-09 -> filled 10-12"
+  ]
+ },
+ "provenance": {
+  "price_convention": "auto_adjusted",
+  "sources": [
+   "trigger_events.jsonl",
+   "monitor_state.json",
+   "alpha_paper_ledger.jsonl",
+   "case_artifacts/"
+  ]
+ },
+ "schema_version": 1,
+ "ticker": "TWST"
+}

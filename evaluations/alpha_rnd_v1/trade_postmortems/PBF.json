@@ -1,0 +1,75 @@
+{
+ "attribution": {
+  "confidence": "LOW",
+  "lesson_tags": [
+   "STALE_TA_AT_ENTRY"
+  ],
+  "primary_failure_attribution": "NO_FAILURE_OPEN_OR_WINNER"
+ },
+ "built_at": "2026-10-14T08:00:42.574352+00:00",
+ "ex_ante": {
+  "artifact": "PBF_2026-10-01.json",
+  "error_artifacts": [],
+  "final_signal": "Overweight",
+  "ta_evidence_status": "VALID_STALE",
+  "valid_artifacts": [
+   "PBF_2026-10-01.json"
+  ]
+ },
+ "ex_post": {
+  "MAE_pct": -3.54,
+  "MFE_pct": 14.41,
+  "max_high": 91.53,
+  "min_low": 77.17,
+  "open_position": true,
+  "sessions": 8,
+  "status": "MATURED",
+  "window": [
+   "2026-10-02",
+   "2026-10-13"
+  ]
+ },
+ "execution": {
+  "cost_basis_alloc": 0.0,
+  "entries": [
+   {
+    "price": 80.0,
+    "session": "2026-10-02",
+    "shares": 62,
+    "source": "ledger POSITION_RULES"
+   }
+  ],
+  "exits": [],
+  "gross_proceeds": 0,
+  "realized_pnl": 0.0,
+  "remaining_shares": 62
+ },
+ "identity": {
+  "entry": {
+   "price": 80.0,
+   "session": "2026-10-02",
+   "shares": 62,
+   "source": "ledger POSITION_RULES"
+  },
+  "initial_notional": 4960.0,
+  "status": "OPEN"
+ },
+ "integrity": {
+  "execution_integrity": "CLEAN",
+  "incidents": []
+ },
+ "management": {
+  "incidents": []
+ },
+ "provenance": {
+  "price_convention": "auto_adjusted",
+  "sources": [
+   "trigger_events.jsonl",
+   "monitor_state.json",
+   "alpha_paper_ledger.jsonl",
+   "case_artifacts/"
+  ]
+ },
+ "schema_version": 1,
+ "ticker": "PBF"
+}

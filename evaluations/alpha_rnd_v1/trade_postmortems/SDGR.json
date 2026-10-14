@@ -1,0 +1,109 @@
+{
+ "attribution": {
+  "confidence": "LOW",
+  "lesson_tags": [
+   "NO_VALID_TA_AT_ENTRY",
+   "PARTIAL_EXIT",
+   "STATE_INTEGRITY_INCIDENT"
+  ],
+  "primary_failure_attribution": "MULTIPLE_FACTORS"
+ },
+ "built_at": "2026-10-14T08:00:53.902825+00:00",
+ "ex_ante": {
+  "artifact": "SDGR_mgmt_review_2026-10-06.json",
+  "error_artifacts": [
+   "SDGR_2026-10-05.error.json",
+   "SDGR_2026-10-06.error.json"
+  ],
+  "final_signal": "Underweight",
+  "ta_evidence_status": "INVALID_RUNTIME_AT_ENTRY",
+  "valid_artifacts": [
+   "SDGR_2026-10-01.json",
+   "SDGR_2026-10-07.json",
+   "SDGR_2026-10-09.json",
+   "SDGR_mgmt_review_2026-10-06.json"
+  ]
+ },
+ "ex_post": {
+  "MAE_pct": -18.03,
+  "MFE_pct": 8.97,
+  "max_high": 33.78,
+  "min_low": 25.41,
+  "open_position": false,
+  "sessions": 6,
+  "status": "MATURED",
+  "window": [
+   "2026-10-06",
+   "2026-10-13"
+  ]
+ },
+ "execution": {
+  "cost_basis_alloc": 4994.49,
+  "entries": [
+   {
+    "price": 31.0,
+    "shares": 161,
+    "utc": "2026-10-06T14:18:37.269400+00:00"
+   }
+  ],
+  "exits": [
+   {
+    "price": 27.809999465942383,
+    "session": "2026-10-07",
+    "shares": 100,
+    "utc": "2026-10-07T13:31:05.380413+00:00",
+    "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~100 of 161 at next open; residual stop close<$27.29"
+   },
+   {
+    "non_economic": "duplicate/incident event row; did not affect cash",
+    "price": 25.690000534057617,
+    "session": "2026-10-13",
+    "shares": 61,
+    "utc": "2026-10-13T13:31:05.421216+00:00",
+    "why": "mgmt review: tightened stop just below $27.29"
+   },
+   {
+    "price": 25.90999984741211,
+    "session": "2026-10-13",
+    "shares": 61,
+    "utc": "2026-10-13T13:32:04.406962+00:00",
+    "why": "mgmt review: tightened stop just below $27.29"
+   }
+  ],
+  "gross_proceeds": 4358.46,
+  "realized_pnl": -636.04,
+  "remaining_shares": 0
+ },
+ "identity": {
+  "entry": {
+   "price": 31.0,
+   "session": "2026-10-06",
+   "shares": 161,
+   "source": "PAPER_ENTRY event"
+  },
+  "initial_notional": 4994.49,
+  "status": "CLOSED"
+ },
+ "integrity": {
+  "execution_integrity": "CORRECTED",
+  "incidents": [
+   "crash-replay event duplication 10-13 (183 event rows, 1 fill); do_exit negative-cost-basis accounting defect -> realized corrected via REALIZED_CORRECTION 10-14"
+  ]
+ },
+ "management": {
+  "incidents": [
+   "crash-replay event duplication 10-13 (183 event rows, 1 fill); do_exit negative-cost-basis accounting defect -> realized corrected via REALIZED_CORRECTION 10-14"
+  ]
+ },
+ "provenance": {
+  "price_convention": "auto_adjusted",
+  "sources": [
+   "trigger_events.jsonl",
+   "monitor_state.json",
+   "alpha_paper_ledger.jsonl",
+   "case_artifacts/"
+  ]
+ },
+ "schema_version": 1,
+ "ticker": "SDGR"
+}

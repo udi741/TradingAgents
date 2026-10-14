@@ -1,0 +1,97 @@
+{
+ "attribution": {
+  "confidence": "LOW",
+  "lesson_tags": [
+   "STALE_TA_AT_ENTRY",
+   "PARTIAL_EXIT",
+   "STATE_INTEGRITY_INCIDENT"
+  ],
+  "primary_failure_attribution": "MULTIPLE_FACTORS"
+ },
+ "built_at": "2026-10-14T08:00:42.957805+00:00",
+ "ex_ante": {
+  "artifact": "ACN_2026-10-01.json",
+  "error_artifacts": [],
+  "final_signal": "Overweight",
+  "ta_evidence_status": "VALID_STALE",
+  "valid_artifacts": [
+   "ACN_2026-10-01.json"
+  ]
+ },
+ "ex_post": {
+  "MAE_pct": -6.81,
+  "MFE_pct": 3.23,
+  "max_high": 211.6124,
+  "min_low": 191.0474,
+  "open_position": false,
+  "sessions": 4,
+  "status": "MATURED",
+  "window": [
+   "2026-10-02",
+   "2026-10-07"
+  ]
+ },
+ "execution": {
+  "cost_basis_alloc": 4920.0,
+  "entries": [
+   {
+    "price": 205.0,
+    "session": "2026-10-02",
+    "shares": 24,
+    "source": "ledger POSITION_RULES"
+   }
+  ],
+  "exits": [
+   {
+    "price": 195.22999572753906,
+    "session": "2026-10-07",
+    "shares": 24,
+    "utc": "2026-10-07T13:31:05.354523+00:00",
+    "why": "close<194.0"
+   },
+   {
+    "non_economic": "duplicate/incident event row; did not affect cash",
+    "price": 195.0,
+    "session": "2026-10-07",
+    "shares": 24,
+    "utc": "2026-10-07T13:46:05.524678+00:00",
+    "why": "close<194.0"
+   }
+  ],
+  "gross_proceeds": 4682.24,
+  "realized_pnl": -237.76,
+  "remaining_shares": 0
+ },
+ "identity": {
+  "entry": {
+   "price": 205.0,
+   "session": "2026-10-02",
+   "shares": 24,
+   "source": "ledger POSITION_RULES"
+  },
+  "initial_notional": 4920.0,
+  "status": "CLOSED"
+ },
+ "integrity": {
+  "execution_integrity": "CONTAMINATED",
+  "incidents": [
+   "INCIDENT_DUPLICATE_EXIT_2026-10-07 \u2014 re-seeded exited position produced a second exit event; canonical economics reconciled"
+  ]
+ },
+ "management": {
+  "incidents": [
+   "INCIDENT_DUPLICATE_EXIT_2026-10-07 \u2014 re-seeded exited position produced a second exit event; canonical economics reconciled"
+  ]
+ },
+ "provenance": {
+  "price_convention": "auto_adjusted",
+  "sources": [
+   "trigger_events.jsonl",
+   "monitor_state.json",
+   "alpha_paper_ledger.jsonl",
+   "case_artifacts/"
+  ]
+ },
+ "schema_version": 1,
+ "ticker": "ACN"
+}

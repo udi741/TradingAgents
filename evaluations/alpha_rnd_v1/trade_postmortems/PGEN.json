@@ -1,0 +1,89 @@
+{
+ "attribution": {
+  "confidence": "LOW",
+  "lesson_tags": [
+   "STALE_TA_AT_ENTRY",
+   "STATE_INTEGRITY_INCIDENT"
+  ],
+  "primary_failure_attribution": "MULTIPLE_FACTORS"
+ },
+ "built_at": "2026-10-14T08:00:53.279764+00:00",
+ "ex_ante": {
+  "artifact": "PGEN_2026-10-02.json",
+  "error_artifacts": [],
+  "final_signal": "Buy",
+  "ta_evidence_status": "VALID_STALE",
+  "valid_artifacts": [
+   "PGEN_2026-10-02.json",
+   "PGEN_2026-10-07.json",
+   "PGEN_2026-10-12.json"
+  ]
+ },
+ "ex_post": {
+  "MAE_pct": -8.66,
+  "MFE_pct": 4.88,
+  "max_high": 8.6,
+  "min_low": 7.49,
+  "open_position": false,
+  "sessions": 2,
+  "status": "MATURED",
+  "window": [
+   "2026-10-05",
+   "2026-10-06"
+  ]
+ },
+ "execution": {
+  "cost_basis_alloc": 4997.3,
+  "entries": [
+   {
+    "price": 8.2,
+    "shares": 609,
+    "utc": "2026-10-05T14:39:42.449541+00:00"
+   }
+  ],
+  "exits": [
+   {
+    "price": 7.789999961853027,
+    "session": "2026-10-06",
+    "shares": 609,
+    "utc": "2026-10-06T14:18:54.458026+00:00",
+    "why": "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP"
+   }
+  ],
+  "gross_proceeds": 4740.79,
+  "realized_pnl": -256.51,
+  "remaining_shares": 0
+ },
+ "identity": {
+  "entry": {
+   "price": 8.2,
+   "session": "2026-10-05",
+   "shares": 609,
+   "source": "PAPER_ENTRY event"
+  },
+  "initial_notional": 4997.3,
+  "status": "CLOSED"
+ },
+ "integrity": {
+  "execution_integrity": "CONTAMINATED",
+  "incidents": [
+   "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP \u2014 stop not visible in time; corrective exit (ledger incident 10-06)"
+  ]
+ },
+ "management": {
+  "incidents": [
+   "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP \u2014 stop not visible in time; corrective exit (ledger incident 10-06)"
+  ]
+ },
+ "provenance": {
+  "price_convention": "auto_adjusted",
+  "sources": [
+   "trigger_events.jsonl",
+   "monitor_state.json",
+   "alpha_paper_ledger.jsonl",
+   "case_artifacts/"
+  ]
+ },
+ "schema_version": 1,
+ "ticker": "PGEN"
+}
