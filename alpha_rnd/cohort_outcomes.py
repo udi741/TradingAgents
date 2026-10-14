@@ -133,22 +133,31 @@ def _outcome(df, entry_session, target_session) -> dict:
             "MAE_pct": round((lo / eo - 1) * 100, 3)}
 
 
-def build_skeleton(session: str, doc: dict, cal: list[str]) -> dict:
+LP_DIR = EV / "low_price_shadow"
+LP_OUT_DIR = EV / "rank_cohort_outcomes_lowprice"
+
+
+def build_skeleton(session: str, doc: dict, cal: list[str],
+                   shadow: bool = False) -> dict:
     et = _entry_and_targets(session, cal)
     tickers = {}
     for t, rec in (doc.get("tickers") or {}).items():
         if not (rec.get("eligibility") or {}).get("eligible"):
             continue
         sc = rec.get("screen") or {}
-        stage = ("DEEP_SELECTED" if (rec.get("deep") or {}).get("selected")
-                 else "POOL_SELECTED_NOT_DEEP" if sc.get("pool_selected") or
-                 (rec.get("deep") or {}).get("selection_reason", "").startswith("deep_score rank")
-                 else "ELIGIBLE_NOT_POOL_SELECTED")
+        if shadow:
+            stage = "LP_SHADOW"  # never confusable with main-ALPHA stages
+        else:
+            stage = ("DEEP_SELECTED" if (rec.get("deep") or {}).get("selected")
+                     else "ELIGIBLE_NOT_POOL_SELECTED")
         # pool membership is proven by presence in pool_rank
-        if sc.get("pool_rank") is not None and not (rec.get("deep") or {}).get("selected"):
+        if not shadow and sc.get("pool_rank") is not None \
+                and not (rec.get("deep") or {}).get("selected"):
             stage = "POOL_SELECTED_NOT_DEEP"
         tickers[t] = {
-            "cohort": sc.get("cohort"), "primary_rank": sc.get("primary_rank"),
+            "cohort": (rec.get("cohort") or sc.get("cohort"))
+                      if shadow else sc.get("cohort"),
+            "primary_rank": sc.get("primary_rank"),
             "lane_ranks": sc.get("lane_ranks"), "pool_rank": sc.get("pool_rank"),
             "pool_selected": sc.get("pool_rank") is not None,
             "deep_selected": bool((rec.get("deep") or {}).get("selected")),
@@ -164,19 +173,18 @@ def build_skeleton(session: str, doc: dict, cal: list[str]) -> dict:
             "tickers": tickers}
 
 
-def update(verbose=True) -> dict:
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    cal = _sessions_index()
-    latest = cal[-1]
+def _update_dir(src_dir: Path, out_dir: Path, cal: list[str], latest: str,
+                shadow: bool, verbose: bool) -> list[str]:
+    out_dir.mkdir(parents=True, exist_ok=True)
     touched = []
-    for fp in sorted((EV / "opportunity_funnel").glob("*.json")):
+    for fp in sorted(src_dir.glob("*.json")):
         session = fp.stem
         doc = json.loads(fp.read_text())
-        op = OUT_DIR / f"{session}.json"
+        op = out_dir / f"{session}.json"
         if op.exists():
             out = json.loads(op.read_text())
         else:
-            out = build_skeleton(session, doc, cal)
+            out = build_skeleton(session, doc, cal, shadow=shadow)
             op.write_text(json.dumps(out, indent=1, sort_keys=True))
         tickers = [t for t, r in out["tickers"].items()
                    if any(h["status"] == "PENDING" and h["target_session"]
@@ -227,8 +235,24 @@ def update(verbose=True) -> dict:
             op.write_text(json.dumps(out, indent=1, sort_keys=True))
             touched.append(session)
             if verbose:
-                print(f"matured outcomes: {session} ({len(tickers)} tickers)")
-    return {"sessions_touched": touched, "latest_completed": latest}
+                tag = "shadow " if shadow else ""
+                print(f"matured {tag}outcomes: {session} ({len(tickers)} tickers)")
+    return touched
+
+
+def update(verbose=True) -> dict:
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    cal = _sessions_index()
+    latest = cal[-1]
+    touched = _update_dir(FUNNEL_DIR := EV / "opportunity_funnel",
+                          OUT_DIR, cal, latest, shadow=False,
+                          verbose=verbose)
+    # R6 low-price shadow cohorts: same canonical semantics, separate store —
+    # never mixed into main cohort stats
+    lp_touched = _update_dir(LP_DIR, LP_OUT_DIR, cal, latest,
+                             shadow=True, verbose=verbose)
+    return {"sessions_touched": touched, "lp_sessions_touched": lp_touched,
+            "latest_completed": latest}
 
 
 def _agg(recs, field):

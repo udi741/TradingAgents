@@ -423,6 +423,12 @@ def _run_cycle(session: str) -> None:
                        cwd=ROOT, env=env, timeout=120)
     except Exception:
         pass
+    # R6: low-price shadow cohort freeze (observational; never fatal)
+    try:
+        subprocess.run([PY, "-m", "alpha_rnd.low_price_shadow", "build",
+                        session], cwd=ROOT, env=env, timeout=300)
+    except Exception:
+        pass
     summary = {"deep": deep, "ta_signals": signals,
                "published": pub,
                "validated": idoc.get("validated"),
