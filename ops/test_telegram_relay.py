@@ -257,6 +257,25 @@ lbl = tr._alpha_research_label(d_inv)
 assert "last valid 2026-10-02" in lbl and "INVALID_TA_RUNTIME_FAILURE" in lbl
 assert tr._alpha_research_label({"completed_sessions": ["S1"]}) == "last session S1"
 
+# --- last attempted must track the NEWEST attempt, not a stale invalid marker ---
+# 10-05/10-06 are permanently INVALID in history; a later failed attempt must
+# replace "last attempted" instead of pinning it to 10-06.
+d_new = {"completed_sessions": ["2026-10-02", "2026-10-06", "2026-10-13"],
+         "session_status": {"2026-10-05": "INVALID_TA_RUNTIME_FAILURE",
+                            "2026-10-06": "INVALID_TA_RUNTIME_FAILURE",
+                            "2026-10-13": "COMPLETE",
+                            "2026-10-14": "ERROR"}}
+lbl = tr._alpha_research_label(d_new)
+assert "last valid 2026-10-13" in lbl
+assert "last attempted 2026-10-14 = ERROR" in lbl
+assert "10-06" not in lbl.split("attempted")[-1]
+# recovered session: attempt == last valid -> plain label, no stale error
+d_ok = {"completed_sessions": ["2026-10-13", "2026-10-14"],
+        "session_status": {"2026-10-13": "COMPLETE", "2026-10-14": "COMPLETE"}}
+assert tr._alpha_research_label(d_ok) == "last session 2026-10-14"
+# no attempts recorded at all
+assert tr._alpha_research_label({}) == "last session none"
+
 # --- rendering performs no state mutation ---
 snap = _copy.deepcopy(st_mixed)
 tr._alpha_nav_headline(st_mixed); tr._alpha_positions_view(pos_mixed, wl_p)

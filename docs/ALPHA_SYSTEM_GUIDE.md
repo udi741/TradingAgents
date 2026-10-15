@@ -302,6 +302,10 @@ messages by severity:
 
 "USER ACTION: NONE" outcomes are audit records, not interruptions.
 
+The daily summary's research line distinguishes `last valid` session from
+`last attempted` session + status (from `session_status`), so a failed recent
+attempt is always visible rather than pinned to a historical invalid marker.
+
 ## 12. Replay (R5A engine)
 
 `alpha_rnd/replay.py` — the historical time machine. For a past session it:

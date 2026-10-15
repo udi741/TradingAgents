@@ -23,6 +23,7 @@ Usage:
 
 import argparse
 import asyncio
+import re
 import getpass
 import hashlib
 import json
@@ -629,10 +630,6 @@ def alpha_status() -> str:
     invested = bk["invested"]
     reanalysis = [t for t, s in st.get("watch_status", {}).items() if s == "REANALYSIS"]
     d = json.loads(ALPHA_SCHED_STATE.read_text()) if ALPHA_SCHED_STATE.exists() else {}
-    done = d.get("completed_sessions") or []
-    sess_status = d.get("session_status") or {}
-    valid_ta = [x for x in done if sess_status.get(x) != "INVALID_TA_RUNTIME_FAILURE"]
-    invalid_ta = [x for x in done if sess_status.get(x) == "INVALID_TA_RUNTIME_FAILURE"]
     lines = ["ALPHA — PAPER PORTFOLIO", "",
              f"Monitor: {health} (per-minute cron)",
              f"Latest canonical EOD mark session: {(st.get('book') or {}).get('mark_session') or asof}"
@@ -646,10 +643,7 @@ def alpha_status() -> str:
              f"pending next-open: {len(st.get('pending_open_fills', []))} entries / "
              f"{len(st.get('pending_open_exits', []))} exits",
              f"reanalysis required: {', '.join(reanalysis) if reanalysis else 'none'}",
-             (f"last VALID TA research session: {valid_ta[-1] if valid_ta else 'none'}   "
-              f"(last attempted: {invalid_ta[-1]} = INVALID_TA_RUNTIME_FAILURE)"
-              if invalid_ta else
-              f"last discovery session: {done[-1] if done else 'none'}"),
+             f"research: {_alpha_research_label(d)}",
              "", "Positions:"] + plines + ["", "Watches: " + (", ".join(watches) or "none")]
     return "\n".join(lines)
 
@@ -850,16 +844,29 @@ def _alpha_nav_headline(mst: dict) -> tuple[str, list]:
     return f"NAV: ${b['valuation']:,.2f}", []
 
 
+_SESS_RX = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
 def _alpha_research_label(d: dict) -> str:
-    """Latest VALID TA session vs last attempted (invalid TA cycles named)."""
+    """Distinguish last VALID session from the true LAST ATTEMPT.
+
+    last_valid  = newest completed session not marked INVALID_*.
+    last_attempted = newest session the scheduler actually attempted
+    (from session_status, which records ERROR/INVALID/COMPLETE per session) —
+    never silently pinned to a historical invalid marker."""
     done = d.get("completed_sessions") or []
-    inv = [x for x in done
-           if (d.get("session_status") or {}).get(x) == "INVALID_TA_RUNTIME_FAILURE"]
+    ss = d.get("session_status") or {}
+    inv = [x for x in done if ss.get(x) == "INVALID_TA_RUNTIME_FAILURE"]
     val = [x for x in done if x not in inv]
-    if inv:
-        return (f"last valid {val[-1] if val else 'none'} "
-                f"(last attempted {inv[-1]} INVALID_TA_RUNTIME_FAILURE)")
-    return f"last session {done[-1] if done else 'none'}"
+    attempts = [x for x in ss if _SESS_RX.match(str(x))]
+    attempted = max(attempts) if attempts else (done[-1] if done else None)
+    last_valid = val[-1] if val else "none"
+    if attempted is None:
+        return "last session none"
+    if attempted == last_valid:
+        return f"last session {last_valid}"
+    return (f"last valid {last_valid}   "
+            f"(last attempted {attempted} = {ss.get(attempted) or 'UNKNOWN'})")
 
 
 def _current_stop_label(t: str, p: dict, wl: dict):
