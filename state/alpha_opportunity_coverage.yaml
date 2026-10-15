@@ -1,9 +1,9 @@
 roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
 roadmap_version: 1
-updated_at: "2026-10-14"
-current_task: R5BB
+updated_at: "2026-10-15"
+current_task: null
 current_subtask: null
-next_task: R5B
+next_task: null
 items:
   R0:
     title: ROADMAP CONTROL
@@ -69,18 +69,18 @@ items:
     title: SHADOW DEEP-COVERAGE EXPANSION
     status: IN_PROGRESS
     objective: shadow-only deep analysis beyond top-10
-    status_detail: PAUSED_RESUMABLE (R5B checkpoint in alpha evaluations/alpha_rnd_v1/replays/R5B_CHECKPOINT.json)
-    interrupted_by: LIVE_ALPHA_PRODUCTION_INCIDENT (interrupt manifest replays/R5B_PRODUCTION_INTERRUPT_CHECKPOINT.json)
-    completed: 57
-    remaining: 27
+    status_detail: R5B COMPLETE — 84/84 artifacts frozen, R5B_ACCEPTED_PRELIMINARY (H1 mature all sessions; H5 mature 10-07, pending 10-16/10-19 for 10-09/10-12; H20 pending into Nov; matures read-only, no inference)
+    interrupted_by: null (resolved; interrupt manifest replays/R5B_PRODUCTION_INTERRUPT_CHECKPOINT.json)
+    completed: 84
+    remaining: 0
     dependencies: [R2]
     started_at: null
     completed_at: null
     blockers: [insufficient clean prospective R2 cohort evidence]
-    bugs: [R5B-B1: replay run() lets synthesis-bridge HTTP 502 escape and abort the run before run_result is written; per-ticker artifacts persist so resume is safe; wrapped by retry driver, engine fix deferred]
-    evidence: []
-    commits: []
-    next_action: WAIT_FOR_DATA — R5A replay engine validated (R5A-B1 resolved); paired runs deferred pending review + R2 evidence maturity
+    bugs: [R5B-B1: replay run() lets synthesis-bridge HTTP 502 escape and abort the run before run_result is written; per-ticker artifacts persist so resume is safe; wrapped by retry driver, engine fix deferred, R5B-B2: RESOLVED — H5 maturity statement was timing (cal excludes in-progress day); session-selection requirement violation logged (10-09/10-12 H5 pending), R5B-B3: candidate examined — EXECUTABLE_WATCH on negative-signal names are gated conditional long re-entries, not a defect]
+    evidence: [evaluations/alpha_rnd_v1/replays/R5B_CHECKPOINT.json, evaluations/alpha_rnd_v1/replays/R5B_REPORT.txt, evaluations/alpha_rnd_v1/replays/R5B_RESULTS.json]
+    commits: [alpha-rnd 2e6ad883, alpha-rnd 519d4c02]
+    next_action: WAIT_FOR_MATURITY — re-run r5b_report after 10-16 and 10-19 closes; R5B changes no live policy
   R6:
     title: LOW-PRICE OPPORTUNITY SHADOW LANE
     status: WAITING_FOR_DATA

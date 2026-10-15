@@ -24,3 +24,19 @@ D. New ideas found during development go to BACKLOG / FUTURE CANDIDATES;
 ## Evidence discipline
 Every task updates state/alpha_opportunity_coverage.yaml: status, evidence,
 commits, blockers, next_action. Chat history is LAST in the source hierarchy.
+
+## Documentation synchronization rule
+`docs/ALPHA_SYSTEM_GUIDE.md` is the canonical current-system description.
+Any change that alters any of the following MUST update that guide in the
+same task/commit set:
+
+- publication disposition meanings or vocabulary
+- entry authorization / entry-gate semantics
+- economic state authority
+- scheduler lifecycle or priority semantics
+- inference-failure classification or semantics
+- retry behavior or retry lifecycle
+- replay engine behavior or policies
+- operator commands
+
+A guide edit that disagrees with current code is a defect, not documentation.

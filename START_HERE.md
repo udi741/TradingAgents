@@ -27,11 +27,17 @@ artifacts.
 ## Reading order
 
 1. `START_HERE.md` (this file)
-2. `CURRENT_STATE.md` — what is happening right now, what the user should do
-3. `TRACKS.md` — canonical registry of all tracks
-4. `tracks/<TRACK>.md` — the track you care about
-5. `docs/OPERATING_RULES.md` — durable project rules
-6. `runbooks/<relevant>.md` — how to actually run/resume things
+2. `docs/ALPHA_SYSTEM_GUIDE.md` — how the ALPHA system works today
+   (architecture, dispositions, retry semantics, authority, replay, commands)
+3. `CURRENT_STATE.md` — what is happening right now, what the user should do
+4. `TRACKS.md` — canonical registry of all tracks
+5. `docs/ALPHA_OPPORTUNITY_COVERAGE_ROADMAP.md` — the development roadmap
+6. `tracks/<TRACK>.md` — the track you care about
+7. `docs/OPERATING_RULES.md` — durable project rules
+8. `runbooks/<relevant>.md` — how to actually run/resume things
+
+Incident and per-task history are evidence trails, not a starting point —
+read them only when debugging a specific session.
 
 Development roadmap / where the project stands:
 `python -m ops.roadmap_status` (deterministic, no network/LLM).
