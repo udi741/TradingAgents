@@ -43,17 +43,19 @@
     "mean_ret": 1.17,
     "median_ret": 1.47,
     "mean_excess": 1.29,
+    "median_excess": 1.59,
     "mean_MFE": 3.11,
     "mean_MAE": -1.7
    },
    "H5": {
     "N": 10,
-    "matured": 0,
-    "mean_ret": null,
-    "median_ret": null,
-    "mean_excess": null,
-    "mean_MFE": null,
-    "mean_MAE": null
+    "matured": 10,
+    "mean_ret": -0.05,
+    "median_ret": 3.66,
+    "mean_excess": 0.63,
+    "median_excess": 4.34,
+    "mean_MFE": 8.64,
+    "mean_MAE": -4.75
    }
   },
   "excluded_agg": {
@@ -63,17 +65,19 @@
     "mean_ret": -0.09,
     "median_ret": 0.0,
     "mean_excess": 0.03,
+    "median_excess": 0.12,
     "mean_MFE": 2.04,
     "mean_MAE": -2.78
    },
    "H5": {
     "N": 18,
-    "matured": 0,
-    "mean_ret": null,
-    "median_ret": null,
-    "mean_excess": null,
-    "mean_MFE": null,
-    "mean_MAE": null
+    "matured": 18,
+    "mean_ret": -3.84,
+    "median_ret": -1.71,
+    "mean_excess": -3.17,
+    "median_excess": -1.03,
+    "mean_MFE": 5.13,
+    "mean_MAE": -6.38
    }
   },
   "excluded_positive": [
@@ -87,17 +91,19 @@
     "mean_ret": -1.28,
     "median_ret": -1.24,
     "mean_excess": -1.16,
+    "median_excess": -1.11,
     "mean_MFE": 2.59,
     "mean_MAE": -2.68
    },
    "H5": {
     "N": 2,
-    "matured": 0,
-    "mean_ret": null,
-    "median_ret": null,
-    "mean_excess": null,
-    "mean_MFE": null,
-    "mean_MAE": null
+    "matured": 2,
+    "mean_ret": -5.81,
+    "median_ret": -4.8,
+    "mean_excess": -5.13,
+    "median_excess": -4.12,
+    "mean_MFE": 7.07,
+    "mean_MAE": -6.26
    }
   },
   "signals_excluded": {
@@ -204,11 +210,151 @@
    "MANH": "PUBLISHED_NON_EXECUTABLE",
    "IQV": "PUBLISHED_NON_EXECUTABLE"
   },
-  "top5_h5": [],
-  "top10_h5": [],
-  "top5_captured": [],
-  "top10_captured": [],
-  "h5_ranked": []
+  "top5_h5": [
+   "MRNA",
+   "IOVA",
+   "MANH",
+   "HAE",
+   "CDNA"
+  ],
+  "top10_h5": [
+   "MRNA",
+   "IOVA",
+   "MANH",
+   "HAE",
+   "CDNA",
+   "TEAM",
+   "AMPL",
+   "IQV",
+   "RXO",
+   "PCVX"
+  ],
+  "top5_captured": [
+   "MRNA",
+   "IOVA",
+   "CDNA"
+  ],
+  "top10_captured": [
+   "MRNA",
+   "IOVA",
+   "CDNA",
+   "TEAM",
+   "AMPL"
+  ],
+  "h5_ranked": [
+   [
+    "MRNA",
+    15.212
+   ],
+   [
+    "IOVA",
+    12.332
+   ],
+   [
+    "MANH",
+    8.075
+   ],
+   [
+    "HAE",
+    5.313
+   ],
+   [
+    "CDNA",
+    4.533
+   ],
+   [
+    "TEAM",
+    3.888
+   ],
+   [
+    "AMPL",
+    3.661
+   ],
+   [
+    "IQV",
+    2.344
+   ],
+   [
+    "RXO",
+    1.558
+   ],
+   [
+    "PCVX",
+    0.611
+   ],
+   [
+    "OPCH",
+    0.225
+   ],
+   [
+    "TWST",
+    0.108
+   ],
+   [
+    "PTC",
+    -0.083
+   ],
+   [
+    "ABCL",
+    -1.356
+   ],
+   [
+    "SYNA",
+    -1.709
+   ],
+   [
+    "PGEN",
+    -1.736
+   ],
+   [
+    "ETON",
+    -2.327
+   ],
+   [
+    "XNCR",
+    -2.623
+   ],
+   [
+    "NTAP",
+    -4.804
+   ],
+   [
+    "CTVA",
+    -5.634
+   ],
+   [
+    "SDGR",
+    -6.495
+   ],
+   [
+    "PENG",
+    -6.811
+   ],
+   [
+    "NKTR",
+    -7.521
+   ],
+   [
+    "ASST",
+    -10.903
+   ],
+   [
+    "QUBT",
+    -16.257
+   ],
+   [
+    "UMAC",
+    -18.707
+   ],
+   [
+    "FLY",
+    -19.679
+   ],
+   [
+    "QMCO",
+    -20.862
+   ]
+  ]
  },
  "2026-10-09": {
   "session": "2026-10-09",
@@ -254,6 +400,7 @@
     "mean_ret": -0.97,
     "median_ret": -0.25,
     "mean_excess": -0.88,
+    "median_excess": -0.16,
     "mean_MFE": 2.09,
     "mean_MAE": -3.42
    },
@@ -263,6 +410,7 @@
     "mean_ret": null,
     "median_ret": null,
     "mean_excess": null,
+    "median_excess": null,
     "mean_MFE": null,
     "mean_MAE": null
    }
@@ -274,6 +422,7 @@
     "mean_ret": -1.4,
     "median_ret": -0.6,
     "mean_excess": -1.31,
+    "median_excess": -0.52,
     "mean_MFE": 1.47,
     "mean_MAE": -2.82
    },
@@ -283,6 +432,7 @@
     "mean_ret": null,
     "median_ret": null,
     "mean_excess": null,
+    "median_excess": null,
     "mean_MFE": null,
     "mean_MAE": null
    }
@@ -299,6 +449,7 @@
     "mean_ret": -1.18,
     "median_ret": -0.45,
     "mean_excess": -1.1,
+    "median_excess": -0.36,
     "mean_MFE": 1.88,
     "mean_MAE": -1.5
    },
@@ -308,6 +459,7 @@
     "mean_ret": null,
     "median_ret": null,
     "mean_excess": null,
+    "median_excess": null,
     "mean_MFE": null,
     "mean_MAE": null
    }
@@ -466,6 +618,7 @@
     "mean_ret": 1.52,
     "median_ret": 1.92,
     "mean_excess": 1.44,
+    "median_excess": 1.84,
     "mean_MFE": 4.0,
     "mean_MAE": -1.03
    },
@@ -475,6 +628,7 @@
     "mean_ret": null,
     "median_ret": null,
     "mean_excess": null,
+    "median_excess": null,
     "mean_MFE": null,
     "mean_MAE": null
    }
@@ -486,6 +640,7 @@
     "mean_ret": -1.41,
     "median_ret": -0.69,
     "mean_excess": -1.49,
+    "median_excess": -0.78,
     "mean_MFE": 1.51,
     "mean_MAE": -3.06
    },
@@ -495,6 +650,7 @@
     "mean_ret": null,
     "median_ret": null,
     "mean_excess": null,
+    "median_excess": null,
     "mean_MFE": null,
     "mean_MAE": null
    }
@@ -513,6 +669,7 @@
     "mean_ret": 0.26,
     "median_ret": -0.6,
     "mean_excess": 0.17,
+    "median_excess": -0.69,
     "mean_MFE": 2.46,
     "mean_MAE": -1.89
    },
@@ -522,6 +679,7 @@
     "mean_ret": null,
     "median_ret": null,
     "mean_excess": null,
+    "median_excess": null,
     "mean_MFE": null,
     "mean_MAE": null
    }

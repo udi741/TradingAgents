@@ -87,10 +87,13 @@ def session_compare(session: str) -> dict:
         mfe = [v["MFE_pct"] for v in vs]
         mae = [v["MAE_pct"] for v in vs]
         med = sorted(ret)
+        med_e = sorted(exc)
         return {"N": len(ts), "matured": len(vs),
                 "mean_ret": round(sum(ret) / len(ret), 2) if ret else None,
                 "median_ret": round(med[len(med) // 2], 2) if ret else None,
                 "mean_excess": round(sum(exc) / len(exc), 2) if exc else None,
+                "median_excess": (round(med_e[len(med_e) // 2], 2)
+                                  if exc else None),
                 "mean_MFE": round(sum(mfe) / len(mfe), 2) if mfe else None,
                 "mean_MAE": round(sum(mae) / len(mae), 2) if mae else None}
     # winner-capture: rank whole pool by H5
