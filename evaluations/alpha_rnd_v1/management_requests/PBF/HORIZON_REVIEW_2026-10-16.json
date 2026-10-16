@@ -1,0 +1,32 @@
+{
+ "analysis_ref": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/management_analyses/PBF/reassess_2026-10-16.json",
+ "entry_snapshot": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/entry_snapshots/PBF_2026-10-02.json",
+ "fired_at": "2026-10-16T21:38:47.504021+00:00",
+ "fired_session": "2026-10-16",
+ "metrics": {
+  "drawdown_from_peak_pct": 6.83,
+  "entry_price": 80.0,
+  "latest_price": 86.99,
+  "mae_pct": -3.54,
+  "metrics_basis": "close_bars",
+  "peak_unrealized_pct": 15.57,
+  "sessions_held": 11,
+  "unrealized_pct": 8.74
+ },
+ "note": "shadow request: think again \u2014 NOT an action, NOT a model call",
+ "policy_version": 3,
+ "position_id": "PBF:2026-10-02",
+ "reason": "reeval checkpoint 2026-10-16 reached at 2026-10-16",
+ "request_id": "PBF:HORIZON_REVIEW:2026-10-16:2026-10-16",
+ "risk_plan_ref": {
+  "label": "hard stop",
+  "level": 74.5,
+  "type": "intraday_stop"
+ },
+ "status": "CONSUMED_BY_SHADOW_ANALYSIS",
+ "threshold": "2026-10-16",
+ "ticker": "PBF",
+ "trigger_family": "HORIZON_REVIEW",
+ "urgency": "NORMAL",
+ "value": "2026-10-16"
+}

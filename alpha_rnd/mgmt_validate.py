@@ -255,10 +255,11 @@ def _validate_stop(ps, cur_stop, mark, pos):
         return None, False, f"NEVER_WIDEN: {lv} < current stop {cur_stop}"
     if cur_stop is not None and lv == cur_stop:
         return None, False, f"no-op: level equals current stop {cur_stop}"
-    if typ not in (None, "intraday_stop", "closing_stop", "close_below"):
+    if typ not in (None, "intraday_stop", "closing_stop", "close_below",
+                    "daily_close"):
         return None, False, f"unsupported stop semantics: {typ}"
     rule = {"type": "close_below" if typ in (None, "closing_stop",
-                                             "close_below") else
+                                             "close_below", "daily_close") else
             "intraday_stop",
             "level": lv, "label": ps.get("rationale") or "mgmt tighten"}
     return rule, True, (f"tightens {cur_stop} -> {lv} "

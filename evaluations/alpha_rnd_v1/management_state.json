@@ -1,6 +1,6 @@
 {
  "last_observe": {
-  "at": "2026-10-16T12:57:02.971883+00:00",
+  "at": "2026-10-16T21:39:03.191586+00:00",
   "backfilled": [],
   "fired": [],
   "session": "2026-10-15"
@@ -15,25 +15,25 @@
    "horizon": "1-3 months with a hard 2-3 week time-box spanning Oct 16 options expiry",
    "horizon_checkpoint": "2026-10-16",
    "last_trigger": {
-    "family": "APPRECIATION",
-    "reason": "unrealized 8.74% >= 8.0%",
-    "session": "2026-10-15",
+    "family": "HORIZON_REVIEW",
+    "reason": "reeval checkpoint 2026-10-16 reached at 2026-10-16",
+    "session": "2026-10-16",
     "urgency": "NORMAL"
    },
    "latest_price": 86.99,
    "latest_reassessment": {
     "action": "PARTIAL_EXIT",
-    "artifact": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/management_analyses/PBF/reassess_2026-10-15.json",
-    "as_of": "2026-10-15",
-    "session": "2026-10-15",
+    "artifact": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/management_analyses/PBF/reassess_2026-10-16.json",
+    "as_of": "2026-10-16",
+    "session": "2026-10-16",
     "shadow": true,
     "status": "SUCCESS",
-    "thesis_status": "INTACT"
+    "thesis_status": "LARGELY_REALIZED"
    },
    "latest_session": "2026-10-15",
    "low_since_entry": 77.17,
    "mae_pct": -3.54,
-   "metrics_at": "2026-10-16T12:57:02.971851+00:00",
+   "metrics_at": "2026-10-16T21:39:03.191557+00:00",
    "metrics_basis": "close_bars",
    "original_stop": {
     "invalidation": "Daily close below $78 = failed breakout (cut to minimal); close inside $70-77 base exits entirely; crack-spread compression or weak Q3 exits regardless of price",
@@ -59,6 +59,12 @@
      "fired_at": "2026-10-15",
      "last_request": "PBF:APPRECIATION:2026-10-15:8.74",
      "last_value": 8.74
+    },
+    "HORIZON_REVIEW": {
+     "fired_at": "2026-10-16",
+     "fired_value": "2026-10-16",
+     "last_request": "PBF:HORIZON_REVIEW:2026-10-16:2026-10-16",
+     "last_value": "2026-10-16"
     }
    },
    "unrealized_pct": 8.74
