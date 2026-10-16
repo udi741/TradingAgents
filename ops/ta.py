@@ -418,11 +418,126 @@ def _verify_archive(archive: Path):
         return False, repr(e)
 
 
+JOURNAL_NAME = ".restore_in_progress"
+RUNTIME_KEYS = {"ALPHA_DIR", "C12_DIR", "BASE_DIR"}
+
+
+def _is_clean_tracked(repo: Path, rel: str) -> bool:
+    """True iff `repo/rel` is a tracked file identical to HEAD — i.e. just
+    the checkout baseline, which restore may safely overwrite. Modified,
+    untracked, ignored or non-repo files are NOT clean."""
+    st = subprocess.run(["git", "-C", str(repo), "status", "--porcelain",
+                         "--", rel], capture_output=True, text=True)
+    if st.returncode != 0 or st.stdout.strip():
+        return False
+    tr = subprocess.run(["git", "-C", str(repo), "ls-files",
+                         "--error-unmatch", "--", rel],
+                        capture_output=True)
+    return tr.returncode == 0
+
+
+def _git_dirty_paths(repo: Path):
+    """Porcelain paths of a worktree, or None if not a git repo."""
+    r = subprocess.run(["git", "-C", str(repo), "status", "--porcelain"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return None
+    out = []
+    for ln in r.stdout.splitlines():
+        p = ln[3:].strip()
+        out.append(p.split(" -> ")[-1])
+    return out
+
+
+def _non_authority_dirty(dirty, auth_rels):
+    """Porcelain entries not explained by the backup authority set.
+    Git collapses untracked dirs to `dir/` — accept them when they only
+    contain authority paths."""
+    out = []
+    for p in dirty or []:
+        if p in auth_rels:
+            continue
+        if p.endswith("/") and any(r.startswith(p) for r in auth_rels):
+            continue
+        out.append(p)
+    return out
+
+
+def _journal_write(jp: Path, j: dict):
+    j["updated_utc"] = ts_utc()
+    jp.write_text(json.dumps(j, indent=1, sort_keys=True))
+
+
+def _promote(jp: Path, j: dict):
+    """Move unpromoted files stage->target; journal updated after each.
+    On any exception the journal on disk reflects exactly what is
+    already in the target — a later restore resumes deterministically."""
+    for f in j["files"]:
+        if f.get("promoted"):
+            continue
+        tgt, sp = Path(f["target"]), Path(f["staged"])
+        tgt.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(sp), str(tgt))
+        f["promoted"] = True
+        _journal_write(jp, j)
+
+
+def _verify_promoted(j: dict, problems: list):
+    for f in j["files"]:
+        if not f.get("promoted"):
+            continue
+        tgt = Path(f["target"])
+        if not tgt.exists() or _sha256(tgt.read_bytes()) != f["sha256"]:
+            problems.append(f"promoted file unverifiable: {tgt}")
+
+
+def _stage_from_archive(archive: Path, man: dict, lay: dict,
+                        stage_root: Path):
+    """Extract+checksum every manifest file under stage_root.
+    Returns journal file list. Raises on any failure."""
+    import tarfile
+    files = []
+    with tarfile.open(archive) as t:
+        for ent in man.get("files", []):
+            k, rel = ent["path"].split("/", 1)
+            sp = stage_root / k / rel
+            sp.parent.mkdir(parents=True, exist_ok=True)
+            data = t.extractfile(f"payload/{ent['path']}").read()
+            if _sha256(data) != ent["sha256"]:
+                raise RuntimeError(f"checksum {rel}")
+            sp.write_bytes(data)
+            files.append({"target": str(Path(lay[k]) / rel),
+                          "staged": str(sp), "sha256": ent["sha256"],
+                          "promoted": False})
+    return files
+
+
+def _rollback_partial(jp: Path, j: dict):
+    """Delete ONLY journal-listed, checksum-verified files of an
+    incomplete transaction. Refuses (raises) on anything unverifiable —
+    never touches foreign content."""
+    prefix = jp.parent.resolve()
+    for f in j["files"]:
+        tgt = Path(f["target"]).resolve()
+        if prefix not in tgt.parents:
+            raise RuntimeError(f"journal path escapes prefix: {tgt}")
+        if not tgt.exists():
+            continue
+        if _sha256(tgt.read_bytes()) != f["sha256"]:
+            raise RuntimeError(
+                f"rollback cannot verify {tgt} — content differs from the "
+                "backup; refusing to delete. Inspect manually.")
+        tgt.unlink()
+    jp.unlink()
+
+
 def cmd_restore(a):
     """Fail-closed, transactional restore into an EMPTY target.
     MUTATING (files only; never starts services or cron).
-    Stages + validates everything before promoting; any pre-promotion
-    failure leaves the target untouched. No overwrite mode exists."""
+    Stages + validates everything before promotion; promotion is journaled
+    so an interrupted restore resumes by simply re-running this command
+    with the same archive. No overwrite mode exists."""
+    import tempfile, shutil as _sh
     archive = Path(a.archive)
     ok, man = _verify_archive(archive)
     if not ok:
@@ -433,35 +548,81 @@ def cmd_restore(a):
     lay = _layout(prefix)
     dry = a.dry_run
     problems = []
+    jp = prefix / JOURNAL_NAME
+    journal = None
+    if jp.exists():
+        try:
+            journal = json.loads(jp.read_text())
+        except Exception as e:
+            print(f"FAIL unreadable restore journal {jp}: {e}")
+            return 2
+        if journal.get("backup_id") != man.get("backup_id"):
+            print(f"REFUSE incomplete restore belongs to backup "
+                  f"{journal.get('backup_id')} — rerun "
+                  f"`ops.ta restore` with THAT archive")
+            return 2
+        print(f"incomplete restore transaction detected "
+              f"(txn {journal.get('txn_id')}) — resuming")
 
-    # 1) target eligibility: EMPTY authority paths only. No exceptions.
+    # 1) eligibility: fresh target must have EMPTY authority paths; a
+    #    resumed transaction legitimately has partial state.
     live = Path(str(TRACKS.parent)).resolve() == prefix
     if live:
         for u in UNITS:
             if _svc(u) == "active":
                 problems.append(f"{u} is ACTIVE — refusing restore into a "
                                 "running installation")
+    auth_rels = {k: set() for k in lay}
     for ent in man.get("files", []):
         k, rel = ent["path"].split("/", 1)
-        tgt = Path(lay[k]) / rel
-        if tgt.exists() and tgt.stat().st_size:
+        auth_rels.setdefault(k, set()).add(rel)
+    if journal is None:
+        for ent in man.get("files", []):
+            k, rel = ent["path"].split("/", 1)
+            tgt = Path(lay[k]) / rel
+            if not (tgt.exists() and tgt.stat().st_size):
+                continue
+            # a clean tracked file is only the git baseline — overwriting
+            # it IS the restore. Dirty/untracked content = living state.
+            if _is_clean_tracked(Path(lay[k]), rel):
+                continue
             problems.append(f"non-empty authority exists: {tgt}")
 
-    # 2) code compatibility: runtime worktrees must match backup SHAs.
-    #    tracks/docs-only differences are non-economic -> warn only.
-    RUNTIME_KEYS = {"ALPHA_DIR", "C12_DIR", "BASE_DIR"}
-    for k, g in (man.get("git") or {}).items():
-        cur = _git(Path(lay.get(k, "")))
-        if not (g.get("sha") and cur.get("sha")):
+    # 2) code compatibility: runtime worktrees must PROVE the backup SHA.
+    #    unverifiable runtime code fails closed; tracks/docs warn only.
+    gitman = man.get("git") or {}
+    for k in sorted(RUNTIME_KEYS):
+        g = gitman.get(k) or {}
+        cur = _git(Path(lay[k])) if Path(lay[k]).exists() else {}
+        if not g.get("sha"):
+            problems.append(f"{k}: backup manifest has no code SHA — "
+                            "cannot verify runtime version")
+        elif not cur.get("sha"):
+            problems.append(
+                f"CANNOT VERIFY RUNTIME CODE VERSION: {k} is not a git "
+                f"checkout at {lay[k]} — backup requires commit "
+                f"{g['sha'][:8]}; `git -C {lay[k]} checkout {g['sha']}`")
+        elif g["sha"] != cur["sha"]:
+            problems.append(
+                f"{k} code mismatch: BACKUP was created by {g['sha'][:8]} "
+                f"but target runs {cur['sha'][:8]} — "
+                f"`git -C {lay[k]} checkout {g['sha']}`")
+        else:
+            dirty = _git_dirty_paths(Path(lay[k]))
+            extra = _non_authority_dirty(dirty, auth_rels.get(k, set()))
+            if extra:
+                more = "…" if len(extra) > 1 else ""
+                problems.append(
+                    f"{k} worktree has uncommitted/untracked files outside "
+                    f"the authority set ({extra[0]}{more}) — effective "
+                    "code version unverifiable")
+    for k, g in gitman.items():
+        if k in RUNTIME_KEYS or not g.get("sha"):
             continue
-        if g["sha"] != cur["sha"]:
-            msg = (f"{k} code mismatch: BACKUP was created by {g['sha'][:8]} "
-                   f"but target runs {cur['sha'][:8]} — "
-                   f"`git -C {lay[k]} checkout {g['sha']}`")
-            if k in RUNTIME_KEYS:
-                problems.append(msg)
-            else:
-                print(f"  WARN {msg} (non-runtime; continuing)")
+        cur = _git(Path(lay[k])) if Path(lay[k]).exists() else {}
+        if cur.get("sha") and cur["sha"] != g["sha"]:
+            print(f"  WARN {k} differs ({g['sha'][:8]} vs "
+                  f"{cur['sha'][:8]}) — non-runtime; continuing")
     if problems:
         for p_ in problems:
             print(f"  REFUSE {p_}")
@@ -469,25 +630,75 @@ def cmd_restore(a):
               "with matching code")
         return 2
 
-    # 3) stage EVERYTHING into a sibling temp dir first (same fs for the
-    #    atomic rename promotion below)
-    import tarfile, tempfile, shutil as _sh
+    # 3) resume or rollback an interrupted transaction
+    if journal is not None:
+        _verify_promoted(journal, problems)
+        if problems:
+            for p_ in problems:
+                print(f"  REFUSE {p_}")
+            return 2
+        stage_root = Path(journal["stage_root"])
+        todo = [f for f in journal["files"] if not f.get("promoted")]
+        if not todo:
+            # every file landed; only journal cleanup remained
+            if dry:
+                print("DRY-RUN ok: transaction complete, journal cleanup "
+                      "only")
+                return 0
+            jp.unlink()
+            _sh.rmtree(stage_root, ignore_errors=True)
+            print(f"restore OK: {len(journal['files'])} files verified "
+                  f"(recovered transaction)")
+            return 0
+        if stage_root.exists():
+            # resume from the existing verified stage
+            bad = [f["staged"] for f in todo
+                   if not Path(f["staged"]).exists() or
+                   _sha256(Path(f["staged"]).read_bytes()) != f["sha256"]]
+            if bad:
+                print(f"FAIL staged files unverifiable: {bad[0]} — "
+                      "cannot safely resume")
+                return 2
+            if dry:
+                print(f"DRY-RUN ok: would resume {len(todo)} files from "
+                      "existing stage")
+                return 0
+            try:
+                _promote(jp, journal)
+                jp.unlink()
+            except Exception as e:
+                print(f"FAIL promotion interrupted again: {e} — journal "
+                      f"{jp} kept; rerun restore with the same archive")
+                return 2
+            _sh.rmtree(stage_root, ignore_errors=True)
+            print(f"restore OK: resumed transaction, "
+                  f"{len(journal['files'])} files total")
+            print("NOT auto-started: fill secrets, then `python3 -m "
+                  "ops.ta setup` for units/cron, then health")
+            return 0
+        # stage lost -> roll back ONLY journal-verified partial files,
+        # then fall through to a fresh restore of the same backup
+        print("stage directory gone — rolling back verified partial "
+              "files, then re-restoring from archive")
+        try:
+            _rollback_partial(jp, journal)
+        except Exception as e:
+            print(f"FAIL recovery: {e}")
+            return 2
+        journal = None
+        if dry:
+            print("DRY-RUN ok: partial state rolled back; would restore "
+                  "fresh")
+            return 0
+
+    # 4) stage EVERYTHING into a sibling temp dir (same fs for atomic
+    #    rename promotion)
     prefix.mkdir(parents=True, exist_ok=True)
     stage_root = Path(tempfile.mkdtemp(prefix=".restore_stage_",
                                        dir=str(prefix)))
-    staged = []
     try:
-        with tarfile.open(archive) as t:
-            for ent in man.get("files", []):
-                k, rel = ent["path"].split("/", 1)
-                sp = stage_root / k / rel
-                sp.parent.mkdir(parents=True, exist_ok=True)
-                data = t.extractfile(f"payload/{ent['path']}").read()
-                if _sha256(data) != ent["sha256"]:
-                    raise RuntimeError(f"checksum {rel}")
-                sp.write_bytes(data)
-                staged.append((sp, Path(lay[k]) / rel))
-        # 4) continuity on the STAGED set (not the target)
+        files = _stage_from_archive(archive, man, lay, stage_root)
+        # 5) continuity on the STAGED set (not the target)
         lay_staged = {k: str(stage_root / k) for k in lay}
         for field in ("cash", "realized", "positions", "executed"):
             if (man.get("alpha") or {}).get(field) != \
@@ -497,34 +708,33 @@ def cmd_restore(a):
                 _c12_summary(lay_staged).get("nav"):
             raise RuntimeError("continuity c12 nav")
         if dry:
-            print(f"DRY-RUN ok: {len(staged)} files staged+validated, "
+            print(f"DRY-RUN ok: {len(files)} files staged+validated, "
                   f"backup {man.get('backup_id')}")
             _sh.rmtree(stage_root)
             return 0
-        # 5) promote: only now do target paths appear. Each rename is a
-        #    single-file op; a marker records an in-flight transaction.
-        marker = prefix / ".restore_in_progress"
-        marker.write_text(json.dumps({"archive": str(archive),
-                                      "at": ts_utc(), "count": len(staged)}))
+        # 6) journal THEN promote — crash-safe: journal always reflects
+        #    exactly which files reached the target
+        journal = {"txn_id": f"restore-{ts_utc()}",
+                   "backup_id": man.get("backup_id"),
+                   "archive": str(archive), "stage_root": str(stage_root),
+                   "files": files}
+        _journal_write(jp, journal)
         try:
-            for sp, tgt in staged:
-                tgt.parent.mkdir(parents=True, exist_ok=True)
-                _sh.move(str(sp), str(tgt))
-            marker.unlink()
-        except Exception:
-            # promotion failed mid-way: leave marker so an operator sees a
-            # partial restore and can re-run cleanly after emptying target
-            raise RuntimeError(
-                f"promotion interrupted — marker left at {marker}; "
-                f"target may be partially populated, inspect before retry")
+            _promote(jp, journal)
+            jp.unlink()
+        except Exception as e:
+            print(f"FAIL promotion interrupted: {e} — journal kept at "
+                  f"{jp}; rerun `python3 -m ops.ta restore {archive} "
+                  f"--prefix {prefix}` to resume automatically")
+            return 2
     except Exception as e:
         _sh.rmtree(stage_root, ignore_errors=True)
         print(f"FAIL restore: {e} — target untouched (pre-promotion)")
         return 2
-    finally:
-        _sh.rmtree(stage_root, ignore_errors=True)
+    _sh.rmtree(stage_root, ignore_errors=True)
 
-    print(f"restore OK: {len(staged)} files; authority verified pre-promotion")
+    print(f"restore OK: {len(files)} files; authority verified "
+          "pre-promotion")
     print("NOT auto-started: fill secrets, then "
           "`python3 -m ops.ta setup` for units/cron, then health")
     return 0
@@ -593,6 +803,13 @@ def cmd_health(a):
     lay = _layout(Path(a.prefix).resolve())
     checks = []
     S = {"ok": "HEALTHY", "degraded": "DEGRADED", "fail": "FAILED"}
+
+    jp = Path(a.prefix).resolve() / JOURNAL_NAME
+    if jp.exists():
+        checks.append(("restore transaction", "fail", ""))
+        print("  [  FAILED] INCOMPLETE RESTORE TRANSACTION — "
+              f"{jp} present; rerun `ops.ta restore` with the same "
+              "archive")
 
     def chk(name, ok, level="fail", note=""):
         checks.append((name, level if not ok else "ok", note))

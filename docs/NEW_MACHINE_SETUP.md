@@ -127,10 +127,14 @@ python3 -m ops.ta restore <backup.tar.gz>
 ```
 
 Restores the full authority set (see docs/STATE_AND_DATA_AUTHORITY.md).
-Rules: EMPTY target only, runtime code SHA must match the manifest (the
-error tells you which commit to check out), staged+verified before
-promotion, checksum-verified. Secrets transfer separately. Runtime is
-NOT started — run `ops.ta setup` then health after secrets are in place.
+Rules: EMPTY target only (clean checked-out baselines are fine; dirty or
+untracked authority = REFUSE), runtime worktrees must be git checkouts at
+the manifest SHAs (the error prints the exact commit to check out;
+unverifiable code = REFUSE), staged+verified before promotion, journaled
+promotion — if the machine crashes mid-restore just rerun the same
+command; it resumes or safely rolls back. Secrets transfer separately.
+Runtime is NOT started — run `ops.ta setup` then health after secrets are
+in place.
 
 ## 10. Post-start verification
 

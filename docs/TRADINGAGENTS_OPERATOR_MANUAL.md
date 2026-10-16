@@ -135,11 +135,18 @@ python3 -m ops.ta health
 ```
 
 Restore is NEW/EMPTY TARGET ONLY and fail-closed:
-- refuses any existing authoritative state (no overwrite mode exists)
-- refuses when runtime code SHA differs from the backup (it prints the
-  exact `git checkout <sha>` you need)
-- stages + validates everything BEFORE promoting; any failure leaves the
-  target untouched
+- refuses any living/dirty authoritative state (no overwrite mode exists;
+  clean git-baseline files count as empty)
+- refuses when runtime code can't be PROVEN to match the backup SHA —
+  wrong SHA, non-git dir, or uncommitted files outside the authority set
+  all abort with the exact `git checkout <sha>` needed
+- stages + validates everything BEFORE promoting
+- promotion is journaled (.restore_in_progress): a crash mid-promotion is
+  recovered by simply rerunning the SAME restore command — it resumes
+  verified staged files or rolls back only journal-verified partials.
+  A different backup can never hijack an incomplete transaction.
+  `ops.ta health` reports FAILED (INCOMPLETE RESTORE TRANSACTION) until
+  recovery finishes
 - never starts trading automatically
 
 ## Call a developer when
