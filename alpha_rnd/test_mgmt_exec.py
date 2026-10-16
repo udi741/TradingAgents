@@ -37,7 +37,12 @@ class E(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self._saves = (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE,
-                       mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P)
+                       mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P,
+                       monitor.NOTIFY, monitor.desktop_notify)
+        # shadow/test runs must never write executed-sounding wording to the
+        # live operator log or desktop — notify writes real state msgs
+        monitor.NOTIFY = self.tmp / "notify.log"
+        monitor.desktop_notify = lambda *a, **k: None
         mv.INTENT_DIR = self.tmp / "i"
         mgmt.MEVENTS = self.tmp / "e.jsonl"
         mgmt.STATE = self.tmp / "ms.json"
@@ -59,7 +64,8 @@ class E(unittest.TestCase):
 
     def tearDown(self):
         (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE,
-         mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P) = self._saves
+         mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P,
+         monitor.NOTIFY, monitor.desktop_notify) = self._saves
 
     def _enable(self):
         mgmt.POLICY_P = self.pol_on
@@ -102,6 +108,37 @@ class E(unittest.TestCase):
         mx._tick_actions(self.st, self.wl)
         self.assertEqual(self.st["positions"]["PBF"]["stop_rule"]["level"],
                          83.5)
+
+    # --- shadow notification semantics: nothing shadow may say EXECUTED ---
+    def test_shadow_paths_never_say_executed(self):
+        # 1. disabled execution writes NOTHING to the operator log
+        r = mx.execute("PBF", self.st, self.wl)
+        self.assertEqual(r["result"], "SKIP_EXECUTION_DISABLED")
+        self.assertFalse((self.tmp / "notify.log").exists())
+        # 2. enabled-but-queued shadow intent still writes no fill wording
+        self._enable()
+        mx.execute("PBF", self.st, self.wl)
+        txt = (self.tmp / "notify.log").read_text()             if (self.tmp / "notify.log").exists() else ""
+        for bad in ("EXECUTED", "FILLED", "SOLD", "STOP CHANGED"):
+            self.assertNotIn(bad, txt)
+        # 3. validated intent record itself carries shadow status, never a
+        #    fill claim
+        self.assertEqual(mx._actions()["mgmact_test1"]["status"], "ENQUEUED")
+        self.assertNotIn("mgmact_test1", self.st["executed"])
+        # 4. SHADOW artifacts/sections are explicitly labeled non-economic
+        self.assertIn("SHADOW RECOMMENDATION ONLY",
+                      open(ROOT / "alpha_rnd/mgmt_reassess.py").read())
+        self.assertIn("NOT AN ECONOMIC ACTION",
+                      open(ROOT / "alpha_rnd/mgmt.py").read())
+
+    def test_real_fill_still_says_executed(self):
+        # canonical fill wording preserved — do_exit on real authority
+        monitor.do_exit(self.st, "PBF", 90.0, "test fill", shares=31)
+        txt = (self.tmp / "notify.log").read_text()
+        self.assertIn("PAPER EXIT EXECUTED", txt)
+        self.assertIn("PBF", txt)
+        # dedup/idempotency unchanged: same exec_id exits once economically
+        self.assertEqual(self.st["positions"]["PBF"]["shares"], 31)
 
     def test_partial_fill_pro_rata(self):
         self._enable()
