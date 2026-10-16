@@ -276,7 +276,12 @@ An observational layer now watches open positions after entry. It is
   Observational — `monitor_state.json` remains sole economic authority.
 - **Shadow triggers** (`alpha_rnd/mgmt.py` + `management_policy.json`):
   APPRECIATION, PEAK_GIVEBACK, ADVERSE_ACCELERATION, HORIZON_REVIEW
-  (CATALYST schema reserved, disabled). Edge-triggered with cooldown and
+  (CATALYST schema reserved, disabled). Price triggers are **position-
+  contextual**: each is expressed in R units where 1R = the position's own
+  initial risk distance (entry − original protective stop) from the frozen
+  entry snapshot — never a universal percentage. A position with no
+  machine-actionable stop is `R_CONTEXT_UNAVAILABLE` (price triggers
+  suppressed; horizon triggers still apply). Edge-triggered with cooldown and
   hysteresis. A trigger writes a `SHADOW_TRIGGERED` request artifact in
   `evaluations/alpha_rnd_v1/management_requests/` — **"think again",
   never an action**. No model call, no Telegram alert, no economic write.
