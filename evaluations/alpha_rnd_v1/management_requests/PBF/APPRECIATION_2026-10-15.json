@@ -1,0 +1,31 @@
+{
+ "entry_snapshot": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/entry_snapshots/PBF_.json",
+ "fired_at": "2026-10-16T11:31:02.914639+00:00",
+ "fired_session": "2026-10-15",
+ "metrics": {
+  "drawdown_from_peak_pct": -8.74,
+  "entry_price": 80.0,
+  "latest_price": 86.99,
+  "mae_pct": 0.0,
+  "metrics_basis": "close_bars",
+  "peak_unrealized_pct": 0.0,
+  "sessions_held": 0,
+  "unrealized_pct": 8.74
+ },
+ "note": "shadow request: think again \u2014 NOT an action, NOT a model call",
+ "policy_version": 1,
+ "position_id": null,
+ "reason": "unrealized 8.74% >= 8.0%",
+ "request_id": "PBF:APPRECIATION:2026-10-15:8.74",
+ "risk_plan_ref": {
+  "label": "hard stop",
+  "level": 74.5,
+  "type": "intraday_stop"
+ },
+ "status": "SHADOW_TRIGGERED",
+ "threshold": 8.0,
+ "ticker": "PBF",
+ "trigger_family": "APPRECIATION",
+ "urgency": "NORMAL",
+ "value": 8.74
+}

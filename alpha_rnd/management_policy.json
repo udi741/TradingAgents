@@ -1,0 +1,33 @@
+{
+ "version": 1,
+ "mode": "shadow",
+ "comment": "Phase B shadow-only. 'live' would enable future economic actions; 'disabled' bypasses detection entirely.",
+ "triggers": {
+  "appreciation": {
+   "min_unrealized_pct": 8.0,
+   "rationale": "roughly one full stop-distance of typical V1 entries (PBF stop is 6.9% below entry); a move of this size materially changes the position context"
+  },
+  "peak_giveback": {
+   "min_peak_pct": 8.0,
+   "giveback_fraction": 0.5,
+   "rationale": "fires only after a real move (same appreciation floor) then surrendering >=50% of the peak gain"
+  },
+  "adverse_acceleration": {
+   "stop_multiple": 1.25,
+   "fallback_pct": 10.0,
+   "rationale": "MAE beyond 1.25x the position's own entry stop distance = materially worse than the planned risk envelope; fallback used only when no stop distance is derivable"
+  },
+  "horizon_review": {
+   "rationale": "fires when an explicit date in the reevaluation/horizon text is reached; descriptive horizons without dates never fire"
+  },
+  "catalyst": {
+   "enabled": false,
+   "rationale": "requires a news/event source not wired in Phase B; schema reserved, production disabled"
+  }
+ },
+ "debounce": {
+  "cooldown_sessions": 2,
+  "hysteresis_fraction": 0.2,
+  "rationale": "one fire per family per ~2 sessions; re-arm only after the metric retreats 20% of the threshold value"
+ }
+}

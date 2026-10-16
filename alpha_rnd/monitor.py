@@ -351,6 +351,14 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
                               "invalidation": watch["invalidation"],
                               "horizon": watch["horizon"], "stop_rule": stop,
                               "entry_session": now_utc().strftime("%Y-%m-%d")}
+    try:  # shadow management snapshot — failure must never block a fill
+        from alpha_rnd import mgmt as _mgmt
+        _mgmt.create_snapshot(ticker, st["positions"][ticker]["entry_session"],
+                              watch=watch, pos=st["positions"][ticker],
+                              intent=_mgmt._latest_intent(ticker),
+                              artifact_ref=watch.get("artifact"))
+    except Exception:
+        pass
     _set_watch_status(st, watch, "TRIGGERED")
     emit_once(st, {"ticker": ticker, "action": ev_type, "price": price,
               "shares": shares,
@@ -867,6 +875,13 @@ def _run_once_locked(st: dict, wl: dict) -> None:
         intraday_pass(st, wl, daily)
         if st["data_health"]["status"] == "ok" and not st["data_health"].get("intraday_ok"):
             st["data_health"]["status"] = "degraded_intraday"
+    try:  # post-entry shadow triggers — observational only, never economics
+        from alpha_rnd import mgmt as _mgmt
+        obs = _mgmt.observe(st, wl, daily,
+                            last_close_session(daily) or sess or "", None)
+        st["last_mgmt_observe"] = obs
+    except Exception:
+        pass
     st["last_check_utc"] = now_utc().isoformat()
     save_state(st)
 
