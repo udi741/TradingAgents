@@ -1,0 +1,40 @@
+{
+ "action_id": "mgmact_27e4d2401bac67e2",
+ "banner": "SHADOW VALIDATION \u2014 NOT AN ECONOMIC ACTION",
+ "decision_artifact_status": "SUCCESS",
+ "economic_authority": false,
+ "management_decision_id": "3bc7c7580d754fde",
+ "normalized_exit_quantity": 31,
+ "position_id": "PBF:",
+ "position_state_hash": "622d8352c9bfea40d854d75dc5cbd461ea35dd0284ec72c35bce6dcc3d833483",
+ "proposed_exit_fraction": 0.5,
+ "proposed_risk_rule": {
+  "label": "Sits just below the 83.53/84.27 pullback lows (10/9, 10/12) and under the 10/15 low of 85.24; locks a minimum ~+4.4% gain vs the $80 entry and narrows downside from ~14.4% (stop 74.5) to ~4.0%. Never wider than the authorized stop.",
+  "level": 83.5,
+  "type": "close_below"
+ },
+ "recommended_action": "PARTIAL_EXIT",
+ "rejection_reasons": [],
+ "remaining_quantity": 31,
+ "risk_validation": {
+  "partial_ok": true,
+  "reason": "tightens 74.5 -> 83.5 (close-confirmed)",
+  "remainder_ok": true,
+  "rule": {
+   "label": "Sits just below the 83.53/84.27 pullback lows (10/9, 10/12) and under the 10/15 low of 85.24; locks a minimum ~+4.4% gain vs the $80 entry and narrows downside from ~14.4% (stop 74.5) to ~4.0%. Never wider than the authorized stop.",
+   "level": 83.5,
+   "type": "close_below"
+  },
+  "status": "PARTIAL_VALID_REMAINDER_VALID"
+ },
+ "shadow_only": true,
+ "status": "VALIDATED_SHADOW_INTENT",
+ "ticker": "PBF",
+ "validated_action": "PARTIAL_EXIT",
+ "validated_at": "2026-10-16T13:08:40.855550+00:00",
+ "validation_reasons": [
+  "fraction 0.5 -> 31 shares of 62 (round to nearest)"
+ ],
+ "validation_schema": 1,
+ "warnings": []
+}

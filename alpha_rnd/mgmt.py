@@ -536,6 +536,22 @@ def status() -> str:
                 f"  failure/retry: {ra.get('status') if 'RETRY' in str(ra.get('status')) or 'FAILED' in str(ra.get('status')) else 'none'}",
                 f"  stale: {'YES — ' + ra.get('status') if str(ra.get('status','')).startswith('STALE') else 'no'}",
             ]
+        vi_dir = Path(__file__).resolve().parents[1] / "evaluations" / \
+            "alpha_rnd_v1" / "management_intents" / t
+        if vi_dir.exists():
+            vi = _j(sorted(vi_dir.glob("*.json"))[-1], {})
+            lines += [
+                f"  === SHADOW VALIDATION — NOT AN ECONOMIC ACTION ===",
+                f"  validator: {vi.get('status')}   "
+                f"validated_action: {vi.get('validated_action')}   "
+                f"action_id: {vi.get('action_id')}",
+                f"  exit qty {vi.get('normalized_exit_quantity')} -> "
+                f"remaining {vi.get('remaining_quantity')}   "
+                f"risk rule {json.dumps(vi.get('proposed_risk_rule'))[:70]}",
+                f"  reasons: {str(vi.get('validation_reasons'))[:80]}",
+                f"  rejections: {str(vi.get('rejection_reasons'))[:80]}",
+                f"  ECONOMIC STATE: NO ORDER, NO STOP CHANGE, NO EXECUTION",
+            ]
         lines += [""]
     return "\n".join(lines)
 

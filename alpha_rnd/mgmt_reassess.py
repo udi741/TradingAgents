@@ -383,7 +383,14 @@ def run_bounded(session: str, urgent_only: bool, limit: int = 2) -> list[dict]:
     for t in work_order(list((st.get("positions") or {})), urgent_only):
         if len(out) >= limit:
             break
-        out.append(assess(t, session))
+        d = assess(t, session)
+        out.append(d)
+        try:  # Phase D shadow validation — never economic
+            from alpha_rnd import mgmt_validate
+            if d.get("status") == "SUCCESS":
+                mgmt_validate.validate(t, dec=d)
+        except Exception:
+            pass
     return out
 
 

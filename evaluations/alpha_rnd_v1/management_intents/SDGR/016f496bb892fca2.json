@@ -1,0 +1,22 @@
+{
+ "action_id": "mgmact_678ee99272f03207",
+ "banner": "SHADOW VALIDATION \u2014 NOT AN ECONOMIC ACTION",
+ "decision_artifact_status": "SUCCESS",
+ "economic_authority": false,
+ "management_decision_id": "016f496bb892fca2",
+ "position_id": "SDGR:",
+ "position_state_hash": "2306330ed5e92337ed7bfd5fc293635316d8136fefac5f3668db4c5b84f6ea84",
+ "proposed_risk_rule": null,
+ "recommended_action": "FULL_EXIT",
+ "rejection_reasons": [],
+ "shadow_only": true,
+ "status": "VALIDATED_SHADOW_INTENT",
+ "ticker": "SDGR",
+ "validated_action": "FULL_EXIT",
+ "validated_at": "2026-10-16T13:08:48.015652+00:00",
+ "validation_reasons": [
+  "full exit of current position"
+ ],
+ "validation_schema": 1,
+ "warnings": []
+}

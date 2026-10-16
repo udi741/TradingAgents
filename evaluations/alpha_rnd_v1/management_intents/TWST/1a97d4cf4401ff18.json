@@ -1,0 +1,22 @@
+{
+ "action_id": "mgmact_b4e0ad1ed057b16a",
+ "banner": "SHADOW VALIDATION \u2014 NOT AN ECONOMIC ACTION",
+ "decision_artifact_status": "SUCCESS",
+ "economic_authority": false,
+ "management_decision_id": "1a97d4cf4401ff18",
+ "position_id": "TWST:",
+ "position_state_hash": "08477f220b5cbb759ae0fd0f3ff3dc174a0d13dcf6a49239dec8eee684933d0e",
+ "proposed_risk_rule": null,
+ "recommended_action": "FULL_EXIT",
+ "rejection_reasons": [],
+ "shadow_only": true,
+ "status": "VALIDATED_SHADOW_INTENT",
+ "ticker": "TWST",
+ "validated_action": "FULL_EXIT",
+ "validated_at": "2026-10-16T13:08:48.015017+00:00",
+ "validation_reasons": [
+  "full exit of current position"
+ ],
+ "validation_schema": 1,
+ "warnings": []
+}
