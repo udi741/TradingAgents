@@ -1,24 +1,23 @@
 {
- "version": 1,
+ "version": 2,
  "mode": "shadow",
- "comment": "Phase B shadow-only. 'live' would enable future economic actions; 'disabled' bypasses detection entirely.",
+ "comment": "Phase B1: position-contextual triggers. Price triggers are expressed in R units where 1R = (entry - original protective stop) / entry, from the frozen entry snapshot. No universal raw-percent threshold exists. Positions without a valid stop are R_CONTEXT_UNAVAILABLE and only horizon/observational triggers apply.",
  "triggers": {
   "appreciation": {
-   "min_unrealized_pct": 8.0,
-   "rationale": "roughly one full stop-distance of typical V1 entries (PBF stop is 6.9% below entry); a move of this size materially changes the position context"
+   "r_multiple": 1.0,
+   "rationale": "fires when favorable excursion reaches 1R — the position has moved favorably by the amount originally risked. Conservative research default, configurable; not a universal return percentage."
   },
   "peak_giveback": {
-   "min_peak_pct": 8.0,
+   "min_peak_r": 1.0,
    "giveback_fraction": 0.5,
-   "rationale": "fires only after a real move (same appreciation floor) then surrendering >=50% of the peak gain"
+   "rationale": "a real winner (peak >= 1R) surrendering >=50% of its favorable excursion. Both legs scale with the position's own risk unit."
   },
   "adverse_acceleration": {
-   "stop_multiple": 1.25,
-   "fallback_pct": 10.0,
-   "rationale": "MAE beyond 1.25x the position's own entry stop distance = materially worse than the planned risk envelope; fallback used only when no stop distance is derivable"
+   "mae_r_multiple": 1.25,
+   "rationale": "MAE beyond -1.25R = materially worse than the original authorized risk envelope"
   },
   "horizon_review": {
-   "rationale": "fires when an explicit date in the reevaluation/horizon text is reached; descriptive horizons without dates never fire"
+   "rationale": "fires when an explicit date in the position's own reevaluation/horizon text is reached"
   },
   "catalyst": {
    "enabled": false,

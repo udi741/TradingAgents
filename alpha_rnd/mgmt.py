@@ -249,16 +249,22 @@ def update_metrics(rec: dict, pos: dict, df, session: str,
 DATE_RX = re.compile(r"20\d\d-\d\d-\d\d")
 
 
-def _stop_distance_pct(snap: dict | None, fill: float) -> float | None:
-    sr = ((snap or {}).get("risk_plan") or {}).get("stop_rule") or {}
-    lv = sr.get("level") or (snap or {}).get("risk_plan", {}).get("stop_level")
+def _r_context(snap: dict | None, fill: float) -> dict:
+    """Initial risk unit (1R) from the frozen snapshot's machine-actionable
+    stop. Never fabricates a risk distance."""
+    rp = (snap or {}).get("risk_plan") or {}
+    sr = rp.get("stop_rule") or {}
+    lv = sr.get("level") or rp.get("stop_level")
     try:
         lv = float(lv)
-        if fill and lv < fill:
-            return round((fill - lv) / fill * 100, 2)
     except (TypeError, ValueError):
-        pass
-    return None
+        lv = None
+    if not fill or lv is None or lv >= fill:
+        return {"r_available": False, "reason": "R_CONTEXT_UNAVAILABLE"}
+    r_abs = fill - lv
+    return {"r_available": True, "stop_level": lv,
+            "r_abs": round(r_abs, 4),
+            "r_pct": round(r_abs / fill * 100, 3)}
 
 
 def _horizon_date(snap: dict | None) -> str | None:
@@ -277,7 +283,8 @@ def _urgent(fam: str) -> str:
             "PEAK_GIVEBACK": "NORMAL",
             "APPRECIATION": "NORMAL",
             "HORIZON_REVIEW": "NORMAL",
-            "CATALYST_MATERIALIZATION": "NORMAL"}[fam]
+            "CATALYST_MATERIALIZATION": "NORMAL",
+            "R_CONTEXT_UNAVAILABLE": "LOW"}[fam]
 
 
 def evaluate(ticker: str, rec: dict, snap: dict | None,
@@ -291,35 +298,44 @@ def evaluate(ticker: str, rec: dict, snap: dict | None,
     dd = rec.get("drawdown_from_peak_pct") or 0.0
     fill = rec.get("entry_price") or 0.0
     tp = pol["triggers"]
+    r = _r_context(snap, fill)
+    r_pct = r.get("r_pct")
 
-    # A. appreciation
-    a = tp["appreciation"]
-    if u >= a["min_unrealized_pct"]:
-        out.append({"family": "APPRECIATION", "value": u,
-                    "threshold": a["min_unrealized_pct"],
-                    "reason": f"unrealized {u}% >= {a['min_unrealized_pct']}%"})
-
-    # B. peak giveback
-    g = tp["peak_giveback"]
-    if pk >= g["min_peak_pct"] and pk > 0 and \
-            dd / pk >= g["giveback_fraction"]:
-        out.append({"family": "PEAK_GIVEBACK", "value": round(dd, 2),
-                    "threshold": round(g["giveback_fraction"] * pk, 2),
-                    "reason": f"surrendered {dd}pp of {pk}% peak "
-                              f"(>= {int(g['giveback_fraction'] * 100)}% of peak)"})
-
-    # C. adverse acceleration — MAE beyond N x entry stop distance
-    c = tp["adverse_acceleration"]
-    sd = _stop_distance_pct(snap, fill) or c["fallback_pct"]
-    lim = round(c["stop_multiple"] * sd, 2)
-    if mae <= -lim:
-        out.append({"family": "ADVERSE_ACCELERATION", "value": mae,
-                    "threshold": -lim,
-                    "reason": f"MAE {mae}% beyond {c['stop_multiple']}x stop "
-                              f"distance {sd}% = -{lim}%"})
+    if r["r_available"]:
+        ur = u / r_pct
+        pkr = pk / r_pct
+        maer = mae / r_pct
+        # A. appreciation — favorable excursion reaches configured R multiple
+        a = tp["appreciation"]
+        if ur >= a["r_multiple"]:
+            out.append({"family": "APPRECIATION", "value": round(ur, 2),
+                        "threshold": a["r_multiple"],
+                        "reason": f"favorable excursion {ur:.2f}R "
+                                  f"(unrealized {u}% vs 1R={r_pct}%)"})
+        # B. peak giveback — a real winner (peak >= min_peak_r) surrendering
+        #    a configured fraction of its favorable excursion
+        g = tp["peak_giveback"]
+        if pkr >= g["min_peak_r"] and pk > 0 and \
+                dd / pk >= g["giveback_fraction"]:
+            out.append({"family": "PEAK_GIVEBACK", "value": round(dd, 2),
+                        "threshold": round(g["giveback_fraction"] * pk, 2),
+                        "reason": f"peak {pkr:.2f}R, surrendered {dd}pp "
+                                  f"({round(dd / pk * 100)}% of excursion)"})
+        # C. adverse acceleration — MAE beyond configured R multiple
+        c = tp["adverse_acceleration"]
+        if maer <= -c["mae_r_multiple"]:
+            out.append({"family": "ADVERSE_ACCELERATION", "value": round(maer, 2),
+                        "threshold": -c["mae_r_multiple"],
+                        "reason": f"MAE {maer:.2f}R beyond -{c['mae_r_multiple']}R "
+                                  f"(1R={r_pct}%)"})
+    else:
+        out.append({"family": "R_CONTEXT_UNAVAILABLE",
+                    "value": None, "threshold": None,
+                    "reason": "no machine-actionable original stop in "
+                              "snapshot; price triggers suppressed",
+                    "observational": True})
 
     # D. horizon review — parsed checkpoint date reached
-    h = tp["horizon_review"]
     hd = _horizon_date(snap)
     if hd and session >= hd:
         out.append({"family": "HORIZON_REVIEW", "value": session,
@@ -452,6 +468,9 @@ def observe(st: dict, wl: dict, daily: dict, session: str,
                        (intraday or {}).get(t))
         for ev in evaluate(t, rec, snap, pol, session):
             fam = ev["family"]
+            if fam == "R_CONTEXT_UNAVAILABLE":
+                rec["r_context"] = "R_CONTEXT_UNAVAILABLE"
+                continue
             tg = rec["triggers"].get(fam) or {}
             if fam != "HORIZON_REVIEW" and tg.get("fired_at") and \
                     not _cooldown_ok(tg, tg["fired_at"], session, dates_idx,
@@ -488,7 +507,8 @@ def status() -> str:
             f"  unrealized {r.get('unrealized_pct')}%   "
             f"peak {r.get('peak_unrealized_pct')}%   "
             f"drawdown {r.get('drawdown_from_peak_pct')}pp   "
-            f"MAE {r.get('mae_pct')}%   held {r.get('sessions_held')} sessions",
+            f"MAE {r.get('mae_pct')}%   held {r.get('sessions_held')} sessions   "
+            f"R: {r.get('r_context', 'available')}",
             f"  original stop {json.dumps((r.get('original_stop') or {}).get('stop_rule') or r.get('original_stop'))[:80]}",
             f"  active stop {json.dumps(r.get('stop_ref'))[:80]}",
             f"  horizon: {str(r.get('horizon'))[:70]}   checkpoint {r.get('horizon_checkpoint')}",
@@ -510,13 +530,16 @@ def replay() -> str:
     import pandas as pd  # noqa
     from ta_eval_alpha import e17_screener as e17
     pol = policy()
-    hist = {"ACN": ("2026-10-02", 205.0, "2026-10-07"),
-            "APPS": ("2026-10-02", 11.30, "2026-10-07"),
-            "PGEN": ("2026-10-05", 8.20, "2026-10-06"),
-            "TWST": ("2026-10-06", 209.55, "2026-10-12"),
-            "SDGR": ("2026-10-06", 31.00, "2026-10-13")}
+    # (entry_session, fill, exit_session, original stop level)
+    hist = {"ACN": ("2026-10-02", 205.0, "2026-10-07", 194.0),
+            "APPS": ("2026-10-02", 11.30, "2026-10-07", 10.42),
+            "PGEN": ("2026-10-05", 8.20, "2026-10-06", 7.75),
+            "TWST": ("2026-10-06", 209.55, "2026-10-12", 164.0),
+            "SDGR": ("2026-10-06", 31.00, "2026-10-13", 27.29)}
     lines = []
-    for t, (ent, fill, exit_) in hist.items():
+    for t, (ent, fill, exit_, stop) in hist.items():
+        snap = {"risk_plan": {"stop_rule": {"type": "close_below",
+                                            "level": stop}}}
         d, _ = e17.fetch_batch_ohlcv([t], "2026-09-15", "2026-10-16",
                                      batch_size=1)
         df = d.get(t)
@@ -539,18 +562,22 @@ def replay() -> str:
                    "peak_unrealized_pct": round((hi / fill - 1) * 100, 2),
                    "drawdown_from_peak_pct": round((hi - c) / fill * 100, 2),
                    "mae_pct": round((lo / fill - 1) * 100, 2)}
-            evs = evaluate(t, rec, None, pol, sess)
+            evs = [e for e in evaluate(t, rec, snap, pol, sess)
+                   if e["family"] != "R_CONTEXT_UNAVAILABLE"]
             for ev in evs:
                 if first is None:
+                    rr = _r_context(snap, fill)
                     first = (sess, ev["family"], rec["unrealized_pct"],
-                             rec["peak_unrealized_pct"], ev["reason"])
+                             rec["peak_unrealized_pct"], ev["reason"],
+                             round((rec["unrealized_pct"] or 0) / rr["r_pct"], 2),
+                             round((rec["peak_unrealized_pct"] or 0) / rr["r_pct"], 2))
         if first:
-            sess, fam, u, pk, why = first
+            sess, fam, u, pk, why, ur, pkr = first
             days = len([x for x in df.index
                         if ent < str(x.date()) <= sess])
             lines.append(f"{t}: first trigger {fam} on {sess} "
-                         f"(unrealized {u}%, peak {pk}%) — {why}; "
-                         f"exit {exit_} ({days} sessions of runway)")
+                         f"(unrealized {u}% = {ur}R, peak {pk}% = {pkr}R) — "
+                         f"{why}; exit {exit_} ({days} sessions of runway)")
         else:
             lines.append(f"{t}: no trigger before exit {exit_}")
     return "\n".join(lines)

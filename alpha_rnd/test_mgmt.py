@@ -23,14 +23,19 @@ def df_for(rows):
                          "Volume": [1e6] * len(rows)}, index=idx)
 
 
-POL = {"version": 1, "mode": "shadow",
+POL = {"version": 2, "mode": "shadow",
        "triggers": {
-           "appreciation": {"min_unrealized_pct": 8.0},
-           "peak_giveback": {"min_peak_pct": 8.0, "giveback_fraction": 0.5},
-           "adverse_acceleration": {"stop_multiple": 1.25, "fallback_pct": 10.0},
+           "appreciation": {"r_multiple": 1.0},
+           "peak_giveback": {"min_peak_r": 1.0, "giveback_fraction": 0.5},
+           "adverse_acceleration": {"mae_r_multiple": 1.25},
            "horizon_review": {},
            "catalyst": {"enabled": False}},
        "debounce": {"cooldown_sessions": 2, "hysteresis_fraction": 0.2}}
+
+SNAP_10PCT = {"risk_plan": {"stop_rule": {"type": "intraday_stop",
+                                          "level": 9.0}}}   # 1R = 10% @10
+SNAP_5PCT = {"risk_plan": {"stop_rule": {"type": "intraday_stop",
+                                         "level": 9.5}}}    # 1R = 5% @10
 
 
 class Snap(unittest.TestCase):
@@ -90,34 +95,62 @@ class Snap(unittest.TestCase):
         self.assertEqual(rec["high_since_entry"], 13.0)
         self.assertEqual(rec["metrics_basis"], "close+intraday")
 
-    def test_appreciation(self):
-        evs = mgmt.evaluate("X", {"unrealized_pct": 9.0, "entry_price": 10},
-                            None, POL, "2026-10-05")
-        self.assertEqual([e["family"] for e in evs], ["APPRECIATION"])
-        self.assertEqual(evs[0]["urgency"], "NORMAL")
+    def test_appreciation_r_contextual(self):
+        # same raw return: fires for wide-stop stock, not for tight-stop
+        rec = {"unrealized_pct": 6.0, "entry_price": 10.0}
+        wide = mgmt.evaluate("X", rec, SNAP_10PCT, POL, "2026-10-05")
+        self.assertNotIn("APPRECIATION", [e["family"] for e in wide])
+        tight = mgmt.evaluate("X", rec, SNAP_5PCT, POL, "2026-10-05")
+        self.assertIn("APPRECIATION", [e["family"] for e in tight])
+        self.assertEqual([e for e in tight if e["family"] == "APPRECIATION"][0]
+                         ["urgency"], "NORMAL")
 
-    def test_giveback(self):
-        evs = mgmt.evaluate("X", {"unrealized_pct": 4.0,
-                                  "peak_unrealized_pct": 16.0,
-                                  "drawdown_from_peak_pct": 12.0,
-                                  "entry_price": 10},
+    def test_no_universal_pct(self):
+        # 9% would have fired the old universal threshold; with 1R=10% it must not
+        evs = mgmt.evaluate("X", {"unrealized_pct": 9.0, "entry_price": 10.0},
+                            SNAP_10PCT, POL, "2026-10-05")
+        self.assertNotIn("APPRECIATION", [e["family"] for e in evs])
+        evs = mgmt.evaluate("X", {"unrealized_pct": 11.0, "entry_price": 10.0},
+                            SNAP_10PCT, POL, "2026-10-05")
+        self.assertIn("APPRECIATION", [e["family"] for e in evs])
+
+    def test_r_unavailable(self):
+        evs = mgmt.evaluate("X", {"unrealized_pct": 50.0, "entry_price": 10.0},
                             None, POL, "2026-10-05")
+        fams = [e["family"] for e in evs]
+        self.assertIn("R_CONTEXT_UNAVAILABLE", fams)
+        self.assertNotIn("APPRECIATION", fams)
+        # malformed stop (>= entry for a long) also unavailable
+        bad = {"risk_plan": {"stop_rule": {"type": "intraday_stop",
+                                          "level": 12.0}}}
+        evs = mgmt.evaluate("X", {"unrealized_pct": 50.0, "entry_price": 10.0},
+                            bad, POL, "2026-10-05")
+        self.assertIn("R_CONTEXT_UNAVAILABLE", [e["family"] for e in evs])
+
+    def test_giveback_r(self):
+        evs = mgmt.evaluate("X", {"unrealized_pct": 5.0,
+                                  "peak_unrealized_pct": 20.0,
+                                  "drawdown_from_peak_pct": 15.0,
+                                  "entry_price": 10.0},
+                            SNAP_10PCT, POL, "2026-10-05")
         self.assertIn("PEAK_GIVEBACK", [e["family"] for e in evs])
 
     def test_adverse(self):
-        snap = {"risk_plan": {"stop_rule": {"type": "intraday_stop",
-                                           "level": 9.0}}}
         evs = mgmt.evaluate("X", {"mae_pct": -15.0, "entry_price": 10.0,
                                   "unrealized_pct": -12.0},
-                            snap, POL, "2026-10-05")
+                            SNAP_10PCT, POL, "2026-10-05")
         self.assertIn("ADVERSE_ACCELERATION", [e["family"] for e in evs])
-        self.assertEqual(evs[0]["urgency"], "URGENT")
+        self.assertEqual([e for e in evs
+                          if e["family"] == "ADVERSE_ACCELERATION"][0]
+                         ["urgency"], "URGENT")
 
-    def test_adverse_needs_stop_context(self):
-        evs = mgmt.evaluate("X", {"mae_pct": -9.0, "entry_price": 10.0,
-                                  "unrealized_pct": -5.0},
-                            None, POL, "2026-10-05")
-        self.assertNotIn("ADVERSE_ACCELERATION", [e["family"] for e in evs])
+    def test_adverse_scales_with_r(self):
+        # same -8% MAE: adverse for 5% stop, not for 10% stop
+        rec = {"mae_pct": -8.0, "entry_price": 10.0, "unrealized_pct": -6.0}
+        t10 = mgmt.evaluate("X", rec, SNAP_10PCT, POL, "2026-10-05")
+        self.assertNotIn("ADVERSE_ACCELERATION", [e["family"] for e in t10])
+        t5 = mgmt.evaluate("X", rec, SNAP_5PCT, POL, "2026-10-05")
+        self.assertIn("ADVERSE_ACCELERATION", [e["family"] for e in t5])
 
     def test_horizon(self):
         snap = {"reevaluation": "review after 2026-10-16"}
