@@ -1,0 +1,19 @@
+{
+ "mgmact_444a58f499a499f0": {
+  "action": "PARTIAL_EXIT",
+  "action_id": "mgmact_444a58f499a499f0",
+  "decision_id": "9219d686b6b45fe2",
+  "enqueued_at": "2026-10-16T21:41:52.448876+00:00",
+  "expected_remaining": 31,
+  "pending_order_id": "pending_exit:mgmact_444a58f499a499f0",
+  "qty": 31,
+  "remainder_rule": {
+   "label": "Just below the 2026-10-16 intraday low (84.10) and the recent consolidation floor; tightens existing 74.5 hard stop to protect the remaining position's profit without widening authorized downside. A close below 78 still cuts to minimal per the original plan.",
+   "level": 83.5,
+   "type": "close_below"
+  },
+  "remainder_status": "PENDING_FILL",
+  "status": "ENQUEUED",
+  "ticker": "PBF"
+ }
+}

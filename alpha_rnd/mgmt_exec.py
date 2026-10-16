@@ -117,7 +117,8 @@ def _enqueue_exit(st: dict, ticker: str, aid: str, qty: int | None,
                   session: str | None) -> dict:
     od = {"ticker": ticker, "type": "partial" if qty else "full",
           "reason": f"MGMT_ADAPTIVE {aid}",
-          "confirm_session": session or st.get("last_eval_session") or "",
+          "confirm_session": session or
+          (st.get("processed_close_sessions") or [""])[-1],
           "order_id": f"pending_exit:{aid}", "mgmt_action": aid}
     if qty:
         od["shares"] = qty

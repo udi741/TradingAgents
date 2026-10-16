@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-14T14:13:04.296532+00:00",
+ "last_check_utc": "2026-10-16T21:41:52.449023+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
@@ -7,7 +7,9 @@
   "2026-10-07",
   "2026-10-09",
   "2026-10-12",
-  "2026-10-13"
+  "2026-10-13",
+  "2026-10-14",
+  "2026-10-15"
  ],
  "confirm": {
   "IOVA": {
@@ -32,7 +34,8 @@
   "QMCO": {},
   "TEAM": {},
   "FRO": {},
-  "MRNA": {}
+  "MRNA": {},
+  "PD": {}
  },
  "pending_open_fills": [],
  "positions": {
@@ -44,14 +47,14 @@
    "seeded": true,
    "mark_source": "regular_session_close",
    "mark_status": "MARKED",
-   "mark": 91.17,
-   "mark_session": "2026-10-13",
-   "unrealized": 692.54,
-   "unrealized_pct": 13.96
+   "mark": 86.99,
+   "mark_session": "2026-10-15",
+   "unrealized": 433.38,
+   "unrealized_pct": 8.74
   }
  },
  "cash": 92899.01133911515,
- "nav_last": 98551.55,
+ "nav_last": 98292.39,
  "watch_status": {
   "PGEN": "TRIGGERED",
   "TWST": "TRIGGERED",
@@ -60,18 +63,28 @@
   "TXG": "RISK_PLAN_REQUIRED",
   "ASST": "RISK_PLAN_REQUIRED"
  },
- "pending_open_exits": [],
+ "pending_open_exits": [
+  {
+   "ticker": "PBF",
+   "type": "partial",
+   "reason": "MGMT_ADAPTIVE mgmact_444a58f499a499f0",
+   "confirm_session": "2026-10-15",
+   "order_id": "pending_exit:mgmact_444a58f499a499f0",
+   "mgmt_action": "mgmact_444a58f499a499f0",
+   "shares": 31
+  }
+ ],
  "book": {
-  "mark_session": "2026-10-13",
-  "market_value": 5652.54,
-  "unrealized": 692.54,
-  "exposure": 5652.54,
-  "nav": 98551.55,
-  "provisional_nav_incl_unmarked_at_cost": 98551.55,
+  "mark_session": "2026-10-15",
+  "market_value": 5393.38,
+  "unrealized": 433.38,
+  "exposure": 5393.38,
+  "nav": 98292.39,
+  "provisional_nav_incl_unmarked_at_cost": 98292.39,
   "unmarked_positions": [],
   "cash": 92899.01133911515,
-  "realized": 2918.24,
-  "marked_at": "2026-10-14T01:57:03.808096+00:00"
+  "realized": -2140.99,
+  "marked_at": "2026-10-16T01:37:03.026462+00:00"
  },
  "realized": -2140.99,
  "policy": {
@@ -95,12 +108,10 @@
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-14T14:13:03.771872+00:00",
-  "daily_ok": 19,
-  "daily_req": 20,
-  "status": "ok",
-  "intraday_ok": 11,
-  "intraday_req": 11
+  "at": "2026-10-16T21:41:52.433224+00:00",
+  "daily_ok": 20,
+  "daily_req": 21,
+  "status": "ok"
  },
  "risk_blocked": {
   "IOVA": "IOVA_2026-10-01.json#1",
@@ -151,7 +162,15 @@
   "paper_exit:SDGR:mgmt review: tightened stop just below $27.29",
   "realized_correction:2026-10-14",
   "realized_correction:r7b1",
-  "risk_block:ASST:ASST_2026-10-02.json#2"
+  "risk_block:ASST:ASST_2026-10-02.json#2",
+  "entry_gate:CDNA:CDNA_2026-10-01.json#1",
+  "entry_gate:PAYC:PAYC_2026-10-02.json#2",
+  "entry_gate:XNCR:XNCR_2026-10-02.json#2",
+  "entry_gate:AXGN:AXGN_2026-10-02.json#2"
  ],
- "event_outbox": []
+ "event_outbox": [],
+ "last_mgmt_observe": {
+  "fired": [],
+  "backfilled": []
+ }
 }

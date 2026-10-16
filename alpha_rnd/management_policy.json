@@ -2,14 +2,16 @@
  "version": 3,
  "mode": "shadow",
  "execution": {
-  "enabled": false,
-  "comment": "KILL SWITCH: when false, adaptive management never creates pending exits, stop changes, or any economic action. Triggers/reassessment/validation continue unaffected. Enable only after explicit approval + fresh reassessment."
+  "enabled": true,
+  "comment": "KILL SWITCH: when false, adaptive management never creates pending exits, stop changes, or any economic action. Triggers/reassessment/validation continue unaffected. Enable only after explicit approval + fresh reassessment.",
+  "activated_at": "2026-10-16",
+  "activated_for": "fresh PBF 2026-10-16 decision accepted"
  },
  "comment": "Phase B1: position-contextual triggers. Price triggers are expressed in R units where 1R = (entry - original protective stop) / entry, from the frozen entry snapshot. No universal raw-percent threshold exists. Positions without a valid stop are R_CONTEXT_UNAVAILABLE and only horizon/observational triggers apply.",
  "triggers": {
   "appreciation": {
    "r_multiple": 1.0,
-   "rationale": "fires when favorable excursion reaches 1R — the position has moved favorably by the amount originally risked. Conservative research default, configurable; not a universal return percentage."
+   "rationale": "fires when favorable excursion reaches 1R \u2014 the position has moved favorably by the amount originally risked. Conservative research default, configurable; not a universal return percentage."
   },
   "peak_giveback": {
    "min_peak_r": 1.0,

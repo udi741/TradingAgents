@@ -6,3 +6,5 @@
 {"ts": "2026-10-16T12:57:17.883004+00:00", "kind": "MGMT_REASSESS_SHADOW_DONE", "ticker": "SDGR", "session": "2026-10-08", "detail": "FULL_EXIT"}
 {"family": "HORIZON_REVIEW", "kind": "REASSESSMENT_TRIGGERED_SHADOW", "reason": "reeval checkpoint 2026-10-16 reached at 2026-10-16", "request_id": "PBF:HORIZON_REVIEW:2026-10-16:2026-10-16", "session": "2026-10-16", "ticker": "PBF", "ts": "2026-10-16T21:38:47.512581+00:00", "urgency": "NORMAL"}
 {"ts": "2026-10-16T21:39:16.540107+00:00", "kind": "MGMT_REASSESS_SHADOW_DONE", "ticker": "PBF", "session": "2026-10-16", "detail": "PARTIAL_EXIT"}
+{"kind": "MGMT_EXECUTION", "ticker": "PBF", "at": "2026-10-16T21:41:41.588108+00:00", "executed": ["enqueued_partial:31"], "result": "ENQUEUED_ADAPTIVE"}
+{"kind": "MGMT_EXECUTION", "ticker": "PBF", "at": "2026-10-16T21:41:52.448685+00:00", "executed": ["enqueued_partial:31"], "result": "ENQUEUED_ADAPTIVE"}
