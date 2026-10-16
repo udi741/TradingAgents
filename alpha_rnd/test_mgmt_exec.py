@@ -37,11 +37,12 @@ class E(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self._saves = (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE,
-                       mgmt.POLICY_P, mr.ANA_DIR)
+                       mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P)
         mv.INTENT_DIR = self.tmp / "i"
         mgmt.MEVENTS = self.tmp / "e.jsonl"
         mgmt.STATE = self.tmp / "ms.json"
         mr.ANA_DIR = self.tmp / "ana"
+        mx.ACTIONS_P = self.tmp / "actions.json"
         self.pol_on = self.tmp / "pol_on.json"
         pol = json.loads((ROOT / "alpha_rnd/management_policy.json")
                          .read_text())
@@ -58,7 +59,7 @@ class E(unittest.TestCase):
 
     def tearDown(self):
         (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE,
-         mgmt.POLICY_P, mr.ANA_DIR) = self._saves
+         mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P) = self._saves
 
     def _enable(self):
         mgmt.POLICY_P = self.pol_on
@@ -72,10 +73,33 @@ class E(unittest.TestCase):
     def test_partial_composite(self):
         self._enable()
         r = mx.execute("PBF", self.st, self.wl)
-        self.assertEqual(r["result"], "EXECUTED_ADAPTIVE_SHADOW")
+        self.assertEqual(r["result"], "ENQUEUED_ADAPTIVE")
         pe = self.st["pending_open_exits"][0]
         self.assertEqual(pe["shares"], 31)
-        self.assertIn("mgmact_test1", self.st["executed"])
+        # queued is NOT executed: canonical fill registry untouched
+        self.assertNotIn("mgmact_test1", self.st["executed"])
+        # remainder stop pending — original protection still on all 62
+        self.assertEqual(self.st["positions"]["PBF"]["stop_rule"]["level"],
+                         74.5)
+        a = mx._actions()["mgmact_test1"]
+        self.assertEqual(a["status"], "ENQUEUED")
+        self.assertEqual(a["remainder_status"], "PENDING_FILL")
+
+    def test_composite_after_fill(self):
+        self._enable()
+        mx.execute("PBF", self.st, self.wl)
+        od = self.st["pending_open_exits"][0]
+        monitor.do_exit(self.st, "PBF", 90.0, "fill", shares=od["shares"])
+        self.st["executed"].append(od["order_id"])
+        self.st["pending_open_exits"] = []
+        mx._tick_actions(self.st, self.wl)
+        a = mx._actions()["mgmact_test1"]
+        self.assertEqual(a["status"], "EXECUTED")
+        self.assertEqual(self.st["positions"]["PBF"]["shares"], 31)
+        self.assertEqual(self.st["positions"]["PBF"]["stop_rule"]["level"],
+                         83.5)
+        # idempotent tick: second pass changes nothing
+        mx._tick_actions(self.st, self.wl)
         self.assertEqual(self.st["positions"]["PBF"]["stop_rule"]["level"],
                          83.5)
 
@@ -99,13 +123,15 @@ class E(unittest.TestCase):
                   proposed_risk_rule=None, normalized_exit_quantity=None,
                   action_id="mgmact_full")
         r = mx.execute("PBF", self.st, self.wl, intent=it)
+        self.assertEqual(r["result"], "ENQUEUED_ADAPTIVE")
         self.assertEqual(self.st["pending_open_exits"][0]["type"], "full")
+        self.assertNotIn("mgmact_full", self.st["executed"])
 
     def test_dup_no_double(self):
         self._enable()
         mx.execute("PBF", self.st, self.wl)
         r = mx.execute("PBF", self.st, self.wl)  # same intent again
-        self.assertEqual(r["result"], "REVALIDATION_FAILED")
+        self.assertEqual(r["result"], "ALREADY_ENQUEUED")
         self.assertEqual(len(self.st["pending_open_exits"]), 1)
 
     def test_closed_noop(self):
@@ -121,21 +147,39 @@ class E(unittest.TestCase):
         self.assertEqual(r["result"], "REVALIDATION_FAILED")
         self.assertFalse(st["pending_open_exits"])
 
+    def _fill_partial(self, st):
+        od = st["pending_open_exits"][0]
+        monitor.do_exit(st, "PBF", 90.0, "fill", shares=od["shares"])
+        st["executed"].append(od["order_id"])
+        st["pending_open_exits"] = []
+
     def test_obsolete_stop(self):
+        # mark drops below proposed 83.5 before fill -> remainder rejected
+        # at activation; the partial exit itself still proceeds
         self._enable()
         st = pbf_state()
-        mgmt.save_mgmt({"positions": {"PBF": {"latest_price": 82.0}}})
         r = mx.execute("PBF", st, self.wl)
-        self.assertEqual(r["result"], "REVALIDATION_FAILED")
-        self.assertIn("obsolete", r["errors"][-1])
+        self.assertEqual(r["result"], "ENQUEUED_ADAPTIVE")
+        mgmt.save_mgmt({"positions": {"PBF": {"latest_price": 82.0}}})
+        self._fill_partial(st)
+        mx._tick_actions(st, self.wl)
+        a = mx._actions()["mgmact_test1"]
+        self.assertEqual(a["status"], "EXECUTED_REMAINDER_REJECTED")
+        self.assertIn("obsolete", a["remainder_errors"][-1])
+        self.assertEqual(st["positions"]["PBF"]["stop_rule"]["level"], 74.5)
 
     def test_never_widen_exec(self):
+        # a stronger stop (85) exists before activation -> 83.5 never widens
         self._enable()
         st = pbf_state()
+        mx.execute("PBF", st, self.wl)
         st["positions"]["PBF"]["stop_rule"]["level"] = 85.0
-        r = mx.execute("PBF", st, self.wl)
-        self.assertEqual(r["result"], "REVALIDATION_FAILED")
-        self.assertTrue(any("NEVER_WIDEN" in e for e in r["errors"]))
+        self._fill_partial(st)
+        mx._tick_actions(st, self.wl)
+        a = mx._actions()["mgmact_test1"]
+        self.assertEqual(a["status"], "EXECUTED_REMAINDER_REJECTED")
+        self.assertTrue(any("NEVER_WIDEN" in e for e in a["remainder_errors"]))
+        self.assertEqual(st["positions"]["PBF"]["stop_rule"]["level"], 85.0)
 
     def test_superseded(self):
         self._enable()
