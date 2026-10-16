@@ -289,8 +289,19 @@ An observational layer now watches open positions after entry. It is
   a failure there can never block a stop.
 - Operator view: `python -m alpha_rnd.mgmt status`.
 
-Model reassessment (Phase C) and any economic management action (Phase E)
-do **not** exist yet.
+**Phase C (shadow model reassessment) is now active** via
+`alpha_rnd/mgmt_reassess.py`: pending `SHADOW_TRIGGERED` requests produce a
+post-entry management analysis (thesis status, catalyst status, reward/risk,
+recommended action among HOLD_UNCHANGED / HOLD_AND_TIGHTEN_RISK /
+PARTIAL_EXIT / FULL_EXIT / REASSESS_LATER) written to
+`evaluations/alpha_rnd_v1/management_analyses/` with a frozen context under
+`management_contexts/`. Results carry `shadow: true`, a context hash and a
+position-state fingerprint; a result is marked `STALE_POSITION_CLOSED` /
+`STALE_POSITION_CHANGED` if the position moved during inference. Runs
+bounded (≤2/run, urgent-first) inside `run_cycle` after publish; generic
+infra retry semantics apply (RETRY_PENDING / FAILED_TERMINAL; a failed call
+never yields a recommendation). **Still not active:** model-driven stop
+changes, partial or full exits — Phase D/E only.
 
 ## 10. Economic state authority
 
