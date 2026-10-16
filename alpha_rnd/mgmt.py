@@ -566,18 +566,19 @@ def replay() -> str:
                    if e["family"] != "R_CONTEXT_UNAVAILABLE"]
             for ev in evs:
                 if first is None:
-                    rr = _r_context(snap, fill)
-                    first = (sess, ev["family"], rec["unrealized_pct"],
-                             rec["peak_unrealized_pct"], ev["reason"],
-                             round((rec["unrealized_pct"] or 0) / rr["r_pct"], 2),
-                             round((rec["peak_unrealized_pct"] or 0) / rr["r_pct"], 2))
+                    first = (sess, ev["family"], ev["value"],
+                             ev["threshold"], ev["reason"],
+                             rec["peak_unrealized_pct"])
         if first:
-            sess, fam, u, pk, why, ur, pkr = first
+            sess, fam, v, th, why, pk = first
             days = len([x for x in df.index
                         if ent < str(x.date()) <= sess])
+            metric = "R" if isinstance(v, float) and fam != "HORIZON_REVIEW" \
+                else ""
             lines.append(f"{t}: first trigger {fam} on {sess} "
-                         f"(unrealized {u}% = {ur}R, peak {pk}% = {pkr}R) — "
-                         f"{why}; exit {exit_} ({days} sessions of runway)")
+                         f"(trigger metric {v}{metric} vs threshold {th}{metric}; "
+                         f"peak {pk}%) — {why}; exit {exit_} "
+                         f"({days} sessions of runway)")
         else:
             lines.append(f"{t}: no trigger before exit {exit_}")
     return "\n".join(lines)
