@@ -126,6 +126,7 @@ def validate(ticker: str, dec: dict | None = None,
         intent["status"] = "SUPERSEDED_MANAGEMENT_DECISION"
         reject.append("newer management decision exists")
     pos_id = f"{ticker}:{(pos or {}).get('entry_session') or ''}"
+    intent["decision_session"] = dec.get("as_of") or dec.get("session")
     intent["position_id"] = pos_id
     intent["position_state_hash"] = mr._fingerprint(pos, []) if pos else None
     if pos and dec.get("position_state_hash"):

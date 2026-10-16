@@ -2,6 +2,7 @@
  "mgmact_444a58f499a499f0": {
   "action": "PARTIAL_EXIT",
   "action_id": "mgmact_444a58f499a499f0",
+  "cancelled_at": "2026-10-16T21:44:15.075819+00:00",
   "decision_id": "9219d686b6b45fe2",
   "enqueued_at": "2026-10-16T21:41:52.448876+00:00",
   "expected_remaining": 31,
@@ -13,7 +14,7 @@
    "type": "close_below"
   },
   "remainder_status": "PENDING_FILL",
-  "status": "ENQUEUED",
+  "status": "CANCELLED_BY_KILL_SWITCH",
   "ticker": "PBF"
  }
 }

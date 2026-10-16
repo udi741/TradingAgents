@@ -117,8 +117,7 @@ def _enqueue_exit(st: dict, ticker: str, aid: str, qty: int | None,
                   session: str | None) -> dict:
     od = {"ticker": ticker, "type": "partial" if qty else "full",
           "reason": f"MGMT_ADAPTIVE {aid}",
-          "confirm_session": session or
-          (st.get("processed_close_sessions") or [""])[-1],
+          "confirm_session": session,  # = decision's completed session
           "order_id": f"pending_exit:{aid}", "mgmt_action": aid}
     if qty:
         od["shares"] = qty
@@ -169,7 +168,7 @@ def execute(ticker: str, st: dict, wl: dict,
     if act == "PARTIAL_EXIT":
         q = intent["normalized_exit_quantity"]
         od = _enqueue_exit(st, ticker, aid, q,
-                           st.get("last_eval_session"))
+                           intent.get("decision_session"))
         # remainder stop is PENDING — not applied to the pre-fill position
         rec_a.update({"status": "ENQUEUED", "qty": q,
                       "expected_remaining": pos["shares"] - q,
@@ -180,7 +179,7 @@ def execute(ticker: str, st: dict, wl: dict,
         rec["executed"].append(f"enqueued_partial:{q}")
     elif act == "FULL_EXIT":
         od = _enqueue_exit(st, ticker, aid, None,
-                           st.get("last_eval_session"))
+                           intent.get("decision_session"))
         rec_a.update({"status": "ENQUEUED", "qty": pos["shares"],
                       "expected_remaining": 0,
                       "pending_order_id": od["order_id"]})
@@ -277,9 +276,42 @@ def _audit(rec: dict) -> None:
                            default=str) + "\n")
 
 
+def cancel_pending_adaptive(st: dict) -> list[str]:
+    """Kill-switch sweep: unfilled adaptive pending exits are removed and
+    marked. Never touches non-adaptive orders or fills."""
+    acts = _actions()
+    dropped = []
+    keep = []
+    for o in st.get("pending_open_exits") or []:
+        aid = o.get("mgmt_action")
+        if aid:
+            a = acts.get(aid)
+            if a and a.get("status") == "ENQUEUED":
+                a["status"] = "CANCELLED_BY_KILL_SWITCH"
+                a["cancelled_at"] = _utc()
+                dropped.append(aid)
+                continue
+        keep.append(o)
+    st["pending_open_exits"] = keep
+    if dropped:
+        _save_actions(acts)
+        with mgmt.MEVENTS.open("a") as f:
+            f.write(json.dumps({"kind": "MGMT_CANCELLED_BY_KILL_SWITCH",
+                                "actions": dropped, "at": _utc()}) + "\n")
+    return dropped
+
+
 def run_exec_pass(st: dict, wl: dict) -> list[dict]:
-    """Called inside the monitor lock. No-op unless execution enabled."""
+    """Called inside the monitor lock. Disabled -> cancel pending adaptive
+    orders (fail-closed) and finish FILLED remainder lifecycle only."""
     if not enabled():
+        cancel_pending_adaptive(st)
+        acts = _actions()
+        # FILLED actions may still complete remainder-protection activation
+        for a in acts.values():
+            if a.get("status") == "FILLED" and a.get("remainder_rule"):
+                pass  # handled below via _tick_actions
+        _tick_actions(st, wl)
         return []
     _tick_actions(st, wl)
     out = []

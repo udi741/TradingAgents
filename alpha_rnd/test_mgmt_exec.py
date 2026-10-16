@@ -237,3 +237,83 @@ class E(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=0)
+
+class C2(unittest.TestCase):
+    """E1-final: confirm_session anchoring + kill switch."""
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self._s = (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE, mgmt.POLICY_P,
+                   mr.ANA_DIR, mx.ACTIONS_P)
+        mv.INTENT_DIR = self.tmp/"i"; mgmt.MEVENTS = self.tmp/"e.jsonl"
+        mgmt.STATE = self.tmp/"ms.json"; mr.ANA_DIR = self.tmp/"ana"
+        mx.ACTIONS_P = self.tmp/"a.json"
+        mgmt.save_mgmt({"positions": {"PBF": {"latest_price": 86.99}}})
+        self.wl = {"open_positions": [{"ticker": "PBF", "invalidation":
+                                       {"type": "intraday_stop",
+                                        "level": 74.5}}]}
+        self.intent = dict(PBF_INTENT, decision_session="2026-10-16")
+
+    def tearDown(self):
+        (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE, mgmt.POLICY_P,
+         mr.ANA_DIR, mx.ACTIONS_P) = self._s
+
+    def _on(self):
+        pol = json.loads((ROOT/"alpha_rnd/management_policy.json").read_text())
+        pol["execution"]["enabled"] = True
+        f = self.tmp/"p.json"; f.write_text(json.dumps(pol))
+        mgmt.POLICY_P = f
+
+    def _off(self):
+        pol = json.loads((ROOT/"alpha_rnd/management_policy.json").read_text())
+        pol["execution"]["enabled"] = False
+        f = self.tmp/"p.json"; f.write_text(json.dumps(pol))
+        mgmt.POLICY_P = f
+
+    def test_decision_session_anchor(self):
+        self._on()
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        self.assertEqual(st["pending_open_exits"][0]["confirm_session"],
+                         "2026-10-16")
+
+    def test_no_enqueue_disabled(self):
+        self._off()
+        st = pbf_state()
+        r = mx.execute("PBF", st, self.wl, intent=self.intent)
+        self.assertEqual(r["result"], "SKIP_EXECUTION_DISABLED")
+        self.assertFalse(st["pending_open_exits"])
+
+    def test_disabled_cancels_pending(self):
+        self._on()
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        self.assertEqual(len(st["pending_open_exits"]), 1)
+        self._off()
+        mx.run_exec_pass(st, self.wl)
+        self.assertEqual(st["pending_open_exits"], [])
+        a = mx._actions()["mgmact_test1"]
+        self.assertEqual(a["status"], "CANCELLED_BY_KILL_SWITCH")
+
+    def test_disabled_preserves_manual_order(self):
+        self._off()
+        st = pbf_state()
+        st["pending_open_exits"] = [{"ticker": "PBF", "type": "full",
+                                     "why": "manual", "confirm_session": "s"}]
+        mx.run_exec_pass(st, self.wl)
+        self.assertEqual(len(st["pending_open_exits"]), 1)
+
+    def test_disabled_no_reverse_after_fill(self):
+        self._on()
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        od = st["pending_open_exits"][0]
+        monitor.do_exit(st, "PBF", 90.0, "fill", shares=od["shares"])
+        st["executed"].append(od["order_id"])
+        st["pending_open_exits"] = []
+        self._off()
+        mx.run_exec_pass(st, self.wl)
+        self.assertEqual(st["positions"]["PBF"]["shares"], 31)
+        self.assertIn(od["order_id"], st["executed"])
+        a = mx._actions()["mgmact_test1"]
+        self.assertEqual(a["status"], "EXECUTED")
+        self.assertEqual(st["positions"]["PBF"]["stop_rule"]["level"], 83.5)

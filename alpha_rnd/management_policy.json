@@ -2,10 +2,11 @@
  "version": 3,
  "mode": "shadow",
  "execution": {
-  "enabled": true,
+  "enabled": false,
   "comment": "KILL SWITCH: when false, adaptive management never creates pending exits, stop changes, or any economic action. Triggers/reassessment/validation continue unaffected. Enable only after explicit approval + fresh reassessment.",
   "activated_at": "2026-10-16",
-  "activated_for": "fresh PBF 2026-10-16 decision accepted"
+  "activated_for": "fresh PBF 2026-10-16 decision accepted",
+  "paused_at": "2026-10-16 pending final safety fix"
  },
  "comment": "Phase B1: position-contextual triggers. Price triggers are expressed in R units where 1R = (entry - original protective stop) / entry, from the frozen entry snapshot. No universal raw-percent threshold exists. Positions without a valid stop are R_CONTEXT_UNAVAILABLE and only horizon/observational triggers apply.",
  "triggers": {

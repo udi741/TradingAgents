@@ -2,6 +2,7 @@
  "action_id": "mgmact_444a58f499a499f0",
  "banner": "SHADOW VALIDATION \u2014 NOT AN ECONOMIC ACTION",
  "decision_artifact_status": "SUCCESS",
+ "decision_session": "2026-10-16",
  "economic_authority": false,
  "management_decision_id": "9219d686b6b45fe2",
  "normalized_exit_quantity": 31,
@@ -31,7 +32,7 @@
  "status": "VALIDATED_SHADOW_INTENT",
  "ticker": "PBF",
  "validated_action": "PARTIAL_EXIT",
- "validated_at": "2026-10-16T21:39:24.787716+00:00",
+ "validated_at": "2026-10-16T21:44:30.008295+00:00",
  "validation_reasons": [
   "fraction 0.5 -> 31 shares of 62 (round to nearest)"
  ],
