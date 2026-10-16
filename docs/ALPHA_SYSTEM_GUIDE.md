@@ -260,6 +260,33 @@ availability — **"model backend down" never means "stop managing PBF."**
 - After the close: `close_pass` evaluates close-based triggers, end-of-day
   marks positions, settles pending orders.
 
+## 9a. Post-entry shadow management (Phase B — observational only)
+
+An observational layer now watches open positions after entry. It is
+**shadow-only**: it cannot create orders, change stops, or touch economics.
+
+- **Entry snapshots** (`evaluations/alpha_rnd_v1/entry_snapshots/`): written
+  once at fill (and backfilled for seeded positions) — entry price/session,
+  shares, artifact ref+hash, thesis, invalidation, catalysts, risk plan,
+  horizon/reeval text. Immutable, restart-safe; incomplete context is
+  recorded as missing, never fabricated.
+- **Management state** (`evaluations/alpha_rnd_v1/management_state.json`):
+  peak/trough since entry, peak and current unrealized %, drawdown from
+  peak, MAE, sessions held, horizon checkpoint, trigger/cooldown state.
+  Observational — `monitor_state.json` remains sole economic authority.
+- **Shadow triggers** (`alpha_rnd/mgmt.py` + `management_policy.json`):
+  APPRECIATION, PEAK_GIVEBACK, ADVERSE_ACCELERATION, HORIZON_REVIEW
+  (CATALYST schema reserved, disabled). Edge-triggered with cooldown and
+  hysteresis. A trigger writes a `SHADOW_TRIGGERED` request artifact in
+  `evaluations/alpha_rnd_v1/management_requests/` — **"think again",
+  never an action**. No model call, no Telegram alert, no economic write.
+  Runs inside the monitor pass after all safety logic, fully guarded —
+  a failure there can never block a stop.
+- Operator view: `python -m alpha_rnd.mgmt status`.
+
+Model reassessment (Phase C) and any economic management action (Phase E)
+do **not** exist yet.
+
 ## 10. Economic state authority
 
 Authoritative (in order):
@@ -415,6 +442,7 @@ All run from `/home/udi/udi_provate/TradingAgents-alpha-rnd` unless noted
 | `python -m alpha_rnd.replay audit --as-of <date>` | replay PIT audit (no inference) |
 | `python -m alpha_rnd.replay run --as-of <date> --policy <P>` | isolated replay run (does call the model) |
 | `python -m alpha_rnd.r5b_report` | R5B paired comparison report |
+| `python -m alpha_rnd.mgmt status` | post-entry shadow management view (Phase B) |
 
 ## 17. Failure scenarios
 
