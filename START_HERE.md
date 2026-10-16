@@ -45,6 +45,10 @@ artifacts.
 Incident and per-task history are evidence trails, not a starting point —
 read them only when debugging a specific session.
 
+Operator commands: `python3 -m ops.ta health` (deep check, exit 0/1/2),
+`python3 -m ops.ta status` (quick summary),
+`python3 -m ops.ta setup [--dry-run]` (bootstrap a machine).
+
 Development roadmap / where the project stands:
 `python -m ops.roadmap_status` (deterministic, no network/LLM).
 Canonical roadmap: `docs/ALPHA_OPPORTUNITY_COVERAGE_ROADMAP.md` +

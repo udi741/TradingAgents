@@ -70,7 +70,24 @@ Bridge auth: Devin CLI must be installed at `~/.local/bin/devin` and
 authenticated (`devin` login / existing user credentials) — the bridge
 execs it per call (PORTABILITY_GAP G11).
 
-## 6. Services (PORTABILITY_GAP — copy by hand)
+## Automated alternative (Phase 1, REAL and tested)
+
+After cloning the worktrees, most of sections 4–7 can be done by:
+
+```bash
+cd TradingAgents-tracks
+python3 -m ops.ta setup --dry-run   # shows every intended change
+python3 -m ops.ta setup             # applies them (idempotent)
+```
+
+It verifies tools/python, builds .venv312, installs pinned runtime deps
+(`ops/runtime_requirements.txt`), writes systemd units + the tagged cron
+block from `ops/templates/`, and creates the secrets file from
+`config/telegram.env.example` WITHOUT overwriting existing secrets.
+Remaining manual: fill real secrets, `devin` CLI login, git clone/worktree
+layout itself, python3.12 install.
+
+## 6. Services (manual reference — the templates live in ops/templates/)
 
 Create `~/.config/systemd/user/tradingagents-swe-bridge.service` and
 `tradingagents-telegram.service` copying the units shown in

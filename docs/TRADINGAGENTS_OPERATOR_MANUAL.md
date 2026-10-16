@@ -19,6 +19,16 @@ runtime and never auto-start.
 
 ## Is the system running?
 
+Easiest:
+
+```bash
+cd /home/udi/udi_provate/TradingAgents-tracks
+python3 -m ops.ta health    # one deep check, exit 0/1/2
+python3 -m ops.ta status    # quick human summary
+```
+
+Or manually:
+
 ```bash
 systemctl --user status tradingagents-swe-bridge tradingagents-telegram
 tail -3 /home/udi/udi_provate/TradingAgents-alpha-rnd/alpha_rnd/monitor_cron.log
