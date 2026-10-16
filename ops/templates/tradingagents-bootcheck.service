@@ -1,0 +1,10 @@
+[Unit]
+Description=TradingAgents boot/recovery self-test (ops.ta bootcheck)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@TRACKS_DIR@
+Environment=PYTHONPATH=@TRACKS_DIR@
+ExecStart=/usr/bin/python3 -m ops.ta bootcheck --prefix @PREFIX@

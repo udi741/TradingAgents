@@ -30,6 +30,13 @@ class Sim(unittest.TestCase):
         (ar / "scheduler.log").write_text("")
         (ar / "management_policy.json").write_text(
             '{"execution": {"enabled": false}}')
+        # sim dirs are plain dirs, not git worktrees — stub the workspace
+        # check; workspace behavior itself is covered in class Workspace
+        self._wsmock = mock.patch.object(
+            ta, "_ws_state",
+            lambda p: {r: {"status": "OK"} for r in ta._ws_spec()})
+        self._wsmock.start()
+        self.addCleanup(self._wsmock.stop)
 
     def _setup(self, **kw):
         ns = type("A", (), {"prefix": str(self.p), "config_dir": str(self.cfg),
@@ -82,7 +89,13 @@ class Sim(unittest.TestCase):
         ns = type("A", (), {"prefix": str(p), "config_dir": str(self.cfg),
                             "dry_run": True, "no_systemctl": True,
                             "sim": True})
-        self.assertEqual(ta.cmd_setup(ns()), 2)
+        with mock.patch.object(ta, "_ws_state", lambda x: {
+                r: {"status": "MISSING"} for r in ta._ws_spec()}):
+            out = io.StringIO()
+            with redirect_stdout(out):
+                rc = ta.cmd_setup(ns())
+        self.assertEqual(rc, 2)
+        self.assertIn("workspace setup", out.getvalue())
 
     # --- health ---
     def test_health_stale_monitor_is_failed(self):
@@ -516,6 +529,193 @@ class BackupRestore(unittest.TestCase):
         rc, o = self._restore()
         self.assertEqual(rc, 2)
         self.assertIn("unverifiable", o)
+
+
+class Workspace(unittest.TestCase):
+    """Real-git workspace creation/status tests."""
+    def setUp(self):
+        import subprocess as sp
+        self.sp = sp
+        t = Path(tempfile.mkdtemp())
+        self.pfx = t / "ws"; self.pfx.mkdir()
+        base = self.pfx / "TradingAgents"
+        def g(*a, d=base):
+            sp.run(["git", "-C", str(d)] + list(a), check=1,
+                   capture_output=1)
+        sp.run(["git", "init", "-b", "infra/devin-bridge", str(base)],
+               check=1, capture_output=1)
+        (base / "x.py").write_text("x=1\n")
+        g("add", "-A")
+        g("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-m", "i")
+        for br in ("exp/alpha-rnd-v1", "exp/gate-c12-prospective",
+                   "exp/expert-rnd-v2", "project/tracks"):
+            g("branch", br)
+        g("worktree", "add", str(self.pfx / "TradingAgents-tracks"),
+          "project/tracks")
+        self.g = g
+
+    def _ws(self, action="status", dry=False, opt=False):
+        ns = type("A", (), {"prefix": str(self.pfx), "action": action,
+                            "dry_run": dry, "with_optional": opt})
+        out = io.StringIO()
+        with redirect_stdout(out):
+            return ta.cmd_workspace(ns()), out.getvalue()
+
+    def test_status_reports_missing_required(self):
+        rc, o = self._ws()
+        self.assertEqual(rc, 2)
+        self.assertIn("ALPHA", o)
+        self.assertIn("MISSING", o)
+        self.assertIn("BASE", o)
+
+    def test_setup_dry_run_creates_nothing(self):
+        rc, o = self._ws("setup", dry=True)
+        self.assertEqual(rc, 0)
+        self.assertIn("DRY", o)
+        self.assertFalse((self.pfx / "TradingAgents-alpha-rnd").exists())
+
+    def test_setup_creates_required_and_is_idempotent(self):
+        rc, o = self._ws("setup")
+        self.assertEqual(rc, 0, o)
+        self.assertTrue((self.pfx / "TradingAgents-alpha-rnd").exists())
+        self.assertTrue((self.pfx / "TradingAgents-c12").exists())
+        self.assertFalse((self.pfx / "TradingAgents-expert-rnd").exists())
+        br, _ = ta._git_branch(self.pfx / "TradingAgents-alpha-rnd")
+        self.assertEqual(br, "exp/alpha-rnd-v1")
+        rc, o = self._ws("setup")   # idempotent
+        self.assertEqual(rc, 0)
+        self.assertIn("SKIP ALPHA", o)
+
+    def test_optional_created_with_flag(self):
+        self._ws("setup", opt=True)
+        self.assertTrue((self.pfx / "TradingAgents-expert-rnd").exists())
+
+    def test_conflict_path_refused(self):
+        (self.pfx / "TradingAgents-c12").mkdir()
+        (self.pfx / "TradingAgents-c12" / "junk").write_text("x")
+        rc, o = self._ws("setup")
+        self.assertEqual(rc, 2)
+        self.assertIn("CONFLICT", o)
+
+    def test_wrong_branch_refused(self):
+        self._ws("setup")
+        self.g("checkout", "-b", "wrong",
+               d=self.pfx / "TradingAgents-alpha-rnd")
+        rc, o = self._ws("status")
+        self.assertEqual(rc, 2)
+        self.assertIn("WRONG_BRANCH", o)
+        rc, o = self._ws("setup")
+        self.assertEqual(rc, 2)
+
+    def test_branch_checked_out_elsewhere_refused(self):
+        self.g("worktree", "add", str(self.pfx / "elsewhere"),
+               "exp/alpha-rnd-v1")
+        rc, o = self._ws("setup")
+        self.assertEqual(rc, 2)
+        self.assertIn("checked out elsewhere", o)
+
+    def test_setup_refuses_incomplete_workspace(self):
+        cfg = Path(tempfile.mkdtemp())
+        ns = type("A", (), {"prefix": str(self.pfx),
+                            "config_dir": str(cfg), "dry_run": True,
+                            "no_systemctl": True, "sim": True})
+        out = io.StringIO()
+        with redirect_stdout(out):
+            rc = ta.cmd_setup(ns())
+        self.assertEqual(rc, 2)
+        self.assertIn("workspace setup", out.getvalue())
+
+
+class Boot(unittest.TestCase):
+    """Boot recovery self-test."""
+    def setUp(self):
+        t = Path(tempfile.mkdtemp())
+        self.p = t / "root"
+        for d in ("TradingAgents-alpha-rnd/alpha_rnd",
+                  "TradingAgents-c12/evaluations/gate_c12_prospective",
+                  "TradingAgents"):
+            (self.p / d).mkdir(parents=True)
+        ar = self.p / "TradingAgents-alpha-rnd/alpha_rnd"
+        (ar / "monitor_state.json").write_text(json.dumps(
+            {"cash": 100.0, "pending_open_fills": [],
+             "pending_open_exits": [], "executed": []}))
+        from datetime import datetime, timezone
+        now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+        (ar / "monitor_cron.log").write_text(
+            f"checked {now}+00:00 data=ok\n")
+        (ar / "scheduler.log").write_text("")
+        (ar / "management_policy.json").write_text(
+            '{"execution":{"enabled":false}}')
+        (self.p / "TradingAgents-c12/evaluations/gate_c12_prospective"
+         "/scheduler.log").write_text("")
+        self.sf = t / "boot_health.json"
+        for name, val in (("_svc", lambda u: "active"),
+                          ("_get", lambda *a, **k: {"runtime_ready": True}),
+                          ("_cron_read", lambda: "alpha_rnd.monitor\n"
+                           "alpha_rnd.daily_scheduler\n"
+                           "ta_eval.c12_scheduler\n"),
+                          ("_boot_id", lambda: "test-boot-1")):
+            m = mock.patch.object(ta, name, val)
+            m.start(); self.addCleanup(m.stop)
+
+    def _boot(self):
+        ns = type("A", (), {"prefix": str(self.p),
+                            "state_file": str(self.sf)})
+        out = io.StringIO()
+        with redirect_stdout(out):
+            return ta.cmd_bootcheck(ns()), out.getvalue()
+
+    def test_healthy_boot_writes_artifact(self):
+        rc, o = self._boot()
+        self.assertEqual(rc, 0)
+        self.assertIn("BOOT RECOVERY: HEALTHY", o)
+        rec = json.loads(self.sf.read_text())
+        self.assertEqual(rec["overall"], "HEALTHY")
+        self.assertEqual(rec["boot_id"], "test-boot-1")
+
+    def test_degraded_then_recovered_records_recovery(self):
+        orig = ta._svc
+        with mock.patch.object(ta, "_svc",
+                               lambda u: "inactive"
+                               if "telegram" in u else "active"):
+            rc, o = self._boot()
+        self.assertEqual(rc, 1)
+        self.assertIn("DEGRADED", o)
+        rc, o = self._boot()   # relay came back
+        self.assertEqual(rc, 0)
+        rec = json.loads(self.sf.read_text())
+        self.assertTrue(rec.get("recovered_utc"))
+
+    def test_stale_monitor_fails(self):
+        (self.p / "TradingAgents-alpha-rnd/alpha_rnd/monitor_cron.log"
+         ).write_text("checked 2020-01-01T00:00:00+00:00 x\n")
+        rc, o = self._boot()
+        self.assertEqual(rc, 2)
+        self.assertIn("BOOT RECOVERY: FAILED", o)
+
+    def test_incomplete_restore_marker_fails(self):
+        (self.p / ".restore_in_progress").write_text("{}")
+        rc, o = self._boot()
+        self.assertEqual(rc, 2)
+
+    def test_missing_worktree_fails(self):
+        import shutil as _s
+        _s.rmtree(self.p / "TradingAgents-c12")
+        rc, o = self._boot()
+        self.assertEqual(rc, 2)
+
+    def test_health_shows_boot_state(self):
+        self._boot()
+        home = self.sf.parent
+        (home / ".config/tradingagents").mkdir(parents=True)
+        (home / ".config/tradingagents/boot_health.json"
+         ).write_text(self.sf.read_text())
+        ns = type("A", (), {"prefix": str(self.p)})
+        out = io.StringIO()
+        with mock.patch.object(Path, "home", classmethod(lambda c: home)):
+            with redirect_stdout(out):
+                ta.cmd_health(ns())
+        self.assertIn("boot recovery: HEALTHY", out.getvalue())
 
 
 if __name__ == "__main__":

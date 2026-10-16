@@ -14,12 +14,16 @@ from pathlib import Path
 TRACKS = Path(__file__).resolve().parents[1]
 TPL = TRACKS / "ops" / "templates"
 UNITS = ["tradingagents-swe-bridge.service", "tradingagents-telegram.service"]
+BOOT_TIMER = "tradingagents-bootcheck.timer"
+UNIT_FILES = UNITS + ["tradingagents-bootcheck.service", BOOT_TIMER]
+ENABLE_UNITS = UNITS + [BOOT_TIMER]
 CRON_TAG = "tradingagents"
 
 
 def _layout(prefix: Path) -> dict:
     return {
         "HOME": str(Path.home()),
+        "PREFIX": str(prefix),
         "BASE_DIR": str(prefix / "TradingAgents"),
         "ALPHA_DIR": str(prefix / "TradingAgents-alpha-rnd"),
         "C12_DIR": str(prefix / "TradingAgents-c12"),
@@ -81,13 +85,25 @@ def cmd_setup(a):
         print("\nABORT — fix the FAIL items above and rerun.")
         return 2
 
+    print("[workspace]")
+    ws = _ws_state(prefix)
+    spec = _ws_spec()
+    bad = [r for r in spec if spec[r]["required_for_production"]
+           and ws[r]["status"] != "OK"]
+    if bad:
+        for r in bad:
+            problems.append(f"workspace {r}: {ws[r]['status']}")
+        problems.append(
+            f"create missing worktrees: `python3 -m ops.ta workspace "
+            f"setup --prefix {prefix}`")
+        for p_ in problems[-len(bad) - 1:]:
+            print(f"  FAIL {p_}")
+        return 2
+    print("  OK   required worktrees present "
+          f"({', '.join(r for r in spec if spec[r]['required_for_production'])})")
+
     alpha = Path(lay["ALPHA_DIR"])
     venv = alpha / ".venv312"
-    if not alpha.exists():
-        problems.append(f"ALPHA worktree missing: {alpha} — clone + "
-                        "`git worktree add` first (see NEW_MACHINE_SETUP.md)")
-        print(f"\n  FAIL {problems[-1]}")
-        return 2
 
     print("[python environments]")
     if venv.exists():
@@ -136,7 +152,7 @@ def cmd_setup(a):
     print("[systemd units]")
     udir = cfg / "systemd" if a.sim else \
         Path.home() / ".config" / "systemd" / "user"
-    for u in UNITS:
+    for u in UNIT_FILES:
         tgt = udir / u
         content = _fill((TPL / u).read_text(), lay)
         if tgt.exists():
@@ -153,11 +169,12 @@ def cmd_setup(a):
     if not dry and not a.no_systemctl:
         apply("systemctl --user daemon-reload", lambda: subprocess.run(
             _sysctl() + ["daemon-reload"], check=1))
-        apply("enable+start bridge & telegram services",
-              lambda: subprocess.run(_sysctl() + ["enable", "--now"] + UNITS,
-                                     check=1))
+        apply("enable+start bridge, telegram & bootcheck timer",
+              lambda: subprocess.run(
+                  _sysctl() + ["enable", "--now"] + ENABLE_UNITS, check=1))
     else:
-        manual.append("systemctl --user enable --now " + " ".join(UNITS))
+        manual.append("systemctl --user enable --now " +
+                      " ".join(ENABLE_UNITS))
 
     print("[crontab]")
     block = _fill((TPL / "crontab.block").read_text(), lay)
@@ -740,6 +757,255 @@ def cmd_restore(a):
     return 0
 
 
+# ------------------------- workspace -------------------------
+
+WS_SPEC = TRACKS / "ops" / "workspace.json"
+
+
+def _ws_spec():
+    return json.loads(WS_SPEC.read_text())["roles"]
+
+
+def _git_branch(d: Path):
+    """(branch, head_sha). branch is symbolic name or 'DETACHED'."""
+    b = subprocess.run(["git", "-C", str(d), "symbolic-ref", "--short",
+                        "-q", "HEAD"], capture_output=True, text=True)
+    sha = subprocess.run(["git", "-C", str(d), "rev-parse", "HEAD"],
+                         capture_output=True, text=True)
+    if sha.returncode != 0:
+        return None, None
+    return (b.stdout.strip() or "DETACHED", sha.stdout.strip())
+
+
+def _worktree_list(repo_anchor: Path):
+    """[(path, branch)] for all worktrees of the repo containing anchor."""
+    r = subprocess.run(["git", "-C", str(repo_anchor), "worktree", "list",
+                        "--porcelain"], capture_output=True, text=True)
+    if r.returncode != 0:
+        return []
+    out, cur = [], {}
+    for ln in r.stdout.splitlines() + [""]:
+        if ln.startswith("worktree "):
+            cur = {"path": ln[9:]}
+        elif ln.startswith("branch "):
+            cur["branch"] = ln[7:].removeprefix("refs/heads/")
+        elif not ln.strip() and cur.get("path"):
+            out.append(cur); cur = {}
+    return out
+
+
+def _ws_state(prefix: Path):
+    """Per-role workspace state. Returns {role: {...}}."""
+    spec = _ws_spec()
+    anchor = prefix / spec["TRACKS"]["path"]
+    if not anchor.exists():
+        anchor = prefix / spec["BASE"]["path"]
+    wt = _worktree_list(anchor) if anchor.exists() else []
+    by_branch = {w.get("branch"): w["path"] for w in wt if w.get("branch")}
+    state = {}
+    for role, s in spec.items():
+        d = prefix / s["path"]
+        e = {"path": str(d), "expected_branch": s["branch"],
+             "required": s["required_for_production"],
+             "status": "OK", "branch": None, "head": None, "dirty": 0}
+        if not d.exists():
+            alt = by_branch.get(s["branch"])
+            e["status"] = (f"MISSING (branch checked out at {alt})"
+                           if alt else "MISSING")
+        elif not (d / ".git").exists():
+            e["status"] = "CONFLICT (exists but not a git worktree)"
+        else:
+            br, head = _git_branch(d)
+            e["branch"], e["head"] = br, head
+            if br != s["branch"]:
+                e["status"] = (f"WRONG_BRANCH ({br or '?'} != {s['branch']})"
+                               if br != "DETACHED" else "DETACHED")
+            else:
+                dirty = _git_dirty_paths(d)
+                e["dirty"] = len(dirty or [])
+        state[role] = e
+    return state
+
+
+def cmd_workspace(a):
+    """Create/inspect the canonical multi-worktree workspace.
+    `status` READ-ONLY; `setup` MUTATING (git worktree add only, never
+    deletes/overwrites), --dry-run safe."""
+    prefix = Path(a.prefix).resolve()
+    spec = _ws_spec()
+    state = _ws_state(prefix)
+
+    if a.action == "status":
+        worst = 0
+        for role, s in spec.items():
+            e = state[role]
+            lvl = {"OK": 0, "DIRTY": 0}.get(e["status"], 2 if e["required"]
+                                            else 1)
+            if e["status"] == "OK" and e["dirty"]:
+                lvl = 0
+            worst = max(worst, lvl)
+            req = "required" if e["required"] else "optional"
+            print(f"{role:<7} {e['status']:<38} {e['path']}")
+            if e["status"] == "OK":
+                print(f"        branch {e['branch']} @ "
+                      f"{(e['head'] or '?')[:8]}, dirty files: "
+                      f"{e['dirty']} ({req})")
+            else:
+                print(f"        want branch {e['expected_branch']} ({req})")
+        return worst
+
+    # setup
+    dry = a.dry_run
+    problems, changes = [], []
+    anchor = prefix / spec["TRACKS"]["path"]
+    if not anchor.exists():
+        anchor = prefix / spec["BASE"]["path"]
+    if not anchor.exists():
+        print("FAIL no repository found in workspace — clone the repo "
+              "first, then: `git -C <clone> worktree add "
+              f"{spec['TRACKS']['path']} {spec['TRACKS']['branch']}`")
+        return 2
+    for role, s in spec.items():
+        e = state[role]
+        if not s["required_for_production"] and not a.with_optional:
+            print(f"  SKIP {role} (optional, --with-optional to create)")
+            continue
+        if e["status"] == "OK":
+            print(f"  SKIP {role} exists @ {e['path']}")
+        elif e["status"].startswith("MISSING"):
+            d = prefix / s["path"]
+            if "checked out at" in e["status"]:
+                problems.append(f"{role} branch {s['branch']} already "
+                                f"checked out elsewhere — {e['status']}")
+                print(f"  FAIL {problems[-1]}")
+                continue
+            cmd = ["git", "-C", str(anchor), "worktree", "add", str(d),
+                   s["branch"]]
+            if dry:
+                print(f"  DRY  git -C {anchor} worktree add {d} "
+                      f"{s['branch']}")
+                changes.append(role)
+            else:
+                r = subprocess.run(cmd, capture_output=True, text=True)
+                if r.returncode != 0:
+                    problems.append(f"{role} worktree add failed: "
+                                    f"{r.stderr.strip()[:120]}")
+                    print(f"  FAIL {problems[-1]}")
+                else:
+                    print(f"  DONE {role} -> {d} [{s['branch']}]")
+                    changes.append(role)
+        else:
+            problems.append(f"{role}: {e['status']} — refusing to touch; "
+                            "resolve manually")
+            print(f"  FAIL {problems[-1]}")
+    if problems:
+        print("\nworkspace incomplete — fix FAIL items above")
+        return 2
+    print(("DRY-RUN complete — no changes" if dry else
+           f"workspace ready ({len(changes)} created)"))
+    return 0
+
+
+# ------------------------- boot recovery self-test -------------------------
+
+def _boot_id():
+    try:
+        return Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+    except OSError:
+        return "unknown"
+
+
+def cmd_bootcheck(a):
+    """Post-boot recovery verification. READ-ONLY vs trading state;
+    writes only its own operational artifact boot_health.json.
+    Exit 0=HEALTHY 1=DEGRADED 2=FAILED. Never trades, never calls models."""
+    prefix = Path(a.prefix).resolve()
+    lay = _layout(prefix)
+    comps = []
+    S = {"ok": "OK", "degraded": "DEGRADED", "fail": "FAILED"}
+
+    def chk(name, ok, level="fail", note=""):
+        comps.append({"name": name, "state": level if not ok else "ok",
+                      "note": note})
+        print(f"  [{S[level] if not ok else 'OK':>7}] {name}"
+              + (f"  {note}" if note else ""))
+
+    for d in (lay["BASE_DIR"], lay["ALPHA_DIR"], lay["C12_DIR"]):
+        chk(f"worktree present {Path(d).name}", Path(d).exists())
+    chk("no incomplete restore transaction",
+        not (prefix / JOURNAL_NAME).exists())
+    chk("bridge service active", _svc(UNITS[0]) == "active")
+    chk("telegram relay active", _svc(UNITS[1]) == "active",
+        level="degraded", note=_svc(UNITS[1]))
+    chk("bootcheck timer active", _svc(BOOT_TIMER) == "active",
+        level="degraded", note=_svc(BOOT_TIMER))
+    msg, age = _fresh(Path(lay["ALPHA_DIR"]) / "alpha_rnd/monitor_cron.log",
+                      240)
+    chk("ALPHA monitor resumed", 0 <= age <= 240, note=msg)
+    try:
+        st = json.loads((Path(lay["ALPHA_DIR"]) /
+                         "alpha_rnd/monitor_state.json").read_text())
+        chk("ALPHA economic state readable", True,
+            note=f"cash ${st['cash']:,.0f}")
+        chk("ALPHA pending sane", isinstance(st.get("pending_open_fills"),
+                                             list))
+    except Exception as e:
+        chk("ALPHA economic state readable", False, note=repr(e)[:50])
+    slog = Path(lay["ALPHA_DIR"]) / "alpha_rnd/scheduler.log"
+    try:
+        age_s = datetime.now(timezone.utc).timestamp() - slog.stat().st_mtime
+        chk("ALPHA scheduler ran <25h", age_s < 90000, level="degraded")
+    except OSError:
+        chk("ALPHA scheduler log exists", False, level="degraded")
+    cslog = Path(lay["C12_DIR"]) / \
+        "evaluations/gate_c12_prospective/scheduler.log"
+    try:
+        age_c = datetime.now(timezone.utc).timestamp() - cslog.stat().st_mtime
+        chk("C12 scheduler ran <25h", age_c < 90000, level="degraded")
+    except OSError:
+        chk("C12 scheduler log exists", False, level="degraded")
+    cron = _cron_read() or ""
+    have = sum(1 for j in ("alpha_rnd.monitor", "alpha_rnd.daily_scheduler",
+                           "ta_eval.c12_scheduler") if j in cron)
+    chk("cron jobs present", have == 3, level="degraded",
+        note=f"{have}/3")
+    try:
+        en = bool((json.loads((Path(lay["ALPHA_DIR"]) / "alpha_rnd" /
+                               "management_policy.json").read_text())
+                   .get("execution") or {}).get("enabled"))
+        chk("adaptive execution state known", True,
+            note="enabled" if en else "disabled")
+    except Exception:
+        chk("adaptive execution state known", False, level="degraded")
+    chk("bridge /healthz recovered",
+        bool(_get("http://127.0.0.1:8765/healthz")), level="degraded",
+        note="local listener only — no inference call")
+
+    worst = max(({"ok": 0, "degraded": 1, "fail": 2}[c["state"]]
+                 for c in comps), default=2)
+    overall = ("HEALTHY" if worst == 0 else
+               "DEGRADED" if worst == 1 else "FAILED")
+
+    state_file = Path(a.state_file).expanduser() if a.state_file else \
+        Path.home() / ".config" / "tradingagents" / "boot_health.json"
+    boot = _boot_id()
+    rec = {"boot_id": boot, "checked_utc": ts_utc(), "overall": overall,
+           "components": comps}
+    try:
+        prev = json.loads(state_file.read_text())
+        if prev.get("boot_id") == boot:
+            if prev.get("recovered_utc"):
+                rec["recovered_utc"] = prev["recovered_utc"]
+            elif prev.get("overall") != "HEALTHY" and overall == "HEALTHY":
+                rec["recovered_utc"] = rec["checked_utc"]
+    except Exception:
+        pass
+    state_file.parent.mkdir(parents=True, exist_ok=True)
+    state_file.write_text(json.dumps(rec, indent=1))
+    print(f"\nBOOT RECOVERY: {overall}  ({state_file})")
+    return worst
+
+
 def ts_utc():
     return datetime.now(timezone.utc).isoformat()
 
@@ -810,6 +1076,25 @@ def cmd_health(a):
         print("  [  FAILED] INCOMPLETE RESTORE TRANSACTION — "
               f"{jp} present; rerun `ops.ta restore` with the same "
               "archive")
+
+    boot = {}
+    try:
+        boot = json.loads((Path.home() / ".config" / "tradingagents" /
+                           "boot_health.json").read_text())
+    except Exception:
+        pass
+    if boot.get("boot_id") == _boot_id():
+        bs = boot.get("overall")
+        lvl = {"HEALTHY": None, "DEGRADED": "degraded"}.get(bs, "fail")
+        notes = "; ".join(c["name"] for c in boot.get("components", [])
+                          if c.get("state") != "ok")
+        checks.append(("boot recovery", lvl or "ok", notes[:80]))
+        print(f"  [{'OK' if not lvl else S[lvl].upper():>7}] boot "
+              f"recovery: {bs}" + (f"  {notes[:80]}" if notes else ""))
+    else:
+        checks.append(("boot recovery", "degraded", ""))
+        print("  [DEGRADED] boot recovery: no bootcheck record for this "
+              "boot (timer runs it ~2min after boot)")
 
     def chk(name, ok, level="fail", note=""):
         checks.append((name, level if not ok else "ok", note))
@@ -937,13 +1222,16 @@ def main():
     ap = argparse.ArgumentParser(prog="ops/ta",
                                  description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for c in ("setup", "health", "status", "backup", "restore"):
+    for c in ("setup", "health", "status", "backup", "restore",
+              "workspace", "bootcheck"):
         p = sub.add_parser(c,
                            help={"setup": "MUTATING bootstrap (--dry-run safe)",
                                  "health": "READ-ONLY deep check (0/1/2)",
                                  "status": "READ-ONLY short summary",
                                  "backup": "read-only consistent archive",
-                                 "restore": "MUTATING, fail-closed, empty target"
+                                 "restore": "MUTATING, fail-closed, empty target",
+                                 "workspace": "workspace status/setup",
+                                 "bootcheck": "boot recovery self-test"
                                  }[c])
         p.add_argument("--prefix", default=str(TRACKS.parent),
                        help="parent dir holding the worktrees")
@@ -961,10 +1249,21 @@ def main():
         if c == "restore":
             p.add_argument("archive")
             p.add_argument("--dry-run", action="store_true")
+        if c == "workspace":
+            p.add_argument("action", nargs="?", default="status",
+                           choices=["status", "setup"])
+            p.add_argument("--dry-run", action="store_true")
+            p.add_argument("--with-optional", action="store_true",
+                           help="also create optional dev worktrees")
+        if c == "bootcheck":
+            p.add_argument("--state-file",
+                           help="boot_health.json location "
+                                "(default ~/.config/tradingagents/)")
 
     a = ap.parse_args()
     return {"setup": cmd_setup, "health": cmd_health, "status": cmd_status,
-            "backup": cmd_backup, "restore": cmd_restore}[a.cmd](a)
+            "backup": cmd_backup, "restore": cmd_restore,
+            "workspace": cmd_workspace, "bootcheck": cmd_bootcheck}[a.cmd](a)
 
 
 if __name__ == "__main__":
