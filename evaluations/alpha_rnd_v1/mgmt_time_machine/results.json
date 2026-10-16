@@ -1,0 +1,164 @@
+{
+ "cohort": "A_MANAGEMENT_RESEARCH_ONLY",
+ "frozen_manager": {
+  "alpha_sha": "8355c176",
+  "model": "devin-deep",
+  "policy_sha": "cc8a406e350db057",
+  "validator": "mgmt_validate.py"
+ },
+ "generated_at": "2026-10-16T21:53:10.475604+00:00",
+ "model_calls": 0,
+ "note": "5 closed historical trades; PBF excluded (live). Trigger-fired sessions got a real as-of-bounded model call; no lookahead.",
+ "results": {
+  "ACN": {
+   "control": {
+    "events": [
+     {
+      "kind": "close_below",
+      "px": 193.87469850452734,
+      "t": "2026-10-05"
+     }
+    ],
+    "exit_px": 193.87469850452734,
+    "exit_session": "2026-10-06",
+    "ret_pct": -5.43,
+    "shares_out": 24
+   },
+   "delta_pct": 0.0,
+   "treatment": {
+    "fills": [
+     {
+      "kind": "close_below",
+      "px": 193.87469850452734,
+      "shares": 24,
+      "t": "2026-10-06"
+     }
+    ],
+    "model_calls": 0,
+    "ret_pct": -5.43,
+    "trace": [],
+    "triggers": {}
+   }
+  },
+  "APPS": {
+   "control": {
+    "events": [
+     {
+      "kind": "stop",
+      "px": 10.42,
+      "t": "2026-10-06"
+     }
+    ],
+    "exit_px": 10.42,
+    "exit_session": "2026-10-06",
+    "ret_pct": -7.79,
+    "shares_out": 442
+   },
+   "delta_pct": 0.0,
+   "treatment": {
+    "fills": [
+     {
+      "kind": "deterministic_stop",
+      "px": 10.42,
+      "shares": 442,
+      "t": "2026-10-06"
+     }
+    ],
+    "model_calls": 0,
+    "ret_pct": -7.79,
+    "trace": [],
+    "triggers": {}
+   }
+  },
+  "PGEN": {
+   "control": {
+    "events": [
+     {
+      "kind": "stop",
+      "px": 7.75,
+      "t": "2026-10-06"
+     }
+    ],
+    "exit_px": 7.75,
+    "exit_session": "2026-10-06",
+    "ret_pct": -5.49,
+    "shares_out": 609
+   },
+   "delta_pct": 0.0,
+   "treatment": {
+    "fills": [
+     {
+      "kind": "deterministic_stop",
+      "px": 7.75,
+      "shares": 609,
+      "t": "2026-10-06"
+     }
+    ],
+    "model_calls": 0,
+    "ret_pct": -5.49,
+    "trace": [],
+    "triggers": {}
+   }
+  },
+  "SDGR": {
+   "control": {
+    "events": [
+     {
+      "kind": "close_below",
+      "px": 26.610000610351562,
+      "t": "2026-10-08"
+     }
+    ],
+    "exit_px": 26.610000610351562,
+    "exit_session": "2026-10-09",
+    "ret_pct": -14.16,
+    "shares_out": 161
+   },
+   "delta_pct": 0.0,
+   "treatment": {
+    "fills": [
+     {
+      "kind": "close_below",
+      "px": 26.610000610351562,
+      "shares": 161,
+      "t": "2026-10-09"
+     }
+    ],
+    "model_calls": 0,
+    "ret_pct": -14.16,
+    "trace": [],
+    "triggers": {}
+   }
+  },
+  "TWST": {
+   "control": {
+    "events": [
+     {
+      "kind": "stop",
+      "px": 158.25999450683594,
+      "t": "2026-10-07"
+     }
+    ],
+    "exit_px": 158.25999450683594,
+    "exit_session": "2026-10-07",
+    "ret_pct": -24.48,
+    "shares_out": 11
+   },
+   "delta_pct": 0.0,
+   "treatment": {
+    "fills": [
+     {
+      "kind": "deterministic_stop",
+      "px": 158.25999450683594,
+      "shares": 11,
+      "t": "2026-10-07"
+     }
+    ],
+    "model_calls": 0,
+    "ret_pct": -24.48,
+    "trace": [],
+    "triggers": {}
+   }
+  }
+ }
+}
