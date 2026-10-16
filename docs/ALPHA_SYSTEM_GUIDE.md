@@ -309,8 +309,16 @@ remainder-risk validated independently), and forbidden actions (any
 add/pyramid/increase → FORBIDDEN_MANAGEMENT_ACTION). Valid results are
 written to `management_intents/` stamped SHADOW_VALIDATED with a
 deterministic `mgmact_*` action ID — still **no orders, no stop changes, no
-economics**. **Still not active:** adaptive stop modification, partial or
-full exits — Phase E only, requires explicit approval.
+economics**. **Phase E machinery implemented but DISABLED:** `alpha_rnd/mgmt_exec.py`
+can convert a VALIDATED_SHADOW_INTENT into canonical economics —
+partial/full exits via `pending_open_exits` (pro-rata cost basis through
+`do_exit`), tighter stops via `stop_rule` update (never-widen enforced at
+execution time too; effective protection = tightest of watchlist +
+position rules). Execution-time revalidation rejects stale, superseded,
+conflicting, or obsolete intents; `mgmact_*` IDs go into `executed[]` for
+exactly-once. Kill switch: `management_policy.json → execution.enabled`
+(default **false** — adaptive execution is OFF; everything upstream stays
+shadow). Deterministic hard stops always take precedence.
 
 ## 10. Economic state authority
 
