@@ -27,6 +27,12 @@ artifacts.
 ## Reading order
 
 1. `START_HERE.md` (this file)
+   - **OPERATOR MANUAL:** `docs/TRADINGAGENTS_OPERATOR_MANUAL.md`
+   - **New machine / fresh install:** `docs/NEW_MACHINE_SETUP.md`
+   - **Architecture map:** `docs/SYSTEM_ARCHITECTURE.md`
+   - **What file is authority for what:** `docs/STATE_AND_DATA_AUTHORITY.md`
+   - **Something broke:** `docs/TROUBLESHOOTING_RUNBOOK.md`
+   - **Development rules:** `docs/DEVELOPER_WORKFLOW.md`
 2. `docs/ALPHA_SYSTEM_GUIDE.md` — how the ALPHA system works today
    (architecture, dispositions, retry semantics, authority, replay, commands)
 3. `CURRENT_STATE.md` — what is happening right now, what the user should do
