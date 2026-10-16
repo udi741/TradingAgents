@@ -45,16 +45,15 @@ def _atomic(p, doc):
 
 
 def _current_stop(pos: dict, wl: dict, ticker: str) -> float | None:
-    """Authoritative protective level: watchlist typed invalidation first,
-    then position stop_rule — same precedence as the monitor."""
+    """Effective protective level for a long = the TIGHTEST active rule
+    (max of watchlist invalidation and position stop_rule). Never-widen
+    must compare against the strongest protection currently in force."""
     wl_pos = {p["ticker"]: p for p in (wl or {}).get("open_positions", [])}
     inv = (wl_pos.get(ticker) or {}).get("invalidation") or {}
-    lv = inv.get("level") if isinstance(inv, dict) else None
-    if isinstance(lv, (int, float)):
-        return lv
-    sr = (pos or {}).get("stop_rule") or {}
-    lv = sr.get("level")
-    return float(lv) if isinstance(lv, (int, float)) else None
+    lv1 = inv.get("level") if isinstance(inv, dict) else None
+    lv2 = ((pos or {}).get("stop_rule") or {}).get("level")
+    lvls = [float(x) for x in (lv1, lv2) if isinstance(x, (int, float))]
+    return max(lvls) if lvls else None
 
 
 def _decision_id(dec: dict) -> str:

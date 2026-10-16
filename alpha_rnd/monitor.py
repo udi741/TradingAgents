@@ -882,6 +882,11 @@ def _run_once_locked(st: dict, wl: dict) -> None:
         st["last_mgmt_observe"] = obs
     except Exception:
         pass
+    try:  # adaptive execution pass — currently a pure no-op (kill switch off)
+        from alpha_rnd import mgmt_exec as _mx
+        _mx.run_exec_pass(st, wl)
+    except Exception:
+        pass
     st["last_check_utc"] = now_utc().isoformat()
     save_state(st)
 

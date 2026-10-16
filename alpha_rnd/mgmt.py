@@ -494,7 +494,10 @@ def observe(st: dict, wl: dict, daily: dict, session: str,
 
 def status() -> str:
     m = load_mgmt()
-    lines = ["ALPHA POST-ENTRY MANAGEMENT (shadow) — observational only", ""]
+    from alpha_rnd import mgmt_exec as _mx
+    ex = "ENABLED" if _mx.enabled() else "DISABLED"
+    lines = ["ALPHA POST-ENTRY MANAGEMENT (shadow) — observational only",
+             f"adaptive execution: {ex}   economic action: NONE", ""]
     if not m.get("positions"):
         return "\n".join(lines + ["(no tracked positions)"])
     for t, r in sorted(m["positions"].items()):
