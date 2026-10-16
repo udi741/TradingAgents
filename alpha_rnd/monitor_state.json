@@ -1,5 +1,5 @@
 {
- "last_check_utc": "2026-10-16T21:44:15.076120+00:00",
+ "last_check_utc": "2026-10-16T21:45:35.795338+00:00",
  "processed_close_sessions": [
   "2026-10-02",
   "2026-10-05",
@@ -63,7 +63,17 @@
   "TXG": "RISK_PLAN_REQUIRED",
   "ASST": "RISK_PLAN_REQUIRED"
  },
- "pending_open_exits": [],
+ "pending_open_exits": [
+  {
+   "ticker": "PBF",
+   "type": "partial",
+   "reason": "MGMT_ADAPTIVE mgmact_444a58f499a499f0",
+   "confirm_session": "2026-10-16",
+   "order_id": "pending_exit:mgmact_444a58f499a499f0",
+   "mgmt_action": "mgmact_444a58f499a499f0",
+   "shares": 31
+  }
+ ],
  "book": {
   "mark_session": "2026-10-15",
   "market_value": 5393.38,
@@ -98,7 +108,7 @@
  ],
  "initialized": true,
  "data_health": {
-  "at": "2026-10-16T21:44:15.060476+00:00",
+  "at": "2026-10-16T21:45:35.780895+00:00",
   "daily_ok": 20,
   "daily_req": 21,
   "status": "ok"
