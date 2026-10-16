@@ -1,7 +1,6 @@
 # ALPHA Post-Entry Adaptive Management — Implementation Plan
 
-Status: PHASE B DONE (shadow trigger infrastructure live, observational
-only — no model reassessment, no economic action). Phase A audit + design
+Status: PHASE D DONE (triggers + shadow reassessment + shadow validator live; no economic action). Phase A audit + design
 lock retained below. Phases C–E require explicit phase approval; Phase E
 additionally requires user approval after shadow acceptance.
 

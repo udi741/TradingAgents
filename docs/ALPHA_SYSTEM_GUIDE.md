@@ -300,8 +300,17 @@ position-state fingerprint; a result is marked `STALE_POSITION_CLOSED` /
 `STALE_POSITION_CHANGED` if the position moved during inference. Runs
 bounded (≤2/run, urgent-first) inside `run_cycle` after publish; generic
 infra retry semantics apply (RETRY_PENDING / FAILED_TERMINAL; a failed call
-never yields a recommendation). **Still not active:** model-driven stop
-changes, partial or full exits — Phase D/E only.
+never yields a recommendation). **Phase D (deterministic shadow validation) is now active** via
+`alpha_rnd/mgmt_validate.py`: each successful shadow recommendation is
+checked for currency (stale/superseded/conflicting-pending), action-specific
+machine rules (never-widen for stops, deterministic partial normalization —
+a rounding that would consume the whole position is rejected, composite
+remainder-risk validated independently), and forbidden actions (any
+add/pyramid/increase → FORBIDDEN_MANAGEMENT_ACTION). Valid results are
+written to `management_intents/` stamped SHADOW_VALIDATED with a
+deterministic `mgmact_*` action ID — still **no orders, no stop changes, no
+economics**. **Still not active:** adaptive stop modification, partial or
+full exits — Phase E only, requires explicit approval.
 
 ## 10. Economic state authority
 
