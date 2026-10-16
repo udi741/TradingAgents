@@ -115,6 +115,28 @@ crontab -r   # DANGEROUS: removes ALL automation; prefer commenting out
 Prefer `crontab -e` and comment the lines. Stopping services mid-pending-
 order is safe — state is durable; the next tick continues.
 
+## Back up / move to another machine
+
+```bash
+python3 -m ops.ta backup                      # creates validated .tar.gz
+python3 -m ops.ta backup --dry-run            # shows what would be captured
+```
+
+Secrets are NOT in the archive — transfer
+`~/.config/tradingagents/telegram.env` and devin auth separately.
+
+On the new machine (after git clone + `ops.ta setup`):
+
+```bash
+python3 -m ops.ta restore backup.tar.gz --dry-run   # verify plan first
+python3 -m ops.ta restore backup.tar.gz
+python3 -m ops.ta health
+# fill secrets, install units/cron, THEN enable runtime manually
+```
+
+Restore is fail-closed: it refuses live/non-empty state, active services,
+bad checksums, wrong versions. It never auto-starts trading.
+
 ## Call a developer when
 
 - `executed[]` and the ledger disagree with positions (integrity bug)

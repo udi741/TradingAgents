@@ -123,5 +123,132 @@ class Sim(unittest.TestCase):
         self.assertNotIn("/home/udi", u)
 
 
+class BackupRestore(unittest.TestCase):
+    """Isolated backup->restore cycle. Never touches the live prefix."""
+    def setUp(self):
+        t = Path(tempfile.mkdtemp())
+        self.src = t / "src"; self.dst = t / "dst"
+        for base in (self.src, self.dst):
+            for d in ("TradingAgents-alpha-rnd/alpha_rnd",
+                      "TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/"
+                      "management_intents",
+                      "TradingAgents-c12/evaluations/gate_c12_prospective/"
+                      "weeks"):
+                (base / d).mkdir(parents=True)
+        ar = self.src / "TradingAgents-alpha-rnd/alpha_rnd"
+        st = {"cash": 5000.0, "realized": -100.0,
+              "positions": {"X": {"shares": 9, "fill": 10.0,
+                                  "stop_rule": {"type": "close_below",
+                                                "level": 9}}},
+              "pending_open_fills": [{"ticker": "Y", "order_id": "o1"}],
+              "pending_open_exits": [], "executed": ["e1", "e2"],
+              "book": {"mark_session": "S1"}}
+        (ar / "monitor_state.json").write_text(json.dumps(st))
+        (ar / "live_watchlist.json").write_text("{}")
+        (ar / "scheduler_state.json").write_text("{}")
+        (ar / "trigger_events.jsonl").write_text('{}"+chr(10)')
+        (ar / "scheduler_events.jsonl").write_text('{}"+chr(10)')
+        (ar / "management_policy.json").write_text(
+            '{"execution":{"enabled":false}}')
+        ev = self.src / ("TradingAgents-alpha-rnd/evaluations"
+                         "/alpha_rnd_v1")
+        (ev / "alpha_paper_ledger.jsonl").write_text('{"type":"MARK"}'+chr(10))
+        (ev / "management_state.json").write_text("{}")
+        (ev / "management_actions.json").write_text("{}")
+        cd = self.src / ("TradingAgents-c12/evaluations"
+                         "/gate_c12_prospective")
+        (cd / "c12_paper_portfolio.jsonl").write_text('{"a":1}'+chr(10))
+        (cd / "c12_nav.jsonl").write_text('{"nav": 999.0}'+chr(10))
+        (cd / "c12_signal_ledger.jsonl").write_text('{}"+chr(10)')
+        (cd / "scheduler_state.json").write_text("{}")
+        (cd / "journal.jsonl").write_text('{}"+chr(10)')
+        self.arc = t / "b.tar.gz"
+
+    def _backup(self):
+        ns = type("A", (), {"prefix": str(self.src), "output": str(self.arc),
+                            "label": "t", "dry_run": False})
+        out = io.StringIO()
+        with redirect_stdout(out):
+            return ta.cmd_backup(ns()), out.getvalue()
+
+    def _restore(self, dry=False, prefix=None, arc=None):
+        ns = type("A", (), {"archive": str(arc or self.arc),
+                            "prefix": str(prefix or self.dst),
+                            "dry_run": dry, "allow_nonempty": False})
+        out = io.StringIO()
+        with redirect_stdout(out):
+            return ta.cmd_restore(ns()), out.getvalue()
+
+    def test_full_cycle(self):
+        rc, o = self._backup()
+        self.assertEqual(rc, 0, o)
+        self.assertTrue(self.arc.exists())
+        rc, o = self._restore(dry=True)
+        self.assertEqual(rc, 0)
+        self.assertFalse((self.dst / "TradingAgents-alpha-rnd/alpha_rnd"
+                          "/monitor_state.json").exists())
+        rc, o = self._restore()
+        self.assertEqual(rc, 0, o)
+        # authority identical byte-for-byte
+        for rel in ("alpha_rnd/monitor_state.json",
+                    "alpha_rnd/trigger_events.jsonl"):
+            self.assertEqual(
+                (self.src / "TradingAgents-alpha-rnd" / rel).read_bytes(),
+                (self.dst / "TradingAgents-alpha-rnd" / rel).read_bytes())
+        # pending order + executed ids preserved -> no dup/replay possible
+        st = json.loads((self.dst / "TradingAgents-alpha-rnd/alpha_rnd"
+                         "/monitor_state.json").read_text())
+        self.assertEqual(st["executed"], ["e1", "e2"])
+        self.assertEqual(st["pending_open_fills"][0]["order_id"], "o1")
+
+    def test_corrupt_archive_fails_closed(self):
+        self._backup()
+        data = bytearray(self.arc.read_bytes())
+        data[100] ^= 0xFF
+        bad = self.arc.with_name("bad.tar.gz")
+        bad.write_bytes(bytes(data))
+        rc, o = self._restore(arc=bad)
+        self.assertEqual(rc, 2)
+
+    def test_missing_manifest_fails(self):
+        import tarfile, io as _io
+        no = self.arc.with_name("no.tar.gz")
+        with tarfile.open(no, "w:gz") as t:
+            b = b"x"; ti = tarfile.TarInfo("payload/x"); ti.size = 1
+            t.addfile(ti, _io.BytesIO(b))
+        rc, o = self._restore(arc=no)
+        self.assertEqual(rc, 2)
+
+    def test_path_traversal_rejected(self):
+        import tarfile, io as _io
+        bad = self.arc.with_name("trav.tar.gz")
+        man = {"format_version": ta.FMT_VER, "files": []}
+        with tarfile.open(bad, "w:gz") as t:
+            mb = json.dumps(man).encode()
+            ti = tarfile.TarInfo("manifest.json"); ti.size = len(mb)
+            t.addfile(ti, _io.BytesIO(mb))
+            b = b"x"; ti = tarfile.TarInfo("../evil"); ti.size = 1
+            t.addfile(ti, _io.BytesIO(b))
+        rc, _ = self._restore(arc=bad)
+        self.assertEqual(rc, 2)
+
+    def test_nonempty_target_refused(self):
+        self._backup()
+        self._restore()
+        rc, o = self._restore()   # second restore into non-empty target
+        self.assertEqual(rc, 2)
+        self.assertIn("REFUSE", o)
+
+    def test_backup_has_no_secrets_and_manifest_shas(self):
+        self._backup()
+        import tarfile, json as _j
+        with tarfile.open(self.arc) as t:
+            man = _j.loads(t.extractfile("manifest.json").read())
+        self.assertIn("telegram.env", str(man["secrets_required_not_included"]))
+        self.assertTrue(all("sha256" in f for f in man["files"]))
+        self.assertEqual(man["alpha"]["cash"], 5000.0)
+        self.assertEqual(man["alpha"]["adaptive_execution_enabled"], False)
+
+
 if __name__ == "__main__":
     unittest.main()

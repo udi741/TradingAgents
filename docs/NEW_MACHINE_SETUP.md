@@ -121,9 +121,15 @@ tail -3 ../TradingAgents-alpha-rnd/alpha_rnd/monitor_cron.log
 
 ## 9. Restore state (optional)
 
-Copy the MUST-BACK-UP files from docs/STATE_AND_DATA_AUTHORITY.md into
-the same relative paths in the matching worktrees BEFORE enabling cron,
-then verify `/alpha` output matches the old machine.
+```bash
+python3 -m ops.ta restore <backup.tar.gz> --dry-run
+python3 -m ops.ta restore <backup.tar.gz>
+```
+
+Restores the full authority set (see docs/STATE_AND_DATA_AUTHORITY.md)
+with checksum + economic-continuity verification. Secrets transfer
+separately. Runtime is NOT started automatically — enable units/cron via
+`ops.ta setup` after secrets are in place.
 
 ## 10. Post-start verification
 

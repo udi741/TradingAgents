@@ -9,8 +9,8 @@ records them; Phase 1+ fixes them.
 | ~~G2~~ CLOSED | Systemd units exist in ~/.config, not installed from repo | HIGH | copy units by hand | `ops/setup` writes/enables them | 1 |
 | ~~G3~~ CLOSED | Cron entries are tribal (4 lines, no installer) | HIGH | paste from NEW_MACHINE_SETUP.md | `ops/setup` installs crontab | 1 |
 | ~~G4~~ CLOSED | No unified health command | MED | run ~6 commands manually | `ops/health` one-shot report | 1 |
-| G5 | No backup command/manifest tool | HIGH | `rsync` listed paths by hand | `ops/backup` + manifest | 2 |
-| G6 | No restore procedure/tool | HIGH | manual file copy + verify | `ops/restore` with integrity checks | 2 |
+| ~~G5~~ CLOSED | No backup command/manifest tool | HIGH | `rsync` listed paths by hand | `python3 -m ops.ta backup` + manifest | 2 |
+| ~~G6~~ CLOSED | No restore procedure/tool | HIGH | manual file copy + verify | `ops.ta restore` fail-closed + integrity checks | 2 |
 | ~~G7~~ CLOSED | `.venv312` (py3.12 TA env) has no creation script | HIGH | `python3.12 -m venv` + `pip install -e .` by hand | pinned env builder | 1 |
 | G8 | System python deps (yfinance/pandas for monitor) not pinned per-runtime | MED | `pip install` pyproject deps for py3.10 | runtime requirements file | 1 |
 | G9 | Hard-coded absolute paths `/home/udi/udi_provate/...` in cron+units | MED | rewrite paths on new machine | path-templated units/cron | 2 |

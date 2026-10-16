@@ -212,6 +212,287 @@ def _missing_py_deps(req: Path) -> list[str]:
     return out
 
 
+# ------------------------- backup / restore -------------------------
+
+FMT_VER = 1
+# (worktree-key, rel-path, classification)
+_BACKUP_SET = [
+    ("ALPHA_DIR", "alpha_rnd/monitor_state.json", "ECONOMIC_AUTHORITY"),
+    ("ALPHA_DIR", "alpha_rnd/live_watchlist.json", "OPERATIONAL"),
+    ("ALPHA_DIR", "alpha_rnd/scheduler_state.json", "OPERATIONAL"),
+    ("ALPHA_DIR", "alpha_rnd/trigger_events.jsonl", "ECONOMIC_EVENT_LOG"),
+    ("ALPHA_DIR", "alpha_rnd/scheduler_events.jsonl", "OPERATIONAL"),
+    ("ALPHA_DIR", "alpha_rnd/management_policy.json", "POLICY"),
+    ("ALPHA_DIR", "alpha_rnd/management_events.jsonl", "SHADOW_LOG"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/alpha_paper_ledger.jsonl",
+     "ECONOMIC_LEDGER"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_state.json",
+     "OPERATIONAL"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_actions.json",
+     "OPERATIONAL"),
+    ("C12_DIR", "evaluations/gate_c12_prospective/c12_paper_portfolio.jsonl",
+     "ECONOMIC_AUTHORITY"),
+    ("C12_DIR", "evaluations/gate_c12_prospective/c12_nav.jsonl",
+     "ECONOMIC_AUTHORITY"),
+    ("C12_DIR", "evaluations/gate_c12_prospective/c12_signal_ledger.jsonl",
+     "ECONOMIC_AUTHORITY"),
+    ("C12_DIR", "evaluations/gate_c12_prospective/scheduler_state.json",
+     "OPERATIONAL"),
+    ("C12_DIR", "evaluations/gate_c12_prospective/journal.jsonl",
+     "OPERATIONAL"),
+]
+_BACKUP_DIRS = [  # whole directories, same consistency rules
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_intents",
+     "SHADOW_ARTIFACT"),
+    ("C12_DIR", "evaluations/gate_c12_prospective/weeks", "OPERATIONAL"),
+]
+_LOCKS = [("ALPHA_DIR", "alpha_rnd/monitor_state.lock"),
+          ("ALPHA_DIR", "alpha_rnd/scheduler_state.lock"),
+          ("C12_DIR", "evaluations/gate_c12_prospective/c12_scheduler.lock")]
+_REQUIRED = {"ECONOMIC_AUTHORITY", "ECONOMIC_LEDGER"}
+
+
+def _sha256(b: bytes) -> str:
+    import hashlib
+    return hashlib.sha256(b).hexdigest()
+
+
+def _git(d: Path):
+    try:
+        sha = subprocess.run(["git", "-C", str(d), "rev-parse", "HEAD"],
+                             capture_output=1, text=1).stdout.strip()
+        dirty = bool(subprocess.run(["git", "-C", str(d), "status",
+                                     "--porcelain"], capture_output=1,
+                                    text=1).stdout.strip())
+        return {"sha": sha, "dirty": dirty}
+    except Exception:
+        return {}
+
+
+def _alpha_summary(lay):
+    try:
+        st = json.loads((Path(lay["ALPHA_DIR"]) /
+                         "alpha_rnd/monitor_state.json").read_text())
+        pol = {}
+        try:
+            pol = json.loads((Path(lay["ALPHA_DIR"]) /
+                              "alpha_rnd/management_policy.json").read_text())
+        except Exception:
+            pass
+        return {"cash": st.get("cash"), "realized": st.get("realized"),
+                "positions": {t: {"shares": p.get("shares"),
+                                  "fill": p.get("fill"),
+                                  "stop_rule": p.get("stop_rule")}
+                              for t, p in
+                              (st.get("positions") or {}).items()},
+                "pending_in": len(st.get("pending_open_fills") or []),
+                "pending_out": len(st.get("pending_open_exits") or []),
+                "executed": st.get("executed") or [],
+                "mark_session": (st.get("book") or {}).get("mark_session"),
+                "adaptive_execution_enabled":
+                    bool((pol.get("execution") or {}).get("enabled"))}
+    except Exception as e:
+        return {"error": repr(e)}
+
+
+def _c12_summary(lay):
+    d = Path(lay["C12_DIR"]) / "evaluations/gate_c12_prospective"
+    out = {}
+    try:
+        last = json.loads(d.joinpath("c12_nav.jsonl")
+                          .read_text().strip().splitlines()[-1])
+        out["nav"] = last.get("nav")
+        out["open_positions"] = last.get("open_positions")
+    except Exception as e:
+        out["error"] = repr(e)
+    return out
+
+
+def cmd_backup(a):
+    """Create a consistent, validated backup archive. READ-ONLY vs state
+    (takes the same flocks briefly; writes only the archive file)."""
+    import fcntl, tarfile
+    lay = _layout(Path(a.prefix).resolve())
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    out = Path(a.output or
+               f"tradingagents-backup-{a.label or ts}.tar.gz").resolve()
+    stage = {}
+    manifest = {"format_version": FMT_VER, "backup_id": out.stem,
+                "created_utc": ts, "hostname": os.uname().nodename,
+                "os": " ".join(os.uname()[:3]), "repo_root": str(lay["BASE_DIR"]),
+                "prefix": str(Path(a.prefix).resolve()),
+                "python": sys.version.split()[0],
+                "git": {k: _git(Path(v)) for k, v in lay.items()
+                        if k.endswith("_DIR") and Path(v).exists()},
+                "alpha": _alpha_summary(lay),
+                "c12": _c12_summary(lay),
+                "secrets_required_not_included":
+                    ["~/.config/tradingagents/telegram.env",
+                     "devin CLI auth (~/.local/bin/devin login state)"],
+                "files": [], "captured_utc": {}}
+
+    # consistent point-in-time: hold the same flocks the writers use
+    locks = []
+    try:
+        for k, rel in _LOCKS:
+            lp = Path(lay[k]) / rel
+            lf = open(lp, "a")
+            fcntl.flock(lf, fcntl.LOCK_EX)
+            locks.append((lp, lf))
+        manifest["captured_utc"] = {lp.name: ts for lp, _ in locks}
+        for k, rel, cls in _BACKUP_SET + _BACKUP_DIRS:
+            src = Path(lay[k]) / rel
+            if not src.exists():
+                if cls in _REQUIRED:
+                    print(f"FAIL required authority missing: {src}")
+                    return 2
+                continue
+            files = sorted(src.rglob("*")) if src.is_dir() else [src]
+            for f in files:
+                if not f.is_file():
+                    continue
+                rel = str(f.relative_to(lay[k]))
+                stage[f"{k}/{rel}"] = f.read_bytes()
+                manifest["files"].append(
+                    {"path": f"{k}/{rel}", "class": cls,
+                     "size": f.stat().st_size,
+                     "sha256": _sha256(stage[f"{k}/{rel}"])})
+    finally:
+        for _, lf in locks:
+            lf.close()
+
+    # archive AFTER locks released — never block the monitor on gzip
+    with tarfile.open(out, "w:gz") as t:
+        mb = json.dumps(manifest, indent=1, sort_keys=True).encode()
+        import io as _io
+        ti = tarfile.TarInfo("manifest.json"); ti.size = len(mb)
+        t.addfile(ti, _io.BytesIO(mb))
+        for rel, data in sorted(stage.items()):
+            ti = tarfile.TarInfo(f"payload/{rel}"); ti.size = len(data)
+            t.addfile(ti, _io.BytesIO(data))
+
+    # validation: reopen and verify every checksum + required classes
+    ok, bad = _verify_archive(out)
+    if not ok:
+        print(f"FAIL backup validation: {bad}")
+        out.unlink(missing_ok=True)
+        return 2
+    have_cls = {f["class"] for f in manifest["files"]}
+    if not _REQUIRED <= have_cls:
+        print("FAIL backup missing required authority classes")
+        out.unlink(missing_ok=True)
+        return 2
+    if a.dry_run:
+        out.unlink(missing_ok=True)
+        print(f"DRY-RUN ok: {len(stage)} files would be archived to {out}")
+        return 0
+    print(f"backup OK: {out}  ({len(stage)} files, "
+          f"{out.stat().st_size} bytes, validated)")
+    print("secrets NOT included — transfer telegram.env + devin auth "
+          "separately")
+    return 0
+
+
+def _verify_archive(archive: Path):
+    """Reopen and verify manifest + every checksum. Returns (ok, detail)."""
+    import tarfile
+    try:
+        with tarfile.open(archive) as t:
+            names = t.getnames()
+            if "manifest.json" not in names:
+                return False, "no manifest"
+            man = json.loads(t.extractfile("manifest.json").read())
+            if man.get("format_version") != FMT_VER:
+                return False, f"format_version {man.get('format_version')}"
+            for f in man.get("files", []):
+                pn = f"payload/{f['path']}"
+                if pn not in names:
+                    return False, f"missing {pn}"
+                if _sha256(t.extractfile(pn).read()) != f["sha256"]:
+                    return False, f"checksum {f['path']}"
+            for n in names:
+                if n.startswith("/") or ".." in n.split("/"):
+                    return False, f"unsafe path {n}"
+            return True, man
+    except Exception as e:
+        return False, repr(e)
+
+
+def cmd_restore(a):
+    """Fail-closed restore into an EMPTY target. MUTATING (files only;
+    never starts services or cron). --dry-run shows the plan."""
+    archive = Path(a.archive)
+    ok, man = _verify_archive(archive)
+    if not ok:
+        print(f"FAIL archive invalid: {man}")
+        return 2
+    man = man if isinstance(man, dict) else {}
+    prefix = Path(a.prefix).resolve()
+    lay = _layout(prefix)
+    dry = a.dry_run
+    problems = []
+
+    # refuse on live/non-empty target
+    live = Path(str(TRACKS.parent)).resolve() == prefix
+    if live:
+        for u in UNITS:
+            if _svc(u) == "active":
+                problems.append(f"{u} is ACTIVE — refusing restore into a "
+                                "running installation")
+    for ent in man.get("files", []):
+        k, rel = ent["path"].split("/", 1)
+        tgt = Path(lay[k]) / rel
+        if tgt.exists() and tgt.stat().st_size:
+            problems.append(f"non-empty authority exists: {tgt}")
+    if problems and not a.allow_nonempty:
+        for p_ in problems:
+            print(f"  REFUSE {p_}")
+        print("restore aborted — empty target or --allow-nonempty required")
+        return 2
+
+    # compatibility: backup SHAs recorded; warn on mismatch, never silent
+    for k, g in (man.get("git") or {}).items():
+        cur = _git(Path(lay.get(k, "")))
+        if g.get("sha") and cur.get("sha") and g["sha"] != cur["sha"]:
+            print(f"  WARN {k} code differs from backup "
+                  f"({g['sha'][:8]} -> {cur['sha'][:8]}); continuing "
+                  f"— review before enabling runtime")
+
+    import tarfile
+    written = 0
+    with tarfile.open(archive) as t:
+        for ent in man.get("files", []):
+            k, rel = ent["path"].split("/", 1)
+            tgt = Path(lay[k]) / rel
+            data = t.extractfile(f"payload/{ent['path']}").read()
+            if dry:
+                print(f"  DRY  restore {tgt} ({len(data)}b)")
+                continue
+            tgt.parent.mkdir(parents=True, exist_ok=True)
+            tgt.write_bytes(data)
+            written += 1
+    if dry:
+        print(f"DRY-RUN ok: {len(man.get('files', []))} files, "
+              f"backup {man.get('backup_id')}")
+        return 0
+
+    # continuity: restored authority must equal manifest summary
+    for field in ("cash", "realized", "positions", "executed"):
+        src = (man.get("alpha") or {}).get(field)
+        now = _alpha_summary(lay).get(field)
+        if src != now:
+            print(f"FAIL continuity {field}: {src} != {now}")
+            return 2
+    if ((man.get("c12") or {}).get("nav")
+            != _c12_summary(lay).get("nav")):
+        print("FAIL continuity c12 nav")
+        return 2
+    print(f"restore OK: {written} files; authority matches manifest")
+    print("NOT auto-started: fill secrets, then "
+          "`python3 -m ops.ta setup` for units/cron, then health")
+    return 0
+
+
 def _sysctl():
     env = os.environ.copy()
     env.setdefault("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
@@ -398,11 +679,14 @@ def main():
     ap = argparse.ArgumentParser(prog="ops/ta",
                                  description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for c in ("setup", "health", "status"):
+    for c in ("setup", "health", "status", "backup", "restore"):
         p = sub.add_parser(c,
                            help={"setup": "MUTATING bootstrap (--dry-run safe)",
                                  "health": "READ-ONLY deep check (0/1/2)",
-                                 "status": "READ-ONLY short summary"}[c])
+                                 "status": "READ-ONLY short summary",
+                                 "backup": "read-only consistent archive",
+                                 "restore": "MUTATING, fail-closed, empty target"
+                                 }[c])
         p.add_argument("--prefix", default=str(TRACKS.parent),
                        help="parent dir holding the worktrees")
         if c == "setup":
@@ -412,9 +696,18 @@ def main():
             p.add_argument("--no-systemctl", action="store_true")
             p.add_argument("--sim", action="store_true",
                            help="write units under config-dir (simulation)")
+        if c == "backup":
+            p.add_argument("--output")
+            p.add_argument("--label")
+            p.add_argument("--dry-run", action="store_true")
+        if c == "restore":
+            p.add_argument("archive")
+            p.add_argument("--dry-run", action="store_true")
+            p.add_argument("--allow-nonempty", action="store_true",
+                           help="DANGEROUS: allow into existing state")
     a = ap.parse_args()
-    return {"setup": cmd_setup, "health": cmd_health,
-            "status": cmd_status}[a.cmd](a)
+    return {"setup": cmd_setup, "health": cmd_health, "status": cmd_status,
+            "backup": cmd_backup, "restore": cmd_restore}[a.cmd](a)
 
 
 if __name__ == "__main__":
