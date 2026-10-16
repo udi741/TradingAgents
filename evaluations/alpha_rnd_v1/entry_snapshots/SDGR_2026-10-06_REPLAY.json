@@ -1,0 +1,15 @@
+{
+ "ticker": "SDGR",
+ "entry_session": "2026-10-06",
+ "entry_price": 31.0,
+ "initial_shares": 161,
+ "artifact_ref": "SDGR_2026-10-02.json",
+ "risk_plan": {
+  "stop_rule": {
+   "type": "close_below",
+   "level": 27.29
+  }
+ },
+ "horizon": "historical",
+ "backfilled_historical": true
+}

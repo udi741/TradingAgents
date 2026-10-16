@@ -593,6 +593,22 @@ def _run_cycle(session: str) -> None:
         event("ALPHA_PUBLICATION_SUMMARY", session=session,
               dispositions={"UNCLASSIFIED_REVIEW": len(reviews)},
               user_action_required="none")
+    # post-entry management reassessment (Phase C, shadow): bounded,
+    # after publish, urgent-first; infrastructure failures never economic
+    try:
+        from alpha_rnd import mgmt_reassess as _mr, mgmt as _mg
+        mstate = _j(AR / "monitor_state.json", {}) or {}
+        open_t = list((mstate.get("positions") or {}))
+        urg = {"URGENT": 0, "NORMAL": 1, "LOW": 2}
+        todo = []
+        for t in open_t:
+            reqs = _mr.pending_requests(t)
+            if reqs:
+                todo.append((min(urg.get(r.get("urgency"), 1) for r in reqs), t))
+        for _, t in sorted(todo)[:2]:  # bounded per run
+            _mr.assess(t, session)
+    except Exception:
+        pass
     # R1: immutable opportunity-funnel artifact (observability; never fatal)
     try:
         subprocess.run([PY, "-m", "alpha_rnd.funnel", "build", session],

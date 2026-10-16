@@ -1,0 +1,1 @@
+{"request_id": "SDGR:ADVERSE_ACCELERATION:2026-10-08", "ticker": "SDGR", "trigger_family": "ADVERSE_ACCELERATION", "urgency": "URGENT", "fired_session": "2026-10-08", "value": -1.43, "threshold": -1.25, "reason": "historical first trigger", "status": "SHADOW_TRIGGERED", "historical_replay": true}

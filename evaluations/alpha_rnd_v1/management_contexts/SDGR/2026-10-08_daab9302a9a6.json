@@ -1,0 +1,118 @@
+{
+ "as_of": "2026-10-08",
+ "context_hash": "daab9302a9a66b002739c2bb99c019885d4a0f8a257f0743d190700801f5dc4b",
+ "context_schema": 1,
+ "current_state": {
+  "active_stop": {
+   "label": "tightened <27.29",
+   "level": 27.29,
+   "type": "close_below"
+  },
+  "drawdown_from_peak_pct": 16.77,
+  "mae_pct": 0.0,
+  "mark": 25.8,
+  "peak_unrealized_pct": 0.0,
+  "pending_actions": [],
+  "sessions_held": 0,
+  "shares": {
+   "fill": 31.0,
+   "shares": 161,
+   "stop_rule": {
+    "level": 27.29,
+    "type": "close_below"
+   }
+  },
+  "unrealized_pct": -16.77
+ },
+ "entry_snapshot": {
+  "artifact_ref": "SDGR_2026-10-02.json",
+  "backfilled_historical": true,
+  "entry_price": 31.0,
+  "entry_session": "2026-10-06",
+  "horizon": "historical",
+  "initial_shares": 161,
+  "risk_plan": {
+   "stop_rule": {
+    "level": 27.29,
+    "type": "close_below"
+   }
+  },
+  "ticker": "SDGR"
+ },
+ "frozen_at": "2026-10-16T12:56:57.881876+00:00",
+ "new_information": {
+  "sec_catalysts": []
+ },
+ "position_id": "SDGR:2026-10-06",
+ "position_state_hash": "11cc85251a54df0d627a47be24288dda312ff538f894fed147bb7ec820e9f098",
+ "price_path": {
+  "recent_bars": [
+   {
+    "c": 30.46,
+    "d": "2026-10-01",
+    "h": 31.93,
+    "l": 30.01,
+    "o": 30.77,
+    "v": 5139800
+   },
+   {
+    "c": 30.31,
+    "d": "2026-10-02",
+    "h": 31.14,
+    "l": 29.28,
+    "o": 30.74,
+    "v": 3050400
+   },
+   {
+    "c": 32.6,
+    "d": "2026-10-05",
+    "h": 33.09,
+    "l": 29.56,
+    "o": 30.33,
+    "v": 4613600
+   },
+   {
+    "c": 28.9,
+    "d": "2026-10-06",
+    "h": 33.78,
+    "l": 28.56,
+    "o": 32.99,
+    "v": 5262400
+   },
+   {
+    "c": 27.29,
+    "d": "2026-10-07",
+    "h": 28.43,
+    "l": 26.87,
+    "o": 27.81,
+    "v": 4557100
+   },
+   {
+    "c": 26.39,
+    "d": "2026-10-08",
+    "h": 27.05,
+    "l": 25.69,
+    "o": 26.79,
+    "v": 3079600
+   }
+  ],
+  "since_entry": {
+   "high": 33.78,
+   "low": 25.69,
+   "sessions": 3
+  },
+  "spy_window_return_pct": 1.3
+ },
+ "ticker": "SDGR",
+ "triggers": [
+  {
+   "family": "ADVERSE_ACCELERATION",
+   "metric": -1.43,
+   "reason": "historical first trigger",
+   "request_id": "SDGR:ADVERSE_ACCELERATION:2026-10-08",
+   "session": "2026-10-08",
+   "threshold": -1.25,
+   "urgency": "URGENT"
+  }
+ ]
+}

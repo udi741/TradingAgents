@@ -1,4 +1,5 @@
 {
+ "analysis_ref": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/management_analyses/PBF/reassess_2026-10-15.json",
  "entry_snapshot": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/entry_snapshots/PBF_.json",
  "fired_at": "2026-10-16T11:31:02.914639+00:00",
  "fired_session": "2026-10-15",
@@ -22,7 +23,7 @@
   "level": 74.5,
   "type": "intraday_stop"
  },
- "status": "SHADOW_TRIGGERED",
+ "status": "CONSUMED_BY_SHADOW_ANALYSIS",
  "threshold": 8.0,
  "ticker": "PBF",
  "trigger_family": "APPRECIATION",

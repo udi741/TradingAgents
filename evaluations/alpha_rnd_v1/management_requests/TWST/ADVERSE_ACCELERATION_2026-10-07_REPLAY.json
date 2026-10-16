@@ -1,0 +1,1 @@
+{"request_id": "TWST:ADVERSE_ACCELERATION:2026-10-07", "ticker": "TWST", "trigger_family": "ADVERSE_ACCELERATION", "urgency": "URGENT", "fired_session": "2026-10-07", "value": -1.25, "threshold": -1.25, "reason": "historical first trigger", "status": "SHADOW_TRIGGERED", "historical_replay": true}

@@ -1,3 +1,6 @@
 {"family": "APPRECIATION", "kind": "REASSESSMENT_TRIGGERED_SHADOW", "reason": "unrealized 8.74% >= 8.0%", "request_id": "PBF:APPRECIATION:2026-10-15:8.74", "session": "2026-10-15", "ticker": "PBF", "ts": "2026-10-16T11:31:02.914902+00:00", "urgency": "NORMAL"}
 {"kind": "ENTRY_SNAPSHOT_BACKFILLED", "missing": ["cost_basis (legacy/seeded)"], "session": "2026-10-02", "ticker": "PBF", "ts": "2026-10-16T11:31:07.266051+00:00"}
 {"kind": "ENTRY_SNAPSHOT_BACKFILLED", "missing": ["cost_basis (legacy/seeded)"], "session": "2026-10-02", "ticker": "PBF", "ts": "2026-10-16T11:31:20.510034+00:00"}
+{"ts": "2026-10-16T12:56:08.433530+00:00", "kind": "MGMT_REASSESS_SHADOW_DONE", "ticker": "PBF", "session": "2026-10-15", "detail": "PARTIAL_EXIT"}
+{"ts": "2026-10-16T12:56:57.598938+00:00", "kind": "MGMT_REASSESS_SHADOW_DONE", "ticker": "TWST", "session": "2026-10-07", "detail": "FULL_EXIT"}
+{"ts": "2026-10-16T12:57:17.883004+00:00", "kind": "MGMT_REASSESS_SHADOW_DONE", "ticker": "SDGR", "session": "2026-10-08", "detail": "FULL_EXIT"}

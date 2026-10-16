@@ -1,0 +1,41 @@
+{
+ "analysis": {
+  "catalyst_status": "UNKNOWN",
+  "confidence": "high",
+  "data_limitations": "Frozen entry thesis text not provided (artifact_ref only), so invalidation is inferred from price action and the breached stop rather than the thesis wording. No SEC catalysts or news supplied; historical/backfilled context with 3 sessions since entry and mark may differ from executable fill.",
+  "next_reassessment": null,
+  "partial_exit": {
+   "fraction": null,
+   "rationale": null
+  },
+  "price_vs_thesis": "contradicting",
+  "proposed_stop": {
+   "level": null,
+   "rationale": null,
+   "type": null
+  },
+  "reasoning_summary": "Position entered 2026-10-06 at 31.00 on apparent momentum (prior session closed 32.60). Entry day produced a severe intraday reversal (high 33.78, close 28.90), followed by a close exactly at the 27.29 stop on 10-07 and a close below it at 26.39 on 10-08; current mark 25.80 is ~5.5% under the authorized stop and -16.77% vs entry while SPY gained 1.3% over the window \u2014 the weakness is stock-specific, not market noise. The authorized downside has already been breached on a closing basis; any continued hold widens the existing risk allowance, which the mandate prohibits. No new catalyst information exists to support averaging down or waiting for a bounce. Full exit executes the existing risk plan rather than expanding it.",
+  "recommended_action": "FULL_EXIT",
+  "reward_risk_status": "materially_changed_risk_reward",
+  "thesis_status": "INVALIDATED",
+  "ticker": "SDGR"
+ },
+ "analyzed_at": "2026-10-16T12:57:17.882763+00:00",
+ "as_of": "2026-10-08",
+ "context_hash": "daab9302a9a66b002739c2bb99c019885d4a0f8a257f0743d190700801f5dc4b",
+ "context_ref": "/home/udi/udi_provate/TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1/management_contexts/SDGR/2026-10-08_daab9302a9a6.json",
+ "created_at": "2026-10-16T12:56:57.599381+00:00",
+ "headline": "SHADOW RECOMMENDATION ONLY \u2014 NO ECONOMIC ACTION TAKEN",
+ "model": "devin-deep",
+ "position_state_hash": "11cc85251a54df0d627a47be24288dda312ff538f894fed147bb7ec820e9f098",
+ "request_refs": [
+  "SDGR:ADVERSE_ACCELERATION:2026-10-08"
+ ],
+ "session": "2026-10-08",
+ "shadow": true,
+ "status": "SUCCESS",
+ "ticker": "SDGR",
+ "trigger_summary": [
+  "ADVERSE_ACCELERATION"
+ ]
+}
