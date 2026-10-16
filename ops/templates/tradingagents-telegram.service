@@ -1,0 +1,15 @@
+[Unit]
+Description=TradingAgents Telegram notification relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@TRACKS_DIR@
+Environment=PYTHONPATH=@TRACKS_DIR@
+ExecStart=/usr/bin/python3 -u -m ops.telegram_relay --serve
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=default.target

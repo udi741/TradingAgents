@@ -1,0 +1,6 @@
+# >>> tradingagents >>>
+* * * * * cd @ALPHA_DIR@ && PYTHONPATH=@ALPHA_DIR@ /usr/bin/python3 -m alpha_rnd.monitor --once >> @ALPHA_DIR@/alpha_rnd/monitor_cron.log 2>&1
+7 * * * * cd @ALPHA_DIR@ && PYTHONPATH=@ALPHA_DIR@ /usr/bin/python3 -m alpha_rnd.daily_scheduler --check >> @ALPHA_DIR@/alpha_rnd/scheduler.log 2>&1
+23 * * * * cd @ALPHA_DIR@ && PYTHONPATH=@ALPHA_DIR@ /usr/bin/python3 -m alpha_rnd.cohort_outcomes update >> @ALPHA_DIR@/alpha_rnd/cohort_outcomes.log 2>&1
+0 * * * * cd @C12_DIR@ && PYTHONPATH=@C12_DIR@ /usr/bin/python3 -m ta_eval.c12_scheduler --check >> @C12_DIR@/evaluations/gate_c12_prospective/scheduler.log 2>&1
+# <<< tradingagents <<<
