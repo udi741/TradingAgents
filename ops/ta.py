@@ -582,13 +582,19 @@ def cmd_restore(a):
               f"(txn {journal.get('txn_id')}) — resuming")
 
     # 1) eligibility: fresh target must have EMPTY authority paths; a
-    #    resumed transaction legitimately has partial state.
-    live = Path(str(TRACKS.parent)).resolve() == prefix
-    if live:
-        for u in UNITS:
-            if _svc(u) == "active":
-                problems.append(f"{u} is ACTIVE — refusing restore into a "
-                                "running installation")
+    #    resumed transaction legitimately has partial state. Services are
+    #    only a refusal when the RUNNING unit is configured for THIS
+    #    prefix — a sim restore elsewhere must not be blocked by prod.
+    for u in UNITS:
+        uf = Path.home() / ".config" / "systemd" / "user" / u
+        bound = False
+        try:
+            bound = str(prefix) in uf.read_text()
+        except OSError:
+            pass
+        if bound and _svc(u) == "active":
+            problems.append(f"{u} is ACTIVE for this prefix — refusing "
+                            "restore into a running installation")
     auth_rels = {k: set() for k in lay}
     for ent in man.get("files", []):
         k, rel = ent["path"].split("/", 1)
