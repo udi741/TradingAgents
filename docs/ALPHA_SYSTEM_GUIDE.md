@@ -321,9 +321,12 @@ never mistaken for a fill. Composite PARTIAL+remainder-stop keeps the
 remainder rule PENDING until the partial fill is observed and remaining
 quantity is authoritative, then revalidates and activates it; the original
 stop protects the full position meanwhile. Kill switch:
-`management_policy.json → execution.enabled` — **currently TRUE**
-(activated 2026-10-16 for ALPHA paper trading; C12 unaffected, real money
-NOT approved). Adaptive actions permitted: hold, tighten, partial exit,
+`management_policy.json → execution.enabled` — **currently FALSE**
+(paused 2026-10-16 pending final safety fix; disabling now actively
+cancels unfilled adaptive pending exits — orders anchored to the
+management decision session; completed fills are never reversed and
+remainder-stop lifecycle may still finish). C12 unaffected, real money
+NOT approved. Adaptive actions permitted: hold, tighten, partial exit,
 full exit, reassess-later. Forbidden: adding/pyramiding, widening risk,
 shorts, leverage. Deterministic hard stops always take precedence.
 
