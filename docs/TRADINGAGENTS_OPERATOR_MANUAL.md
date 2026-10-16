@@ -134,8 +134,13 @@ python3 -m ops.ta health
 # fill secrets, install units/cron, THEN enable runtime manually
 ```
 
-Restore is fail-closed: it refuses live/non-empty state, active services,
-bad checksums, wrong versions. It never auto-starts trading.
+Restore is NEW/EMPTY TARGET ONLY and fail-closed:
+- refuses any existing authoritative state (no overwrite mode exists)
+- refuses when runtime code SHA differs from the backup (it prints the
+  exact `git checkout <sha>` you need)
+- stages + validates everything BEFORE promoting; any failure leaves the
+  target untouched
+- never starts trading automatically
 
 ## Call a developer when
 

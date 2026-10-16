@@ -419,8 +419,10 @@ def _verify_archive(archive: Path):
 
 
 def cmd_restore(a):
-    """Fail-closed restore into an EMPTY target. MUTATING (files only;
-    never starts services or cron). --dry-run shows the plan."""
+    """Fail-closed, transactional restore into an EMPTY target.
+    MUTATING (files only; never starts services or cron).
+    Stages + validates everything before promoting; any pre-promotion
+    failure leaves the target untouched. No overwrite mode exists."""
     archive = Path(a.archive)
     ok, man = _verify_archive(archive)
     if not ok:
@@ -432,7 +434,7 @@ def cmd_restore(a):
     dry = a.dry_run
     problems = []
 
-    # refuse on live/non-empty target
+    # 1) target eligibility: EMPTY authority paths only. No exceptions.
     live = Path(str(TRACKS.parent)).resolve() == prefix
     if live:
         for u in UNITS:
@@ -444,53 +446,92 @@ def cmd_restore(a):
         tgt = Path(lay[k]) / rel
         if tgt.exists() and tgt.stat().st_size:
             problems.append(f"non-empty authority exists: {tgt}")
-    if problems and not a.allow_nonempty:
-        for p_ in problems:
-            print(f"  REFUSE {p_}")
-        print("restore aborted — empty target or --allow-nonempty required")
-        return 2
 
-    # compatibility: backup SHAs recorded; warn on mismatch, never silent
+    # 2) code compatibility: runtime worktrees must match backup SHAs.
+    #    tracks/docs-only differences are non-economic -> warn only.
+    RUNTIME_KEYS = {"ALPHA_DIR", "C12_DIR", "BASE_DIR"}
     for k, g in (man.get("git") or {}).items():
         cur = _git(Path(lay.get(k, "")))
-        if g.get("sha") and cur.get("sha") and g["sha"] != cur["sha"]:
-            print(f"  WARN {k} code differs from backup "
-                  f"({g['sha'][:8]} -> {cur['sha'][:8]}); continuing "
-                  f"— review before enabling runtime")
-
-    import tarfile
-    written = 0
-    with tarfile.open(archive) as t:
-        for ent in man.get("files", []):
-            k, rel = ent["path"].split("/", 1)
-            tgt = Path(lay[k]) / rel
-            data = t.extractfile(f"payload/{ent['path']}").read()
-            if dry:
-                print(f"  DRY  restore {tgt} ({len(data)}b)")
-                continue
-            tgt.parent.mkdir(parents=True, exist_ok=True)
-            tgt.write_bytes(data)
-            written += 1
-    if dry:
-        print(f"DRY-RUN ok: {len(man.get('files', []))} files, "
-              f"backup {man.get('backup_id')}")
-        return 0
-
-    # continuity: restored authority must equal manifest summary
-    for field in ("cash", "realized", "positions", "executed"):
-        src = (man.get("alpha") or {}).get(field)
-        now = _alpha_summary(lay).get(field)
-        if src != now:
-            print(f"FAIL continuity {field}: {src} != {now}")
-            return 2
-    if ((man.get("c12") or {}).get("nav")
-            != _c12_summary(lay).get("nav")):
-        print("FAIL continuity c12 nav")
+        if not (g.get("sha") and cur.get("sha")):
+            continue
+        if g["sha"] != cur["sha"]:
+            msg = (f"{k} code mismatch: BACKUP was created by {g['sha'][:8]} "
+                   f"but target runs {cur['sha'][:8]} — "
+                   f"`git -C {lay[k]} checkout {g['sha']}`")
+            if k in RUNTIME_KEYS:
+                problems.append(msg)
+            else:
+                print(f"  WARN {msg} (non-runtime; continuing)")
+    if problems:
+        for p_ in problems:
+            print(f"  REFUSE {p_}")
+        print("restore aborted — fix the refusals or use an empty target "
+              "with matching code")
         return 2
-    print(f"restore OK: {written} files; authority matches manifest")
+
+    # 3) stage EVERYTHING into a sibling temp dir first (same fs for the
+    #    atomic rename promotion below)
+    import tarfile, tempfile, shutil as _sh
+    prefix.mkdir(parents=True, exist_ok=True)
+    stage_root = Path(tempfile.mkdtemp(prefix=".restore_stage_",
+                                       dir=str(prefix)))
+    staged = []
+    try:
+        with tarfile.open(archive) as t:
+            for ent in man.get("files", []):
+                k, rel = ent["path"].split("/", 1)
+                sp = stage_root / k / rel
+                sp.parent.mkdir(parents=True, exist_ok=True)
+                data = t.extractfile(f"payload/{ent['path']}").read()
+                if _sha256(data) != ent["sha256"]:
+                    raise RuntimeError(f"checksum {rel}")
+                sp.write_bytes(data)
+                staged.append((sp, Path(lay[k]) / rel))
+        # 4) continuity on the STAGED set (not the target)
+        lay_staged = {k: str(stage_root / k) for k in lay}
+        for field in ("cash", "realized", "positions", "executed"):
+            if (man.get("alpha") or {}).get(field) != \
+                    _alpha_summary(lay_staged).get(field):
+                raise RuntimeError(f"continuity {field}")
+        if (man.get("c12") or {}).get("nav") != \
+                _c12_summary(lay_staged).get("nav"):
+            raise RuntimeError("continuity c12 nav")
+        if dry:
+            print(f"DRY-RUN ok: {len(staged)} files staged+validated, "
+                  f"backup {man.get('backup_id')}")
+            _sh.rmtree(stage_root)
+            return 0
+        # 5) promote: only now do target paths appear. Each rename is a
+        #    single-file op; a marker records an in-flight transaction.
+        marker = prefix / ".restore_in_progress"
+        marker.write_text(json.dumps({"archive": str(archive),
+                                      "at": ts_utc(), "count": len(staged)}))
+        try:
+            for sp, tgt in staged:
+                tgt.parent.mkdir(parents=True, exist_ok=True)
+                _sh.move(str(sp), str(tgt))
+            marker.unlink()
+        except Exception:
+            # promotion failed mid-way: leave marker so an operator sees a
+            # partial restore and can re-run cleanly after emptying target
+            raise RuntimeError(
+                f"promotion interrupted — marker left at {marker}; "
+                f"target may be partially populated, inspect before retry")
+    except Exception as e:
+        _sh.rmtree(stage_root, ignore_errors=True)
+        print(f"FAIL restore: {e} — target untouched (pre-promotion)")
+        return 2
+    finally:
+        _sh.rmtree(stage_root, ignore_errors=True)
+
+    print(f"restore OK: {len(staged)} files; authority verified pre-promotion")
     print("NOT auto-started: fill secrets, then "
           "`python3 -m ops.ta setup` for units/cron, then health")
     return 0
+
+
+def ts_utc():
+    return datetime.now(timezone.utc).isoformat()
 
 
 def _sysctl():
@@ -703,8 +744,7 @@ def main():
         if c == "restore":
             p.add_argument("archive")
             p.add_argument("--dry-run", action="store_true")
-            p.add_argument("--allow-nonempty", action="store_true",
-                           help="DANGEROUS: allow into existing state")
+
     a = ap.parse_args()
     return {"setup": cmd_setup, "health": cmd_health, "status": cmd_status,
             "backup": cmd_backup, "restore": cmd_restore}[a.cmd](a)

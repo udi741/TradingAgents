@@ -126,10 +126,11 @@ python3 -m ops.ta restore <backup.tar.gz> --dry-run
 python3 -m ops.ta restore <backup.tar.gz>
 ```
 
-Restores the full authority set (see docs/STATE_AND_DATA_AUTHORITY.md)
-with checksum + economic-continuity verification. Secrets transfer
-separately. Runtime is NOT started automatically — enable units/cron via
-`ops.ta setup` after secrets are in place.
+Restores the full authority set (see docs/STATE_AND_DATA_AUTHORITY.md).
+Rules: EMPTY target only, runtime code SHA must match the manifest (the
+error tells you which commit to check out), staged+verified before
+promotion, checksum-verified. Secrets transfer separately. Runtime is
+NOT started — run `ops.ta setup` then health after secrets are in place.
 
 ## 10. Post-start verification
 

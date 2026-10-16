@@ -174,7 +174,7 @@ class BackupRestore(unittest.TestCase):
     def _restore(self, dry=False, prefix=None, arc=None):
         ns = type("A", (), {"archive": str(arc or self.arc),
                             "prefix": str(prefix or self.dst),
-                            "dry_run": dry, "allow_nonempty": False})
+                            "dry_run": dry})
         out = io.StringIO()
         with redirect_stdout(out):
             return ta.cmd_restore(ns()), out.getvalue()
@@ -248,6 +248,81 @@ class BackupRestore(unittest.TestCase):
         self.assertTrue(all("sha256" in f for f in man["files"]))
         self.assertEqual(man["alpha"]["cash"], 5000.0)
         self.assertEqual(man["alpha"]["adaptive_execution_enabled"], False)
+
+
+    def test_sha_mismatch_refuses_runtime(self):
+        self._backup()
+        import tarfile, json as _j, io as _io
+        # rewrite manifest with a bogus ALPHA sha inside the archive
+        tampered = self.arc.with_name("tamper.tar.gz")
+        with tarfile.open(self.arc) as tin, \
+                tarfile.open(tampered, "w:gz") as tout:
+            for m in tin.getmembers():
+                data = tin.extractfile(m).read()
+                if m.name == "manifest.json":
+                    man = _j.loads(data)
+                    man["git"] = {"ALPHA_DIR": {"sha": "deadbeef" * 5,
+                                              "dirty": False}}
+                    man["files"] = [{**f, "sha256":
+                                     f["sha256"]} for f in man["files"]]
+                    data = _j.dumps(man).encode()
+                    m = tarfile.TarInfo("manifest.json"); m.size = len(data)
+                tout.addfile(m, _io.BytesIO(data))
+        orig = ta._git
+        try:
+            ta._git = lambda d: {"sha": "cafebabe" * 5, "dirty": False}
+            rc, o = self._restore(arc=tampered)
+        finally:
+            ta._git = orig
+        self.assertEqual(rc, 2)
+        self.assertIn("code mismatch", o)
+        self.assertIn("deadbeef", o)
+        self.assertIn("checkout", o)
+        # nothing promoted
+        self.assertFalse((self.dst / "TradingAgents-alpha-rnd/alpha_rnd"
+                          "/monitor_state.json").exists())
+
+    def test_prepromotion_failure_leaves_target_untouched(self):
+        self._backup()
+        # corrupt one payload member -> checksum failure during staging
+        import tarfile, io as _io
+        bad = self.arc.with_name("prepro.tar.gz")
+        with tarfile.open(self.arc) as tin, \
+                tarfile.open(bad, "w:gz") as tout:
+            for m in tin.getmembers():
+                data = tin.extractfile(m).read()
+                if m.name.endswith("monitor_state.json") and \
+                        "payload/" in m.name:
+                    data = b'{"corrupted": true}'
+                    m = tarfile.TarInfo(m.name); m.size = len(data)
+                tout.addfile(m, _io.BytesIO(data))
+        rc, o = self._restore(arc=bad)
+        self.assertEqual(rc, 2)
+        # nothing promoted
+        self.assertFalse((self.dst / "TradingAgents-alpha-rnd/alpha_rnd"
+                          "/monitor_state.json").exists())
+        self.assertFalse(any(self.dst.rglob("*restore_stage*")))
+        self.assertFalse((self.dst / ".restore_in_progress").exists())
+
+    def test_staged_continuity_failure_no_promotion(self):
+        self._backup()
+        # manifest summary lies vs payload -> staged continuity fails
+        import tarfile, json as _j, io as _io
+        bad = self.arc.with_name("cont.tar.gz")
+        with tarfile.open(self.arc) as tin, \
+                tarfile.open(bad, "w:gz") as tout:
+            for m in tin.getmembers():
+                data = tin.extractfile(m).read()
+                if m.name == "manifest.json":
+                    man = _j.loads(data); man["alpha"]["cash"] = 1.0
+                    # keep file sha entries valid (payload unchanged)
+                    data = _j.dumps(man).encode()
+                    m = tarfile.TarInfo("manifest.json"); m.size = len(data)
+                tout.addfile(m, _io.BytesIO(data))
+        rc, o = self._restore(arc=bad)
+        self.assertEqual(rc, 2)
+        self.assertFalse((self.dst / "TradingAgents-alpha-rnd/alpha_rnd"
+                          "/monitor_state.json").exists())
 
 
 if __name__ == "__main__":
