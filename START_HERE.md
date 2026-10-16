@@ -47,7 +47,11 @@ read them only when debugging a specific session.
 
 Operator commands: `python3 -m ops.ta health` (deep check, exit 0/1/2),
 `python3 -m ops.ta status` (quick summary),
-`python3 -m ops.ta setup [--dry-run]` (bootstrap a machine).
+`python3 -m ops.ta workspace status|setup` (canonical 5-worktree layout
+from ops/workspace.json), `python3 -m ops.ta setup [--dry-run]`
+(bootstrap a machine), `python3 -m ops.ta backup` / `restore <archive>`
+(fail-closed, journaled), `python3 -m ops.ta bootcheck` (post-boot
+self-test; also runs via tradingagents-bootcheck.timer).
 
 Development roadmap / where the project stands:
 `python -m ops.roadmap_status` (deterministic, no network/LLM).

@@ -26,9 +26,14 @@ daily-close failure for a held ticker = real risk to marks/exits —
 escalate, do not hand-edit marks.
 
 ## Computer rebooted
-Everything auto-starts (linger + default.target + cron). First relay
-start may DNS-crash once — self-heals in ~15s. Verify with the operator
-manual status block. This is expected, not an incident.
+Everything auto-starts (linger + default.target + cron). The
+`tradingagents-bootcheck.timer` writes
+`~/.config/tradingagents/boot_health.json` ~2min after boot and re-checks
+every 10min; `ops.ta health` shows `boot recovery`. A first relay
+DNS-crash self-heals in ~15s and shows DEGRADED until the next
+bootcheck — expected, not an incident. If boot recovery stays FAILED,
+the component list in boot_health.json names exactly what did not come
+back.
 
 ## Position mark stale / UNMARKED_SINCE_ENTRY
 Normal for positions entered today (first mark at tonight's EOD). If a

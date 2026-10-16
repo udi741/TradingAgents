@@ -22,22 +22,37 @@ sudo apt install git python3 python3-pip python3.12 python3.12-venv \
 # yfinance-capable network, notify-send (optional desktop popups)
 ```
 
-## 3. Clone + worktree layout
+## 3. Workspace — canonical spec + one command
 
-Production assumes five checkouts under ONE parent dir
-(PORTABILITY_GAP: paths are hard-coded — keep the layout or rewrite
-every cron/unit path):
+The canonical layout is `ops/workspace.json` (machine-readable): five
+checkouts of ONE repository under one parent dir. Do NOT hand-pick
+folders — inspect/create with:
 
 ```bash
-git clone <repo> TradingAgents                      # base, bridge host
+git clone <repo> TradingAgents                       # BASE: infra/devin-bridge
+git -C TradingAgents worktree add ../TradingAgents-tracks project/tracks
+cd TradingAgents-tracks
+python3 -m ops.ta workspace status --prefix ..       # shows MISSING/OK per role
+python3 -m ops.ta workspace setup --prefix ..        # creates required worktrees
+#   (--with-optional also creates EXPERT; --dry-run shows the plan)
+```
+
+It refuses conflicting paths, wrong branches, and branches already
+checked out elsewhere — it never deletes or overwrites a worktree.
+
+Roles: BASE (runtime, bridge host), ALPHA + C12 (runtime, mutate
+production state), TRACKS (control — this repo), EXPERT (optional,
+parked research). Reference — the manual equivalent of workspace setup:
+
+```bash
 cd TradingAgents
 git worktree add ../TradingAgents-alpha-rnd exp/alpha-rnd-v1
 git worktree add ../TradingAgents-c12 exp/gate-c12-prospective
-git worktree add ../TradingAgents-expert-rnd exp/expert-rnd-v2
-git worktree add ../TradingAgents-tracks project/tracks
+git worktree add ../TradingAgents-expert-rnd exp/expert-rnd-v2   # optional
 ```
 
-Base worktree stays on `infra/devin-bridge` (bridge code lives there).
+(The tracks worktree must be created manually once — it is where the
+tool itself lives.)
 
 ## 4. Python environments (PORTABILITY_GAP — manual)
 
@@ -84,8 +99,12 @@ It verifies tools/python, builds .venv312, installs pinned runtime deps
 (`ops/runtime_requirements.txt`), writes systemd units + the tagged cron
 block from `ops/templates/`, and creates the secrets file from
 `config/telegram.env.example` WITHOUT overwriting existing secrets.
-Remaining manual: fill real secrets, `devin` CLI login, git clone/worktree
-layout itself, python3.12 install.
+Remaining manual: fill real secrets, `devin` CLI login, the initial
+clone + tracks worktree (`ops.ta workspace setup` does the rest), and
+python3.12 install. A `tradingagents-bootcheck.timer` unit is also
+installed — it writes ~/.config/tradingagents/boot_health.json ~2min
+after every boot and every 10min after; `ops.ta health` shows the
+result as `boot recovery`.
 
 ## 6. Services (manual reference — the templates live in ops/templates/)
 

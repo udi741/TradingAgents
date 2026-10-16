@@ -89,8 +89,15 @@ persist for hours AND marks/exits would be affected.
 ## After a reboot
 
 Lingering + `default.target` start the bridge and relay automatically;
-cron jobs resume on their own. Verify with the status commands above.
-Nothing needs a manual start.
+cron jobs resume on their own. `tradingagents-bootcheck.timer` runs
+`ops.ta bootcheck` ~2min after boot and every 10min after — it verifies
+worktrees, services, monitor ticks, schedulers, cron, economic state,
+the adaptive flag, and the bridge listener (no inference calls, never
+trades), and writes `~/.config/tradingagents/boot_health.json`.
+`ops.ta health` shows it as `boot recovery: HEALTHY/DEGRADED/FAILED` —
+a relay that comes up late shows DEGRADED until the next run, then
+flips HEALTHY with `recovered_utc` recorded. Nothing needs a manual
+start.
 
 ## Never edit manually while the system runs
 
@@ -125,7 +132,18 @@ python3 -m ops.ta backup --dry-run            # shows what would be captured
 Secrets are NOT in the archive — transfer
 `~/.config/tradingagents/telegram.env` and devin auth separately.
 
-On the new machine (after git clone + `ops.ta setup`):
+On the new machine:
+
+```bash
+git clone <repo> TradingAgents
+git -C TradingAgents worktree add ../TradingAgents-tracks project/tracks
+cd TradingAgents-tracks
+python3 -m ops.ta workspace setup --prefix ..   # creates required worktrees
+python3 -m ops.ta setup                        # units/cron/venv/secrets-template
+```
+
+Fresh install vs migration: the above is identical either way — for a
+migration additionally restore the backup BEFORE starting runtime:
 
 ```bash
 python3 -m ops.ta restore backup.tar.gz --dry-run   # verify plan first

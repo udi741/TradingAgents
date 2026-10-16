@@ -16,7 +16,7 @@ records them; Phase 1+ fixes them.
 | G9 | Hard-coded absolute paths `/home/udi/udi_provate/...` in cron+units | MED | rewrite paths on new machine | path-templated units/cron | 2 |
 | ~~G10~~ CLOSED | Secrets have no checked-in template | MED | create `~/.config/tradingagents/telegram.env` from memory | `config/telegram.env.example` committed | 1 |
 | G11 | Bridge auth depends on Devin CLI login (~/.local/bin/devin + user creds) — undocumented install | MED | install devin CLI, log in | documented minimal install path or alt auth | 2 |
-| G12 | Telegram relay has no network-ready guard — first post-boot start can DNS-crash once | LOW | systemd Restart=always heals it | After=+retry or socket activation | 2 |
+| G12 | Telegram relay had no network-ready guard — RESOLVED: units carry After=+Wants=network-online.target and Restart=always; relay never gates trading | CLOSED | — | P3 |
 | G13 | No `ops/start|stop|status` wrapper — operators must know module names | MED | this manual | ops wrapper CLI | 2 |
-| G14 | Worktree layout (5 checkouts) is implicit; clone gives only base | MED | `git worktree add` per layout table | `ops/setup` creates worktrees | 2 |
-| G15 | Reboot verification was manual; no boot-health self-test artifact | LOW | check logs after boot | boot beacon written + `/status` green check | 2 |
+| G14 | Worktree layout implicit — RESOLVED: ops/workspace.json canonical spec + `ops.ta workspace setup/status` | CLOSED | — | P3 |
+| G15 | No boot self-test — RESOLVED: `ops.ta bootcheck` + tradingagents-bootcheck.timer writing boot_health.json; health shows `boot recovery` | CLOSED | — | P3 |
