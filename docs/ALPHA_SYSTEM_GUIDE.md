@@ -314,9 +314,14 @@ can convert a VALIDATED_SHADOW_INTENT into canonical economics —
 partial/full exits via `pending_open_exits` (pro-rata cost basis through
 `do_exit`), tighter stops via `stop_rule` update (never-widen enforced at
 execution time too; effective protection = tightest of watchlist +
-position rules). Execution-time revalidation rejects stale, superseded,
-conflicting, or obsolete intents; `mgmact_*` IDs go into `executed[]` for
-exactly-once. Kill switch: `management_policy.json → execution.enabled`
+position rules). Management actions have their own durable registry
+(`management_actions.json`, VALIDATED→ENQUEUED→FILLED→EXECUTED) — canonical
+`executed[]` remains fill authority only, so a queued adaptive order is
+never mistaken for a fill. Composite PARTIAL+remainder-stop keeps the
+remainder rule PENDING until the partial fill is observed and remaining
+quantity is authoritative, then revalidates and activates it; the original
+stop protects the full position meanwhile. Kill switch:
+`management_policy.json → execution.enabled`
 (default **false** — adaptive execution is OFF; everything upstream stays
 shadow). Deterministic hard stops always take precedence.
 
