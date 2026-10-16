@@ -501,6 +501,7 @@ def status() -> str:
         if r.get("status") == "CLOSED":
             continue
         lt = r.get("last_trigger") or {}
+        ra = r.get("latest_reassessment") or {}
         lines += [
             f"{t}  entry {r.get('entry_session')} @{r.get('entry_price')}   "
             f"mark {r.get('latest_price')} ({r.get('latest_session')})",
@@ -516,7 +517,26 @@ def status() -> str:
             f"{lt.get('reason') or ''} ({lt.get('urgency') or ''})",
             f"  pending shadow reassessment: "
             f"{'YES' if any((REQ_DIR / t).glob('*') if (REQ_DIR / t).exists() else False for _ in [0]) else 'no'}",
-            ""]
+        ]
+        if ra:
+            ana = _j(Path(ra["artifact"]), {}) if ra.get("artifact") else {}
+            an = (ana or {}).get("analysis") or {}
+            ps = an.get("proposed_stop") or {}
+            pe = an.get("partial_exit") or {}
+            lines += [
+                f"  === SHADOW REASSESSMENT — NOT AN ECONOMIC ACTION ===",
+                f"  status {ra.get('status')}  analyzed {ra.get('as_of')}  "
+                f"thesis {ra.get('thesis_status')}",
+                f"  shadow recommendation: {ra.get('action')}   "
+                f"(proposal only — nothing executed, nothing pending)",
+                f"  proposed stop {json.dumps(ps.get('level'))} "
+                f"({str(ps.get('type'))})   "
+                f"proposed partial {json.dumps(pe.get('fraction'))}",
+                f"  next reassessment: {str(an.get('next_reassessment'))[:70]}",
+                f"  failure/retry: {ra.get('status') if 'RETRY' in str(ra.get('status')) or 'FAILED' in str(ra.get('status')) else 'none'}",
+                f"  stale: {'YES — ' + ra.get('status') if str(ra.get('status','')).startswith('STALE') else 'no'}",
+            ]
+        lines += [""]
     return "\n".join(lines)
 
 

@@ -138,3 +138,61 @@ class T(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=0)
+
+class C1(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self._ = (mgmt.REQ_DIR, mr.ANA_DIR)
+        mgmt.REQ_DIR = self.tmp / "req"; mr.ANA_DIR = self.tmp / "ana"
+        for t, urg in (("URG", "URGENT"), ("NRML", "NORMAL"), ("LOWX", "NORMAL")):
+            rd = mgmt.REQ_DIR / t; rd.mkdir(parents=True)
+            (rd / "x_2026-10-01.json").write_text(json.dumps(
+                {"request_id": t, "ticker": t, "trigger_family": "F",
+                 "urgency": urg, "fired_session": "s", "value": 1,
+                 "threshold": 1, "reason": "x", "status": "SHADOW_TRIGGERED"}))
+
+    def tearDown(self):
+        mgmt.REQ_DIR, mr.ANA_DIR = self._
+
+    def test_urgent_only_pass(self):
+        self.assertEqual(mr.work_order(["URG", "NRML", "LOWX"], True), ["URG"])
+        got = mr.work_order(["LOWX", "URG", "NRML"], False)
+        self.assertEqual(got[0], "URG")
+
+    def test_success_not_rerun(self):
+        ad = mr.ANA_DIR / "URG"; ad.mkdir(parents=True)
+        (ad / "reassess_2026-10-01.json").write_text(json.dumps(
+            {"status": "SUCCESS", "analyzed_at": "t"}))
+        self.assertEqual(mr.work_order(["URG"], True), [])
+
+    def test_rate_limit_deprioritized(self):
+        ad = mr.ANA_DIR / "NRML"; ad.mkdir(parents=True)
+        (ad / "reassess_2026-10-01.json").write_text(json.dumps(
+            {"status": "RETRY_PENDING", "reason_code": "MODEL_RATE_LIMITED",
+             "last_error_at": "t0"}))
+        # rate-limited retry goes behind fresh NORMAL work
+        self.assertEqual(mr.work_order(["NRML", "LOWX"], False),
+                         ["LOWX", "NRML"])
+
+    def test_status_shadow_label(self):
+        # every recommendation renders an explicit shadow banner
+        import alpha_rnd.mgmt as M
+        st = {"positions": {"XYZ": {"entry_session": "2026-10-01",
+                                    "entry_price": 10, "status": "S",
+                                    "latest_reassessment": {
+                                        "status": "SUCCESS", "as_of": "d",
+                                        "action": "PARTIAL_EXIT",
+                                        "thesis_status": "INTACT",
+                                        "artifact": None, "shadow": True}}}}
+        orig = M.load_mgmt
+        M.load_mgmt = lambda: st
+        try:
+            out = M.status()
+        finally:
+            M.load_mgmt = orig
+        self.assertIn("SHADOW REASSESSMENT — NOT AN ECONOMIC ACTION", out)
+        self.assertIn("proposal only — nothing executed, nothing pending", out)
+
+
+if __name__ == "__main__":
+    unittest.main()

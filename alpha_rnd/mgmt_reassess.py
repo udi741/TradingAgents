@@ -339,6 +339,54 @@ def assess(ticker: str, session: str, asof: str | None = None,
     return dec
 
 
+def latest_analysis(ticker: str) -> dict | None:
+    d = ANA_DIR / ticker
+    if not d.exists():
+        return None
+    fs = sorted(d.glob("reassess_*.json"))
+    return _j(fs[-1]) if fs else None
+
+
+def work_order(open_tickers: list[str], urgent_only: bool) -> list[str]:
+    """Fair ordering: urgent-first; within a class, least-recently-analyzed
+    first (None = never analyzed = oldest). Skip tickers whose latest result
+    is a terminal/success or a recent rate-limit retry — no backend hammering."""
+    urg_rank = {"URGENT": 0, "NORMAL": 1, "LOW": 2}
+    cands = []
+    for t in open_tickers:
+        reqs = pending_requests(t)
+        if not reqs:
+            continue
+        u = min(urg_rank.get(r.get("urgency"), 1) for r in reqs)
+        if urgent_only and u != 0:
+            continue
+        prev = latest_analysis(t)
+        if prev and prev.get("status") in ("SUCCESS", "STALE_POSITION_CLOSED",
+                                         "STALE_POSITION_CHANGED",
+                                         "FAILED_TERMINAL"):
+            continue  # frozen result — never rerun
+        if prev and prev.get("status") == "RETRY_PENDING" and \
+                prev.get("reason_code") == "MODEL_RATE_LIMITED":
+            cands.append((u, prev.get("last_error_at") or "9", t, True))
+        else:
+            cands.append((u, prev.get("analyzed_at") or "9" if prev else "0",
+                          t, False))
+    # rate-limited retries go last within their urgency class
+    cands.sort(key=lambda x: (x[0], x[3], x[1], x[2]))
+    return [c[2] for c in cands]
+
+
+def run_bounded(session: str, urgent_only: bool, limit: int = 2) -> list[dict]:
+    """Bounded management work for one scheduler invocation."""
+    st = _j(AR / "monitor_state.json", {}) or {}
+    out = []
+    for t in work_order(list((st.get("positions") or {})), urgent_only):
+        if len(out) >= limit:
+            break
+        out.append(assess(t, session))
+    return out
+
+
 def _default_model(ctx: dict) -> str:
     brief = {"position_management_request": PROMPT, "context": ctx}
     return call_bridge({"model": MODEL, "temperature": 0,

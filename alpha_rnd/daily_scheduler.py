@@ -459,6 +459,15 @@ def _run_cycle(session: str) -> None:
                    cwd=ROOT, env=env,
                    capture_output=True, timeout=STAGE_TIMEOUTS["book"])
 
+    # 1b. URGENT post-entry management first — an urgent open-position
+    # reassessment must not wait behind multi-hour discovery/TA work.
+    # Bounded (<=2), shadow-only; failures are non-fatal and never economic.
+    try:
+        from alpha_rnd import mgmt_reassess as _mr
+        _mr.run_bounded(session, urgent_only=True, limit=2)
+    except Exception:
+        pass
+
     # 2. Frozen discovery pipeline.
     _run_progress("discovery")
     if not _resuming(session):  # frozen pool is authoritative once it exists
@@ -593,20 +602,12 @@ def _run_cycle(session: str) -> None:
         event("ALPHA_PUBLICATION_SUMMARY", session=session,
               dispositions={"UNCLASSIFIED_REVIEW": len(reviews)},
               user_action_required="none")
-    # post-entry management reassessment (Phase C, shadow): bounded,
-    # after publish, urgent-first; infrastructure failures never economic
+    # post-entry management reassessment (Phase C, shadow): NORMAL/LOW work
+    # runs after publish — urgent work already ran before discovery (1b).
+    # Bounded, fair-ordered; infrastructure failures never economic.
     try:
-        from alpha_rnd import mgmt_reassess as _mr, mgmt as _mg
-        mstate = _j(AR / "monitor_state.json", {}) or {}
-        open_t = list((mstate.get("positions") or {}))
-        urg = {"URGENT": 0, "NORMAL": 1, "LOW": 2}
-        todo = []
-        for t in open_t:
-            reqs = _mr.pending_requests(t)
-            if reqs:
-                todo.append((min(urg.get(r.get("urgency"), 1) for r in reqs), t))
-        for _, t in sorted(todo)[:2]:  # bounded per run
-            _mr.assess(t, session)
+        from alpha_rnd import mgmt_reassess as _mr
+        _mr.run_bounded(session, urgent_only=False, limit=2)
     except Exception:
         pass
     # R1: immutable opportunity-funnel artifact (observability; never fatal)
