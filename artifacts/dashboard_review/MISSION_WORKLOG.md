@@ -35,3 +35,10 @@
 
 ## Open issues / notes
 - monitor_state schema keys: positions{cash...}, pending_open_fills, pending_open_exits, watch_status, book, executed, trigger_events.jsonl etc.
+
+## Final state (mission end)
+- 21 pytest green; E2E 14 pages green, 0 console errors, 0 API 5xx
+- drift check green; registry now 68 capabilities
+- commits: 4fc04282 (merge), 9470d9b0 (dashboard)
+- post-check: ALPHA cash/realized/positions/pendings/executed identical to baseline; C12 unchanged
+- server running: http://127.0.0.1:8420
