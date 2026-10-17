@@ -1,5 +1,8 @@
 # SYSTEM ARCHITECTURE — newcomer map
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 ## Pipeline
 
 ```

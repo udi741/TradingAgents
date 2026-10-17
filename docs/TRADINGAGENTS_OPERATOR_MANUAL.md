@@ -1,5 +1,8 @@
 # TRADINGAGENTS OPERATOR MANUAL
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 Plain-language guide to running the paper-trading system day to day.
 Everything here is read-only unless marked otherwise.
 

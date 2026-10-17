@@ -1,5 +1,8 @@
 # ALPHA System Guide
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 How the ALPHA_RND track of TradingAgents actually works today, written for an
 engineer who has never seen this repository. Read `START_HERE.md` first; this
 guide is second. Code lives in `TradingAgents-alpha-rnd` (the ALPHA_RND

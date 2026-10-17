@@ -1,5 +1,8 @@
 # STATE AND DATA AUTHORITY
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 The single source-of-truth map for TradingAgents state. If a display,
 log, or notification disagrees with a file listed as AUTHORITY here,
 the file wins. Do not "fix" the authority to match the display.

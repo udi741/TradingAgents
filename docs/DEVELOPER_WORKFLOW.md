@@ -1,5 +1,8 @@
 # DEVELOPER WORKFLOW
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 **Do not depend on historical chat context for a code change.** Every
 material behavior must be discoverable in repo docs, code, and tests.
 

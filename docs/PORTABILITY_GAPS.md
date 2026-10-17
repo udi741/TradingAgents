@@ -1,5 +1,8 @@
 # PORTABILITY GAPS — register
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 What prevents "fresh machine → safe running system" today. Phase 0
 records them; Phase 1+ fixes them.
 

@@ -1,5 +1,8 @@
 # NEW MACHINE SETUP — current truthful procedure
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 Everything below is what is ACTUALLY required today. Steps marked
 PORTABILITY_GAP are awkward manual work with no automation yet
 (see docs/PORTABILITY_GAPS.md).

@@ -1,5 +1,8 @@
 # TROUBLESHOOTING RUNBOOK
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 Symptom → likely cause → first read-only check → authority → safe fix.
 
 ## Telegram message did not arrive

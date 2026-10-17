@@ -1,5 +1,8 @@
 # ROADMAP OPERATING RULES
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 ## Bug subtask rule
 If roadmap task Rn discovers a bug, create subtasks `Rn-B1`, `Rn-B2`, ...
 The bug is a SUBTASK of Rn, never a new parent item:

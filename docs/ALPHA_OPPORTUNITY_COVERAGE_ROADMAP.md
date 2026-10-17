@@ -1,5 +1,8 @@
 # ALPHA OPPORTUNITY COVERAGE ROADMAP
 
+> Capability map: `docs/TRADINGAGENTS_CAPABILITY_REFERENCE.md` (registry: `docs/TRADINGAGENTS_CAPABILITY_REGISTRY.yaml`).
+
+
 Canonical development roadmap for TradingAgents. Survives conversations.
 Machine-readable state: `state/alpha_opportunity_coverage.yaml`.
 Task discipline: `docs/ROADMAP_OPERATING_RULES.md`, `docs/ROADMAP_TASK_TEMPLATE.md`.
