@@ -502,6 +502,27 @@ capabilities:
     status: UNUSED
     modules: [main.py]
     purpose: upstream demo script (propagates NVDA); not part of ALPHA pipeline
+  # ================= Operator tooling =================
+  - id: ops.command_center_dashboard
+    status: ACTIVE_PRODUCTION
+    modules: [dashboard/server.py, dashboard/config.py, dashboard/readutil.py,
+      dashboard/truth_ledger.py, dashboard/adapters/alpha.py,
+      dashboard/adapters/c12.py, dashboard/adapters/capabilities.py,
+      dashboard/adapters/health.py, dashboard/adapters/providers.py,
+      dashboard/static/index.html, dashboard/static/app.js,
+      dashboard/static/styles.css]
+    purpose: read-only local web dashboard (127.0.0.1:8420) over ALPHA/C12
+      authoritative state — overview, opportunity funnel, TA research,
+      positions + Phase-G entry snapshots, deterministic/adaptive management,
+      executions, performance/evidence, provider + system health, capability
+      registry, track boundaries. Safe controls are an allowlist wrapping
+      ops.ta (health/status/backup); no economic write path exists.
+    authority: none — reads the state files listed in state_authority; own
+      truth ledger at dashboard/truth_ledger.py
+    limitations: [localhost only; polling refresh; controls are read-only
+      or archive-writing; never exposes secrets; not a trading interface]
+    docs: docs/TRADINGAGENTS_DASHBOARD.md
+    tests: dashboard/tests/
 duplicated_implementations:
   - capability: portfolio_simulation
     authoritative: monitor_state.json + do_exit (alpha_rnd/monitor.py)

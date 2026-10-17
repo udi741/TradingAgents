@@ -197,6 +197,16 @@ event streams to Telegram with severity routing, semantic dedup by transition
 identity, and a circuit breaker; delivery != proof. Bridge journal = model-call evidence.
 `infra_status.py` = provider-health ledger (no model calls).
 
+### Command Center dashboard — ACTIVE_PRODUCTION
+`dashboard/` (tracks worktree, `feature/tradingagents-command-center`):
+read-only local web UI over all authoritative state — overview, funnel,
+research, positions/Phase-G plans, management, executions, evidence,
+provider + system health, capability registry, track boundaries. FastAPI on
+127.0.0.1:8420 + no-build static SPA. Safe controls are an allowlist wrapping
+`ops.ta` (health/status/backup only, confirm-gated); there is no economic
+write path. Field→source map: `dashboard/truth_ledger.py`; reconciliation
+tests: `dashboard/tests/`; runbook: `docs/TRADINGAGENTS_DASHBOARD.md`.
+
 ## Duplication / authority
 
 | Capability | Authoritative | Non-authoritative |

@@ -45,6 +45,9 @@ artifacts.
 Incident and per-task history are evidence trails, not a starting point —
 read them only when debugging a specific session.
 
+Dashboard: `python3 -m dashboard.server` → http://127.0.0.1:8420
+(read-only command center; runbook `docs/TRADINGAGENTS_DASHBOARD.md`).
+
 Operator commands: `python3 -m ops.ta health` (deep check, exit 0/1/2),
 `python3 -m ops.ta status` (quick summary),
 `python3 -m ops.ta workspace status|setup` (canonical 5-worktree layout

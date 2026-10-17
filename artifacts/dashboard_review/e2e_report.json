@@ -1,0 +1,85 @@
+{
+ "base": "http://127.0.0.1:8420",
+ "pages": {
+  "overview": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "overview.png"
+  },
+  "funnel": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "funnel.png"
+  },
+  "research": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "research.png"
+  },
+  "research_PBF": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "research_PBF.png"
+  },
+  "positions": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "positions.png"
+  },
+  "position_PBF": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "position_PBF.png"
+  },
+  "management": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "management.png"
+  },
+  "executions": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "executions.png"
+  },
+  "performance": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "performance.png"
+  },
+  "providers": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "providers.png"
+  },
+  "health": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "health.png"
+  },
+  "capabilities": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "capabilities.png"
+  },
+  "tracks": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "tracks.png"
+  },
+  "controls": {
+   "ok": true,
+   "console_errors": [],
+   "screenshot": "controls.png"
+  }
+ },
+ "api_5xx": [],
+ "console_errors": [],
+ "viewports": {
+  "1440x900": {
+   "ok": true
+  },
+  "1366x768": {
+   "ok": true
+  }
+ }
+}

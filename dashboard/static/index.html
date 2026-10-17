@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TradingAgents Command Center</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">TA<span>//</span>DESK</div>
+    <nav id="nav">
+      <a href="#/overview" data-route="overview">Overview</a>
+      <a href="#/funnel" data-route="funnel">Funnel</a>
+      <a href="#/research" data-route="research">Research</a>
+      <a href="#/positions" data-route="positions">Positions</a>
+      <a href="#/management" data-route="management">Management</a>
+      <a href="#/executions" data-route="executions">Executions</a>
+      <a href="#/performance" data-route="performance">Performance</a>
+      <a href="#/providers" data-route="providers">Providers</a>
+      <a href="#/health" data-route="health">Health</a>
+      <a href="#/capabilities" data-route="capabilities">Capabilities</a>
+      <a href="#/tracks" data-route="tracks">Tracks</a>
+      <a href="#/controls" data-route="controls">Controls</a>
+    </nav>
+    <div class="sidebar-foot">Internal desk view<br>read-mostly ops surface</div>
+  </aside>
+  <div id="main">
+    <header id="topbar">
+      <div class="tb-title">TRADINGAGENTS <span class="tb-sub">COMMAND CENTER</span></div>
+      <span class="badge badge-paper">PAPER — NO REAL MONEY</span>
+      <span id="health-dot" class="dot dot-unknown" title="system health"></span>
+      <span id="health-label" class="tb-meta">—</span>
+      <span id="freshness" class="tb-meta" title="monitor_state freshness">data —</span>
+      <div class="tb-spacer"></div>
+      <input id="ticker-search" type="text" placeholder="Jump to ticker…" autocomplete="off" spellcheck="false">
+    </header>
+    <div id="page"><div class="loading">loading…</div></div>
+  </div>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
