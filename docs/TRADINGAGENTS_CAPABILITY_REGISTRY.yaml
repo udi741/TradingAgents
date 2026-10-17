@@ -1,0 +1,131 @@
+# TradingAgents Capability Registry — canonical machine-readable map.
+# Status vocabulary: ACTIVE_PRODUCTION | ACTIVE_PARTIAL | SHADOW_ONLY |
+#   RESEARCH_ONLY | LEGACY | DUPLICATED | BROKEN | UNUSED | MISSING
+# RULE: no production capability is complete until this registry,
+# TRADINGAGENTS_CAPABILITY_REFERENCE.md, and the system guide are updated.
+registry_version: 1
+generated_from: code audit of alpha_rnd/, TradingAgents-alpha-rnd, tracks repo
+capabilities:
+  - id: discovery.universe
+    status: ACTIVE_PRODUCTION
+    modules: [evaluations/alpha_rnd_v1/discovery.py]
+    purpose: build PIT universe, eligibility, liquidity, lanes, candidate pool
+    authority: candidate_pool_frozen_<session>.json
+    limitations: [pit-universe-fidelity, external-provider-fail-soft]
+  - id: discovery.ta_analysis
+    status: ACTIVE_PRODUCTION
+    modules: [evaluations/alpha_rnd_v1/run_ta.py, devin bridge service]
+    purpose: per-ticker TradingAgents debate -> signal
+    authority: case_artifacts/<T>_<session>.json
+    limitations: [~25 calls/ticker, pretrained-knowledge]
+  - id: discovery.retry
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/daily_scheduler.py]
+    purpose: bounded fair retry of failed TA (7-day lifetime, ≤2/run, fair order)
+  - id: entry.publication_intents
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/synthesize.py]
+    purpose: translator converts TA text -> machine intents (dispositions)
+    limitations: [numbers must appear in source text]
+  - id: entry.gate
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py::do_fill, alpha_rnd/entry_gate.py]
+    purpose: risk-plan gate + Phase G success-plan gate, fail-closed
+  - id: entry.success_plan
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/success_plan.py, alpha_rnd/monitor.py::entry_success_plan]
+    purpose: every buy defines base/bull objective + RR + success criteria; fail-closed
+    limitations: [legacy target doubles as base case; shorts untested]
+  - id: economics.monitor_state
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py]
+    purpose: canonical cash/positions/pending/executed/outbox
+    authority: alpha_rnd/monitor_state.json
+  - id: economics.fills
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py]
+    purpose: next-open fills, pro-rata cost basis, exec-id dedup; executed[]=fill authority only
+  - id: mgmt.deterministic
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py]
+    purpose: hard intraday stops + close_below; always independent of inference
+  - id: mgmt.snapshots
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt.py::create_snapshot]
+    purpose: immutable entry snapshot incl. frozen success_plan
+    authority: evaluations/alpha_rnd_v1/entry_snapshots/
+  - id: mgmt.triggers
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt.py::evaluate]
+    purpose: R-based APPRECIATION/PEAK_GIVEBACK/ADVERSE_ACCELERATION/HORIZON_REVIEW; trigger=think-again only
+    limitations: [catalyst trigger schema-reserved/disabled]
+  - id: mgmt.reassessment
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt_reassess.py]
+    purpose: shadow model reassessment, stale fingerprints, infra retries
+    limitation: [HISTORICAL_RESEARCH_EVIDENCE only when replayed]
+  - id: mgmt.validator
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt_validate.py]
+    purpose: never-widen, partial normalization, runner contract, stale/superseded
+    authority: management_intents/
+  - id: mgmt.execution
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt_exec.py]
+    purpose: intent -> canonical pending order; kill switch; ENQUEUED!=FILLED
+    authority: management_actions.json; switch=management_policy.json execution.enabled
+    current_state: ENABLED (paper)
+  - id: mgmt.runner_contract
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/success_plan.py::runner_contract_ok]
+    purpose: no runner without remaining thesis+objective+upside
+  - id: eval.replay_r5
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/replay.py, alpha_rnd/r5b_report.py]
+    purpose: as-of replay experiments; isolated from production economics
+  - id: eval.mgmt_time_machine
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/mgmt_time_machine.py]
+    purpose: control-vs-treatment mgmt replay; NOT economic authority
+  - id: ops.scheduler
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/daily_scheduler.py]
+    purpose: cron lifecycle, stage timeouts, cycle lock, urgent-mgmt priority
+  - id: ops.telegram
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py::notify]
+    purpose: event delivery, dedup, circuit breaker; delivery != proof
+  - id: ops.bridge
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents-swe-bridge.service]
+    purpose: model provider abstraction; journal = call evidence
+  - id: profit.legacy_target
+    status: LEGACY
+    modules: [publication_intents target field]
+    purpose: single number target; superseded by success_plan but preserved
+  - id: open_position_management.disposition
+    status: UNUSED
+    modules: [alpha_rnd/synthesize.py DISPOSITIONS]
+    purpose: entry-side label for held-ticker validation failures; nothing consumes it
+duplicated_implementations:
+  - capability: portfolio_simulation
+    authoritative: monitor_state.json + do_exit
+    non_authoritative: [mgmt_time_machine.py, replay.py, backtest.py]
+  - capability: exit_execution
+    authoritative: pending_open_exits + resolve_pending
+    non_authoritative: [mgmt_time_machine treatment fills]
+state_authority:
+  cash: monitor_state.json (AUTHORITATIVE)
+  positions: monitor_state.json (AUTHORITATIVE)
+  pending_orders: monitor_state.json (AUTHORITATIVE)
+  executed_fill_ids: monitor_state.json executed[] (AUTHORITATIVE = fill only)
+  mgmt_actions: management_actions.json (AUTHORITATIVE for lifecycle)
+  entry_snapshots: entry_snapshots/ (AUTHORITATIVE, immutable)
+  intents: management_intents/ (AUTHORITATIVE shadow)
+  watchlist: live_watchlist.json (AUTHORITATIVE for watches/stops)
+  management_state: management_state.json (OBSERVABILITY_ONLY)
+  management_requests: management_requests/ (OBSERVABILITY_ONLY)
+  mevents/ledger: alpha_paper_ledger.jsonl + events (EVIDENCE)
+limits: >
+  Docs cannot fully capture TradingAgents library internals yet; this registry
+  covers ALPHA operating-layer. TA vendored internals listed as research-only.
