@@ -377,9 +377,9 @@ were the archive artifact and non-economic files in the dashboard worktree.
 
 ### Remediation commits
 
-(add this commit) — paths resolution (`dashboard/paths.py`, config rewrite,
+`75950203` — paths resolution (`dashboard/paths.py`, config rewrite,
 `--prefix` plumbing), stale health-check fix + 4 regression tests,
-test-isolation hardening, doc updates.
+test-isolation hardening, doc updates, regenerated screenshots.
 
 DASHBOARD_BOOTS_FROM_CLEAN_START: YES
 OVERVIEW_WORKING: YES
