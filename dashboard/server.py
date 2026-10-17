@@ -12,7 +12,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import config
+from . import config, paths
 from .adapters import alpha, c12, capabilities, health, providers
 from .truth_ledger import TRUTH_LEDGER
 
@@ -266,7 +266,8 @@ def api_run_control(control_id: str, confirm: str | None = None):
         out.parent.mkdir(parents=True, exist_ok=True)
         import subprocess
         p = subprocess.run(
-            ["python3", "-m", "ops.ta", "backup", "--output", str(out)],
+            ["python3", "-m", "ops.ta", "backup", "--output", str(out),
+             "--prefix", str(config.WORKSPACE_PREFIX)],
             cwd=str(config.SELF_ROOT), capture_output=True, text=True, timeout=300)
         return {"control": control_id, "rc": p.returncode,
                 "stdout": p.stdout[-3000:], "stderr": p.stderr[-2000:],
@@ -279,8 +280,7 @@ def api_meta():
     return {
         "name": "TradingAgents Command Center",
         "paper_only": True, "real_money": False,
-        "alpha_root": str(config.ALPHA_ROOT),
-        "c12_root": str(config.C12_ROOT),
+        "roots": paths.report(),
         "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
 

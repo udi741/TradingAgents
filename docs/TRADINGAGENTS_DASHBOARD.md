@@ -19,16 +19,35 @@ Ctrl-C to stop. No daemon, no install step, no external network required —
 the UI is a static SPA served by the same process; all data comes from local
 files.
 
-Config env vars (defaults are correct on this machine):
-`TA_DASH_PREFIX`, `TA_DASH_ALPHA_ROOT`, `TA_DASH_C12_ROOT`,
-`TA_DASH_TRACKS_ROOT`, `TA_DASH_HOST`, `TA_DASH_PORT`.
+## Root resolution (`dashboard/paths.py`)
+
+| Root | Resolution |
+|---|---|
+| DASHBOARD CODE ROOT | the checkout containing `dashboard/` — never configured |
+| ALPHA RUNTIME/STATE ROOT | `TA_DASH_ALPHA_ROOT` env → `ops/workspace.json` `roles.ALPHA.path` under PREFIX → this checkout itself if it contains `alpha_rnd/monitor_state.json` (single-checkout deploy) |
+| C12 ROOT | `TA_DASH_C12_ROOT` env → `ops/workspace.json` `roles.C12.path` under PREFIX |
+| CAPABILITY/DOC ROOT | `TA_DASH_TRACKS_ROOT` env → **this checkout's own `docs/`** → spec `roles.TRACKS.path` |
+| RESEARCH ROOT (EXPERT, optional) | `TA_DASH_EXPERT_ROOT` env → spec `roles.EXPERT.path` |
+
+PREFIX = `TA_DASH_PREFIX` env, else the parent directory of this checkout.
+No `/home/udi` path and no sibling-worktree name is hardcoded; worktree
+names come from the canonical `ops/workspace.json` spec. Sentinel files
+(e.g. `alpha_rnd/` for ALPHA) must be present or the candidate is rejected;
+spec/single-checkout candidates whose git branch contradicts the spec's
+expected branch are also rejected (economic state files are git-tracked —
+a stale committed `monitor_state.json` must never be read as live).
+Unresolved roots surface as `meta.state="missing"` + `/api/meta` root
+report; the API never reads a fallback tree silently.
+
+Other env vars: `TA_DASH_HOST`, `TA_DASH_PORT`.
 
 ## Architecture
 
 ```
 dashboard/
   server.py         FastAPI app: JSON /api/* + static SPA (hash routing)
-  config.py         authoritative root paths (env-overridable for tests)
+  config.py         resolved roots (from paths.py), env-overridable
+  paths.py          root resolution: env -> ops/workspace.json -> single-checkout
   readutil.py       tolerant readers; every read carries {state, mtime, age}
   truth_ledger.py   field -> api -> source -> freshness map (canonical)
   adapters/
@@ -89,10 +108,9 @@ browser · `#/tracks` track boundaries · `#/controls` safe operations.
 
 ## Known caveats
 
-- `ops.ta health` currently reports FAILED on "adaptive execution DISABLED
-  (expected)" because `management_policy.json` execution is enabled — the
-  check encodes the pre-2026-10-16 default; the dashboard surfaces the flag
-  accurately rather than hiding it.
+- `ops.ta health` verifies adaptive-execution *provenance* (enabled requires
+  `activated_at`/`activated_for`) rather than demanding disabled — enabled
+  with provenance is the accepted paper state since 2026-10-16.
 - `management_events.jsonl` repeats `MGMT_EXECUTION/ALREADY_ENQUEUED` ~1/min
   while the PBF partial exit waits for a valid open — the UI dedupes; the
   pending order itself is the authority.

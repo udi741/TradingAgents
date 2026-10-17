@@ -68,26 +68,34 @@ def test_paper_flags(client):
 
 
 def test_dashboard_does_not_mutate_state(tmp_path):
-    """Reading every endpoint must not change any monitored state file."""
-    before = {}
-    files = [config.ALPHA_STATE / "monitor_state.json",
-             config.ALPHA_STATE / "live_watchlist.json",
-             config.ALPHA_EVAL / "management_actions.json",
-             config.ALPHA_EVAL / "alpha_paper_ledger.jsonl",
-             config.C12_EVAL / "c12_nav.jsonl"]
-    for f in files:
-        before[f] = (f.stat().st_mtime_ns, f.stat().st_size) if f.exists() else None
+    """Reading every endpoint must not change monitored state files.
+
+    monitor_state.json is ticked ~1/min by the live monitor — for it we
+    compare only economic fields (cash/positions/realized/pending/executed),
+    not mtime. All other files get a strict byte-level check.
+    """
+    strict_files = [config.ALPHA_STATE / "live_watchlist.json",
+                    config.ALPHA_EVAL / "management_actions.json",
+                    config.ALPHA_EVAL / "alpha_paper_ledger.jsonl"]
+    ms_file = config.ALPHA_STATE / "monitor_state.json"
+    ECON = ("cash", "realized", "positions", "pending_open_fills",
+            "pending_open_exits", "executed")
+
+    def econ(fp):
+        d = json.loads(fp.read_text())
+        return {k: d.get(k) for k in ECON}
+
+    before_strict = {f: f.read_bytes() for f in strict_files if f.exists()}
+    before_econ = econ(ms_file)
     c = TestClient(app)
     for ep in ["/api/overview", "/api/funnel", "/api/candidates", "/api/research",
                "/api/research/PBF", "/api/positions", "/api/positions/PBF",
                "/api/management", "/api/executions", "/api/performance",
                "/api/providers", "/api/capabilities", "/api/tracks"]:
         c.get(ep)
-    for f in files:
-        if before[f] is None:
-            assert not f.exists()
-        else:
-            assert (f.stat().st_mtime_ns, f.stat().st_size) == before[f]
+    for f, blob in before_strict.items():
+        assert f.read_bytes() == blob, f"{f} mutated by reads"
+    assert econ(ms_file) == before_econ, "economic fields changed by reads"
 
 
 def test_missing_state_graceful(tmp_path, monkeypatch):

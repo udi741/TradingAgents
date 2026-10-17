@@ -114,9 +114,34 @@ class Sim(unittest.TestCase):
         # bridge/c12/services missing in sim -> degraded not crash
         self.assertIn(rc, (1, 2))
 
-    def test_adaptive_disabled_reported(self):
+    def test_adaptive_disabled_ok(self):
         _, o = self._health()
-        self.assertIn("adaptive execution DISABLED", o)
+        self.assertIn("adaptive execution disabled (conservative)", o)
+
+    def test_adaptive_enabled_with_provenance_not_unhealthy(self):
+        # E1 acceptance: enabled paper execution is legitimate when it
+        # carries activation provenance — must not flag fail/degraded.
+        import json as _json
+        (self.p / "TradingAgents-alpha-rnd/alpha_rnd/management_policy.json"
+         ).write_text(_json.dumps({"execution": {
+             "enabled": True, "activated_at": "2026-10-16",
+             "activated_for": "fresh PBF decision accepted"}}))
+        _, o = self._health()
+        self.assertIn("[     OK] adaptive execution ENABLED with provenance", o)
+
+    def test_adaptive_enabled_without_provenance_flagged(self):
+        import json as _json
+        (self.p / "TradingAgents-alpha-rnd/alpha_rnd/management_policy.json"
+         ).write_text(_json.dumps({"execution": {"enabled": True}}))
+        _, o = self._health()
+        self.assertIn("[DEGRADED] adaptive execution ENABLED with provenance", o)
+
+    def test_adaptive_policy_malformed_flagged(self):
+        import json as _json
+        (self.p / "TradingAgents-alpha-rnd/alpha_rnd/management_policy.json"
+         ).write_text(_json.dumps({"execution": {"enabled": "yes"}}))
+        _, o = self._health()
+        self.assertIn("[ FAILED] adaptive execution policy well-formed", o)
 
     def test_health_exit_codes_documented(self):
         self.assertIn("0=HEALTHY", ta.cmd_health.__doc__)

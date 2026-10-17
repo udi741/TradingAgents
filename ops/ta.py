@@ -1170,12 +1170,27 @@ def cmd_health(a):
         note="tagged block" if f">>> {CRON_TAG} >>>" in cron else
              f"{have}/4 legacy entries — untagged, rerunnable anyway")
 
+    # Adaptive execution is legitimately ENABLED for paper since 2026-10-16
+    # (E1 acceptance). The invariant is provenance, not the flag value:
+    # enabled requires activation provenance (activated_at/for); a bare
+    # enabled flag is suspicious. Disabled is the conservative default.
     pol = Path(lay["ALPHA_DIR"]) / "alpha_rnd/management_policy.json"
     try:
-        en = bool((json.loads(pol.read_text()).get("execution") or {})
-                  .get("enabled"))
-        chk("adaptive execution DISABLED (expected)", not en,
-            note="enabled" if en else "disabled")
+        ex = (json.loads(pol.read_text()).get("execution") or {})
+        en = ex.get("enabled")
+        if not isinstance(en, bool):
+            chk("adaptive execution policy well-formed", False,
+                note="execution.enabled missing/not boolean")
+        elif en:
+            prov = bool(ex.get("activated_at") and ex.get("activated_for"))
+            chk("adaptive execution ENABLED with provenance", prov,
+                level="degraded",
+                note=(f"activated {ex.get('activated_at')} for "
+                      f"{ex.get('activated_for')}" if prov else
+                      "enabled without activated_at/activated_for"))
+        else:
+            chk("adaptive execution disabled (conservative)", True,
+                note="disabled")
     except Exception:
         chk("management policy readable", False, level="degraded")
 

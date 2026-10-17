@@ -42,3 +42,10 @@
 - commits: 4fc04282 (merge), 9470d9b0 (dashboard)
 - post-check: ALPHA cash/realized/positions/pendings/executed identical to baseline; C12 unchanged
 - server running: http://127.0.0.1:8420
+
+## Remediation (final acceptance pass)
+- paths.py: env -> ops/workspace.json spec (+TA_DASH_PREFIX) -> single-checkout; sentinel + branch guards; git-tracked monitor_state stale-copy hazard found & guarded
+- ops.ta health: stale "DISABLED expected" -> provenance check; ops/test_ta.py +4 regression tests (48 pass)
+- dashboard/tests: 28 pass (incl. 7 portability tests, synthetic layouts)
+- ops.ta health -> OVERALL: HEALTHY exit 0; E2E re-run clean; health.png regenerated
+- alpha_rnd suite: 216 pass / 3 fail (pre-existing: live-state interference in mgmt_exec C2); root tests/: 49 collection errors (pre-existing py3.10 StrEnum)

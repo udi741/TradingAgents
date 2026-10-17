@@ -16,7 +16,8 @@ from .. import config
 def _run_ta(args: list[str], timeout: int = 90) -> dict:
     try:
         p = subprocess.run(
-            ["python3", "-m", "ops.ta", *args],
+            ["python3", "-m", "ops.ta", *args,
+             "--prefix", str(config.WORKSPACE_PREFIX)],
             cwd=str(config.SELF_ROOT), capture_output=True, text=True,
             timeout=timeout)
         return {"rc": p.returncode, "stdout": p.stdout, "stderr": p.stderr[-2000:]}

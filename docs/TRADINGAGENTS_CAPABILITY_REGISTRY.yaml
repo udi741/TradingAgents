@@ -505,12 +505,12 @@ capabilities:
   # ================= Operator tooling =================
   - id: ops.command_center_dashboard
     status: ACTIVE_PRODUCTION
-    modules: [dashboard/server.py, dashboard/config.py, dashboard/readutil.py,
-      dashboard/truth_ledger.py, dashboard/adapters/alpha.py,
-      dashboard/adapters/c12.py, dashboard/adapters/capabilities.py,
-      dashboard/adapters/health.py, dashboard/adapters/providers.py,
-      dashboard/static/index.html, dashboard/static/app.js,
-      dashboard/static/styles.css]
+    modules: [dashboard/server.py, dashboard/config.py, dashboard/paths.py,
+      dashboard/readutil.py, dashboard/truth_ledger.py,
+      dashboard/adapters/alpha.py, dashboard/adapters/c12.py,
+      dashboard/adapters/capabilities.py, dashboard/adapters/health.py,
+      dashboard/adapters/providers.py, dashboard/static/index.html,
+      dashboard/static/app.js, dashboard/static/styles.css]
     purpose: read-only local web dashboard (127.0.0.1:8420) over ALPHA/C12
       authoritative state — overview, opportunity funnel, TA research,
       positions + Phase-G entry snapshots, deterministic/adaptive management,

@@ -234,9 +234,9 @@ START_HERE.md.
 ## 27. Known limitations
 
 - Funnel per-ticker table is large (whole universe); local-only so acceptable.
-- `ops.ta health` reports FAILED on "adaptive execution DISABLED (expected)"
-  — a pre-existing stale expectation in ops.ta (execution was legitimately
-  enabled 2026-10-16); surfaced honestly, not hidden.
+- ~~`ops.ta health` reports FAILED on "adaptive execution DISABLED
+  (expected)"~~ — FIXED in remediation: see FINAL ACCEPTANCE REMEDIATION
+  below; health is now legitimately HEALTHY.
 - No NAV equity-curve for ALPHA (no authoritative NAV series exists — only
   ledger MARKs); performance shows unrealized-over-sessions instead.
 
@@ -262,6 +262,124 @@ reconciliation tests + screenshots, not by self-report). PBF matches its
 sources field-by-field. C12 is isolated. Zero unauthorized mutation
 proven by before/after diff and a no-mutation test. Docs and drift check
 green.
+
+## FINAL ACCEPTANCE REMEDIATION
+
+### Hardcoded worktree dependencies — did they exist?
+
+Yes. The original `dashboard/config.py` derived all roots from a hardcoded
+`~/udi_provate` prefix and sibling-worktree names
+(`TradingAgents-alpha-rnd`, `TradingAgents-c12`). Remediated.
+
+### Path-resolution architecture after remediation
+
+New module `dashboard/paths.py` resolves every role root explicitly:
+
+| Root | Resolution |
+|---|---|
+| DASHBOARD CODE ROOT | the checkout containing `dashboard/` (`paths.SELF_ROOT`) — never configured |
+| ALPHA RUNTIME/STATE ROOT | `TA_DASH_ALPHA_ROOT` env → `ops/workspace.json` `roles.ALPHA.path` under PREFIX → this checkout if it holds `alpha_rnd/monitor_state.json` (single-checkout deploy) |
+| C12 ROOT | `TA_DASH_C12_ROOT` env → spec `roles.C12.path` under PREFIX |
+| CAPABILITY/DOC ROOT | `TA_DASH_TRACKS_ROOT` env → this checkout's own `docs/` → spec `roles.TRACKS.path` |
+| RESEARCH ROOT (EXPERT, optional) | `TA_DASH_EXPERT_ROOT` env → spec `roles.EXPERT.path` |
+
+PREFIX = `TA_DASH_PREFIX` env else the checkout's parent directory.
+Sibling worktree names are read from the canonical `ops/workspace.json`
+spec, not hardcoded. Each candidate must pass a sentinel-content check
+(`alpha_rnd/` for ALPHA, `evaluations/gate_c12_prospective/` for C12).
+Spec-derived and single-checkout candidates whose git branch contradicts
+the spec's expected branch are **rejected** — necessary because economic
+state files are git-tracked and a wrong checkout carries a stale committed
+`monitor_state.json` (verified: this checkout's committed copy was 1 day
+stale). Env overrides are honored but branch mismatches are surfaced in
+`/api/meta`. Unresolvable roots produce `meta.state="missing"` everywhere —
+no silent fallback reads.
+
+`ops.ta` invocations now pass `--prefix <resolved PREFIX>` explicitly.
+
+### Portability tests
+
+`dashboard/tests/test_paths.py` — 7 tests on synthetic tmp-dir layouts with
+deliberately unrelated worktree names (`zzz-live`, `repo-dash`): spec-driven
+resolution, env-override precedence, sentinel rejection, single-checkout
+fallback, missing-root clear failure, end-to-end API "missing" behavior, and
+an assertion that no user-specific path or current sibling names appear in
+the resolution report. All pass.
+
+### Stale health check — root cause and fix
+
+`ops/ta.py` `cmd_health` contained
+`chk("adaptive execution DISABLED (expected)", not en)` — written before the
+2026-10-16 E1 acceptance legitimately enabled adaptive paper execution.
+Root cause: the check encoded a pre-activation policy as permanent.
+
+Fix: replaced with a provenance check — `enabled` requires `activated_at` +
+`activated_for`; `enabled` non-boolean → FAIL; enabled without provenance →
+DEGRADED; disabled → OK (conservative default). Detection semantics
+preserved; only the stale expectation removed. Regression tests added in
+`ops/test_ta.py`: enabled+provenance → OK, enabled w/o provenance →
+DEGRADED, malformed policy → FAILED, disabled → OK.
+
+### Final `ops.ta health` output (verbatim tail)
+
+```
+  [     OK] adaptive execution ENABLED with provenance  activated 2026-10-16 for fresh PBF 2026-10-16 decision accepted
+  [     OK] alpha_rnd writable
+  [     OK] gate_c12_prospective writable
+
+OVERALL: HEALTHY        (exit 0, all 16 checks OK)
+```
+
+### Existing-suite coverage accounting
+
+- `ops/test_ta.py` — **48 tests, all pass** (includes 4 new adaptive-policy
+  regression tests; the stale `test_adaptive_disabled_reported` was updated).
+- `dashboard/tests/` — **28 tests, all pass** (reconciliation, safety,
+  edge cases, new portability tests).
+- `alpha_rnd/` suite (live worktree, ~20 files) — **216 pass, 3 fail**:
+  `test_mgmt_exec.py::C2::{test_decision_session_anchor,
+  test_disabled_cancels_pending, test_disabled_no_reverse_after_fill}`.
+  Pre-existing isolation weakness: `mgmt_exec.ACTIONS_P` points at the live
+  `evaluations/alpha_rnd_v1/management_actions.json`, so these tests
+  read/collide with the real ENQUEUED PBF action. Not dashboard-caused;
+  the registry file content was verified clean/intact afterward.
+  `test_monitor.py` fails collection with `KeyError: 'ZZZ'` — pre-existing,
+  related to the committed ZZZ test artifact in live state.
+- `tests/` (repo root) — **cannot run: 49 collection errors**, pre-existing
+  (`tests/conftest.py` imports `cli.prefs` which needs `enum.StrEnum`,
+  absent on Python 3.10, plus other pre-existing import errors). Untouched,
+  unrelated to dashboard; dashboard tests deliberately live under
+  `dashboard/tests/`.
+- No dashboard/health/path code lacks coverage because of the broken root
+  conftest — all new code is covered by `dashboard/tests/` + `ops/test_ta.py`.
+
+### Refreshed reconciliation
+
+Re-ran after path-resolution changes: **28/28 dashboard tests pass**,
+including cash, positions, PBF shares/entry/original-stop(74.5)/
+remainder-rule(close_below 83.5)/pending-action(mgmact_…, 31sh ENQUEUED),
+executed[] authority, latest funnel session+counts, registry count=YAML,
+C12 isolation (nav/cash exclusion).
+
+### Refreshed browser verification
+
+Dashboard restarted cleanly (cold start `/api/overview` 200 in ~26 ms).
+Playwright re-run: 14 routes all render, 0 console errors, 0 API 5xx.
+`health.png` regenerated — now shows `OVERALL: HEALTHY` with the corrected
+check line.
+
+### Post-remediation economic state (unchanged)
+
+cash 92899.01133911515 · realized −2140.99 · nav 98139.25 · PBF 62@80.00
+mark 84.52 · pending exit 31sh ENQUEUED · executed[] 6 · C12 nav 98446.48 /
+cash 85000 — identical to the remediation-time baseline; the only writes
+were the archive artifact and non-economic files in the dashboard worktree.
+
+### Remediation commits
+
+(add this commit) — paths resolution (`dashboard/paths.py`, config rewrite,
+`--prefix` plumbing), stale health-check fix + 4 regression tests,
+test-isolation hardening, doc updates.
 
 DASHBOARD_BOOTS_FROM_CLEAN_START: YES
 OVERVIEW_WORKING: YES
@@ -294,4 +412,10 @@ DASHBOARD_RUNBOOK_CREATED: YES
 DOC_DRIFT_CHECK_GREEN: YES
 KNOWN_CRITICAL_BUGS_REMAIN: NO
 KNOWN_DATA_MISMATCHES_REMAIN: NO
+HARDCODED_USER_WORKTREE_PATHS_REQUIRED: NO
+SINGLE_CHECKOUT_COMPATIBLE_ARCHITECTURE: YES
+CURRENT_MULTI_WORKTREE_LAYOUT_SUPPORTED: YES
+OPS_TA_HEALTH_STALE_EXPECTATION_FIXED: YES
+OPS_TA_HEALTH_VERIFIED: YES
+RELEVANT_EXISTING_TEST_COVERAGE_ACCOUNTED_FOR: YES
 STATUS: COMPLETE
