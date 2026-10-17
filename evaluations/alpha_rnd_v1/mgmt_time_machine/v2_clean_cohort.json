@@ -1,0 +1,27 @@
+{
+ "adaptive_opportunity_trades": 0,
+ "clean_pit_entries": 0,
+ "conclusion": "INSUFFICIENT_EVIDENCE \u2014 no clean point-in-time entry in the archived material survives long enough to give the adaptive manager a turn. V1 trades are R7-flagged (not clean); VSTM filled only on the final available session. Adaptive efficacy remains untested prospectively.",
+ "corrected_v1_label": "CLEAN_PIT_TRADES=0; DETERMINISTIC_PRIORITY_REGRESSION_PASSED",
+ "experiment": "mgmt_time_machine_v2_clean_cohort",
+ "frozen_manager": {
+  "alpha_sha": "8355c176",
+  "model": "devin-deep",
+  "policy_sha": "cc8a406e350db057"
+ },
+ "generated_at": "2026-10-17T05:53:29.716696+00:00",
+ "management_inference_calls": 0,
+ "source_audit": {
+  "filled_under_production_semantics": 4,
+  "fills": {
+   "ACN": "2026-10-02@204 (R7 provenance-flagged)",
+   "HAE": "never reached zone",
+   "PBF": "2026-10-02@79 (live canary, excluded)",
+   "PGEN": "2026-10-05@8.10 (R7 flagged)",
+   "TEAM": "never reached zone",
+   "VSTM": "2026-10-16@8.70 (no runway: filled final available session)"
+  },
+  "reconstructable_long_candidates": 6,
+  "sessions_scanned": "publication_intents 2026-10-01..2026-10-16 (11 files)"
+ }
+}

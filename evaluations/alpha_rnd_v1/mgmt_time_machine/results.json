@@ -1,4 +1,5 @@
 {
+ "clean_pit_trades": 0,
  "cohort": "A_MANAGEMENT_RESEARCH_ONLY",
  "frozen_manager": {
   "alpha_sha": "8355c176",
@@ -160,5 +161,6 @@
     "triggers": {}
    }
   }
- }
+ },
+ "v1_conclusion": "DETERMINISTIC_PRIORITY_REGRESSION_PASSED; ADAPTIVE_EFFICACY_NOT_TESTED"
 }
