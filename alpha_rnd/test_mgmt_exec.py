@@ -49,6 +49,11 @@ class E(unittest.TestCase):
         mr.ANA_DIR = self.tmp / "ana"
         mx.ACTIONS_P = self.tmp / "actions.json"
         self.pol_on = self.tmp / "pol_on.json"
+        self.pol_off = self.tmp / "pol_off.json"
+        _po = json.loads((ROOT/"alpha_rnd/management_policy.json").read_text())
+        _po["execution"]["enabled"] = False
+        self.pol_off.write_text(json.dumps(_po))
+        mgmt.POLICY_P = self.pol_off  # default disabled unless _enable()
         pol = json.loads((ROOT / "alpha_rnd/management_policy.json")
                          .read_text())
         pol["execution"] = {"enabled": True}
