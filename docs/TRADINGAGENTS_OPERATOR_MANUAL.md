@@ -55,7 +55,10 @@ Only if BOTH hold:
    `alpha_paper_ledger.jsonl` has the matching record.
 
 A Telegram message, desktop popup, or NOTIFICATIONS.log line alone is NOT
-proof. Shadow management output is labeled SHADOW and never executes.
+proof. Shadow management analyses/intents are labeled SHADOW and never execute
+on their own — only a VALIDATED intent enqueued to `management_actions.json`
+and filled via `pending_open_exits` moves economics (adaptive execution
+ENABLED since 2026-10-16).
 
 ## Restart safely
 

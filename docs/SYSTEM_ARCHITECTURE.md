@@ -17,7 +17,7 @@ raw ticker universe
 → per-minute monitor             [deterministic]
 → pending → next-open execution  [deterministic]
 → paper economics + ledger       [ECONOMIC AUTHORITY]
-→ shadow post-entry management   [research only, execution DISABLED]
+→ post-entry adaptive management [shadow analysis; paper execution ENABLED 2026-10-16]
 → events → Telegram relay        [NOTIFICATION, not authority]
 → cohort/outcome evaluation      [R&D evidence]
 ```
@@ -65,8 +65,10 @@ from the tracks repo.
 - Monitor tick: one-shot per minute; a crash loses only that tick.
 - Bridge down: LLM phases BLOCK, deterministic phases unaffected.
 - Relay down: events queue in jsonl; cursors resume delivery on restart.
-- Shadow management: writes intents/reassessments only; `mgmt_exec` is a
-  no-op while `management_policy.json -> execution.enabled == false`.
+- Adaptive management: reassessment/intents are shadow artifacts; `mgmt_exec`
+  converts VALID intents to canonical pending exits while
+  `management_policy.json -> execution.enabled == true` (currently ON since
+  2026-10-16; false = kill switch that cancels unfilled adaptive orders).
 
 ## Worktrees
 

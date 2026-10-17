@@ -263,7 +263,7 @@ availability — **"model backend down" never means "stop managing PBF."**
 - After the close: `close_pass` evaluates close-based triggers, end-of-day
   marks positions, settles pending orders.
 
-## 9a. Post-entry shadow management (Phase B — observational only)
+## 9a. Post-entry adaptive management (Phase B: shadow analysis; Phase E: paper execution enabled)
 
 An observational layer now watches open positions after entry. It is
 **shadow-only**: it cannot create orders, change stops, or touch economics.
@@ -312,7 +312,7 @@ remainder-risk validated independently), and forbidden actions (any
 add/pyramid/increase → FORBIDDEN_MANAGEMENT_ACTION). Valid results are
 written to `management_intents/` stamped SHADOW_VALIDATED with a
 deterministic `mgmact_*` action ID — still **no orders, no stop changes, no
-economics**. **Phase E machinery implemented but DISABLED:** `alpha_rnd/mgmt_exec.py`
+economics**. **Phase E machinery ENABLED since 2026-10-16:** `alpha_rnd/mgmt_exec.py`
 can convert a VALIDATED_SHADOW_INTENT into canonical economics —
 partial/full exits via `pending_open_exits` (pro-rata cost basis through
 `do_exit`), tighter stops via `stop_rule` update (never-widen enforced at

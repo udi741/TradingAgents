@@ -21,7 +21,7 @@ DERIVED STATE | RESEARCH/SHADOW ARTIFACT | NOTIFICATION ONLY
 | `alpha_rnd/scheduler_state.json` | OPERATIONAL STATE | YES — completed/invalid sessions, published digests | NO | MUST |
 | `alpha_rnd/scheduler_state.lock` | OPERATIONAL | lock file | NO | no |
 | `evaluations/alpha_rnd_v1/management_state.json` | OPERATIONAL/SHADOW | latest prices + mgmt shadow bookkeeping | NO | MUST |
-| `evaluations/alpha_rnd_v1/management_actions.json` | OPERATIONAL REGISTRY | adaptive-execution lifecycle (VALIDATED→ENQUEUED→FILLED→EXECUTED); EMPTY while execution disabled | NO | MUST |
+| `evaluations/alpha_rnd_v1/management_actions.json` | OPERATIONAL REGISTRY | adaptive-execution lifecycle (VALIDATED→ENQUEUED→FILLED→EXECUTED); execution ENABLED since 2026-10-16 (kill switch in management_policy.json) | NO | MUST |
 | `evaluations/alpha_rnd_v1/management_intents/<TICKER>/*.json` | SHADOW ARTIFACT | validated shadow intents — NOT economic | NO | MUST |
 | `alpha_rnd/management_events.jsonl` | SHADOW/OPERATIONAL log | reassessment triggers/results; never proof of a trade | NO | yes |
 | `alpha_rnd/trigger_events.jsonl` | ECONOMIC EVENT LOG | durable entry/exit/stop events; relay cursor feeds on it | NO | MUST |

@@ -1,6 +1,6 @@
 # ALPHA Post-Entry Adaptive Management — Implementation Plan
 
-Status: PHASE E MACHINERY DONE — execution path implemented but DISABLED (execution.enabled=false). Activation requires explicit approval + fresh reassessment. Phase A audit + design
+Status: PHASE E DONE — execution path implemented; execution.enabled=TRUE since 2026-10-16 (this plan doc is historical; live semantics: TRADINGAGENTS_CAPABILITY_REFERENCE.md). Activation requires explicit approval + fresh reassessment. Phase A audit + design
 lock retained below. Phases C–E require explicit phase approval; Phase E
 additionally requires user approval after shadow acceptance.
 
