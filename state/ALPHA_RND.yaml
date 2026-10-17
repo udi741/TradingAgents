@@ -1,0 +1,71 @@
+track: ALPHA_RND
+status: ACTIVE
+type: OPPORTUNITY_RND_PAPER_ONLY
+owner_session: feather-room
+branch: exp/alpha-rnd-v1
+worktree: /home/udi/udi_provate/TradingAgents-alpha-rnd
+current_gate: V1_V2_COMPLETE_MONITOR_PLUS_RETRO_COVERAGE_DONE
+last_accepted_result: >-
+  V1 (session 2026-10-01): 28-name frozen pool, 10 deep TA runs,
+  0 ACTIONABLE_NOW, 6 WATCH_FOR_ENTRY, 4 REJECT. 3 VALID_PROSPECTIVE fills
+  on 2026-10-02: PBF @80.00 (62sh), ACN @205.00 (24sh), APPS @11.30 (442sh).
+  V2 (session 2026-10-02): 22 new candidates, 10 deep runs, 0 ACTIONABLE_NOW,
+  10 new WATCH triggers, 0 REJECT. Paper-book protocol frozen; close-confirmed
+  executions moved to next regular-session open.
+next_action: >-
+  Mark book each completed session; monitor 13 active watch triggers
+  (expiry 2026-10-30) via the cron fast-trigger monitor; E1 shadow
+  counterfactual ACCUMULATING. Coverage diagnostic done: ALPHA noticed
+  12/16 expert buys at family level, 1/16 reached deep analysis (UAMY).
+blockers: []
+paper_account:
+  starting_capital: 100000.00
+  cash: 85125.40
+  invested: 14874.60
+  nav: 99844.50
+  as_of: '2026-10-02 close'
+  note: verify against authoritative ledger in alpha worktree if newer
+open_positions:
+  - ticker: PBF
+    entry: 80.00
+    shares: 62
+    style: SHORT_SWING
+    invalidation: 'intraday hard stop 74.50; completed close < 78 -> next-open exit'
+    target: ~90
+    reevaluation: 'mid-October / ~Oct-16 time-box'
+  - ticker: ACN
+    entry: 205.00
+    shares: 24
+    style: MEDIUM_TERM
+    invalidation: 'completed close < 194 -> next-open exit; gap-fill concern < ~183'
+    target: ~250
+    reevaluation: 'next earnings; 60 sessions = checkpoint not exit'
+  - ticker: APPS
+    entry: 11.30
+    shares: 442
+    style: EVENT_DRIVEN
+    invalidation: 'intraday hard stop < 10.42'
+    target: NOT_STATED
+    reevaluation: 'through ~early-November earnings'
+watchlist:
+  v1: [IOVA, CDNA, SDGR]
+  v2: [PGEN, SYNA, ASST, KOD, TXG, TWST, PAYC, XNCR, AXGN, HHH]
+  reanalyze_on_trigger: [SYNA, KOD, HHH]
+  auto_entry: [PGEN]
+monitor:
+  mechanism: cron per-minute while machine is on
+  command: 'cd TradingAgents-alpha-rnd && PYTHONPATH=. python3 -m alpha_rnd.monitor --once'
+  events_log: alpha_rnd/trigger_events.jsonl (append-only)
+production_modification_permission: none without separate explicit promotion decision
+last_updated_utc: '2026-10-03T14:20:00Z'
+
+daily_discovery_scheduler:
+  installed: '2026-10-03'
+  cron: '7 * * * *'
+  status: AWAITING_FIRST_UNATTENDED_DISCOVERY_VERIFICATION
+  next_unattended_session: '2026-10-05'
+
+eod_marks:
+  owner: monitor.eod_marks (run_once, per completed session)
+  ledger_record: alpha_paper_ledger.jsonl MARK
+  first_catchup_mark: 2026-10-05

@@ -1,0 +1,10 @@
+[Unit]
+Description=TradingAgents boot/recovery self-test schedule
+
+[Timer]
+OnBootSec=120
+OnUnitActiveSec=600
+Unit=tradingagents-bootcheck.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,623 @@
+# TradingAgents Capability Registry — canonical machine-readable map.
+# Status vocabulary: ACTIVE_PRODUCTION | ACTIVE_PARTIAL | SHADOW_ONLY |
+#   RESEARCH_ONLY | LEGACY | DUPLICATED | BROKEN | UNUSED | MISSING
+# RULE: no production capability is complete until this registry,
+# TRADINGAGENTS_CAPABILITY_REFERENCE.md, and the system guide are updated.
+# Module paths are relative to the ALPHA worktree root
+# (/home/udi/udi_provate/TradingAgents-alpha-rnd); tracks/ paths are relative
+# to this repo. tradingagents/ = the vendored library ALPHA actually imports.
+registry_version: 2
+generated_from: code audit of alpha_rnd/, evaluations/alpha_rnd_v1/,
+  tradingagents/ (vendored), cli/, ta_eval_alpha/, tracks repo
+capabilities:
+  # ================= ALPHA operating layer =================
+  - id: discovery.universe
+    status: ACTIVE_PRODUCTION
+    modules: [evaluations/alpha_rnd_v1/discovery.py, ta_eval_alpha/e17_screener.py]
+    purpose: PIT universe (Wikipedia S&P500/MidCap400 + nasdaqtrader common stock),
+      junk-name filter, eligibility (>=252 sessions, close>=$5, medDV20>=$20M),
+      multi-lane scoring (momentum/RS/quality-pullback/catalyst/fundamental-
+      acceleration), frozen candidate pool
+    authority: candidate_pool_frozen_<session>.json, universe_raw.json,
+      market_cache_<session>.pkl
+    limitations: [no LLM; fail-soft on universe fetch errors;
+      deep_quota=10 must match daily_scheduler]
+  - id: discovery.ta_analysis
+    status: ACTIVE_PRODUCTION
+    modules: [evaluations/alpha_rnd_v1/run_ta.py]
+    purpose: per-ticker full TradingAgents graph run via SWE bridge
+      (devin-quick=swe-2-medium, devin-deep=swe-2-high, temperature=0,
+      statements pinned to sec_edgar, flat PortfolioContext $100k)
+    authority: case_artifacts/<T>_<session>.json (sha-stamped),
+      <T>_<session>.error.json for failures
+    limitations: [~25 calls/ticker; pretrained model knowledge;
+      artifact caching makes reruns read-only]
+  - id: discovery.retry
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/daily_scheduler.py]
+    purpose: bounded fair retry of failed TA (7-day lifetime, <=2/run,
+      least-recently-attempted first); skips LLM call when upstream known-down
+  - id: entry.synthesize
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/synthesize.py]
+    purpose: bridge translator converts TA text -> machine intents; numbers must
+      appear in source text; TranslatorInfra on infra failure; deterministic
+      fail-closed disposition per ticker
+    authority: publication_intents_<session>.json (append-only merge; never
+      drops prior intents)
+    notes: >-
+      8 dispositions: EXECUTABLE_WATCH, REANALYZE_ON_TRIGGER,
+      RISK_PLAN_REQUIRED, RESEARCH_ONLY, AMBIGUOUS_REJECTED, NO_ACTION,
+      OPEN_POSITION_MANAGEMENT, PUBLISHED_NON_EXECUTABLE. Publishable set =
+      EXECUTABLE_WATCH, REANALYZE_ON_TRIGGER, PUBLISHED_NON_EXECUTABLE.
+      Machine-executable requires watch_mode in {AUTO_ENTRY,
+      DETERMINISTIC_CONFIRMATION} + an executable param key + a risk plan.
+  - id: entry.gate
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/entry_gate.py, alpha_rnd/monitor.py]
+    purpose: >-
+      fail-closed entry authorization: latest frozen publication for the
+      ticker must be EXECUTABLE_WATCH AND the watch's revision session must equal
+      that latest session; REANALYZE_ON_TRIGGER never passes
+  - id: entry.success_plan
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/success_plan.py, alpha_rnd/monitor.py]
+    purpose: every executable buy must define base/bull value ranges (legacy
+      `target` doubles as base-case top), success_criteria,
+      profit_realization_plan; optional policy minimums
+      (management_policy.success_plan.min_upside_pct / min_rr); fail-closed
+      in do_fill. Long-only validation; shorts untested.
+    limitations: [legacy target fallback; long-oriented]
+  - id: entry.triggers
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py]
+    purpose: >-
+      monitor primitives evaluated on daily/intraday bars:
+      multi_close_in_zone, close_in_zone_low_vol, close_in_zone (zone2),
+      close_breakout_vol, close_breakout_retest, orderly_pullback_close,
+      weekly_close_breakout (Fridays), reclaim_2step, gapfill_probe,
+      event_gated_multi_close, close_breakout, intraday_zone_touch
+      (DETERMINISTIC_CONFIRMATION only). Malformed watch params reject at eval.
+  - id: entry.publish
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/publish.py, alpha_rnd/gen_watchlist.py]
+    purpose: >-
+      atomic live_watchlist.json regen: hand-curated WATCHES/POSITIONS
+      spec merged with published EXECUTABLE_WATCH/REANALYZE_ON_TRIGGER intents
+      from all sessions <= publish session; newer revision wins per ticker;
+      monitor_state.watch_lifecycle terminal/revised watches never resurrect;
+      publication marker recorded in scheduler_state.published_sessions
+    authority: alpha_rnd/live_watchlist.json (AUTHORITATIVE watches/stops)
+  - id: economics.monitor_state
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py]
+    purpose: canonical cash/positions/pending_open_fills/pending_open_exits/
+      executed/outbox; executed[] capped to last 2000 exec ids
+    authority: alpha_rnd/monitor_state.json
+  - id: economics.fills
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py]
+    purpose: next-open fills; pro-rata cost basis incl. 0.1% fee; exec-id dedup;
+      executed[] = fill authority only; do_exit removes matching
+      pending_open_exits; resolve_pending fills pending orders at next open
+  - id: mgmt.deterministic
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py]
+    purpose: hard intraday stops + close_below/close rules -> next-open exits;
+      always runs before and independent of any inference
+  - id: mgmt.snapshots
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt.py]
+    purpose: immutable entry snapshot incl. frozen success_plan + original stop
+      (R basis); backfill_missing for legacy positions
+    authority: evaluations/alpha_rnd_v1/entry_snapshots/
+  - id: mgmt.triggers
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt.py]
+    purpose: >-
+      R-based triggers vs frozen entry risk unit (1R = (entry - original stop)/entry): APPRECIATION >=1.0R, PEAK_GIVEBACK (peak>=1R and >=50% giveback), ADVERSE_ACCELERATION <=-1.25R, HORIZON_REVIEW at parsed reeval date; R_CONTEXT_UNAVAILABLE suppresses price triggers; edge-trigger + 2-session cooldown + 20%-of-threshold hysteresis; catalyst schema-reserved/disabled. Trigger = request to think again.
+    authority: alpha_rnd/management_policy.json (trigger config)
+  - id: mgmt.reassessment
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt_reassess.py]
+    purpose: frozen per-trigger context (bars window, SEC catalysts, position
+      fingerprint) -> bridge inference -> management_analyses/; position-state
+      fingerprint staleness (STALE_POSITION_CLOSED/CHANGED); urgent families
+      (ADVERSE_ACCELERATION) prioritized
+    limitations: [HISTORICAL_RESEARCH_EVIDENCE only when replayed]
+  - id: mgmt.validator
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt_validate.py, alpha_rnd/success_plan.py]
+    purpose: never-widen stop check, partial-exit normalization, composite stop,
+      runner contract (remaining thesis + revised objective + positive
+      remaining upside required to HOLD a realized objective), stale/superseded
+    authority: management_intents/
+  - id: mgmt.execution
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/mgmt_exec.py]
+    purpose: VALID intent -> management_actions.json lifecycle
+      ENQUEUED/ALREADY_ENQUEUED -> canonical pending exit -> next-open fill;
+      revalidation against live state; remainder-rule checks; kill switch
+      management_policy.execution.enabled cancels unfilled adaptive orders,
+      never reverses fills. ENQUEUED != FILLED; executed[] stays fill-only.
+    authority: management_actions.json; switch=management_policy.json
+      execution.enabled
+    current_state: ENABLED (paper, since 2026-10-16)
+  - id: mgmt.runner_contract
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/success_plan.py]
+    purpose: no runner/HOLD on realized objective without remaining thesis +
+      revised objective + positive remaining upside
+  - id: ops.scheduler
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/daily_scheduler.py]
+    purpose: >-
+      cron lifecycle: sched lock + cycle lock, per-stage subprocess
+      timeouts, state txns (flock + atomic), urgent-mgmt pre-pass, upstream-
+      known-down skip before spending model calls, INTERRUPTED honestly
+      overwritten by later success
+  - id: ops.infra_status
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/infra_status.py]
+    purpose: bridge-process health (systemd + /v1/models probe) vs upstream
+      model status from journal evidence only; reason codes
+      (MODEL_RATE_LIMITED/QUOTA_EXHAUSTED/UNAVAILABLE/TIMEOUT/BRIDGE_FAILURE/
+      TA_RUNTIME_FAILURE/MALFORMED_MODEL_OUTPUT/UNKNOWN), retryable flags,
+      analysis_summary terminal model; no model calls
+  - id: ops.notify
+    status: ACTIVE_PRODUCTION
+    modules: [alpha_rnd/monitor.py, ops/telegram_relay.py]
+    purpose: >-
+      event delivery: monitor notify() appends NOTIFICATIONS.log + libnotify
+      desktop popup (DISPLAY/DBUS set for cron); ops/telegram_relay.py (tracks
+      repo, tradingagents-telegram.service) tails event streams, severity
+      routing, semantic dedup by transition identity, circuit breaker;
+      delivery != proof
+  - id: ops.bridge
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents-swe-bridge.service]
+    purpose: model provider abstraction at 127.0.0.1:8765/v1 (openai_compatible
+      provider); journal = call evidence consumed by infra_status
+  - id: profit.legacy_target
+    status: LEGACY
+    modules: [alpha_rnd/success_plan.py]
+    purpose: single-number `target` preserved; becomes base-case top when no
+      explicit range exists
+  - id: disposition.open_position_management
+    status: UNUSED
+    modules: [alpha_rnd/synthesize.py]
+    purpose: entry-side label for held-ticker validation failures; nothing
+      consumes it (ta_outcomes reads it observationally)
+
+  # ================= ALPHA evaluation/research (R1-R7) =================
+  - id: eval.funnel
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/funnel.py, alpha_rnd/funnel_status.py]
+    purpose: R1 immutable ex-ante per-session artifact joining frozen pool +
+      intents + watchlist + state; exclusion taxonomy; lane/cohort ranks
+    authority: evaluations/alpha_rnd_v1/opportunity_funnel/<session>.json
+  - id: eval.cohort_outcomes
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/cohort_outcomes.py]
+    purpose: R2 scheduled ex-post outcome tracker; per (session,ticker,horizon
+      H1/H5/H20/H60) MATURED/DATA_UNAVAILABLE records, next-open entry ref,
+      SPY excess, MFE/MAE; flock + health file; also matures R6 shadow cohorts
+    authority: evaluations/alpha_rnd_v1/rank_cohort_outcomes/
+  - id: eval.ta_outcomes
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/ta_outcomes.py]
+    purpose: >-
+      R3 derived read-only join: TA signal group x disposition x
+      R2 outcomes; clean-only headline stats
+  - id: eval.translator_gap
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/translator_gap.py]
+    purpose: R4 PUBLISHED_NON_EXECUTABLE attribution (intent quality vs
+      translation vs missing monitor primitive); capability catalog derived
+      from monitor.py git revision live at the session (no retroactive relabel)
+  - id: eval.low_price_shadow
+    status: SHADOW_ONLY
+    modules: [alpha_rnd/low_price_shadow.py]
+    purpose: R6 counterfactual $1-$5 shadow lane from already-fetched data;
+      never trades; feeds R2 shadow outcome dir (separate store)
+  - id: eval.postmortems
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/postmortems.py, alpha_rnd/investigate.py]
+    purpose: R7 evidence-first per-trade packets from frozen artifacts;
+      dedups economic events; incident registry; conservative attribution
+  - id: eval.replay_r5
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/replay.py, alpha_rnd/r5b_report.py]
+    purpose: as-of replay experiments; isolated from production economics;
+      never writes monitor_state.json
+  - id: eval.mgmt_time_machine
+    status: RESEARCH_ONLY
+    modules: [alpha_rnd/mgmt_time_machine.py]
+    purpose: control-vs-treatment mgmt replay; NOT economic authority
+
+  # ================= Vendored TradingAgents core =================
+  - id: ta.graph
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/graph/trading_graph.py, tradingagents/graph/setup.py,
+      tradingagents/graph/conditional_logic.py, tradingagents/graph/propagation.py,
+      tradingagents/graph/analyst_execution.py]
+    purpose: >-
+      LangGraph orchestration: selected analysts run IN PARALLEL (each a
+      private subgraph returning only its report) -> Bull/Bear debate
+      (2*max_debate_rounds turns) -> Research Manager (deep) -> Trader
+      (quick) -> Aggressive/Conservative/Neutral risk debate
+      (3*max_risk_discuss_rounds) -> Portfolio Manager (deep) -> END.
+      Analyst tool rounds capped (max_tool_rounds=20) then WRAP_UP turn ends
+      the subgraph regardless; complete path_maps prevent mid-run crashes on
+      speaker-label drift; trade_date validated YYYY-MM-DD not-in-future.
+  - id: ta.analyst.market
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/analysts/market_analyst.py]
+    purpose: picks <=8 of 12 curated indicators; must call get_stock_data first;
+      must call get_verified_market_snapshot before exact price claims
+    tools: [get_stock_data, get_indicators, get_verified_market_snapshot]
+  - id: ta.analyst.sentiment
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/analysts/sentiment_analyst.py]
+    purpose: pre-fetches Yahoo news + StockTwits + Reddit into the prompt (no
+      tool calls), optional Jev screening, structured SentimentReport
+      (band/score 0-10/confidence/narrative) with free-text fallback;
+      7-day window ending trade_date
+    limitations: [social feeds serve recent items only — NOT PIT-complete for
+      old dates (window-trimmed but coverage-bounded)]
+  - id: ta.analyst.news
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/analysts/news_analyst.py]
+    purpose: world/macro report; tools get_news, get_global_news,
+      get_macro_indicators (FRED), get_prediction_markets (Polymarket)
+  - id: ta.analyst.fundamentals
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/analysts/fundamentals_analyst.py]
+    purpose: company fundamentals report; tools get_fundamentals,
+      get_balance_sheet, get_cashflow, get_income_statement,
+      get_insider_transactions
+  - id: ta.debate.research
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/researchers/bull_researcher.py,
+      tradingagents/agents/researchers/bear_researcher.py,
+      tradingagents/agents/managers/research_manager.py]
+    purpose: quick-LLM bull vs bear rounds; deep-LLM Research Manager emits
+      structured ResearchPlan (5-tier recommendation + rationale + strategic
+      actions)
+  - id: ta.trader
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/trader/trader.py]
+    purpose: quick-LLM structured TraderProposal (Buy/Hold/Sell + reasoning +
+      optional entry_price/stop_loss absolute levels + sizing); market report
+      grounds levels; entry/stop coerced or dropped if non-numeric
+  - id: ta.debate.risk
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/risk_mgmt/aggressive_debator.py,
+      tradingagents/agents/risk_mgmt/conservative_debator.py,
+      tradingagents/agents/risk_mgmt/neutral_debator.py]
+    purpose: quick-LLM three-stance risk debate over trader proposal
+  - id: ta.portfolio_manager
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/managers/portfolio_manager.py]
+    purpose: >-
+      deep-LLM structured PortfolioDecision: 5-tier rating + summary +
+      thesis + optional price_target/time_horizon; injects past_context
+      lessons; rating is run's final_rating (REVIEW sentinel when unparseable)
+  - id: ta.structured_output
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/structured.py, tradingagents/agents/schemas.py,
+      tradingagents/agents/rating.py]
+    purpose: with_structured_output binding + free-text fallback chain;
+      _coerce_optional_float drops %/range/placeholder numerics; rating parser
+      (first own-line label, else last anywhere, scale-lines skipped) ->
+      REVIEW when absent
+  - id: ta.memory_reflection
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/memory/log.py, tradingagents/memory/reflection.py,
+      tradingagents/memory/settlement.py]
+    purpose: append-only markdown decision log (idempotent per ticker+date);
+      settle_pending scores pending entries after holding_period_days (20 in
+      ALPHA) vs benchmark_map index; Reflector writes 2-4 sentence lesson;
+      resolved:<date> tags enable PIT filtering so historical runs only learn
+      from outcomes known by then; entry rotation via memory_log_max_entries
+    authority: evaluations/alpha_rnd_v1/memory/trading_memory.md
+  - id: ta.checkpoint_resume
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/graph/checkpointer.py]
+    purpose: per-ticker SQLite SqliteSaver; resume on same run signature
+      (analysts+rounds+asset+portfolio fingerprint+config digest); cleared on
+      success. Enabled in ALPHA config.
+  - id: ta.instrument_context
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/context.py]
+    purpose: deterministic fail-open yfinance identity (name/sector/industry/
+      exchange) injected into every agent; historical runs get current NAME
+      ONLY (labeled), not today's sector/industry; absent-report and
+      absent-portfolio sentinels; output_language instruction
+  - id: ta.jev_screen
+    status: ACTIVE_PARTIAL
+    modules: [tradingagents/agents/post_screen.py]
+    purpose: optional TypeSafe Jev screening of StockTwits/Reddit posts
+      (on-topic noul>=0.3 kept; stance counts when confidence>=0.5); active
+      only when TYPESAFE_API_KEY set; failure keeps posts unscreened w/ note
+  - id: ta.backtest_grid
+    status: RESEARCH_ONLY
+    modules: [tradingagents/backtest.py]
+    purpose: ticker x date grid runs into an isolated memory log + per-rating
+      alpha scoring; NOT a portfolio simulator
+  - id: ta.reporting
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/reporting.py]
+    purpose: per-section markdown report tree + complete_report.md with
+      run-settings header
+  - id: ta.portfolio_context
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/portfolio.py]
+    purpose: caller book (cash/currency/positions) rendered into Trader/risk/PM
+      prompts; fingerprint in run signature; absent != flat
+  - id: ta.tool_surface
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/agents/tools.py,
+      tradingagents/agents/analysts/turn.py, tradingagents/agents/state.py,
+      tradingagents/default_config.py]
+    purpose: >-
+      the 11 analyst-facing @tool functions (InjectedState pins symbol +
+      trade_date so a model can never query past the run date); take_turn/
+      WRAP_UP tool-round lifecycle; AgentState schema; DEFAULT_CONFIG +
+      TRADINGAGENTS_* env overrides with strict coercion
+  - id: eval.expert_coverage
+    status: RESEARCH_ONLY
+    modules: [evaluations/alpha_rnd_v1/expert_coverage.py]
+    purpose: retrospective diagnostic — replays frozen discovery machinery at
+      expert BUY dates with PIT data only (survivorship caveat flagged)
+  - id: ta.symbols
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/symbols.py, tradingagents/dataflows/files.py]
+    purpose: broker->Yahoo symbol normalization (crypto/forex/HK/SH/aliases);
+      safe_ticker_component path-traversal guard; atomic replace_file + locked()
+
+  # ================= Vendor / data semantics =================
+  - id: data.router
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/router.py, tradingagents/dataflows/config.py,
+      tradingagents/dataflows/errors.py]
+    purpose: tool->category->configured vendor chain; NO silent fallback to
+      unconfigured vendors; per-tool override via tool_vendors; typed errors
+      (NoMarketData/VendorUnavailable/VendorNotConfigured); failure sentinels
+      DATA_UNAVAILABLE / NO_DATA_AVAILABLE are VISIBLE to the model (never
+      fabricate wording). OPTIONAL_CATEGORIES {macro_data, prediction_markets}
+      degrade to sentinel instead of raising; core categories raise.
+  - id: data.pit_guards
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/date_window.py]
+    purpose: as_of/as_of_window clamp tool dates to trade_date; in_window
+      half-open UTC trim (undated items only when window reaches today);
+      coverage_gap marks unobserved windows unavailable-not-empty;
+      withhold_live_profile / withhold_undisclosed_trades /
+      withhold_undisclosed_statements for historical runs
+  - id: data.vendor.yfinance
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/vendors/yahoo/common.py,
+      tradingagents/dataflows/vendors/yahoo/ohlcv.py,
+      tradingagents/dataflows/vendors/yahoo/market.py,
+      tradingagents/dataflows/vendors/yahoo/news.py,
+      tradingagents/dataflows/vendors/yahoo/fundamentals.py,
+      tradingagents/dataflows/vendors/yahoo/snapshot.py]
+    purpose: >-
+      OHLCV (5y cache, same-day TTL 900s, rows > as_of filtered, stale >10d rejected, closeless newest bar handled, gap fill for indicators only); indicators via stockstats (12 supported); verified market snapshot (deterministic truth for exact claims); news/global news window-filtered; Ticker.info fundamentals TODAY_ONLY (withheld for historical); insider TODAY_ONLY (no filing date -> withheld); statements period-dated -> withheld for historical. yf_retry: 3 exponential retries on 429 only; empty-answer probing host before declaring no-data.
+  - id: data.vendor.sec_edgar
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/vendors/sec_edgar.py]
+    purpose: >-
+      TRUE PIT statements: XBRL companyfacts by FILED date <= as_of;
+      amendments count from filing; quarterly YTD handling; annual = 10-K/20-F/
+      40-F only; US filers only (non-filer -> NoMarketData -> next vendor);
+      24h disk cache; SEC EDGAR UA required (SEC_EDGAR_USER_AGENT env).
+      ALPHA pins all statement tools here.
+  - id: data.vendor.fred
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/vendors/fred.py]
+    purpose: macro series via alias/raw series ID; VINTAGE-PINNED
+      (realtime_start=realtime_end=min(as_of, FRED-today CT)) so historical
+      runs see pre-revision values; FRED_API_KEY absent ->
+      FredNotConfiguredError -> optional category -> DATA_UNAVAILABLE sentinel
+      (macro withheld, run continues, model told). Bad alias returns guidance
+      text not error.
+  - id: data.vendor.polymarket
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/vendors/polymarket.py]
+    purpose: live open-market implied probabilities via public Gamma API,
+      keyless; forward-looking filter; TODAY_ONLY — historical as_of ->
+      explicit withholding; network error -> sentinel (optional category)
+  - id: data.vendor.alpha_vantage
+    status: ACTIVE_PARTIAL
+    modules: [tradingagents/dataflows/vendors/alpha_vantage/common.py,
+      tradingagents/dataflows/vendors/alpha_vantage/stock.py,
+      tradingagents/dataflows/vendors/alpha_vantage/indicator.py,
+      tradingagents/dataflows/vendors/alpha_vantage/news.py,
+      tradingagents/dataflows/vendors/alpha_vantage/fundamentals.py]
+    purpose: configured fallback vendor (not in ALPHA chains by default);
+      requires ALPHA_VANTAGE_API_KEY; same PIT withhold rules via date_window
+  - id: data.vendor.reddit
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/vendors/reddit.py]
+    purpose: public Atom search (JSON endpoint WAF-blocked); single combined
+      subreddit query, t=week only; ONE 429 retry honoring Retry-After (cap
+      60s, else ~60s jittered); failure -> <Reddit unavailable> NOT silence;
+      no scores/comments; window-trimmed for historical runs but feed only
+      reaches ~7d back (coverage_gap says so)
+  - id: data.vendor.stocktwits
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/vendors/stocktwits.py]
+    purpose: keyless public symbol stream, Bullish/Bearish tags; NO retry;
+      failure -> <unavailable> placeholder; window-trimmed, recent-only feed
+  - id: data.vendor.typesafe_jev
+    status: ACTIVE_PARTIAL
+    modules: [tradingagents/agents/post_screen.py]
+    purpose: see ta.jev_screen (screening service for social posts)
+  - id: data.net_helpers
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/dataflows/net.py]
+    purpose: get_scrubbed keeps API keys out of error text; vendor_reachable
+      distinguishes outage from empty answer
+
+  # ================= LLM client layer =================
+  - id: llm.factory_routing
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/llm_clients/factory.py,
+      tradingagents/llm_clients/base_client.py,
+      tradingagents/llm_clients/api_key_env.py,
+      tradingagents/llm_clients/validators.py,
+      tradingagents/llm_clients/model_catalog.py]
+    purpose: provider registry (anthropic/google/azure/bedrock native + 15
+      OpenAI-compatible); ALPHA uses openai_compatible -> bridge;
+      env-var key map; model catalog + unknown-model warning; validated
+      llm_max_retries/max_tokens coercion
+  - id: llm.openai_compatible
+    status: ACTIVE_PRODUCTION
+    modules: [tradingagents/llm_clients/openai_client.py,
+      tradingagents/llm_clients/capabilities.py]
+    purpose: normalized content; per-model capability table (tool_choice
+      suppression, json modes, reasoning_content roundtrip, reasoning_split);
+      Responses API only on native api.openai.com; key-optional local servers;
+      reasoning_effort gated to reasoning models
+  - id: llm.native_providers
+    status: UNUSED
+    modules: [tradingagents/llm_clients/anthropic_client.py,
+      tradingagents/llm_clients/google_client.py,
+      tradingagents/llm_clients/azure_client.py,
+      tradingagents/llm_clients/bedrock_client.py]
+    purpose: native Anthropic/Gemini/Azure/Bedrock clients; not used by ALPHA
+      (bridge is openai_compatible) but production code for other users
+
+  # ================= Supporting / entry points =================
+  - id: cli.interactive_app
+    status: ACTIVE_PARTIAL
+    modules: [cli/main.py, cli/run.py, cli/prompts.py, cli/selections.py,
+      cli/display.py, cli/stats_handler.py, cli/announcements.py, cli/prefs.py,
+      cli/models.py, cli/config.py]
+    purpose: Typer interactive TUI (provider/model pickers, streaming display,
+      stats); NOT on ALPHA's path (ALPHA calls the graph directly via run_ta.py)
+  - id: entrypoint.demo_main
+    status: UNUSED
+    modules: [main.py]
+    purpose: upstream demo script (propagates NVDA); not part of ALPHA pipeline
+duplicated_implementations:
+  - capability: portfolio_simulation
+    authoritative: monitor_state.json + do_exit (alpha_rnd/monitor.py)
+    non_authoritative: [mgmt_time_machine.py, replay.py, r5b_report.py,
+      tradingagents/backtest.py, ta_eval_alpha/e17_screener.py]
+  - capability: exit_execution
+    authoritative: pending_open_exits + resolve_pending (monitor.py)
+    non_authoritative: [mgmt_time_machine treatment fills]
+  - capability: trigger_evaluation
+    authoritative: mgmt.py::evaluate + monitor.py close/intraday passes
+    non_authoritative: [mgmt_time_machine.py replay copies]
+  - capability: discovery_scoring
+    authoritative: e17_screener.py via discovery.py
+    non_authoritative: [low_price_shadow.py reuses e17 on shadow population only]
+  - capability: watchlist_spec
+    authoritative: live_watchlist.json (gen_watchlist spec + publish merge)
+    non_authoritative: [case_artifact trigger text, funnel monitor projections]
+  - capability: vendored_library_copy
+    authoritative: TradingAgents-alpha-rnd/tradingagents (imported by ALPHA)
+    non_authoritative: [TradingAgents-tracks/tradingagents mirror copy,
+      TradingAgents-c12 frozen v0.5.0 tree]
+state_authority:
+  cash: monitor_state.json (AUTHORITATIVE)
+  positions: monitor_state.json (AUTHORITATIVE)
+  pending_orders: monitor_state.json pending_open_fills/exits (AUTHORITATIVE)
+  executed_fill_ids: monitor_state.json executed[] (AUTHORITATIVE = fill only)
+  mgmt_actions: management_actions.json (AUTHORITATIVE for adaptive lifecycle)
+  entry_snapshots: entry_snapshots/ (AUTHORITATIVE, immutable)
+  intents: management_intents/ (AUTHORITATIVE validated decisions)
+  publication_intents: publication_intents_<session>.json (AUTHORITATIVE frozen
+    dispositions, append-only)
+  watchlist: live_watchlist.json (AUTHORITATIVE for watches/stops)
+  watch_lifecycle: monitor_state.json watch_lifecycle (AUTHORITATIVE terminal/
+    superseded markers)
+  funnel: opportunity_funnel/<session>.json (AUTHORITATIVE ex-ante, immutable)
+  cohort_outcomes: rank_cohort_outcomes*/ (AUTHORITATIVE ex-post, append-only)
+  memory_log: trading_memory.md (AUTHORITATIVE decision/reflection log)
+  management_state: management_state.json (OBSERVABILITY_ONLY)
+  management_requests: management_requests/ (OBSERVABILITY_ONLY)
+  mevents/ledger: alpha_paper_ledger.jsonl + trigger_events.jsonl + management_
+    events.jsonl (EVIDENCE)
+  scheduler_state: scheduler_state.json (OPS STATE incl. published_sessions)
+  bridge_journal: systemd journal of tradingagents-swe-bridge.service (EVIDENCE)
+track_boundaries:
+  ALPHA_RND:
+    worktree: TradingAgents-alpha-rnd
+    branch: exp/alpha-rnd-v1
+    type: OPPORTUNITY_RND paper-only
+    economic_authority: monitor_state.json
+    may_mutate_production: "its own state only"
+    outputs: paper evidence
+  C12_PROSPECTIVE:
+    worktree: TradingAgents-c12
+    branch: exp/gate-c12-prospective
+    type: VALIDATION_CONTROL frozen v0.5.0
+    economic_authority: own ledger
+    may_mutate_production: "no (other tracks MUST NOT touch)"
+    outputs: clean validation evidence
+  EXPERT_RND:
+    worktree: TradingAgents-expert-rnd
+    type: ANALYSIS_RND
+    may_mutate_production: "no"
+    outputs: signal evidence only
+  TIME_MACHINE_RND:
+    worktree: TradingAgents-time-machine-rnd
+    type: RESEARCH (broad time-machine)
+    may_mutate_production: "no"
+    outputs: simulation only
+  TRACKS_REPO:
+    path: TradingAgents-tracks
+    type: DOCS/REGISTRY hub
+    note: vendored TA copy here is a mirror, not the imported one
+provider_semantics:
+  yfinance:
+    pit: "OHLCV yes (as_of filter + stale reject); profile/insider/statements TODAY_ONLY-withheld; news window-trimmed recent-only"
+    retry: "429 x3 exponential backoff"
+    fail_visibility: sentinels visible to model
+  sec_edgar:
+    pit: "yes (filed-date true PIT)"
+    coverage: "US filers only"
+    fail_visibility: "NoMarketData falls through to next vendor"
+  fred:
+    pit: "yes (vintage-pinned realtime bounds)"
+    key: FRED_API_KEY
+    absent_key: "optional-category sentinel"
+    fail_visibility: visible
+  polymarket:
+    pit: "no (TODAY_ONLY, withheld on historical)"
+    key: none
+    fail_visibility: "sentinel visible"
+  reddit:
+    pit: "partial (window-trimmed, ~7d reach, coverage_gap honesty)"
+    key: none
+    retry: "one 429 retry honoring Retry-After else ~60s jittered"
+    fail_visibility: placeholder
+  stocktwits:
+    pit: "partial (same as reddit)"
+    key: none
+    retry: none
+    fail_visibility: placeholder
+  alpha_vantage:
+    pit: "same withhold rules via shared guards"
+    key: ALPHA_VANTAGE_API_KEY
+    status: configured-but-unused-by-ALPHA
+  typesafe_jev:
+    key: "TYPESAFE_API_KEY (absent = screening off)"
+    fail_visibility: "unscreened note; stance thresholds 0.3/0.5"
+  swe_bridge:
+    provider: "openai_compatible @127.0.0.1:8765/v1"
+    models: "[devin-quick=swe-2-medium, devin-deep=swe-2-high]"
+    temp: "0"
+    fail_visibility: "error artifacts + infra_status reason codes"
+limits: >
+  Social feeds (Reddit/StockTwits/Yahoo news) are window-trimmed but serve only
+  recent items, so historical sentiment is coverage-bounded, not full-PIT.
+  yfinance profile/insider/statements are TODAY_ONLY and withheld on historical
+  runs. SEC EDGAR is the only true-PIT fundamentals source; ALPHA pins
+  statements to it. Prediction markets are TODAY_ONLY. The tracks-repo
+  tradingagents/ tree is a mirror; ALPHA imports the alpha-rnd copy.

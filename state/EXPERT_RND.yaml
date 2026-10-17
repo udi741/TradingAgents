@@ -1,0 +1,41 @@
+track: EXPERT_RND
+status: WAITING_FOR_PROSPECTIVE_EXPERT_SIGNALS
+type: ANALYSIS_ONLY_RND
+owner_session: groovy-allspice
+branch: exp/expert-rnd-v2
+worktree: /home/udi/udi_provate/TradingAgents-expert-rnd
+current_gate: EXPERT_PROSPECTIVE_CAPTURE (historical mimic CLOSED)
+last_accepted_result: >-
+  X3-B — published invalidation non-discriminative: losers stopped more often
+  but too many winners also stopped and winner economics damaged.
+  HISTORICAL_EXPERT_MIMIC = CLOSED. Prospective capture protocol frozen;
+  append-only store at expert_prospective/.
+next_action: >-
+  On each new expert message: capture the exact signal BEFORE outcome is
+  known per runbooks/EXPERT_NEW_SIGNAL.md; freeze signal record; run
+  same-time v0.5.0 TA comparison; freeze artifact.
+reopen_thresholds:
+  min_prospective_buy_add_signals: 20
+  min_completed_losers_or_loser_rate: '5 losers OR >=25% loser rate'
+  min_trades_with_explicit_exits: 15
+blockers:
+  - waits on future expert recommendations; historical disclosures do NOT count
+prospective_signal_count: 0
+historical_disclosures_not_prospective:
+  - {ticker: IREN, path: NORMAL, buy: '2026-08-14 @45', sell: '2026-08-28', outcome: LOSS}
+  - {ticker: PANW, path: RISKIER_PATH_1, buy: '2026-09-08 @329', sell: '2026-09-22 @329', outcome: FLAT}
+  - {ticker: FTNT, path: RISKIER_PATH_1, buy: '2026-09-08 @153', sell: '2026-09-22 @153', outcome: FLAT}
+  - {ticker: AMAT, path: RISKIER_PATH_1, buy: '2026-09-08 @462', sell: '2026-10-01 @524', outcome: WIN}
+rejected_hypotheses: [M2, M4, X1-entangled, X2-zones-non-discriminative, X3-invalidation-non-discriminative]
+accepted_decisions:
+  - M5.1 — production decision layer remains untouched official v0.5.0
+production_modification_permission: none — analysis-only track
+last_updated_utc: '2026-10-03T11:30:00Z'
+
+historical_artifact_root: /home/udi/udi_provate/archive/tradingagents/expert_mimic_m5/evaluations
+notes:
+  - X2/X3 loader repointed from retired TradingAgents-mimic worktree to the
+    permanent M5 archive (commit 0b342543 on exp/expert-rnd-v2).
+  - Vendor price caches were intentionally NOT archived (re-derivable);
+    replay requires re-fetching them. No runtime dependency on the old
+    mimic worktree remains.

@@ -1,0 +1,9 @@
+# Pinned runtime dependencies for system-python processes
+# (alpha_rnd.monitor / daily_scheduler / cohort_outcomes /
+#  ta_eval.c12_scheduler / ops.telegram_relay).
+# TA inference itself lives in .venv312 via pyproject.toml.
+yfinance==1.4.1
+pandas==2.3.3
+python-telegram-bot==22.8
+requests==2.34.2
+python-dotenv==1.2.2

@@ -1,0 +1,39 @@
+track: C12_PROSPECTIVE
+status: ACTIVE
+type: VALIDATION_CONTROL
+owner_session: kindly-nightshade
+branch: exp/gate-c12-prospective
+worktree: /home/udi/udi_provate/TradingAgents-c12
+current_gate: EPOCH_2_PROSPECTIVE_PAPER_TRADING
+last_accepted_result: >-
+  Epoch 1 = operational dry run only; 0 scoreable observations.
+  2026-09-25 week = LATE_DECISION_NON_SCOREABLE; zero fills.
+  Timing guard added: late cycles are non-scoreable and create no executable
+  paper orders. Epoch 2 created after SEC fail-closed pin of the three
+  financial statement tools.
+next_action: >-
+  AUTOMATED — hourly cron checker (ta_eval.c12_scheduler --check) settles
+  the two pending ENTRY orders (HPE, NTAP) at the real 2026-10-05 open and
+  runs each due weekly cycle under the timing guard; no human resume needed.
+  Manual: --settle-pending-fills after Monday's session if desired.
+blockers:
+  - calendar/market weeks only
+  - machine powered off = nothing runs, nothing backfilled
+live_state: >-
+  scoreable_cycles=1 (2026-10-02 SCOREABLE); scoreable_signals=10
+  (2 ENTRY pending: HPE Buy, NTAP Buy); open_positions=0; cash=100000;
+  background checker installed (hourly cron, c12_scheduler.lock + gate
+  c12.lock dedup); bridge managed to --timeout 1200 when idle;
+  notifications -> c12_notifications.jsonl + notify-send
+automation: >-
+  installed 2026-10-03 — hourly cron; deterministic due-cycle checks;
+  deadline passed => LATE_DECISION_NON_SCOREABLE, never backfilled
+frozen_constraints:
+  - decision layer is official v0.5.0 (SHA 2d17df8da1536c121e4d7395ac5a5dcec9e96d6f)
+  - get_balance_sheet: sec_edgar (fail-closed, no yfinance fallback)
+  - get_income_statement: sec_edgar (fail-closed, no yfinance fallback)
+  - get_cashflow: sec_edgar (fail-closed, no yfinance fallback)
+  - SEC path is filing-date aware (filed <= decision_session)
+  - no ALPHA_RND or EXPERT_RND imports; C12 is validation, not R&D
+production_modification_permission: SEC statement-tool pins only; decision logic must stay official v0.5.0
+last_updated_utc: '2026-10-03T13:50:00Z'

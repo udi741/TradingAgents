@@ -1,0 +1,16 @@
+[Unit]
+Description=TradingAgents SWE model bridge (devin-quick/devin-deep -> swe-2)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@BASE_DIR@
+Environment=PYTHONPATH=@BASE_DIR@
+Environment=PATH=@HOME@/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 -u -m devin_bridge --quick-model swe-2-medium --deep-model swe-2-high --timeout 1200
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,16 @@
+{
+  "record_id": "HD-20261002-001",
+  "NOT_PROSPECTIVE": true,
+  "disclosed_to_project_utc": "2026-10-02",
+  "source": "USER_REPORTED_EXPERT_TRADE",
+  "entry_known_before_outcome": false,
+  "strategy_regime": "NORMAL",
+  "ticker": "IREN",
+  "buy_date": "2026-08-14",
+  "buy_price": 45,
+  "sell_date": "2026-08-28",
+  "sell_price": null,
+  "qualitative_outcome_user_supplied": "LOSS",
+  "counts_toward_prospective_threshold": 0,
+  "note": "First explicitly disclosed losing trade from the expert's normal strategy in material available to this project. Sell price not provided; not inferred."
+}

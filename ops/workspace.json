@@ -1,0 +1,46 @@
+{
+ "version": 1,
+ "comment": "Canonical TradingAgents workspace. All worktrees are branches of ONE shared repository (the repo this tracks checkout belongs to). Paths are relative to the workspace prefix (the directory containing the worktrees). Devin/agent session names are NOT part of this spec.",
+ "roles": {
+  "BASE": {
+   "path": "TradingAgents",
+   "branch": "infra/devin-bridge",
+   "purpose": "shared runtime code; hosts the SWE model bridge service",
+   "role": "runtime",
+   "required_for_production": true,
+   "may_mutate_production_state": false
+  },
+  "ALPHA": {
+   "path": "TradingAgents-alpha-rnd",
+   "branch": "exp/alpha-rnd-v1",
+   "purpose": "ALPHA V1 paper-trading runtime (monitor, scheduler, authority state)",
+   "role": "runtime",
+   "required_for_production": true,
+   "may_mutate_production_state": true
+  },
+  "C12": {
+   "path": "TradingAgents-c12",
+   "branch": "exp/gate-c12-prospective",
+   "purpose": "frozen C12 prospective validation/control runtime",
+   "role": "runtime",
+   "required_for_production": true,
+   "may_mutate_production_state": true
+  },
+  "TRACKS": {
+   "path": "TradingAgents-tracks",
+   "branch": "project/tracks",
+   "purpose": "project control: docs, state YAMLs, runbooks, ops tooling",
+   "role": "control",
+   "required_for_production": true,
+   "may_mutate_production_state": false
+  },
+  "EXPERT": {
+   "path": "TradingAgents-expert-rnd",
+   "branch": "exp/expert-rnd-v2",
+   "purpose": "parked expert-signal research worktree",
+   "role": "research",
+   "required_for_production": false,
+   "may_mutate_production_state": false
+  }
+ }
+}

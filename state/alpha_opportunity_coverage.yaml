@@ -1,0 +1,144 @@
+roadmap_name: ALPHA_OPPORTUNITY_COVERAGE
+roadmap_version: 1
+updated_at: "2026-10-15"
+current_task: null
+current_subtask: null
+next_task: null
+items:
+  R0:
+    title: ROADMAP CONTROL
+    status: DONE
+    objective: durable roadmap/state/task tracking
+    dependencies: []
+    started_at: "2026-10-14"
+    completed_at: "2026-10-14"
+    blockers: []
+    bugs: []
+    evidence: [docs/ALPHA_OPPORTUNITY_COVERAGE_ROADMAP.md, docs/ROADMAP_OPERATING_RULES.md, docs/ROADMAP_TASK_TEMPLATE.md, ops/roadmap_status.py]
+    commits: []
+    next_action: none
+  R1:
+    title: OPPORTUNITY FUNNEL INSTRUMENTATION
+    status: DONE
+    objective: persist where stocks disappear universe->eligibility->ranking->deep TA->decision->publication->executability->trigger->paper trade
+    dependencies: []
+    started_at: "2026-10-14"
+    completed_at: "2026-10-14"
+    blockers: []
+    bugs: [R1-B3: DONE outbox transaction model, do_exit cost fix + realized correction, exit precedence + param guards, R1-B1: candidate pool persisted exclusion counts only; fixed by persisting per-ticker exclusions + eligible_features + deep_score/rank (instrumentation-only), R1-B2: DONE cohorts were pool-rank only; now persist per-ticker per-lane score/rank + primary_rank for all ~1850 eligible (schema v2, no fabricated global rank)]
+    evidence: [alpha_rnd/funnel.py, alpha_rnd/funnel_status.py, evaluations/alpha_rnd_v1/opportunity_funnel/, alpha_rnd/test_funnel.py]
+    commits: [alpha:49389628]
+    next_action: none
+  R2:
+    title: RANK COHORT OUTCOME TRACKING
+    status: WAITING_FOR_DATA
+    objective: prospective rank cohorts 1-10/11-25/26-50/51-100/101+ returns, benchmark-relative, MFE/MAE
+    dependencies: []
+    started_at: "2026-10-14"
+    completed_at: null
+    blockers: []
+    bugs: [R2-B2: DONE hourly cron 23 * * * *, flock, health file, catch-up built-in, R2-B1: fetch end-exclusive empty window burned DATA_UNAVAILABLE on transient failure; fixed (end+1d, fetch-fail stays PENDING)]
+    evidence: [alpha_rnd/cohort_outcomes.py, alpha_rnd/test_cohort_outcomes.py, evaluations/alpha_rnd_v1/rank_cohort_outcomes/]
+    commits: [alpha:4d8975da]
+    next_action: first clean prospective funnel session 2026-10-14 (schema v2) -> R2 evidence matures as horizons complete
+  R3:
+    title: TA ACCEPT/REJECT OUTCOME TRACKING
+    status: WAITING_FOR_DATA
+    objective: outcome comparison across TA dispositions
+    dependencies: []
+    started_at: "2026-10-14"
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: [alpha_rnd/ta_outcomes.py, alpha_rnd/test_ta_outcomes.py]
+    commits: [alpha:b7f7f8e6]
+    next_action: none — derived view is current-by-construction over R2 collector; first clean session 2026-10-14
+  R4:
+    title: TRANSLATOR GAP MEASUREMENT
+    status: WAITING_FOR_DATA
+    objective: why valid TA research becomes PUBLISHED_NON_EXECUTABLE
+    dependencies: [R1]
+    started_at: "2026-10-14"
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: [alpha_rnd/translator_gap.py, alpha_rnd/test_translator_gap.py]
+    commits: [alpha:ecc6e0bf]
+    next_action: none — derived view, current-by-construction; first clean session 2026-10-14
+  R5:
+    title: SHADOW DEEP-COVERAGE EXPANSION
+    status: IN_PROGRESS
+    objective: shadow-only deep analysis beyond top-10
+    status_detail: R5B COMPLETE — 84/84 artifacts frozen, R5B_ACCEPTED_PRELIMINARY (H1 mature all sessions; H5 mature 10-07, pending 10-16/10-19 for 10-09/10-12; H20 pending into Nov; matures read-only, no inference)
+    interrupted_by: null (resolved; interrupt manifest replays/R5B_PRODUCTION_INTERRUPT_CHECKPOINT.json)
+    completed: 84
+    remaining: 0
+    dependencies: [R2]
+    started_at: null
+    completed_at: null
+    blockers: [insufficient clean prospective R2 cohort evidence]
+    bugs: [R5B-B1: replay run() lets synthesis-bridge HTTP 502 escape and abort the run before run_result is written; per-ticker artifacts persist so resume is safe; wrapped by retry driver, engine fix deferred, R5B-B2: RESOLVED — H5 maturity statement was timing (cal excludes in-progress day); session-selection requirement violation logged (10-09/10-12 H5 pending), R5B-B3: candidate examined — EXECUTABLE_WATCH on negative-signal names are gated conditional long re-entries, not a defect]
+    evidence: [evaluations/alpha_rnd_v1/replays/R5B_CHECKPOINT.json, evaluations/alpha_rnd_v1/replays/R5B_REPORT.txt, evaluations/alpha_rnd_v1/replays/R5B_RESULTS.json]
+    commits: [alpha-rnd 2e6ad883, alpha-rnd 519d4c02]
+    next_action: WAIT_FOR_MATURITY — re-run r5b_report after 10-16 and 10-19 closes; R5B changes no live policy
+  R6:
+    title: LOW-PRICE OPPORTUNITY SHADOW LANE
+    status: WAITING_FOR_DATA
+    objective: sub-$5 under strict constraints, isolated from ALPHA V1
+    dependencies: []
+    started_at: "2026-10-14"
+    completed_at: null
+    blockers: []
+    bugs: []
+    evidence: [alpha_rnd/low_price_shadow.py, alpha_rnd/test_low_price_shadow.py, evaluations/alpha_rnd_v1/low_price_shadow/2026-10-13.json]
+    commits: [alpha:ae78d721]
+    next_action: none — collector matures via hourly R2 update; 10-13 diagnostic built from frozen cache
+  R7:
+    title: EXISTING TRADE POSTMORTEMS
+    status: DONE
+    objective: standardized packets PBF/ACN/APPS/PGEN/TWST/SDGR
+    dependencies: []
+    started_at: "2026-10-14"
+    completed_at: "2026-10-14"
+    blockers: []
+    bugs: [R7-B1: DONE — packet realized sum vs canonical diverged $12.96; root cause = postmortem fee hardcoded 0.0007 vs canonical 0.001 + canonical correction had ~$3.25 rounding error; canonical realized corrected to -2140.99 via auditable REALIZED_CORRECTION; packets reconcile to 1c]
+    evidence: [alpha_rnd/postmortems.py, alpha_rnd/investigate.py, evaluations/alpha_rnd_v1/trade_postmortems/, reconciliation.json]
+    commits: [alpha:e083a06d, alpha:f3bc2af3]
+    next_action: create packet template
+  R8:
+    title: EVIDENCE REVIEW
+    status: BLOCKED
+    objective: decide which bottlenecks cost opportunities; justify changes
+    dependencies: [R1, R2, R3, R4, R7]
+    started_at: null
+    completed_at: null
+    blockers: [needs R1-R4/R7 evidence]
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: wait for evidence items
+  R9:
+    title: ALPHA V2
+    status: BLOCKED
+    objective: evidence-supported challenger; ALPHA V1 remains baseline
+    dependencies: [R8]
+    started_at: null
+    completed_at: null
+    blockers: [needs R8]
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: wait for R8
+  R10:
+    title: REAL-MONEY READINESS
+    status: BLOCKED
+    objective: formal gate before any supervised pilot
+    dependencies: [R9]
+    started_at: null
+    completed_at: null
+    blockers: [needs R8/R9 + mature prospective data]
+    bugs: []
+    evidence: []
+    commits: []
+    next_action: wait for R8/R9 and outcome maturity
+backlog: []
