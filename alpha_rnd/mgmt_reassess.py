@@ -143,6 +143,10 @@ def build_context(ticker: str, pos: dict | None, rec: dict,
             "sessions_held": rec.get("sessions_held"),
             "active_stop": rec.get("stop_ref"),
             "pending_actions": []},
+        "success_plan": __import__(
+            "alpha_rnd.success_plan", fromlist=["mcf"]).mgmt_context_fields(
+            snap.get("success_plan"), snap.get("entry_price"),
+            rec.get("latest_price")),
         "triggers": [{"request_id": r.get("request_id"),
                       "family": r.get("trigger_family"),
                       "urgency": r.get("urgency"),

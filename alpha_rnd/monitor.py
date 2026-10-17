@@ -229,6 +229,24 @@ def last_close_session(daily: dict[str, pd.DataFrame]) -> str | None:
 RISK_GUARDRAIL_FROM = "2026-10-07"  # policy-version boundary (prospective only)
 
 
+def entry_success_plan(watch: dict) -> tuple[bool, str]:
+    """Executable long entry must define SUCCESS, not only failure.
+    Plan derived from the watch's own fields (target/params/horizon) —
+    legacy prose is used, never invented. Fail-closed."""
+    from alpha_rnd.success_plan import extract, validate, _hi
+    p = watch.get("params") or {}
+    plan = extract({"target": watch.get("target"),
+                    "success_criteria": watch.get("invalidation") and
+                    (p.get("success_criteria") or watch.get("horizon")),
+                    "profit_realization_plan": watch.get("target") or
+                    p.get("profit_realization_plan")})
+    stop = post_entry_risk_plan(watch)
+    entry = p.get("entry_price") or p.get("primary_limit")
+    v, errs = validate(plan, entry or 0, (stop or {}).get("level"),
+                       None)
+    return (v is not None), ("; ".join(errs) if errs else "ok")
+
+
 def post_entry_risk_plan(watch: dict) -> dict | None:
     """Machine-actionable POST-ENTRY risk rule, or None.
     Qualifying: typed intraday stop; typed close/exit rule; explicit typed
@@ -323,6 +341,13 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
         notify(f"ALPHA_RND RISK PLAN REQUIRED — NOT AUTO-EXECUTABLE\n\n{ticker}\n"
                "TA identified an entry opportunity but provided no explicit "
                "post-entry risk/exit rule.\nStatus: NOT BOUGHT.\nUSER ACTION: NONE")
+        return
+    ok_sp, why_sp = entry_success_plan(watch)
+    if not ok_sp:
+        emit_once(st, {"ticker": ticker, "action": "NO_ACTION",
+                  "why": "success_plan_required: no valid upside/profit "
+                         f"objective ({why_sp}) — NOT BOUGHT"},
+                  f"success_plan_block:{ticker}:{_watch_rev(watch)}")
         return
     if len(st["positions"]) >= MAX_POSITIONS:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "no_slots"})

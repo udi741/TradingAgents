@@ -157,8 +157,23 @@ def validate(ticker: str, dec: dict | None = None,
             reject.append("HOLD_UNCHANGED carries hidden economic fields: "
                           + ",".join(hidden))
         else:
-            intent["status"] = VALID
-            reasons.append("pure hold — no economic instruction")
+            from alpha_rnd import success_plan as _sp
+            snap_p = None
+            for f in mgmt.SNAP_DIR.glob(f"{ticker}_*.json"):
+                snap_p = _j(f)
+            bct = _sp._hi(((snap_p or {}).get("success_plan") or {})
+                          .get("base_case_value_range"))
+            if bct and mark and mark >= bct:
+                ok, why = _sp.runner_contract_ok(an)
+                if not ok:
+                    intent["status"] = NONEXEC
+                    reject.append("objective reached; " + why)
+                else:
+                    intent["status"] = VALID
+                    reasons.append("hold with justified runner: " + why)
+            else:
+                intent["status"] = VALID
+                reasons.append("pure hold — no economic instruction")
 
     elif action == "HOLD_AND_TIGHTEN_RISK":
         rule, ok, why = _validate_stop(ps, cur_stop, mark, pos)

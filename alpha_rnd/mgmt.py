@@ -108,6 +108,8 @@ def create_snapshot(ticker: str, entry_session: str, *, watch: dict | None,
         "horizon": (intent or pos).get("horizon"),
         "reevaluation": ((watch or {}).get("reeval")
                          or (intent or {}).get("reevaluation")),
+        "success_plan": __import__("alpha_rnd.success_plan",
+                fromlist=["extract"]).extract(intent),
         "artifact_sha256": _art_sha(artifact_ref or (watch or {}).get("artifact")),
         "missing_context": missing or [],
         **(extra or {}),
