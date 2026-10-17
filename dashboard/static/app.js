@@ -1122,6 +1122,7 @@ function confirmControl(c, wrap, token) {
 
 // ---------- router ----------
 let navToken = 0;
+let pageInflight = false;
 function route2() {
   const hash = location.hash.slice(2) || 'overview';
   const [pathPart, queryPart] = hash.split('?');
@@ -1139,13 +1140,31 @@ function route2() {
   let fn = pages[name] || pages.overview;
   if (name === 'research' && arg) fn = pages.researchDetail;
   if (name === 'positions' && arg) fn = pages.positionDetail;
+  pageInflight = true;
   Promise.resolve()
     .then(() => (name === 'research' && arg) ? pages.researchDetail(page, arg)
       : (name === 'positions' && arg) ? pages.positionDetail(page, arg)
       : fn(page, params))
     .then(markRefreshed)
-    .catch(e => { if (token === navToken) page.appendChild(errPanel(e)); });
+    .catch(e => { if (token === navToken) page.appendChild(errPanel(e)); })
+    .finally(() => { pageInflight = false; });
 }
+
+// ---------- near-live refresh ----------
+// Persisted artifacts/state are the source of truth: re-render the current
+// page every 30s. Guards: never overlap an in-flight render, never while the
+// tab is hidden, a modal is open, or the user is typing in a field.
+const PAGE_REFRESH_MS =
+  parseInt(new URLSearchParams(location.search).get('refresh_ms')) || 30000;
+function autoRefresh() {
+  if (pageInflight || document.hidden) return;
+  if (document.querySelector('dialog[open]')) return;
+  const ae = document.activeElement;
+  if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' ||
+             ae.tagName === 'SELECT')) return;
+  route2();
+}
+setInterval(autoRefresh, PAGE_REFRESH_MS);
 
 // ---------- topbar ----------
 async function pollTopbar() {
