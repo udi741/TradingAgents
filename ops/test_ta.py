@@ -111,8 +111,9 @@ class Sim(unittest.TestCase):
         rc, o = self._health()
         self.assertIn("[     OK] ALPHA monitor", o)
         self.assertIn("cash $100", o)
-        # bridge/c12/services missing in sim -> degraded not crash
-        self.assertIn(rc, (1, 2))
+        # C12 is optional: absent ta_eval no longer degrades. rc 0..2 all
+        # legitimate depending on ambient services; must not crash.
+        self.assertIn(rc, (0, 1, 2))
 
     def test_adaptive_disabled_ok(self):
         _, o = self._health()
