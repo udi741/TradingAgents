@@ -33,9 +33,15 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-ALPHA_ROOT = Path("/home/udi/udi_provate/TradingAgents-alpha-rnd")
-C12_ROOT = Path("/home/udi/udi_provate/TradingAgents-c12")
-EXPERT_ROOT = Path("/home/udi/udi_provate/TradingAgents-expert-rnd")
+from ops import ta as _ta
+
+# Roots resolve via the shared workspace layout: sibling worktrees when the
+# dev workspace exists, otherwise THIS canonical checkout (single-checkout
+# product). No machine-specific path is required.
+_LAY = _ta._layout(_ta.TRACKS.parent)
+ALPHA_ROOT = Path(_LAY["ALPHA_DIR"])
+C12_ROOT = Path(_LAY["C12_DIR"])
+EXPERT_ROOT = Path(_LAY["EXPERT_DIR"])
 
 ALPHA_EVENTS = ALPHA_ROOT / "alpha_rnd" / "trigger_events.jsonl"
 ALPHA_SCHED_EVENTS = ALPHA_ROOT / "alpha_rnd" / "scheduler_events.jsonl"
@@ -56,10 +62,11 @@ ENV_FILE = CFG_DIR / "telegram.env"
 STATE_FILE = CFG_DIR / "telegram_state.json"
 
 SESSIONS = {
-    "ALPHA": ("cd ~/udi_provate/TradingAgents-alpha-rnd", "devin -r feather-room"),
-    "C12": ("cd ~/udi_provate/TradingAgents-c12", "devin -r kindly-nightshade"),
-    "EXPERT": ("cd ~/udi_provate/TradingAgents-expert-rnd", "devin -r groovy-allspice"),
-    "PROJECT_CONTROL": ("cd ~/udi_provate/TradingAgents-tracks", "devin -r nonchalant-citipati"),
+    "ALPHA": (f"cd {ALPHA_ROOT}", "devin -r feather-room"),
+    "C12": (f"cd {C12_ROOT}", "devin -r kindly-nightshade"),
+    "EXPERT": (f"cd {EXPERT_ROOT}", "devin -r groovy-allspice"),
+    "PROJECT_CONTROL": (f"cd {_LAY['TRACKS_DIR']}",
+                        "devin -r nonchalant-citipati"),
 }
 
 # action/kind -> (severity, notify?)  Everything not listed is not sent.

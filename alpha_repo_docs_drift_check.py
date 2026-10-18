@@ -16,8 +16,10 @@ from pathlib import Path
 
 import yaml
 
-ALPHA_ROOT = Path("/home/udi/udi_provate/TradingAgents-alpha-rnd")
-DOCS = Path(__file__).resolve().parent / "docs"
+# Canonical product = THIS checkout. Module paths resolve inside it; no
+# sibling worktree is consulted.
+ALPHA_ROOT = Path(__file__).resolve().parent
+DOCS = ALPHA_ROOT / "docs"
 VALID_STATUS = {
     "ACTIVE_PRODUCTION", "ACTIVE_PARTIAL", "SHADOW_ONLY", "RESEARCH_ONLY",
     "LEGACY", "DUPLICATED", "BROKEN", "UNUSED", "MISSING",

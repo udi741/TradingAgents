@@ -20,8 +20,25 @@ ENABLE_UNITS = UNITS + [BOOT_TIMER]
 CRON_TAG = "tradingagents"
 
 
+def _single_checkout(prefix: Path) -> bool:
+    """True when THIS checkout is the canonical single-checkout product.
+
+    Triggers only when `prefix` is this checkout's own parent (i.e. the
+    default --prefix), the checkout carries the alpha_rnd package, and no
+    sibling ALPHA worktree exists at prefix. A sim/foreign --prefix keeps
+    the multi-worktree layout so rehearsal targets stay under it.
+    """
+    try:
+        alpha_path = _ws_spec()["ALPHA"]["path"]
+    except Exception:
+        alpha_path = "TradingAgents-alpha-rnd"
+    return (TRACKS.parent == prefix.resolve()
+            and (TRACKS / "alpha_rnd").is_dir()
+            and not (prefix / alpha_path).exists())
+
+
 def _layout(prefix: Path) -> dict:
-    return {
+    lay = {
         "HOME": str(Path.home()),
         "PREFIX": str(prefix),
         "BASE_DIR": str(prefix / "TradingAgents"),
@@ -30,6 +47,11 @@ def _layout(prefix: Path) -> dict:
         "TRACKS_DIR": str(prefix / "TradingAgents-tracks"),
         "EXPERT_DIR": str(prefix / "TradingAgents-expert-rnd"),
     }
+    if _single_checkout(prefix):
+        for k in ("BASE_DIR", "ALPHA_DIR", "C12_DIR", "TRACKS_DIR",
+                  "EXPERT_DIR"):
+            lay[k] = str(TRACKS)
+    return lay
 
 
 def _fill(text: str, lay: dict) -> str:
@@ -86,21 +108,30 @@ def cmd_setup(a):
         return 2
 
     print("[workspace]")
-    ws = _ws_state(prefix)
-    spec = _ws_spec()
-    bad = [r for r in spec if spec[r]["required_for_production"]
-           and ws[r]["status"] != "OK"]
-    if bad:
-        for r in bad:
-            problems.append(f"workspace {r}: {ws[r]['status']}")
-        problems.append(
-            f"create missing worktrees: `python3 -m ops.ta workspace "
-            f"setup --prefix {prefix}`")
-        for p_ in problems[-len(bad) - 1:]:
-            print(f"  FAIL {p_}")
-        return 2
-    print("  OK   required worktrees present "
-          f"({', '.join(r for r in spec if spec[r]['required_for_production'])})")
+    single = _single_checkout(prefix)
+    if single:
+        _check((TRACKS / ".git").exists(),
+               f"single-checkout product at {TRACKS} (git checkout)",
+               f"{TRACKS} is not a git checkout — clone the canonical "
+               "product branch first", problems)
+        if problems:
+            return 2
+    else:
+        ws = _ws_state(prefix)
+        spec = _ws_spec()
+        bad = [r for r in spec if spec[r]["required_for_production"]
+               and ws[r]["status"] != "OK"]
+        if bad:
+            for r in bad:
+                problems.append(f"workspace {r}: {ws[r]['status']}")
+            problems.append(
+                f"create missing worktrees: `python3 -m ops.ta workspace "
+                f"setup --prefix {prefix}`")
+            for p_ in problems[-len(bad) - 1:]:
+                print(f"  FAIL {p_}")
+            return 2
+        print("  OK   required worktrees present "
+              f"({', '.join(r for r in spec if spec[r]['required_for_production'])})")
 
     alpha = Path(lay["ALPHA_DIR"])
     venv = alpha / ".venv312"
@@ -178,6 +209,14 @@ def cmd_setup(a):
 
     print("[crontab]")
     block = _fill((TPL / "crontab.block").read_text(), lay)
+    # C12 is an optional track: skip its scheduler line when the code is
+    # absent from the resolved C12 root (e.g. canonical product checkout
+    # without the frozen control tree).
+    if not (Path(lay["C12_DIR"]) / "ta_eval").is_dir():
+        block = "\n".join(l for l in block.splitlines()
+                          if "ta_eval.c12_scheduler" not in l) + "\n"
+        print("  INFO C12 scheduler job omitted — ta_eval not present "
+              "(optional track absent)")
     cur = _cron_read() or ""
     have = [j for j in ("alpha_rnd.monitor", "alpha_rnd.daily_scheduler",
                         "alpha_rnd.cohort_outcomes", "ta_eval.c12_scheduler")
@@ -272,6 +311,13 @@ _REQUIRED = {"ECONOMIC_AUTHORITY", "ECONOMIC_LEDGER"}
 def _sha256(b: bytes) -> str:
     import hashlib
     return hashlib.sha256(b).hexdigest()
+
+
+def _is_ancestor(repo: Path, sha: str) -> bool:
+    """True iff `sha` is an ancestor of repo's HEAD (or equal)."""
+    return subprocess.run(
+        ["git", "-C", str(repo), "merge-base", "--is-ancestor", sha, "HEAD"],
+        capture_output=True).returncode == 0
 
 
 def _git(d: Path):
@@ -613,10 +659,43 @@ def cmd_restore(a):
 
     # 2) code compatibility: runtime worktrees must PROVE the backup SHA.
     #    unverifiable runtime code fails closed; tracks/docs warn only.
+    #    Single-checkout mode: every role resolves to ONE checkout, so the
+    #    per-role SHAs recorded by a multi-worktree backup cannot all equal
+    #    HEAD. Lineage is verified instead — the backup's ALPHA code must be
+    #    an ancestor of (or equal to) this checkout's HEAD. Roles off the
+    #    product line (e.g. frozen C12) warn; their data still restores.
+    single = _single_checkout(prefix)
     gitman = man.get("git") or {}
     for k in sorted(RUNTIME_KEYS):
         g = gitman.get(k) or {}
         cur = _git(Path(lay[k])) if Path(lay[k]).exists() else {}
+        if single and cur.get("sha"):
+            if not g.get("sha"):
+                problems.append(f"{k}: backup manifest has no code SHA — "
+                                "cannot verify runtime version")
+            elif g["sha"] == cur["sha"] or \
+                    _is_ancestor(Path(lay[k]), g["sha"]):
+                pass  # code lineage proven
+            elif k == "ALPHA_DIR":
+                problems.append(
+                    f"{k} code lineage mismatch: backup code {g['sha'][:8]} "
+                    f"is not in this checkout's history (HEAD "
+                    f"{cur['sha'][:8]}) — refusing economic state restore "
+                    "onto unrelated code")
+            else:
+                print(f"  WARN {k} backup sha {g['sha'][:8]} not on this "
+                      "product line — optional-track data restores anyway")
+            dirty = _git_dirty_paths(Path(lay[k])) if k == "ALPHA_DIR" \
+                else None
+            if dirty is not None:
+                extra = _non_authority_dirty(dirty, auth_rels.get(k, set()))
+                if extra:
+                    more = "…" if len(extra) > 1 else ""
+                    problems.append(
+                        f"{k} checkout has uncommitted/untracked files "
+                        f"outside the authority set ({extra[0]}{more}) — "
+                        "effective code version unverifiable")
+            continue
         if not g.get("sha"):
             problems.append(f"{k}: backup manifest has no code SHA — "
                             "cannot verify runtime version")
@@ -838,6 +917,15 @@ def cmd_workspace(a):
     `status` READ-ONLY; `setup` MUTATING (git worktree add only, never
     deletes/overwrites), --dry-run safe."""
     prefix = Path(a.prefix).resolve()
+    if _single_checkout(prefix):
+        br, head = _git_branch(TRACKS)
+        print(f"SINGLE-CHECKOUT canonical product at {TRACKS}")
+        print(f"branch {br or '?'} @ {(head or '?')[:8]} — all runtime "
+              "roles resolve to this checkout; sibling worktrees are a "
+              "developer convenience, not required")
+        for role in _ws_spec():
+            print(f"  {role:<7} -> {TRACKS}")
+        return 0
     spec = _ws_spec()
     state = _ws_state(prefix)
 
@@ -971,10 +1059,12 @@ def cmd_bootcheck(a):
     except OSError:
         chk("C12 scheduler log exists", False, level="degraded")
     cron = _cron_read() or ""
-    have = sum(1 for j in ("alpha_rnd.monitor", "alpha_rnd.daily_scheduler",
-                           "ta_eval.c12_scheduler") if j in cron)
-    chk("cron jobs present", have == 3, level="degraded",
-        note=f"{have}/3")
+    _jobs = ["alpha_rnd.monitor", "alpha_rnd.daily_scheduler"]
+    if (Path(lay["C12_DIR"]) / "ta_eval").is_dir():
+        _jobs.append("ta_eval.c12_scheduler")
+    have = sum(1 for j in _jobs if j in cron)
+    chk("cron jobs present", have == len(_jobs), level="degraded",
+        note=f"{have}/{len(_jobs)}")
     try:
         en = bool((json.loads((Path(lay["ALPHA_DIR"]) / "alpha_rnd" /
                                "management_policy.json").read_text())
@@ -1163,12 +1253,15 @@ def cmd_health(a):
         bool(shutil.which("devin")), level="degraded",
         note="bridge delegates auth to it")
     cron = _cron_read() or ""
-    _jobs = ("alpha_rnd.monitor", "alpha_rnd.daily_scheduler",
-             "alpha_rnd.cohort_outcomes", "ta_eval.c12_scheduler")
+    _jobs = ["alpha_rnd.monitor", "alpha_rnd.daily_scheduler",
+             "alpha_rnd.cohort_outcomes"]
+    if (Path(lay["C12_DIR"]) / "ta_eval").is_dir():
+        _jobs.append("ta_eval.c12_scheduler")
     have = sum(1 for j in _jobs if j in cron)
-    chk("cron jobs installed (4)", have == 4, level="degraded",
+    chk(f"cron jobs installed ({len(_jobs)})", have == len(_jobs),
+        level="degraded",
         note="tagged block" if f">>> {CRON_TAG} >>>" in cron else
-             f"{have}/4 legacy entries — untagged, rerunnable anyway")
+             f"{have}/{len(_jobs)} legacy entries — untagged, rerunnable anyway")
 
     # Adaptive execution is legitimately ENABLED for paper since 2026-10-16
     # (E1 acceptance). The invariant is provenance, not the flag value:

@@ -67,8 +67,15 @@ def _valid(role: str, root: Path) -> bool:
     return root.is_dir() and (s is None or (root / s).exists())
 
 
-def _single_checkout_candidate(role: str) -> Path | None:
-    """This checkout itself can be the runtime root (single-repo deploy)."""
+def _single_checkout_candidate(role: str, env: dict) -> Path | None:
+    """This checkout itself can be the runtime root (single-repo deploy).
+
+    Suppressed when an explicit env override was given for this role —
+    operator intent that fails validation must report missing, never
+    silently fall back to this checkout's committed baseline state.
+    """
+    if env.get(_ENV[role]):
+        return None
     if role == "ALPHA" and (SELF_ROOT / "alpha_rnd" / "monitor_state.json").exists():
         return SELF_ROOT
     if role == "C12" and (SELF_ROOT / "evaluations" / "gate_c12_prospective").is_dir():
@@ -102,7 +109,7 @@ def resolve(env: dict | None = None) -> dict:
             candidates.append((SELF_ROOT, "self-checkout"))
         if spec_role.get("path"):
             candidates.append((prefix / spec_role["path"], "workspace.json"))
-        sc = _single_checkout_candidate(role)
+        sc = _single_checkout_candidate(role, env)
         if sc:
             candidates.append((sc, "single-checkout"))
         for cand, src in candidates:
@@ -112,13 +119,15 @@ def resolve(env: dict | None = None) -> dict:
                 continue
             br = _branch(cand)
             exp = entry["expected_branch"]
-            # wrong-checkout guard: spec-derived and single-checkout
-            # candidates whose git branch contradicts the spec are rejected
-            # (git-tracked state files make a wrong checkout look valid).
-            # Env overrides are explicit operator intent: accepted, but the
-            # mismatch is still reported. TRACKS self-checkout is exempt —
-            # the dashboard always reads its own docs.
-            if src in ("workspace.json", "single-checkout") and \
+            # wrong-checkout guard: spec-derived candidates whose git
+            # branch contradicts the spec are rejected (git-tracked state
+            # files make a wrong sibling checkout look valid). Env
+            # overrides are explicit operator intent: accepted, but the
+            # mismatch is still reported. TRACKS self-checkout and the
+            # single-checkout candidate are exempt — the canonical product
+            # branch legitimately has its own name; staleness of committed
+            # state is surfaced by health freshness checks, not hidden.
+            if src == "workspace.json" and \
                     br is not None and exp is not None and br != exp:
                 entry.setdefault("rejected", []).append(
                     {"path": str(cand), "source": src,
