@@ -11,6 +11,30 @@ Validation is deliberately separated from R&D: a frozen control pipeline
 produces clean evidence while parallel research tracks search for
 opportunities and improvements.
 
+## Repository model — ONE canonical checkout
+
+**Canonical product branch: `product/tradingagents-current`.** One clone,
+one checkout contains the entire supported product: core TradingAgents,
+ALPHA runtime, ops tooling, docs, dashboard, tests, and the SWE model
+bridge. Deployment needs no sibling worktrees.
+
+```bash
+git clone <repo> && cd <repo>
+git checkout product/tradingagents-current
+python3 -m ops.ta setup        # then restore state + secrets (below)
+```
+
+Code comes from git. Mutable state (portfolio, watches, ledgers) is NOT
+deployment input — it moves via `python3 -m ops.ta backup` / `restore`.
+Secrets live outside the repo (`~/.config/tradingagents/`).
+
+The multi-worktree layout in `ops/workspace.json` (BASE/ALPHA/C12/TRACKS/
+EXPERT siblings) remains the DEVELOPER workspace — a convenience for
+parallel sessions, not a deployment requirement. `ops.ta` auto-detects:
+sibling worktrees present → multi-worktree layout; absent → this checkout
+is the runtime root. Optional tracks (C12, EXPERT, time-machine R&D) may
+be absent from a deployment without degrading ALPHA.
+
 ## The tracks
 
 | Track | Type | What it does |

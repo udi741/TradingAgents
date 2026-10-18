@@ -3,10 +3,12 @@
 #   RESEARCH_ONLY | LEGACY | DUPLICATED | BROKEN | UNUSED | MISSING
 # RULE: no production capability is complete until this registry,
 # TRADINGAGENTS_CAPABILITY_REFERENCE.md, and the system guide are updated.
-# Module paths are relative to the ALPHA worktree root
-# (/home/udi/udi_provate/TradingAgents-alpha-rnd); tracks/ paths are relative
-# to this repo. tradingagents/ = the vendored library ALPHA actually imports.
+# Module paths are relative to the canonical product checkout
+# (branch product/tradingagents-current — one checkout contains alpha_rnd/,
+# tradingagents/ vendored library, ops/, dashboard/, docs/). Worktree names
+# in track_boundaries describe the optional developer layout only.
 registry_version: 2
+canonical_product_branch: product/tradingagents-current
 generated_from: code audit of alpha_rnd/, evaluations/alpha_rnd_v1/,
   tradingagents/ (vendored), cli/, ta_eval_alpha/, tracks repo
 capabilities:
@@ -175,7 +177,10 @@ capabilities:
       delivery != proof
   - id: ops.bridge
     status: ACTIVE_PRODUCTION
-    modules: [tradingagents-swe-bridge.service]
+    modules: [tradingagents-swe-bridge.service, devin_bridge/__main__.py,
+      devin_bridge/server.py, devin_bridge/runtime.py,
+      devin_bridge/protocol.py, devin_bridge/executor.py,
+      devin_bridge/config.py]
     purpose: model provider abstraction at 127.0.0.1:8765/v1 (openai_compatible
       provider); journal = call evidence consumed by infra_status
   - id: profit.legacy_target
@@ -541,9 +546,8 @@ duplicated_implementations:
     authoritative: live_watchlist.json (gen_watchlist spec + publish merge)
     non_authoritative: [case_artifact trigger text, funnel monitor projections]
   - capability: vendored_library_copy
-    authoritative: TradingAgents-alpha-rnd/tradingagents (imported by ALPHA)
-    non_authoritative: [TradingAgents-tracks/tradingagents mirror copy,
-      TradingAgents-c12 frozen v0.5.0 tree]
+    authoritative: tradingagents/ in the canonical product checkout (imported by ALPHA)
+    non_authoritative: [TradingAgents-c12 frozen v0.5.0 tree (optional worktree)]
 state_authority:
   cash: monitor_state.json (AUTHORITATIVE)
   positions: monitor_state.json (AUTHORITATIVE)

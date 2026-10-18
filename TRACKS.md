@@ -4,6 +4,10 @@ Canonical master registry of all tracks. Update a track's row whenever its
 gate, result, or next action changes. Per-track detail lives in
 `tracks/<TRACK>.md` and `state/<TRACK>.yaml`; this file is the index.
 
+Deployment note: the supported product runs from a single checkout of
+`product/tradingagents-current` — the worktrees named below are the
+developer workspace, not a runtime requirement.
+
 Last updated: 2026-10-03T10:13:19Z
 
 ---

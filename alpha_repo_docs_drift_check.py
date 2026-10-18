@@ -95,7 +95,8 @@ def _unmapped(root_sub: str) -> list[str]:
     return out
 
 unmapped = _unmapped("alpha_rnd") + _unmapped("tradingagents") \
-    + _unmapped("ta_eval_alpha") + _unmapped("cli") + _unmapped("evaluations/alpha_rnd_v1")
+    + _unmapped("ta_eval_alpha") + _unmapped("cli") + _unmapped("devin_bridge") \
+    + _unmapped("evaluations/alpha_rnd_v1")
 if unmapped:
     errs.append("unmapped production modules: " + ", ".join(unmapped))
 
