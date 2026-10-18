@@ -145,6 +145,17 @@ def main():
                 (ev / "publication_intents_2026-10-17.json").write_text(json.dumps(p))
             wait_text("#/funnel", "WATCH_FOR_ENTRY", mut_pub, "publication")
 
+            # 3b. rejection + persisted violation reason appears without reload
+            def mut_rej():
+                p = json.loads((ev / "publication_intents_2026-10-17.json").read_text())
+                p["dispositions"]["AAA"] = {
+                    "disposition": "AMBIGUOUS_REJECTED",
+                    "violations": ["ambiguous: e2e persisted violation marker"],
+                    "executable": False, "user_action_required": False}
+                (ev / "publication_intents_2026-10-17.json").write_text(json.dumps(p))
+            wait_text("#/funnel", "e2e persisted violation marker",
+                      mut_rej, "rejection_reason")
+
             # 4. watch appears (monitor_state.watch_status)
             def mut_watch():
                 m = json.loads((alpha / "alpha_rnd" / "monitor_state.json").read_text())
