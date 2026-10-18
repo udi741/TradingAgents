@@ -163,6 +163,63 @@ class Sim(unittest.TestCase):
         self.assertNotIn("/home/udi", u)
 
 
+class SingleCheckoutC12(unittest.TestCase):
+    """Single-checkout layout + optional validated C12 sibling worktree."""
+    def setUp(self):
+        import subprocess as sp
+        self.sp = sp
+        t = Path(tempfile.mkdtemp())
+        self.pfx = t / "ws"; self.pfx.mkdir()
+        self.tracks = self.pfx / "TradingAgents"; self.tracks.mkdir()
+        self._mocks = [
+            mock.patch.object(ta, "_single_checkout", lambda p: True),
+            mock.patch.object(ta, "TRACKS", self.tracks),
+        ]
+        for m in self._mocks:
+            m.start(); self.addCleanup(m.stop)
+
+    def _c12_repo(self, branch="exp/gate-c12-prospective"):
+        d = self.pfx / "TradingAgents-c12"
+        self.sp.run(["git", "init", "-b", branch, str(d)],
+                    check=1, capture_output=1)
+        (d / "ta_eval").mkdir()
+        (d / "x").write_text("x\n")
+        self.sp.run(["git", "-C", str(d), "add", "-A"],
+                    check=1, capture_output=1)
+        self.sp.run(["git", "-C", str(d), "-c", "user.email=t@t",
+                     "-c", "user.name=t", "commit", "-m", "i"],
+                    check=1, capture_output=1)
+        return d
+
+    def test_single_checkout_no_sibling(self):
+        lay = ta._layout(self.pfx)
+        self.assertEqual(lay["C12_DIR"], str(self.tracks))
+        self.assertEqual(lay["ALPHA_DIR"], str(self.tracks))
+
+    def test_valid_sibling_becomes_c12(self):
+        d = self._c12_repo()
+        lay = ta._layout(self.pfx)
+        self.assertEqual(lay["C12_DIR"], str(d))
+        self.assertEqual(lay["ALPHA_DIR"], str(self.tracks))
+
+    def test_wrong_branch_sibling_rejected(self):
+        self._c12_repo(branch="exp/other")
+        lay = ta._layout(self.pfx)
+        self.assertEqual(lay["C12_DIR"], str(self.tracks))
+
+    def test_sibling_without_sentinel_rejected(self):
+        d = self._c12_repo()
+        shutil.rmtree(d / "ta_eval")
+        lay = ta._layout(self.pfx)
+        self.assertEqual(lay["C12_DIR"], str(self.tracks))
+
+    def test_nongit_sibling_rejected(self):
+        d = self.pfx / "TradingAgents-c12"
+        (d / "ta_eval").mkdir(parents=True)
+        lay = ta._layout(self.pfx)
+        self.assertEqual(lay["C12_DIR"], str(self.tracks))
+
+
 class BackupRestore(unittest.TestCase):
     """Isolated backup->restore cycle. Never touches the live prefix."""
     def setUp(self):

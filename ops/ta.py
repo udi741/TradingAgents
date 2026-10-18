@@ -37,6 +37,25 @@ def _single_checkout(prefix: Path) -> bool:
             and not (prefix / alpha_path).exists())
 
 
+def _c12_sibling(prefix: Path) -> str | None:
+    """Validated separate C12 worktree path, or None.
+
+    Consulted only in single-checkout mode: the workspace.json C12 path
+    must exist, be a git worktree on the spec branch, and carry the
+    ta_eval sentinel. A missing/wrong-branch/arbitrary dir never becomes
+    C12 authority — single-checkout fallback is preserved instead.
+    """
+    try:
+        s = _ws_spec()["C12"]
+    except Exception:
+        return None
+    d = (prefix / s["path"]).resolve()
+    if not (d / ".git").exists() or not (d / "ta_eval").is_dir():
+        return None
+    br, _ = _git_branch(d)
+    return str(d) if br == s["branch"] else None
+
+
 def _layout(prefix: Path) -> dict:
     lay = {
         "HOME": str(Path.home()),
@@ -51,6 +70,9 @@ def _layout(prefix: Path) -> dict:
         for k in ("BASE_DIR", "ALPHA_DIR", "C12_DIR", "TRACKS_DIR",
                   "EXPERT_DIR"):
             lay[k] = str(TRACKS)
+        c12 = _c12_sibling(prefix)
+        if c12:
+            lay["C12_DIR"] = c12
     return lay
 
 
