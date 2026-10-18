@@ -65,7 +65,7 @@ assert ev["severity"] == "SUCCESS"
 ev = tr.normalize("C12", {"ts": "t1", "kind": "C12_AUTOMATION_BLOCKED_BRIDGE"}, 'x')
 assert ev["severity"] == "ACTION_REQUIRED" and "kindly-nightshade" not in ev["recommended_next_action"]
 msg = tr.format_message(ev)
-assert "kindly-nightshade" in msg and "TradingAgents-c12" in msg
+assert "kindly-nightshade" in msg and str(tr.C12_ROOT) in msg
 assert "USER ACTION REQUIRED:" in msg
 ev_ok = tr.normalize("C12", {"ts": "t", "kind": "C12_CYCLE_STARTED"}, "x")
 assert "USER ACTION: NONE" in tr.format_message(ev_ok)
@@ -117,16 +117,13 @@ assert tr._authorized({"TELEGRAM_CHAT_ID": "123"}, u)
 u.effective_chat.id = "999"
 assert not tr._authorized({"TELEGRAM_CHAT_ID": "123"}, u)
 
-# --- read-only status (real files, read only) ---
-tr.ALPHA_STATE = Path("/home/udi/udi_provate/TradingAgents-alpha-rnd/alpha_rnd/monitor_state.json")
-tr.ALPHA_WATCHLIST = Path("/home/udi/udi_provate/TradingAgents-alpha-rnd/alpha_rnd/live_watchlist.json")
-tr.ALPHA_CRON_LOG = Path("/home/udi/udi_provate/TradingAgents-alpha-rnd/alpha_rnd/monitor_cron.log")
-tr.C12_STATE = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/scheduler_state.json")
+# --- read-only status (real files of the resolved roots, read only) ---
+tr.C12_STATE = tr.C12_ROOT / "evaluations/gate_c12_prospective/scheduler_state.json"
 tr.C12_NOTIF = C12_FIXTURE
-tr.C12_LOG = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/scheduler.log")
-tr.C12_NAV = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/c12_nav.jsonl")
-tr.C12_LEDGER = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/c12_signal_ledger.jsonl")
-tr.C12_WEEKS = Path("/home/udi/udi_provate/TradingAgents-c12/evaluations/gate_c12_prospective/weeks")
+tr.C12_LOG = tr.C12_ROOT / "evaluations/gate_c12_prospective/scheduler.log"
+tr.C12_NAV = tr.C12_ROOT / "evaluations/gate_c12_prospective/c12_nav.jsonl"
+tr.C12_LEDGER = tr.C12_ROOT / "evaluations/gate_c12_prospective/c12_signal_ledger.jsonl"
+tr.C12_WEEKS = tr.C12_ROOT / "evaluations/gate_c12_prospective/weeks"
 a = tr.alpha_status(); c = tr.c12_status()
 assert "Positions" in a and "C12" in c and "disposition" in c
 assert "TELEGRAM_BOT_TOKEN" not in a + c
