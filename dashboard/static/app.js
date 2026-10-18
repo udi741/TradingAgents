@@ -311,6 +311,23 @@ pages.funnel = async (root, params) => {
   const mb = metaBanner(d.meta); if (mb) root.appendChild(mb);
   const f = d.funnel || {};
 
+  // semantic freshness: the artifact's own session is authoritative;
+  // file mtime is transport metadata (restore/checkout rewrites it)
+  const fb = el('div');
+  const fbasis = d.meta && d.meta.freshness_basis;
+  if (f.session) {
+    fb.appendChild(chip('as-of session ' + f.session, 'info'));
+    if (d.scheduler_latest_session && f.session < d.scheduler_latest_session)
+      fb.appendChild(chip('STALE — scheduler completed ' + d.scheduler_latest_session, 'warn'));
+  } else if (fbasis === 'artifact' && d.meta.asof) {
+    fb.appendChild(chip('as-of ' + d.meta.asof, 'info'));
+  } else if (fbasis !== 'artifact') {
+    fb.appendChild(chip('STALENESS UNVERIFIED — artifact carries no session/as-of', 'warn'));
+  }
+  if (d.meta && d.meta.mtime_utc)
+    fb.appendChild(el('span', 'dim small', ' file mtime ' + fmtTs(d.meta.mtime_utc) + ' (not authoritative)'));
+  root.appendChild(fb);
+
   // session selector
   if (d.sessions && d.sessions.length) {
     const sel = el('select', 'filterbox');
@@ -365,6 +382,32 @@ pages.funnel = async (root, params) => {
   const c = await api('/api/candidates' + (session ? '?session=' + encodeURIComponent(session) : ''));
   const mb2 = metaBanner(c.meta); if (mb2) root.appendChild(mb2);
   const intents = (c.publication && c.publication.intents) || {};
+  const disps = (c.publication && c.publication.dispositions) || {};
+  const dispOf = t => disps[t] || {};
+  const dispName = t => { const dp = dispOf(t), it = intents[t] || {};
+    return dp.disposition || it.disposition || it.classification; };
+  const reasonCell = t => {
+    const dp = dispOf(t), it = intents[t];
+    if (!dp.disposition && !it) return DASH;  // never reached publication
+    const viols = dp.violations || [];
+    if (viols.length) {
+      if (viols.length === 1)
+        return el('span', 'dim small why-cell', viols[0]);
+      const det = el('details');
+      det.appendChild(el('summary', 'dim small why-cell',
+        viols[0].slice(0, 110) + (viols[0].length > 110 ? '…' : '') +
+        '  (+' + (viols.length - 1) + ' more)'));
+      const ul = el('ul', 'viol-list');
+      viols.forEach(v => ul.appendChild(el('li', 'dim small', v)));
+      det.appendChild(ul);
+      return det;
+    }
+    // analyzed + disposition persisted but no reason text: honest, never invented
+    const dn = dp.disposition || '';
+    if (/REJECT|RESEARCH_ONLY/.test(dn))
+      return el('span', 'dim small', 'REASON NOT PERSISTED');
+    return el('span', 'dim small', '—');  // non-rejected: trigger text carries the reason
+  };
   root.appendChild(el('h2', 'sec', 'Candidate pool — session ' + ((c.pool || {}).session || DASH) +
     ' (frozen ' + fmtTs((c.pool || {}).frozen_at) + ')'));
   const cands = (c.pool && c.pool.candidates) || [];
@@ -379,9 +422,11 @@ pages.funnel = async (root, params) => {
       { k: 'rsi_14', label: 'RSI', num: true, fmt: v => fmtNum(v, 1) },
       { k: 'deep_score', label: 'DeepScore', num: true, fmt: v => fmtNum(v, 1) },
       {
-        k: '_disp', label: 'Disposition', sort: r => { const it = intents[r.ticker]; return it ? (it.disposition || it.classification) : null; },
-        fmt: (v, r) => { const it = intents[r.ticker]; return it ? chipFor(it.disposition || it.classification, { ...STATUS_KIND, _default: 'info' }) : chip('—', 'gray'); }
+        k: '_disp', label: 'Disposition', sort: r => dispName(r.ticker),
+        fmt: (v, r) => dispName(r.ticker) ? chipFor(dispName(r.ticker), { ...STATUS_KIND, _default: 'info' }) : chip('—', 'gray')
       },
+      { k: '_why', label: 'Why (persisted reason)', sort: r => { const vv = dispOf(r.ticker).violations; return vv && vv.length ? vv[0] : null; },
+        fmt: (v, r) => reasonCell(r.ticker) },
       { k: '_wm', label: 'Watch mode', sort: r => { const it = intents[r.ticker]; return it && it.watch_mode; }, fmt: (v, r) => { const it = intents[r.ticker]; return it && it.watch_mode ? it.watch_mode : DASH; } },
       { k: '_trig', label: 'Trigger', sort: () => null, fmt: (v, r) => { const it = intents[r.ticker]; return it && it.trigger ? el('span', 'dim small', String(it.trigger).slice(0, 90)) : DASH; } },
       { k: '_inv', label: 'Invalidation / stop / target / horizon', sort: () => null, fmt: (v, r) => {
@@ -424,7 +469,11 @@ pages.researchDetail = async (root, ticker) => {
   }
   const chips = el('div');
   [['signal', a.signal], ['rm_rating', a.rm_rating], ['trader_action', a.trader_action],
-   ['pm_rating', a.pm_rating], ['model', a.model_routing], ['duration_s', nul(a.duration_s) ? null : fmtNum(a.duration_s, 1)],
+   ['pm_rating', a.pm_rating],
+   ['model', a.model_routing && typeof a.model_routing === 'object'
+     ? Object.entries(a.model_routing).map(([k, v]) => k + '=' + v).join(' · ')
+     : a.model_routing],
+   ['duration_s', nul(a.duration_s) ? null : fmtNum(a.duration_s, 1)],
    ['decision_session', a.decision_session]]
     .forEach(([k, v]) => chips.appendChild(chip(k + ': ' + (nul(v) ? 'UNKNOWN' : v), 'info')));
   root.appendChild(chips);
@@ -923,8 +972,17 @@ pages.providers = async (root) => {
   }
 };
 
-pages.health = async (root) => {
-  const d = await api('/api/health');
+pages.health = async (root, params, fresh) => {
+  const d = await api('/api/health' + (fresh ? '?refresh=1' : ''));
+  if (d.cache) {
+    const row = el('div');
+    row.appendChild(chip('snapshot ' + d.cache.age_s + 's old (ttl ' + d.cache.ttl_s + 's)', 'gray'));
+    const btn = el('button', 'refresh-btn', '↻ authoritative check now');
+    btn.addEventListener('click', () => { root.textContent = '';
+      pages.health(root, params, true).then(markRefreshed); });
+    row.appendChild(btn);
+    root.appendChild(row);
+  }
   const oh = d.ops_health || {};
   const overall = oh.overall;
   root.appendChild(el('div', 'banner ' + (overall === 'OK' || overall === 'HEALTHY' ? 'banner-info' : 'banner-bad') + ' banner-big',
@@ -1067,7 +1125,7 @@ pages.tracks = async (root) => {
 pages.controls = async (root) => {
   const d = await api('/api/controls');
   root.appendChild(el('div', 'banner banner-info',
-    'Safe operations — allowlist only. ' + (d.note || '')));
+    'Safe operations. ' + (d.note || '')));
   (d.controls || []).forEach(c => {
     const card = el('div', 'control-card');
     const wrap = el('div', 'wrap');

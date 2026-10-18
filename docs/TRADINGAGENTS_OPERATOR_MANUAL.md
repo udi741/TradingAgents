@@ -138,6 +138,19 @@ python3 -m ops.ta backup --dry-run            # shows what would be captured
 Secrets are NOT in the archive — transfer
 `~/.config/tradingagents/telegram.env` and devin auth separately.
 
+Backup scope: economic/operational authority (monitor state, watchlist,
+scheduler state, ledgers, management state/actions/policy, C12 economics)
+plus cockpit-continuity decision evidence — `opportunity_funnel/`,
+`candidate_pool_frozen_*`, `publication_intents_*`/`resolutions_*`,
+`case_artifacts/`, `entry_snapshots/`, `management_analyses/`/`contexts/`/
+`requests/`/`intents/`, `analysis_*`/`fundamental_facts_*` snapshots and
+`trade_postmortems/`. Disposable caches (`cache/`, `market_cache_*.pkl`,
+`replays/`, `results/`, `expert_coverage/`, `low_price_shadow/`, `memory/`,
+`rank_cohort*`, `universe_raw.json`) are deliberately excluded — they are
+rebuildable or research-only bulk. Each archived file records its source
+mtime in the manifest and restore **re-applies the source mtime**, so a
+restored old artifact can never masquerade as freshly generated.
+
 On the new machine:
 
 ```bash

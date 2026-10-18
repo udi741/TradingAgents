@@ -296,11 +296,47 @@ _BACKUP_SET = [
      "OPERATIONAL"),
     ("C12_DIR", "evaluations/gate_c12_prospective/journal.jsonl",
      "OPERATIONAL"),
+    ("ALPHA_DIR", "alpha_rnd/cohort_outcomes_state.json", "OPERATIONAL"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/ta_decisions_summary.json",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/intraday_trigger_evidence.json",
+     "DECISION_EVIDENCE"),
 ]
 _BACKUP_DIRS = [  # whole directories, same consistency rules
     ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_intents",
      "SHADOW_ARTIFACT"),
     ("C12_DIR", "evaluations/gate_c12_prospective/weeks", "OPERATIONAL"),
+]
+# session-stamped file families (glob patterns, same consistency rules)
+_BACKUP_GLOBS = [
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/candidate_pool_frozen*.json",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/publication_intents_*.json",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/publication_resolutions_*.json",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/analysis_status_*.json",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/analysis_ledger_*.json",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/fundamental_facts_*.json",
+     "DECISION_EVIDENCE"),
+]
+_BACKUP_DIRS += [  # cockpit-continuity evidence dirs (audit IMPORTANT-1)
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/opportunity_funnel",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/case_artifacts",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/entry_snapshots",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_analyses",
+     "SHADOW_ARTIFACT"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_contexts",
+     "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_requests",
+     "OPERATIONAL"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/trade_postmortems",
+     "DECISION_EVIDENCE"),
 ]
 _LOCKS = [("ALPHA_DIR", "alpha_rnd/monitor_state.lock"),
           ("ALPHA_DIR", "alpha_rnd/scheduler_state.lock"),
@@ -403,22 +439,30 @@ def cmd_backup(a):
             fcntl.flock(lf, fcntl.LOCK_EX)
             locks.append((lp, lf))
         manifest["captured_utc"] = {lp.name: ts for lp, _ in locks}
-        for k, rel, cls in _BACKUP_SET + _BACKUP_DIRS:
+        for k, rel, cls in _BACKUP_SET + _BACKUP_DIRS + _BACKUP_GLOBS:
             src = Path(lay[k]) / rel
-            if not src.exists():
+            if "*" in rel:
+                files = sorted(Path(lay[k]).glob(rel))
+                if not files and cls in _REQUIRED:
+                    print(f"FAIL required authority missing: {src}")
+                    return 2
+            elif not src.exists():
                 if cls in _REQUIRED:
                     print(f"FAIL required authority missing: {src}")
                     return 2
                 continue
-            files = sorted(src.rglob("*")) if src.is_dir() else [src]
+            else:
+                files = sorted(src.rglob("*")) if src.is_dir() else [src]
             for f in files:
                 if not f.is_file():
                     continue
                 rel = str(f.relative_to(lay[k]))
                 stage[f"{k}/{rel}"] = f.read_bytes()
+                st = f.stat()
                 manifest["files"].append(
                     {"path": f"{k}/{rel}", "class": cls,
-                     "size": f.stat().st_size,
+                     "size": st.st_size,
+                     "src_mtime": st.st_mtime,
                      "sha256": _sha256(stage[f"{k}/{rel}"])})
     finally:
         for _, lf in locks:
@@ -541,6 +585,10 @@ def _promote(jp: Path, j: dict):
         tgt, sp = Path(f["target"]), Path(f["staged"])
         tgt.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(sp), str(tgt))
+        # preserve the source mtime captured at backup time — restored
+        # files must not look freshly generated merely because restore ran
+        if f.get("src_mtime"):
+            os.utime(tgt, (f["src_mtime"], f["src_mtime"]))
         f["promoted"] = True
         _journal_write(jp, j)
 
@@ -571,6 +619,7 @@ def _stage_from_archive(archive: Path, man: dict, lay: dict,
             sp.write_bytes(data)
             files.append({"target": str(Path(lay[k]) / rel),
                           "staged": str(sp), "sha256": ent["sha256"],
+                          "src_mtime": ent.get("src_mtime"),
                           "promoted": False})
     return files
 

@@ -280,6 +280,78 @@ class BackupRestore(unittest.TestCase):
         self.assertEqual(st["executed"], ["e1", "e2"])
         self.assertEqual(st["pending_open_fills"][0]["order_id"], "o1")
 
+    def test_cockpit_continuity_roundtrip(self):
+        """Audit IMPORTANT-1: funnel/intents/pool/case artifacts must ride
+        the backup and survive restore with SOURCE mtimes (not restore-time
+        mtimes that would fake freshness)."""
+        ev = (self.src / "TradingAgents-alpha-rnd"
+              / "evaluations" / "alpha_rnd_v1")
+        for d in ("opportunity_funnel", "case_artifacts", "entry_snapshots",
+                  "management_analyses/X", "management_requests",
+                  "management_contexts"):
+            (ev / d).mkdir(parents=True)
+        (ev / "opportunity_funnel" / "2026-10-16.json").write_text(
+            '{"session":"2026-10-16","eligible_count":42}')
+        (ev / "publication_intents_2026-10-16.json").write_text(
+            '{"session":"2026-10-16","dispositions":{}}')
+        (ev / "publication_resolutions_2026-10-16.json").write_text('{}')
+        (ev / "candidate_pool_frozen_2026-10-16.json").write_text(
+            '{"session":"2026-10-16","candidates":[]}')
+        (ev / "case_artifacts" / "X_2026-10-16.json").write_text(
+            '{"ticker":"X","decision_session":"2026-10-16"}')
+        (ev / "entry_snapshots" / "X_2026-10-16.json").write_text('{}')
+        (ev / "analysis_status_2026-10-16.json").write_text('{}')
+        (ev / "fundamental_facts_2026-10-16.json").write_text('{}')
+        (ev / "management_analyses" / "X" / "reassess_1.json").write_text('{}')
+        # disposable caches / research-only bulk must NOT be captured
+        (ev / "cache").mkdir(); (ev / "cache" / "x.pkl").write_bytes(b"junk")
+        (ev / "market_cache_2026-10-16.pkl").write_bytes(b"junk")
+        (ev / "replays").mkdir(); (ev / "replays" / "r.bin").write_bytes(b"j")
+        old = 1700000000.0
+        os.utime(ev / "opportunity_funnel" / "2026-10-16.json", (old, old))
+        rc, o = self._backup()
+        self.assertEqual(rc, 0, o)
+        paths = {f["path"] for f in self._man()["files"]}
+        for want in (
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "opportunity_funnel/2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "publication_intents_2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "publication_resolutions_2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "candidate_pool_frozen_2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "case_artifacts/X_2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "entry_snapshots/X_2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "analysis_status_2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "fundamental_facts_2026-10-16.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "management_analyses/X/reassess_1.json",
+        ):
+            self.assertIn(want, paths)
+        self.assertFalse(any("/cache/" in p or p.endswith(".pkl")
+                             or "/replays/" in p for p in paths),
+                         "disposable caches must not be backed up")
+        rc, o = self._restore()
+        self.assertEqual(rc, 0, o)
+        de = (self.dst / "TradingAgents-alpha-rnd"
+              / "evaluations" / "alpha_rnd_v1")
+        self.assertEqual(
+            json.loads((de / "opportunity_funnel" / "2026-10-16.json")
+                       .read_text())["session"], "2026-10-16")
+        self.assertTrue((de / "case_artifacts" / "X_2026-10-16.json").exists())
+        self.assertTrue(
+            (de / "publication_intents_2026-10-16.json").exists())
+        # restored mtime must be the SOURCE mtime, not restore time —
+        # an old artifact can never masquerade as freshly generated
+        self.assertEqual(
+            os.stat(de / "opportunity_funnel" / "2026-10-16.json").st_mtime,
+            old)
+
     def test_corrupt_archive_fails_closed(self):
         self._backup()
         data = bytearray(self.arc.read_bytes())

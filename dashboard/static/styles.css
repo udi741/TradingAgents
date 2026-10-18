@@ -100,9 +100,12 @@ h2.sec{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.8
   padding:14px;color:var(--red);font-family:var(--mono);font-size:12px;white-space:pre-wrap}
 
 /* tables */
+.why-cell{white-space:normal;min-width:260px;max-width:560px;display:inline-block}
+.viol-list{margin:4px 0 0;padding-left:16px}
+.viol-list li{margin:2px 0}
 .tablewrap{border:1px solid var(--border);border-radius:4px;overflow:auto;max-height:560px;
   background:var(--panel);margin-bottom:12px}
-table.dt{border-collapse:collapse;width:100%;font-size:12px}
+table.dt{border-collapse:collapse;width:100%;min-width:max-content;font-size:12px}
 table.dt th{position:sticky;top:0;background:var(--panel2);color:var(--text-dim);
   font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;text-align:left;
   padding:7px 10px;border-bottom:1px solid var(--border2);cursor:pointer;user-select:none;white-space:nowrap}

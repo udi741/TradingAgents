@@ -68,6 +68,30 @@ def _latest(globpat: str) -> Path | None:
     return Path(files[-1]) if files else None
 
 
+_ASOF_KEYS = ("session", "decision_session", "frozen_at", "created_at",
+              "generated_at", "synthesized_at", "checked_at")
+
+
+def _content_meta(meta: dict, data) -> dict:
+    """Annotate read meta with the artifact's own semantic timestamp.
+
+    Filesystem mtime is transport metadata — restore/git checkout rewrites
+    it, so it can never prove freshness. Sessioned artifacts carry their
+    authoritative as-of inside the content; when no such field exists the
+    dashboard must treat freshness as unverifiable rather than trusting
+    mtime."""
+    if meta.get("state") != "ok" or not isinstance(data, dict):
+        meta["freshness_basis"] = "unverifiable"
+        return meta
+    for k in _ASOF_KEYS:
+        if data.get(k):
+            meta["asof"] = str(data[k])
+            meta["freshness_basis"] = "artifact"
+            return meta
+    meta["freshness_basis"] = "mtime_only"
+    return meta
+
+
 def funnel_sessions() -> list[str]:
     out = []
     for p in glob.glob(str(config.ALPHA_EVAL / "opportunity_funnel" / "*.json")):
@@ -84,7 +108,8 @@ def funnel(session: str | None = None) -> tuple[dict | None, dict]:
         p = config.ALPHA_EVAL / "opportunity_funnel" / f"{session}.json"
     if p is None:
         return None, {"state": "missing", "path": None}
-    return read_json(p)
+    d, meta = read_json(p)
+    return d, _content_meta(meta, d)
 
 
 def candidate_pools() -> list[str]:
@@ -107,7 +132,8 @@ def candidate_pool(session: str | None = None) -> tuple[dict | None, dict]:
         p = config.ALPHA_EVAL / f"candidate_pool_frozen_{session}.json"
     if p is None:
         return None, {"state": "missing", "path": None}
-    return read_json(p)
+    d, meta = read_json(p)
+    return d, _content_meta(meta, d)
 
 
 def publication_sessions() -> list[str]:
@@ -123,7 +149,8 @@ def publication_intents(session: str | None = None) -> tuple[dict | None, dict]:
         session = sessions[-1]
     if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", session):
         return None, {"state": "invalid", "path": None}
-    return read_json(config.ALPHA_EVAL / f"publication_intents_{session}.json")
+    d, meta = read_json(config.ALPHA_EVAL / f"publication_intents_{session}.json")
+    return d, _content_meta(meta, d)
 
 
 def case_artifacts() -> list[dict]:
@@ -169,7 +196,8 @@ def case_artifact(ticker: str, session: str | None = None) -> tuple[dict | None,
         cands.append(p)
     if not cands:
         return None, {"state": "missing", "path": None}
-    return read_json(Path(sorted(cands)[-1]))
+    d, meta = read_json(Path(sorted(cands)[-1]))
+    return d, _content_meta(meta, d)
 
 
 def entry_snapshots() -> list[dict]:
@@ -232,7 +260,8 @@ def analysis_status(session: str | None = None) -> tuple[dict | None, dict]:
         p = config.ALPHA_EVAL / f"analysis_status_{session}.json"
     if p is None:
         return None, {"state": "missing", "path": None}
-    return read_json(p)
+    d, meta = read_json(p)
+    return d, _content_meta(meta, d)
 
 
 def cohort_state() -> tuple[dict | None, dict]:

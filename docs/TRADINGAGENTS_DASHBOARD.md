@@ -64,8 +64,27 @@ dashboard/
 
 Freshness semantics: every API response embeds `meta` per source file
 (`state`: ok|missing|malformed|empty|unreadable, `mtime_utc`,
-`age_seconds`). The UI renders `—`/UNKNOWN for absent values; it never
+`age_seconds`). For sessioned artifacts (opportunity funnel, candidate
+pools, publication intents, case artifacts, analysis status) `meta` also
+carries `asof` + `freshness_basis` taken from the **content's own**
+session/as-of fields — filesystem mtime is transport metadata (restore and
+git checkout rewrite it) and can never prove freshness. When an artifact
+carries no semantic timestamp the UI shows `STALENESS UNVERIFIED`, and the
+funnel page flags `STALE` when its session lags the scheduler's latest
+completed session. The UI renders `—`/UNKNOWN for absent values; it never
 substitutes zero.
+
+Rejection visibility: the funnel candidate table shows each ticker's
+publication `disposition` plus its persisted `violations[]` reason text
+(multi-violation rows are expandable). Where ALPHA persisted no reason the
+cell says `REASON NOT PERSISTED` — reasons are never generated
+retrospectively. Candidates that never reached publication show `—`.
+
+Health polling: `/api/health` wraps the authoritative `ops.ta health`
+subprocess behind a short-lived cached snapshot (`TA_DASH_HEALTH_TTL_S`,
+default 120 s); `GET /api/health?refresh=1` — or the Health page's
+"authoritative check now" button — reruns it on demand. Page/topbar polls
+therefore do not respawn the health subprocess each cycle.
 
 ## Data authority
 

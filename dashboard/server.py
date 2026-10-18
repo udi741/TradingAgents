@@ -4,6 +4,7 @@ Run:  python3 -m dashboard.server   (binds 127.0.0.1:8420)
 """
 from __future__ import annotations
 
+import os
 import re
 import time
 from pathlib import Path
@@ -46,8 +47,17 @@ def api_funnel(session: str | None = None):
     if session:
         _session(session)
     data, meta = alpha.funnel(session)
+    sched, _ = alpha.scheduler()
+    latest_done = None
+    done = (sched or {}).get("completed_sessions") or []
+    if done:
+        latest_done = sorted(done)[-1]
+    lc = (sched or {}).get("last_cycle") or {}
+    if lc.get("session") and (latest_done is None or lc["session"] > latest_done):
+        latest_done = lc["session"]
     return {"meta": meta, "funnel": data,
-            "sessions": alpha.funnel_sessions()}
+            "sessions": alpha.funnel_sessions(),
+            "scheduler_latest_session": latest_done}
 
 
 @app.get("/api/candidates")
@@ -189,12 +199,32 @@ def api_providers():
     return providers.providers()
 
 
-@app.get("/api/health")
-def api_health():
+# ops.ta health spawns a subprocess (plus bridge probe + systemctl) — too
+# heavy to run on every page/topbar poll. Serve a short-lived cached
+# snapshot; `?refresh=1` forces the authoritative live check.
+_HEALTH_TTL_S = int(os.environ.get("TA_DASH_HEALTH_TTL_S", "120"))
+_health_cache: dict = {"ts": 0.0, "data": None}
+
+
+def _health_snapshot() -> dict:
     return {"ops_health": health.health(),
             "ops_status": health.status(),
             "bridge": health.bridge(),
             "units": health.systemd_units()}
+
+
+@app.get("/api/health")
+def api_health(refresh: int = 0):
+    now = time.time()
+    if refresh or _health_cache["data"] is None or \
+            now - _health_cache["ts"] > _HEALTH_TTL_S:
+        _health_cache.update(ts=now, data=_health_snapshot())
+    snap = dict(_health_cache["data"])
+    snap["cache"] = {"age_s": round(now - _health_cache["ts"], 1),
+                     "ttl_s": _HEALTH_TTL_S,
+                     "authoritative_cmd": "ops.ta health",
+                     "note": "snapshot; refresh=1 reruns the authoritative check"}
+    return snap
 
 
 @app.get("/api/capabilities")
