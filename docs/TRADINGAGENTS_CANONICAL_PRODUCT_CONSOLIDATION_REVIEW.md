@@ -294,6 +294,98 @@ python3 -m ops.ta health
 python3 -m dashboard.server    # http://127.0.0.1:8420
 ```
 
+## FINAL ACCEPTANCE CLOSURE (2026-10-18)
+
+### `.venv312` disposition
+
+It WAS a real tracked virtualenv (33 files: `bin/` scripts, `pyvenv.cfg`
+created by `/usr/bin/python3.12 -m venv .../TradingAgents-alpha-rnd`).
+Removed from git tracking (`git rm -r --cached`), `.venv312/` added to
+`.gitignore`. Files on disk in the dev worktree untouched. Recreation is
+the documented `python3.12 -m venv .venv312 && .venv312/bin/pip install -e .`
+(also automated by `ops.ta setup`).
+
+### Fresh environment creation (verified in `/tmp/ta-canon2/TradingAgents`)
+
+```bash
+python3.12 -m venv .venv312
+.venv312/bin/pip install -e .          # tradingagents import OK
+python3 -m pip install --user -r ops/runtime_requirements.txt
+#   now includes fastapi==0.121.0 uvicorn==0.38.0 playwright==1.64.0
+python3 -c "import fastapi, uvicorn, playwright, yfinance, telegram, dotenv"  # OK
+```
+
+### Clean-clone lifecycle (exact commands, exit-verified)
+
+```bash
+git clone /home/udi/udi_provate/TradingAgents /tmp/ta-canon2/TradingAgents \
+    -b product/tradingagents-current
+cd /tmp/ta-canon2/TradingAgents
+python3 -m ops.ta restore /path/backup.tar.gz      # 23 files, lineage OK
+PYTHONPATH=$PWD python3 -m alpha_rnd.monitor --once \
+    >> alpha_rnd/monitor_cron.log 2>&1              # real tick, rc=0
+PYTHONPATH=$PWD python3 -m alpha_rnd.daily_scheduler --check \
+    >> alpha_rnd/scheduler.log 2>&1                 # "up to date", rc=0
+python3 -m ops.ta health                            # see below
+TA_DASH_PORT=8421 python3 -m dashboard.server &
+```
+
+### Post-restore `ops.ta health` — final result
+
+`OVERALL: HEALTHY`, exit 0. Every check OK: boot recovery, monitor tick
+(real, 5s old), economic state ($92,899 cash / 1 open), pending orders,
+scheduler <25h (real run), C12 optional-track honest note, bridge
+/healthz + unit, telegram relay+config, devin CLI, cron 3/3, adaptive
+execution enabled-with-provenance. The C12 scheduler check no longer
+degrades when the optional track's code is absent — matching the cron
+behaviour and the canonical model (display-only when state restored).
+
+### Clean-clone browser/E2E result
+
+`dashboard/tests/e2e_browser.py` against the clone's own server
+(restored isolated state): all 14 pages loaded, **0 console errors,
+0 API 5xx**; interaction smoke OK. `/api/meta` shows ALPHA source
+`single-checkout` at `/tmp/ta-canon2/TradingAgents` — zero references to
+developer sibling worktrees. Screenshots under
+`artifacts/dashboard_review/`.
+
+### Near-live refresh result (clean clone)
+
+`dashboard/tests/e2e_autorefresh.py` (synthetic state, own server):
+all six lifecycle stages — funnel_candidate 0.9s, ta_result 1.4s,
+publication 1.5s, watch 1.5s, position 1.5s, management 1.5s —
+`ALL_STAGES_AUTO_UPDATED: True`, no console errors, no 5xx.
+
+### Sibling-worktree isolation
+
+The clone's prefix (`/tmp/ta-canon2`) contains no sibling checkouts;
+single-checkout detection makes every role resolve inside the clone.
+`/api/meta` paths, `ops.ta` layout, and restored state all live under
+`/tmp/ta-canon2/TradingAgents`. No code path was found that reads the
+developer worktrees when they are absent.
+
+### Test suite accounting (post-cleanup, clean clone)
+
+`pytest alpha_rnd dashboard/tests ops`: **291+1 fixed** —
+- `ops/test_ta.py::Sim::test_health_fresh_monitor_and_readable_state`:
+  stale assertion updated (optional-C12-absent health is legitimately
+  HEALTHY). Now green.
+- Still failing, PRE-EXISTING (reproduced identically on base branch,
+  unrelated to consolidation): `alpha_rnd/test_monitor.py` collection
+  error (`KeyError ZZZ`, state-dependent), `test_mgmt_exec.py::C2` ×3
+  (state-dependent PBF assumptions vs live pending exit).
+- `tests/` upstream suite: needs the py3.12 venv + pytest; not part of
+  the shipped runtime requirements — documented limitation.
+
+### Final commits on product/tradingagents-current
+
+- `be267ffb` devin bridge (cherry-pick ceabecf9)
+- `9fe3ed37` single-checkout layout + optional-track degrade + lineage restore
+- `7e5d78c9` telegram_relay test via layout
+- `0df74512` canonical docs + review artifact
+- `f21c535b` untrack .venv312 + health gating + pinned dashboard/e2e deps
+- d3d3c328 sim health assertion fix
+
 ## Acceptance
 
 CANONICAL_PRODUCT_BRANCH_CREATED: YES
@@ -313,4 +405,13 @@ CONSOLIDATION_CAUSED_NO_ECONOMIC_MUTATION: YES
 REAL_MONEY_REMAINS_OFF: YES
 C12_ECONOMICS_UNCHANGED: YES
 KNOWN_CRITICAL_PORTABILITY_GAPS_REMAIN: NO
+
+TRACKED_VIRTUALENV_REMOVED: YES
+FRESH_ENVIRONMENT_RECREATION_VERIFIED: YES
+CLEAN_CLONE_SETUP_VERIFIED: YES
+CLEAN_CLONE_RESTORE_VERIFIED: YES
+POST_RESTORE_OPS_HEALTH_HEALTHY: YES
+CLEAN_CLONE_BROWSER_E2E_VERIFIED: YES
+CLEAN_CLONE_AUTO_REFRESH_VERIFIED: YES
+SIBLING_WORKTREES_NOT_REQUIRED: YES
 STATUS: COMPLETE
