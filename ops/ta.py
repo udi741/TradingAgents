@@ -1051,13 +1051,17 @@ def cmd_bootcheck(a):
         chk("ALPHA scheduler ran <25h", age_s < 90000, level="degraded")
     except OSError:
         chk("ALPHA scheduler log exists", False, level="degraded")
-    cslog = Path(lay["C12_DIR"]) / \
-        "evaluations/gate_c12_prospective/scheduler.log"
-    try:
-        age_c = datetime.now(timezone.utc).timestamp() - cslog.stat().st_mtime
-        chk("C12 scheduler ran <25h", age_c < 90000, level="degraded")
-    except OSError:
-        chk("C12 scheduler log exists", False, level="degraded")
+    if (Path(lay["C12_DIR"]) / "ta_eval").is_dir():
+        cslog = Path(lay["C12_DIR"]) / \
+            "evaluations/gate_c12_prospective/scheduler.log"
+        try:
+            age_c = datetime.now(timezone.utc).timestamp() - cslog.stat().st_mtime
+            chk("C12 scheduler ran <25h", age_c < 90000, level="degraded")
+        except OSError:
+            chk("C12 scheduler log exists", False, level="degraded")
+    else:
+        chk("C12 optional track", True, level="degraded",
+            note="not deployed in this checkout")
     cron = _cron_read() or ""
     _jobs = ["alpha_rnd.monitor", "alpha_rnd.daily_scheduler"]
     if (Path(lay["C12_DIR"]) / "ta_eval").is_dir():
@@ -1225,17 +1229,24 @@ def cmd_health(a):
     except OSError:
         chk("ALPHA scheduler log exists", False, level="degraded")
 
-    cslog = Path(lay["C12_DIR"]) / "evaluations/gate_c12_prospective/scheduler.log"
-    try:
-        age_c = (datetime.now(timezone.utc).timestamp()
-                 - cslog.stat().st_mtime)
-        chk("C12 scheduler ran <25h", age_c < 90000, level="degraded",
-            note=f"{int(age_c/3600)}h ago")
-    except OSError:
-        chk("C12 scheduler log exists", False, level="degraded")
-    cnav = Path(lay["C12_DIR"]) / "evaluations/gate_c12_prospective/c12_nav.jsonl"
-    chk("C12 state readable", cnav.exists() and cnav.stat().st_size > 0,
-        level="degraded")
+    c12_eval = Path(lay["C12_DIR"]) / "evaluations/gate_c12_prospective"
+    if (Path(lay["C12_DIR"]) / "ta_eval").is_dir():
+        cslog = c12_eval / "scheduler.log"
+        try:
+            age_c = (datetime.now(timezone.utc).timestamp()
+                     - cslog.stat().st_mtime)
+            chk("C12 scheduler ran <25h", age_c < 90000, level="degraded",
+                note=f"{int(age_c/3600)}h ago")
+        except OSError:
+            chk("C12 scheduler log exists", False, level="degraded")
+        cnav = c12_eval / "c12_nav.jsonl"
+        chk("C12 state readable", cnav.exists() and cnav.stat().st_size > 0,
+            level="degraded")
+    else:
+        chk("C12 optional track", True,
+            note="not deployed in this checkout (ta_eval absent)"
+            if not c12_eval.exists() else "state restored; scheduler code "
+            "not part of canonical product — display only")
 
     h = _get("http://127.0.0.1:8765/healthz")
     chk("SWE bridge /healthz", bool(h and h.get("runtime_ready")),
