@@ -368,6 +368,40 @@ class BackupRestore(unittest.TestCase):
         rc, o = self._restore()
         self.assertEqual(rc, 0, o)
 
+    def test_older_backup_without_reuse_shadow_still_restores(self):
+        import io as _io
+        import tarfile
+
+        ev = (self.src / "TradingAgents-alpha-rnd"
+              / "evaluations" / "alpha_rnd_v1")
+        shadow = ev / "reuse_shadow"
+        shadow.mkdir()
+        (shadow / "X_2026-10-16.json").write_text('{"schema_version":1}')
+        self._backup()
+        older = self.arc.with_name("older.tar.gz")
+        with tarfile.open(self.arc) as source, tarfile.open(older, "w:gz") as target:
+            for member in source.getmembers():
+                if member.name.startswith(
+                    "payload/ALPHA_DIR/evaluations/alpha_rnd_v1/reuse_shadow/"):
+                    continue
+                data = source.extractfile(member).read()
+                if member.name == "manifest.json":
+                    manifest = json.loads(data)
+                    manifest["files"] = [
+                        item for item in manifest["files"]
+                        if "/reuse_shadow/" not in item["path"]
+                    ]
+                    data = json.dumps(manifest).encode()
+                    member = tarfile.TarInfo("manifest.json")
+                    member.size = len(data)
+                target.addfile(member, _io.BytesIO(data))
+
+        rc, output = self._restore(arc=older)
+        self.assertEqual(rc, 0, output)
+        self.assertFalse(
+            (self.dst / "TradingAgents-alpha-rnd/evaluations/alpha_rnd_v1"
+             / "reuse_shadow").exists())
+
     def test_cockpit_continuity_roundtrip(self):
         """Audit IMPORTANT-1: funnel/intents/pool/case artifacts must ride
         the backup and survive restore with SOURCE mtimes (not restore-time
@@ -375,6 +409,7 @@ class BackupRestore(unittest.TestCase):
         ev = (self.src / "TradingAgents-alpha-rnd"
               / "evaluations" / "alpha_rnd_v1")
         for d in ("opportunity_funnel", "case_artifacts", "entry_snapshots",
+                  "reuse_shadow",
                   "management_analyses/X", "management_requests",
                   "management_contexts"):
             (ev / d).mkdir(parents=True)
@@ -391,6 +426,9 @@ class BackupRestore(unittest.TestCase):
         (ev / "analysis_status_2026-10-16.json").write_text('{}')
         (ev / "fundamental_facts_2026-10-16.json").write_text('{}')
         (ev / "management_analyses" / "X" / "reassess_1.json").write_text('{}')
+        (ev / "reuse_shadow" / "X_2026-10-16.json").write_text(
+            '{"schema_version":1,"shadow_mode":{"classification":'
+            '"FULL_REFRESH_REQUIRED"}}')
         # disposable caches / research-only bulk must NOT be captured
         (ev / "cache").mkdir(); (ev / "cache" / "x.pkl").write_bytes(b"junk")
         (ev / "market_cache_2026-10-16.pkl").write_bytes(b"junk")
@@ -419,8 +457,14 @@ class BackupRestore(unittest.TestCase):
             "fundamental_facts_2026-10-16.json",
             "ALPHA_DIR/evaluations/alpha_rnd_v1/"
             "management_analyses/X/reassess_1.json",
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/"
+            "reuse_shadow/X_2026-10-16.json",
         ):
             self.assertIn(want, paths)
+        manifest_entry = next(
+            f for f in self._man()["files"]
+            if f["path"].endswith("reuse_shadow/X_2026-10-16.json"))
+        self.assertEqual(manifest_entry["class"], "OPERATIONAL")
         self.assertFalse(any("/cache/" in p or p.endswith(".pkl")
                              or "/replays/" in p for p in paths),
                          "disposable caches must not be backed up")
@@ -432,6 +476,8 @@ class BackupRestore(unittest.TestCase):
             json.loads((de / "opportunity_funnel" / "2026-10-16.json")
                        .read_text())["session"], "2026-10-16")
         self.assertTrue((de / "case_artifacts" / "X_2026-10-16.json").exists())
+        self.assertTrue(
+            (de / "reuse_shadow" / "X_2026-10-16.json").exists())
         self.assertTrue(
             (de / "publication_intents_2026-10-16.json").exists())
         # restored mtime must be the SOURCE mtime, not restore time —

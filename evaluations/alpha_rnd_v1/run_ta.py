@@ -119,6 +119,20 @@ def run_one(ticker: str, date: str,
     return a
 
 
+def _record_shadow_case(ticker: str, session: str) -> None:
+    try:
+        from alpha_rnd.reuse_shadow import record_for_session
+
+        record = record_for_session(ticker, session)
+        if record is not None:
+            print(
+                f"{ticker}: reuse shadow={record['shadow_mode']['classification']}",
+                flush=True,
+            )
+    except Exception as e:
+        print(f"{ticker}: reuse shadow instrumentation failed {e!r}", flush=True)
+
+
 def main() -> None:
     session = sys.argv[1]
     tickers = sys.argv[2:]
@@ -129,6 +143,7 @@ def main() -> None:
             print(f"{t}: signal={a['signal']} rm={a['rm_rating']} "
                   f"trader={a['trader_action']} pm={a['pm_rating']} "
                   f"dur={a['duration_s']}s", flush=True)
+            _record_shadow_case(t, session)
         except Exception as e:
             print(f"{t}: FAILED {e!r}", flush=True)
             from alpha_rnd import infra_status as inf

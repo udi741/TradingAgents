@@ -329,6 +329,7 @@ _BACKUP_SET = [
 _BACKUP_DIRS = [  # whole directories, same consistency rules
     ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_intents",
      "SHADOW_ARTIFACT"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/reuse_shadow", "OPERATIONAL"),
     ("C12_DIR", "evaluations/gate_c12_prospective/weeks", "OPERATIONAL"),
 ]
 # session-stamped file families (glob patterns, same consistency rules)
