@@ -330,6 +330,9 @@ _BACKUP_DIRS = [  # whole directories, same consistency rules
     ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_intents",
      "SHADOW_ARTIFACT"),
     ("ALPHA_DIR", "evaluations/alpha_rnd_v1/reuse_shadow", "OPERATIONAL"),
+    # Paired reuse-validation records are the measured-savings evidence for
+    # the reuse engine rollout gate — research-only, never economic authority.
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/reuse_validation", "OPERATIONAL"),
     ("C12_DIR", "evaluations/gate_c12_prospective/weeks", "OPERATIONAL"),
 ]
 # session-stamped file families (glob patterns, same consistency rules)

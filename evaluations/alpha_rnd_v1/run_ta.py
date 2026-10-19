@@ -35,7 +35,7 @@ _TR = re.compile(r"(?:\*\*Action\*\*:|FINAL TRANSACTION PROPOSAL:\s*\*\*)\s*(BUY
 _PM = re.compile(r"\*\*Rating\*\*:\s*(Buy|Overweight|Hold|Underweight|Sell)", re.I)
 
 
-def cfg() -> dict:
+def cfg(overrides: dict | None = None) -> dict:
     from tradingagents.default_config import DEFAULT_CONFIG
 
     c = dict(DEFAULT_CONFIG)
@@ -58,6 +58,8 @@ def cfg() -> dict:
             "memory_log_path": str(D / "memory" / "trading_memory.md"),
         }
     )
+    if overrides:
+        c.update(overrides)
     return c
 
 
@@ -68,7 +70,8 @@ def pick(pat, txt, default):
 
 def run_one(ticker: str, date: str,
             position: tuple[float, float] | None = None,
-            out_name: str | None = None) -> dict:
+            out_name: str | None = None,
+            config_overrides: dict | None = None) -> dict:
     from tradingagents.graph.trading_graph import TradingAgentsGraph
     from tradingagents.portfolio import PortfolioContext, Position
     from alpha_rnd.analysis_metrics import ModelCallMetrics, provider_call_metrics
@@ -78,7 +81,7 @@ def run_one(ticker: str, date: str,
     if art_path.exists():
         return json.loads(art_path.read_text())
 
-    config = cfg()
+    config = cfg(config_overrides)
     model_metrics = ModelCallMetrics({
         "quick": config.get("quick_think_llm"), "deep": config.get("deep_think_llm"),
     })
@@ -182,16 +185,74 @@ def _record_shadow_case(ticker: str, session: str) -> None:
         print(f"{ticker}: reuse shadow instrumentation failed {e!r}", flush=True)
 
 
+def _pairs_done(session: str) -> int:
+    from alpha_rnd.reuse_engine import VALIDATION_DIR
+
+    try:
+        return sum(1 for p in VALIDATION_DIR.glob(f"*_{session}.json"))
+    except Exception:
+        return 0
+
+
+def _engine_dispatch(t: str, session: str):
+    """ALPHA_REUSE_ENGINE dispatch.
+
+    OFF (default): identical to before — plain run_one.
+    VALIDATE: paired controlled run for repeated tickers, capped by
+      ALPHA_REUSE_MAX_PAIRS (default 2) per session; the canonical artifact is
+      always the full-refresh baseline — economic/publication authority is
+      never switched here.
+    ENABLED: optimized reuse path writes the canonical artifact.
+    """
+    from alpha_rnd import reuse_engine
+
+    def _full(ticker, date, out_name=None, config_overrides=None):
+        return run_one(ticker, date, out_name=out_name,
+                       config_overrides=config_overrides)
+
+    mode = reuse_engine.engine_mode()
+    if mode == "OFF":
+        return run_one(t, session), mode
+    if mode == "VALIDATE":
+        has_prior = bool(list((D / "case_artifacts").glob(f"{t}_*.json")))
+        if has_prior and _pairs_done(session) < reuse_engine.max_validation_pairs():
+            try:
+                a = reuse_engine.run_validated_pair(
+                    t, session, full_run=_full)
+                print(f"{t}: reuse VALIDATE pair recorded "
+                      f"(authority=baseline)", flush=True)
+                return a, mode
+            except Exception as exc:
+                # Optimization must never lose an analysis: plain full run.
+                print(f"{t}: reuse VALIDATE failed {exc!r}; full run", flush=True)
+                return run_one(t, session), mode
+        return run_one(t, session), mode
+    # ENABLED — optimized authority (operator-enabled only)
+    try:
+        return reuse_engine.run_optimized(
+            t, session, full_run=_full,
+            artifact_path=D / "case_artifacts" / f"{t}_{session}.json"), mode
+    except Exception as exc:
+        print(f"{t}: reuse engine failed {exc!r}; full run", flush=True)
+        return run_one(t, session), mode
+
+
 def main() -> None:
     session = sys.argv[1]
     tickers = sys.argv[2:]
+    try:
+        from alpha_rnd import reuse_engine as _re  # noqa: F401
+        engine = _re.engine_mode()
+    except Exception:
+        engine = "OFF"
     for t in tickers:
         print(f"=== {t} {session} ===", flush=True)
         try:
-            a = run_one(t, session)
+            a, used = _engine_dispatch(t, session) if engine != "OFF" else (
+                run_one(t, session), "OFF")
             print(f"{t}: signal={a['signal']} rm={a['rm_rating']} "
                   f"trader={a['trader_action']} pm={a['pm_rating']} "
-                  f"dur={a['duration_s']}s", flush=True)
+                  f"dur={a.get('duration_s', 'n/a')}s", flush=True)
             _record_shadow_case(t, session)
         except Exception as e:
             print(f"{t}: FAILED {e!r}", flush=True)

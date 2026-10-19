@@ -74,7 +74,126 @@ def compare_metrics(baseline: dict, optimized: dict | None) -> dict:
     return result
 
 
-def render_report(case_dir: Path, shadow_dir: Path | None = None) -> str:
+def _validation_section(validation_dir: Path) -> str:
+    """PAIRED VALIDATION + MEASURED SAVINGS from controlled paired runs."""
+    try:
+        from alpha_rnd.reuse_engine import evaluate_readiness, load_pairs
+        pairs = load_pairs(validation_dir)
+        gate = evaluate_readiness(validation_dir)
+    except Exception as exc:
+        return f"PAIRED VALIDATION\n\nUNAVAILABLE ({type(exc).__name__}: {exc})\n"
+    if not pairs:
+        return (
+            "PAIRED VALIDATION\n\nPairs completed: 0\n\n"
+            "ROLLOUT GATE\n\n"
+            f"READY_FOR_OPTIMIZED_AUTHORITY: "
+            f"{gate['ready_for_optimized_authority']}\n"
+            "  auto-enable: NO — operator approval required\n")
+    optimized_modes = {}
+    for pair in pairs:
+        mode = pair.get("optimized_mode") or "UNKNOWN"
+        optimized_modes[mode] = optimized_modes.get(mode, 0) + 1
+    signal_agree = sum(p.get("signal_agreement") is True for p in pairs if p.get("optimized_mode") != "FULL_REFRESH")
+    rated = [p for p in pairs if p.get("optimized_mode") != "FULL_REFRESH"]
+    rating_agree = sum(p.get("rating_agreement") is True for p in rated)
+    exec_agree = sum(p.get("executable_action_agreement") is True for p in rated)
+    unsafe = sum(p.get("executable_disagreement") is True for p in pairs)
+    fallbacks = sum(p.get("fallback_to_full_refresh") is True for p in pairs)
+    def _measured_values(key):
+        return [
+            p["savings"][key] for p in pairs
+            if (p.get("savings") or {}).get("quality", {}).get(key) == "MEASURED"
+            and isinstance(p["savings"].get(key), (int, float))
+        ]
+
+    saved_time = _measured_values("time_saved_ms")
+    saved_model = _measured_values("model_calls_avoided")
+    saved_prov = _measured_values("provider_calls_avoided")
+    base_time = [
+        (p.get("baseline_metrics") or {}).get("wall_clock", {}).get("elapsed_ms")
+        for p in pairs]
+    base_time = [v for v in base_time if isinstance(v, (int, float))]
+    opt_time = [
+        (p.get("optimized_metrics") or {}).get("wall_clock", {}).get("elapsed_ms")
+        for p in pairs]
+    opt_time = [v for v in opt_time if isinstance(v, (int, float))]
+    token_q = {
+        q: sum((p.get("savings") or {}).get("tokens", {}).get("availability") == q
+               for p in pairs)
+        for q in ("MEASURED", "UNAVAILABLE")
+    }
+    # FULL_REFRESH pairs paid real probe overhead — zero model savings plus
+    # extra provider work must be visible, not hidden behind UPDATE/REUSE gains.
+    refresh_pairs = [
+        p for p in pairs if p.get("optimized_mode") == "FULL_REFRESH"]
+    overhead_ms = [
+        (p.get("probe_overhead") or {}).get("elapsed_ms")
+        for p in refresh_pairs]
+    overhead_ms = [v for v in overhead_ms if isinstance(v, (int, float))]
+    overhead_calls = [
+        (p.get("probe_overhead") or {}).get("provider_call_count")
+        for p in refresh_pairs]
+    overhead_calls = [v for v in overhead_calls if isinstance(v, (int, float))]
+    net_model = [
+        p["savings"]["model_calls_avoided"] for p in pairs
+        if (p.get("savings") or {}).get("quality", {}).get("model_calls_avoided")
+        == "MEASURED"]
+    net_time = [
+        p["savings"]["time_saved_ms"] for p in pairs
+        if (p.get("savings") or {}).get("quality", {}).get("time_saved_ms")
+        == "MEASURED"]
+    partial_time = sum(
+        (p.get("savings") or {}).get("quality", {}).get("time_saved_ms")
+        == "PARTIAL" for p in pairs)
+    safety = {}
+    for pair in pairs:
+        for reason in pair.get("decision_reasons") or []:
+            safety[reason] = safety.get(reason, 0) + 1
+    return (
+        "PAIRED VALIDATION\n\n"
+        f"Pairs completed: {len(pairs)} "
+        f"across {len({p['ticker'] for p in pairs})} tickers\n"
+        f"Optimized modes: {json.dumps(dict(sorted(optimized_modes.items())))}\n"
+        f"Signal agreement: {signal_agree}/{len(rated)}\n"
+        f"Rating agreement: {rating_agree}/{len(rated)}\n"
+        f"Executable-action agreement: {exec_agree}/{len(rated)}\n"
+        f"Unsafe disagreements: {unsafe}\n"
+        f"Fallbacks to full refresh: {fallbacks}\n\n"
+        "MEASURED SAVINGS (paired runs)\n"
+        f"  baseline time: {sum(base_time):.3f} ms over {len(base_time)} runs\n"
+        f"  optimized time: {sum(opt_time):.3f} ms over {len(opt_time)} runs\n"
+        f"  time saved: {sum(saved_time):.3f} ms (MEASURED)\n"
+        f"  model calls avoided: {sum(saved_model)} (MEASURED)\n"
+        f"  provider calls avoided: {sum(saved_prov)} (MEASURED)\n"
+        f"  token savings: {token_q['MEASURED']} MEASURED, "
+        f"{token_q['UNAVAILABLE']} UNAVAILABLE\n\n"
+        "FULL_REFRESH probe overhead (real cost, zero model savings):\n"
+        f"  cases: {len(refresh_pairs)}\n"
+        f"  measured probe time: "
+        f"{sum(overhead_ms):.3f} ms over {len(overhead_ms)} cases\n"
+        f"  extra logical provider requests: "
+        f"{sum(overhead_calls)} over {len(overhead_calls)} cases\n\n"
+        "NET / QUALITY:\n"
+        f"  measured model-call effect: {sum(net_model)} calls "
+        f"({len(net_model)} MEASURED pairs)\n"
+        f"  measured time effect: {sum(net_time):.0f} ms "
+        f"({len(net_time)} MEASURED pairs; {partial_time} PARTIAL not summed)\n\n"
+        "ROLLOUT GATE\n\n"
+        f"READY_FOR_OPTIMIZED_AUTHORITY: {gate['ready_for_optimized_authority']}\n"
+        f"  pairs {gate['pairs_completed']}/{gate['required_pairs']}, "
+        f"tickers {gate['distinct_tickers']}/{gate['required_tickers']}\n"
+        f"  unsafe executable disagreements: {len(gate['unsafe_executable_disagreements'])}\n"
+        f"  missed full-refresh triggers: {len(gate['missed_full_refresh_triggers'])}\n"
+        f"  integrity/point-in-time failures: {len(gate['integrity_or_pit_failures'])}\n"
+        f"  measured benefit: time {gate['measured_time_saved_ms']:.0f} ms, "
+        f"model calls {gate['measured_model_calls_avoided']}\n"
+        f"  auto-enable: NO — operator approval required\n\n"
+        f"SAFETY TRIGGERS: {json.dumps(dict(sorted(safety.items())), sort_keys=True)}\n"
+    )
+
+
+def render_report(case_dir: Path, shadow_dir: Path | None = None,
+                  validation_dir: Path | None = None) -> str:
     cases = []
     for path in sorted(case_dir.glob("*.json")):
         try:
@@ -226,7 +345,9 @@ def render_report(case_dir: Path, shadow_dir: Path | None = None) -> str:
         )
         + f"Projected model calls avoidable: ESTIMATED / PROJECTED lower bound {projected_calls}\n"
         f"Case artifacts: {len(cases)}; integrity verified: {valid}\n"
-        f"Safety reasons: {json.dumps(dict(sorted(safety_reasons.items())), sort_keys=True)}\n"
+        f"Safety reasons: {json.dumps(dict(sorted(safety_reasons.items())), sort_keys=True)}\n\n"
+        + _validation_section(
+            validation_dir or case_dir.parent / "reuse_validation")
     )
 
 
