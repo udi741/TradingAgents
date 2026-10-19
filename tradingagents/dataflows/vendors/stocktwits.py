@@ -22,6 +22,7 @@ import logging
 from datetime import datetime
 from urllib.request import Request, urlopen
 
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.date_window import coverage_gap, in_window
 from tradingagents.dataflows.symbols import crypto_base
 
@@ -103,10 +104,25 @@ def fetch_stocktwits_messages(
         # OSError covers URLError/TimeoutError/connection resets; HTTPException
         # covers chunked-transfer errors (IncompleteRead/BadStatusLine, #1024).
         logger.warning("StockTwits fetch failed for %s: %s", ticker, exc)
+        provenance.observe("social", "stocktwits", "fetch_stocktwits_messages", "failed",
+                           requested_from=start_date, requested_to=end_date,
+                           error=f"{type(exc).__name__}: {exc}"[:200])
         return f"<stocktwits unavailable: {type(exc).__name__}>"
 
     fetched = data.get("messages", []) if isinstance(data, dict) else []
     messages = _within_window(fetched, start_date, end_date)
+    _cov = provenance.feed_coverage([_created_at(m) for m in fetched], start_date, end_date)
+    provenance.observe(
+        "social", "stocktwits", "fetch_stocktwits_messages",
+        "ok" if messages else "empty",
+        requested_from=start_date, requested_to=end_date,
+        coverage=_cov,
+        items=[{"published_at": m.get("created_at"),
+                "id": str(m.get("id") or provenance.item_id(_body(m), m.get("created_at"))),
+                "sentiment": ((m.get("entities") or {}).get("sentiment") or {}).get("basic")}
+               for m in messages],
+        fetched_count=len(fetched),
+    )
     if not messages:
         if start_date and end_date:
             gap = coverage_gap(

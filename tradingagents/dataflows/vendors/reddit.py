@@ -29,6 +29,7 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.date_window import coverage_gap, in_window
 from tradingagents.dataflows.symbols import crypto_base
 
@@ -264,10 +265,24 @@ def fetch_reddit_posts(
     label = ", ".join(f"r/{s}" for s in subreddits)
     fetched = _fetch_subreddit_rss(ticker, "+".join(subreddits), _FEED_PAGE, timeout)
     if fetched is None:
+        provenance.observe("social", "reddit", "fetch_reddit_posts", "failed",
+                           requested_from=start_date, requested_to=end_date)
         return f"<Reddit unavailable: fetch failed ({label}); this is not an absence of discussion>"
 
     window = bool(start_date and end_date)
     posts = _within_window(fetched, start_date, end_date)
+    cov = provenance.feed_coverage(_coverage_dates(fetched), start_date, end_date)
+    provenance.observe(
+        "social", "reddit", "fetch_reddit_posts",
+        "ok" if posts else "empty",
+        requested_from=start_date, requested_to=end_date,
+        coverage=cov,
+        items=[{"published_at": (_posted_at(p) or datetime.fromtimestamp(0, tz=UTC)).isoformat(),
+                "id": provenance.item_id(p.get("title"), p.get("created_utc"), p.get("subreddit")),
+                "subreddit": p.get("subreddit")}
+               for p in posts],
+        fetched_count=len(fetched),
+    )
     if not posts:
         gap = window and coverage_gap(
             _coverage_dates(fetched), start_date, end_date,

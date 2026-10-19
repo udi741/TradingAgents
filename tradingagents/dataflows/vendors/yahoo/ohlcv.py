@@ -1,9 +1,11 @@
 import logging
 import os
+from datetime import UTC, datetime
 
 import pandas as pd
 import yfinance as yf
 
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.config import get_config
 from tradingagents.dataflows.errors import NoMarketDataError
 from tradingagents.dataflows.files import replace_file
@@ -197,6 +199,7 @@ def load_ohlcv(symbol: str, as_of_date: str, fill_gaps: bool = True) -> pd.DataF
     # transient rate limit). Treat an empty/columnless cache as a miss and
     # re-fetch rather than serving the poisoned file forever.
     data = None
+    cache_hit = False
     if os.path.exists(data_file):
         cached = pd.read_csv(data_file, on_bad_lines="skip", encoding="utf-8")
         if (
@@ -205,6 +208,7 @@ def load_ohlcv(symbol: str, as_of_date: str, fill_gaps: bool = True) -> pd.DataF
             and _cache_is_fresh(data_file, as_of_dt, now)
         ):
             data = cached
+            cache_hit = True
 
     if data is None:
         # yf.download catches every error, a rate limit included, and returns
@@ -253,6 +257,20 @@ def load_ohlcv(symbol: str, as_of_date: str, fill_gaps: bool = True) -> pd.DataF
     # Reject a stale frame (latest row far older than as_of_date) rather than
     # feeding year-old prices into indicators (#1021).
     _assert_ohlcv_not_stale(data, as_of_date, symbol, canonical)
+
+    provenance.observe(
+        "price_technical", "yfinance", "load_ohlcv", "ok",
+        requested_to=as_of_date,
+        coverage=None if data.empty else {
+            "from": data["Date"].iloc[0].strftime("%Y-%m-%d"),
+            "through": data["Date"].iloc[-1].strftime("%Y-%m-%d")},
+        provider="yfinance",
+        latest_bar_date=(data["Date"].iloc[-1].strftime("%Y-%m-%d")
+                         if not data.empty else None),
+        close=float(data["Close"].iloc[-1]) if not data.empty else None,
+        cache={"hit": cache_hit,
+               "mtime": (datetime.fromtimestamp(os.path.getmtime(data_file), tz=UTC).isoformat()
+                         if cache_hit else None)})
 
     return data
 

@@ -79,6 +79,8 @@ def run_one(ticker: str, date: str,
     graph = TradingAgentsGraph(
         selected_analysts=("market", "social", "news", "fundamentals"), config=cfg()
     )
+    from tradingagents.dataflows import provenance
+    provenance.begin(ticker, date)
     port = PortfolioContext(
         cash=100000, currency="USD",
         positions=[Position(ticker=ticker, quantity=position[0],
@@ -114,6 +116,16 @@ def run_one(ticker: str, date: str,
         json.dumps({k: v for k, v in a.items() if k != "final_state_hash"},
                    sort_keys=True, default=str).encode()
     ).hexdigest()
+    # Observability only: provider-call provenance captured during propagate.
+    try:
+        a["provider_metadata"] = provenance.finish()
+    except Exception as e:
+        a["provider_metadata"] = {
+            "schema_version": 1,
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+            "coverage": {},
+            "instrumentation_errors": [f"{type(e).__name__}: {e}"],
+        }
     art_path.parent.mkdir(parents=True, exist_ok=True)
     art_path.write_text(json.dumps(a, indent=1, default=str))
     return a

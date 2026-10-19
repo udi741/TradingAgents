@@ -1,5 +1,6 @@
 import logging
 
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.config import get_config
 from tradingagents.dataflows.errors import (
     NoMarketDataError,
@@ -197,6 +198,50 @@ def no_data_available(error: NoMarketDataError) -> str:
     )
 
 
+_METHOD_FAMILY = {
+    "get_stock_data": "price_technical",
+    "get_indicators": "price_technical",
+    "get_fundamentals": "fundamentals",
+    "get_balance_sheet": "fundamentals",
+    "get_cashflow": "fundamentals",
+    "get_income_statement": "fundamentals",
+    "get_news": "news",
+    "get_global_news": "market_sector",
+    "get_insider_transactions": "insider",
+    "get_macro_indicators": "market_sector",
+    "get_prediction_markets": "market_sector",
+}
+
+
+def _result_status(result) -> str:
+    if isinstance(result, str):
+        if result.startswith("DATA_UNAVAILABLE"):
+            return "failed"
+        if result.startswith("NO_DATA_AVAILABLE"):
+            return "empty"
+        if result.startswith("FRED:"):
+            return "failed"  # invalid indicator / series guidance, not data
+    return "ok"
+
+
+def _observe_call(method: str, vendor: str, status: str, args, kwargs, error: str | None = None) -> None:
+    """Passively record a routed call; never alters the returned value.
+
+    The router knows only the REQUESTED window — whether the vendor actually
+    observed that interval is proven by source-aware vendor instrumentation
+    (feed coverage bounds, filing horizons, latest data row). A generic routed
+    call therefore records no coverage claim: an ``ok``/``empty`` result says
+    the call ran, not that the interval was observed.
+    """
+    family = ("filings" if vendor == "sec_edgar"
+              else _METHOD_FAMILY.get(method, "other"))
+    frm, to = provenance.call_window(method, args, kwargs)
+    kw = {"requested_from": frm, "requested_to": to}
+    if error:
+        kw["error"] = error[:200]
+    provenance.observe(family, vendor, method, status, **kw)
+
+
 def route_to_vendor(method: str, *args, **kwargs):
     """Route method calls to appropriate vendor implementation with fallback support."""
     category = get_category_for_method(method)
@@ -233,19 +278,24 @@ def route_to_vendor(method: str, *args, **kwargs):
         impl_func = vendor_impl[0] if isinstance(vendor_impl, list) else vendor_impl
 
         try:
-            return impl_func(*args, **kwargs)
+            result = impl_func(*args, **kwargs)
+            _observe_call(method, vendor, _result_status(result), args, kwargs)
+            return result
         except VendorUnavailableError as e:
             logger.warning("Vendor %r unavailable for %s: %s; trying next vendor.", vendor, method, e)
+            _observe_call(method, vendor, "failed", args, kwargs, error=repr(e))
             # Kept so an all-unavailable chain can say the vendor was the
             # problem, rather than reporting nothing about the symbol.
             last_unavailable = e
             continue
         except VendorNotConfiguredError as e:
             logger.warning("Vendor %r not configured for %s; trying next vendor.", vendor, method)
+            _observe_call(method, vendor, "failed", args, kwargs, error=repr(e))
             if first_error is None:
                 first_error = e  # Surface it if no other vendor can serve the call.
             continue
         except NoMarketDataError as e:
+            _observe_call(method, vendor, "empty", args, kwargs, error=repr(e))
             last_no_data = e  # No data here; another configured vendor may have it
             continue
         except Exception as e:
@@ -253,6 +303,7 @@ def route_to_vendor(method: str, *args, **kwargs):
             # serve it, but never swallow silently: a broken primary must be
             # visible in the logs (#989), not hidden behind a fallback's verdict.
             logger.warning("Vendor %r failed for %s: %s", vendor, method, e)
+            _observe_call(method, vendor, "failed", args, kwargs, error=repr(e))
             if first_error is None:
                 first_error = e
             failed = e

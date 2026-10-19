@@ -15,6 +15,7 @@ from collections.abc import Iterable
 import pandas as pd
 from stockstats import wrap
 
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.errors import NoMarketDataError
 from tradingagents.dataflows.symbols import normalize_symbol
 from tradingagents.dataflows.vendors.yahoo.ohlcv import load_ohlcv
@@ -114,6 +115,13 @@ def build_verified_market_snapshot(
               "| Date | Close |", "|---|---:|"]
     for _, row in recent.iterrows():
         lines.append(f"| {_fmt(row['Date'])} | {_fmt(row.get('Close'))} |")
+
+    provenance.observe(
+        "price_technical", "yfinance", "verified_market_snapshot", "ok",
+        requested_to=as_of_date,
+        coverage={"from": _fmt(df["Date"].iloc[0]), "through": latest_date},
+        provider="yfinance", latest_bar_date=latest_date,
+        close=(float(latest["Close"]) if pd.notna(latest["Close"]) else None))
 
     lines += [
         "",

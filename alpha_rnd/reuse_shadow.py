@@ -80,6 +80,12 @@ def _cutoff(artifact: dict, session: str) -> dict:
             else:
                 precision = "date" if _valid_date(value[:10]) else "unknown"
             return {"value": value, "precision": precision, "source": key}
+    meta_cutoff = (artifact.get("provider_metadata") or {}).get("information_cutoff")
+    if (isinstance(meta_cutoff, dict)
+            and isinstance(meta_cutoff.get("value"), str) and meta_cutoff["value"]
+            and meta_cutoff.get("precision") in ("timestamp", "date")):
+        return {"value": meta_cutoff["value"], "precision": meta_cutoff["precision"],
+                "source": "provider_metadata.information_cutoff"}
     return {
         "value": session,
         "precision": "session_date",
@@ -336,19 +342,57 @@ def _same(left, right) -> bool:
         json.dumps(right, sort_keys=True, separators=(",", ":"), default=str)
 
 
-def _coverage(metadata: dict, previous_metadata: dict, prior: dict | None) -> dict:
+def _entry_covers(entry, need_from: str, need_through: str) -> str:
+    """Whether one recorded coverage entry proves the gap [need_from, need_through].
+
+    ``True`` (legacy/synthetic fixtures) counts as COMPLETE. A schema-1 dict is
+    COMPLETE only when the provider's ACHIEVED coverage spans the required
+    interval — proven from the recorded ``intervals`` (never bridged across a
+    gap), or the single ``from``/``through`` span of older records. Anything
+    else surfaces the recorded status so the reason stays honest.
+    """
+    if entry is True:
+        return "COMPLETE"
+    if not isinstance(entry, dict):
+        return "UNKNOWN"
+    status = entry.get("status")
+    if status != "COMPLETE":
+        return status or "UNKNOWN"
+    intervals = entry.get("intervals")
+    if not isinstance(intervals, list):
+        intervals = ([{"from": entry.get("from"), "through": entry.get("through")}]
+                     if entry.get("through") is not None else [])
+    if not need_from or not need_through:
+        return "PARTIAL"
+    from tradingagents.dataflows.provenance import intervals_cover
+    if not intervals or not intervals_cover(intervals, need_from, need_through):
+        return "PARTIAL"
+    return "COMPLETE"
+
+
+def _prev_entry_ok(entry) -> bool:
+    """The prior case's own evidence existed (for change comparison)."""
+    return entry is True or (
+        isinstance(entry, dict) and entry.get("status") in ("COMPLETE", "PARTIAL"))
+
+
+def _coverage(metadata: dict, previous_metadata: dict, prior: dict | None,
+              session: str) -> dict:
     current_coverage = metadata.get("coverage") or {}
     previous_coverage = previous_metadata.get("coverage") or {}
     if not isinstance(current_coverage, dict):
         current_coverage = {}
     if not isinstance(previous_coverage, dict):
         previous_coverage = {}
+    need_from = (prior or {}).get("session", "")
     coverage = {}
     for name in REQUIRED_EVIDENCE:
-        present = current_coverage.get(name) is True
+        status = _entry_covers(current_coverage.get(name), need_from, session)
         if name in ("social", "market_sector", "price_technical"):
-            present = present and previous_coverage.get(name) is True and prior is not None
-        coverage[name] = "COMPLETE" if present else "UNKNOWN"
+            if status == "COMPLETE" and (
+                    not _prev_entry_ok(previous_coverage.get(name)) or prior is None):
+                status = "UNKNOWN"
+        coverage[name] = status
     if not (
         isinstance(metadata.get("price_technical"), dict)
         and isinstance(previous_metadata.get("price_technical"), dict)
@@ -395,7 +439,7 @@ def _delta(
             filing_events = snapshot_filings
     else:
         filing_events.extend(snapshot_filings)
-    coverage = _coverage(metadata, previous_metadata, prior)
+    coverage = _coverage(metadata, previous_metadata, prior, session)
     fact_dates = _last_filed(current_facts)
     old_fact_dates = _last_filed(prior_facts)
     same_day_fact_ambiguity = [

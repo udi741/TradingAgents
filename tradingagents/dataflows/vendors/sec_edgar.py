@@ -21,12 +21,13 @@ import json
 import logging
 import os
 import time
-from datetime import date, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 import requests
 
 from tradingagents import __version__
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.config import get_config
 from tradingagents.dataflows.errors import NoMarketDataError, VendorUnavailableError
 from tradingagents.dataflows.files import replace_file
@@ -88,6 +89,10 @@ _YEAR_TO_DATE = ((150, 200, 6), (240, 290, 9))
 # filing of any form: a recast after a split or spin-off counts from its filing.
 _ANNUAL_FORMS = ("10-K", "20-F", "40-F")
 
+# Provenance: bound the deduped filing-event list so a long filing history does
+# not bloat the artifact; intervals further back are proven by prior cases.
+_FILINGS_HORIZON = timedelta(days=400)
+
 
 def _user_agent() -> str:
     """Who SEC sees. No account or key exists; callers identify themselves.
@@ -123,12 +128,19 @@ def _cached_json(url: str, name: str) -> dict:
     path = Path(get_config()["data_cache_dir"]) / "sec_edgar" / name
     if path.exists() and time.time() - path.stat().st_mtime < _CACHE_TTL_SECONDS:
         try:
-            return json.loads(path.read_text(encoding="utf-8"))
+            data = json.loads(path.read_text(encoding="utf-8"))
+            provenance.observe(
+                "cache", "sec_edgar", f"cache:{name}", "ok",
+                cache={"hit": True, "mtime": datetime.fromtimestamp(
+                    path.stat().st_mtime, tz=UTC).isoformat(), "ttl_s": _CACHE_TTL_SECONDS})
+            return data
         except ValueError:
             pass  # a truncated file is a miss, not a failure
     data = _fetch_json(url)
     path.parent.mkdir(parents=True, exist_ok=True)
     replace_file(path, lambda temp: Path(temp).write_text(json.dumps(data), encoding="utf-8"))
+    provenance.observe("cache", "sec_edgar", f"cache:{name}", "ok",
+                       cache={"hit": False})
     return data
 
 
@@ -187,6 +199,35 @@ def _as_of(facts: dict, tags: tuple[str, ...], as_of_date: str, spans: tuple[tup
     return dict(sorted(values.items())), chosen_unit
 
 
+def _record_filings(us_gaap: dict, as_of_date: str, ticker: str, kind: str) -> None:
+    """Observability: deduped filing events the companyfacts payload proves
+    were on file by ``as_of_date`` (one entry per accession, recent window)."""
+    if not provenance.active():
+        return
+    try:
+        horizon = (date.fromisoformat(as_of_date) - _FILINGS_HORIZON).isoformat()
+        seen: dict[str, dict] = {}
+        for tag in us_gaap.values():
+            for unit_values in (tag.get("units") or {}).values():
+                for fact in unit_values:
+                    filed = fact.get("filed")
+                    accn = fact.get("accn")
+                    if not filed or filed > as_of_date or filed < horizon:
+                        continue
+                    key = accn or f"{fact.get('form')}|{filed}|{fact.get('end')}"
+                    if key not in seen or filed >= seen[key]["filed_at"]:
+                        seen[key] = {"filed_at": filed, "form": fact.get("form"),
+                                     "accession": accn, "id": key}
+        provenance.observe(
+            "filings", "sec_edgar", kind, "ok",
+            requested_to=as_of_date,
+            coverage={"from": horizon, "through": as_of_date},
+            items=sorted(seen.values(), key=lambda f: f["filed_at"]),
+            cik_facts=True)
+    except Exception:
+        pass
+
+
 def _statement(kind: str, ticker: str, freq: str, as_of_date: str, title: str) -> str:
     as_of_date = as_of_date or datetime.now().strftime("%Y-%m-%d")
     cik = cik_for(ticker)
@@ -197,6 +238,7 @@ def _statement(kind: str, ticker: str, freq: str, as_of_date: str, title: str) -
     us_gaap = (facts.get("facts") or {}).get("us-gaap")
     if not us_gaap:
         raise NoMarketDataError(ticker, ticker, "US filer with no us-gaap facts")
+    _record_filings(us_gaap, as_of_date, ticker, kind)
 
     quarterly = freq.lower() == "quarterly"
     if quarterly:

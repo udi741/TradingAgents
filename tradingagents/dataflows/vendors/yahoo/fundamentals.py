@@ -2,6 +2,7 @@ from typing import Annotated
 
 import yfinance as yf
 
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.date_window import (
     withhold_live_profile,
     withhold_undated_statements,
@@ -144,8 +145,24 @@ def get_insider_transactions(
     if data is None or data.empty:
         if not vendor_reachable(YAHOO_HOST):
             raise VendorUnavailableError("Yahoo Finance is unreachable; insider filings were not retrieved")
+        provenance.observe("insider", "yfinance", "get_insider_transactions", "empty",
+                           requested_to=as_of_date)
         return f"No insider transactions reported for symbol '{canonical}'"
 
+    date_col = next((c for c in ("Start Date", "Transaction Date", "Date")
+                     if c in data.columns), None)
+    dates = [str(d)[:10] for d in data[date_col]] if date_col else []
+    # The returned table's proven coverage is bounded by its oldest row — the
+    # feed does not prove an unbounded history.
+    provenance.observe(
+        "insider", "yfinance", "get_insider_transactions", "ok",
+        requested_to=as_of_date,
+        coverage={"from": min(dates) if dates else as_of_date,
+                  "through": as_of_date} if as_of_date else None,
+        items=[{"date": str(d)[:10],
+                "id": provenance.item_id(canonical, d, r.get("Shares"), r.get("Insider"))}
+               for d, r in
+               ((r.get(date_col), r) for _, r in data.iterrows())] if date_col else [])
     return f"# Insider Transactions data for {canonical}\n" + data.to_csv()
 
 

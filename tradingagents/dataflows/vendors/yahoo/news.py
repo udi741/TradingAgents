@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 import yfinance as yf
 from dateutil.relativedelta import relativedelta
 
+from tradingagents.dataflows import provenance
 from tradingagents.dataflows.config import get_config
 from tradingagents.dataflows.date_window import coverage_gap, in_window
 from tradingagents.dataflows.symbols import normalize_symbol
@@ -86,6 +87,7 @@ def get_news_yfinance(
 
     news_str = ""
     filtered_count = 0
+    in_window_data = []
 
     for article in news:
         data = _extract_article_data(article)
@@ -93,6 +95,7 @@ def get_news_yfinance(
         # Keep only articles within the requested window (look-ahead safe).
         if not in_window(data["pub_date"], start_dt, end_dt):
             continue
+        in_window_data.append(data)
 
         news_str += f"### {data['title']} (source: {data['publisher']})\n"
         if data["summary"]:
@@ -102,6 +105,19 @@ def get_news_yfinance(
         news_str += "\n"
         filtered_count += 1
 
+    cov = provenance.feed_coverage(
+        [_extract_article_data(a)["pub_date"] for a in news], start_date, end_date)
+    provenance.observe(
+        "news", "yfinance", "get_news",
+        "ok" if filtered_count else "empty",
+        requested_from=start_date, requested_to=end_date,
+        coverage=cov,
+        items=[{"published_at": d["pub_date"].isoformat() if d["pub_date"] else None,
+                "id": provenance.item_id(data["link"] or data["title"]),
+                "publisher": data["publisher"]}
+               for d in in_window_data],
+        fetched_count=len(news),
+    )
     if filtered_count == 0:
         gap = coverage_gap(
             (_extract_article_data(a)["pub_date"] for a in news),
@@ -175,6 +191,20 @@ def get_global_news_yfinance(
         if data["link"]:
             news_str += f"Link: {data['link']}\n"
         news_str += "\n"
+
+    # Merged fuzzy-search results prove coverage only from the present
+    # backwards — judge the window the same way coverage_gap does.
+    cov = provenance.feed_coverage((), start_date, as_of_date)
+    provenance.observe(
+        "market_sector", "yfinance", "get_global_news",
+        "ok" if in_window_news else "empty",
+        requested_from=start_date, requested_to=as_of_date,
+        coverage=cov,
+        items=[{"published_at": d["pub_date"].isoformat() if d["pub_date"] else None,
+                "id": provenance.item_id(d["link"] or d["title"]),
+                "publisher": d["publisher"]}
+               for d in in_window_news[:limit]],
+    )
 
     # Nothing fell inside the window -> say so rather than return an
     # empty-bodied report (#993).
