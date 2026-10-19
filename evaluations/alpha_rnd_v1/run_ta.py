@@ -71,13 +71,20 @@ def run_one(ticker: str, date: str,
             out_name: str | None = None) -> dict:
     from tradingagents.graph.trading_graph import TradingAgentsGraph
     from tradingagents.portfolio import PortfolioContext, Position
+    from alpha_rnd.analysis_metrics import ModelCallMetrics, provider_call_metrics
+    from alpha_rnd.case_integrity import seal_case
 
     art_path = D / "case_artifacts" / (out_name or f"{ticker}_{date}.json")
     if art_path.exists():
         return json.loads(art_path.read_text())
 
+    config = cfg()
+    model_metrics = ModelCallMetrics({
+        "quick": config.get("quick_think_llm"), "deep": config.get("deep_think_llm"),
+    })
     graph = TradingAgentsGraph(
-        selected_analysts=("market", "social", "news", "fundamentals"), config=cfg()
+        selected_analysts=("market", "social", "news", "fundamentals"), config=config,
+        callbacks=[model_metrics],
     )
     from tradingagents.dataflows import provenance
     provenance.begin(ticker, date)
@@ -85,9 +92,11 @@ def run_one(ticker: str, date: str,
         cash=100000, currency="USD",
         positions=[Position(ticker=ticker, quantity=position[0],
                             average_price=position[1])] if position else [])
+    started_at = datetime.now(timezone.utc).isoformat()
     t0 = time.monotonic()
     st, signal = graph.propagate(ticker, date, asset_type="stock", portfolio=port)
     dur = time.monotonic() - t0
+    finished_at = datetime.now(timezone.utc).isoformat()
     inv, risk = st["investment_debate_state"], st["risk_debate_state"]
     a = {
         "ticker": ticker,
@@ -113,19 +122,47 @@ def run_one(ticker: str, date: str,
         "duration_s": round(dur, 1),
     }
     a["final_state_hash"] = hashlib.sha256(
-        json.dumps({k: v for k, v in a.items() if k != "final_state_hash"},
-                   sort_keys=True, default=str).encode()
+        json.dumps(a, sort_keys=True, default=str).encode()
     ).hexdigest()
-    # Observability only: provider-call provenance captured during propagate.
     try:
-        a["provider_metadata"] = provenance.finish()
+        provider_metadata = provenance.finish()
     except Exception as e:
-        a["provider_metadata"] = {
+        provider_metadata = {
             "schema_version": 1,
             "captured_at": datetime.now(timezone.utc).isoformat(),
             "coverage": {},
             "instrumentation_errors": [f"{type(e).__name__}: {e}"],
         }
+    try:
+        observed = model_metrics.snapshot()
+        calls = provider_metadata.get("calls", [])
+        a["analysis_metrics"] = {
+            "schema_version": 1,
+            "wall_clock": {
+                "started_at": started_at, "finished_at": finished_at,
+                "elapsed_ms": round(dur * 1000, 3),
+            },
+            "provider_calls": provider_call_metrics(calls),
+            **observed,
+            "stages": {},
+        }
+    except Exception:
+        a["analysis_metrics"] = {
+            "schema_version": 1,
+            "wall_clock": {
+                "started_at": started_at, "finished_at": finished_at,
+                "elapsed_ms": round(dur * 1000, 3),
+            },
+            "provider_calls": {"logical_data_calls": None},
+            "model_calls": {"total": None},
+            "tokens": {
+                "availability": "UNAVAILABLE", "input_tokens": None,
+                "output_tokens": None, "total_tokens": None,
+            },
+            "stages": {},
+        }
+    a["provider_metadata"] = provider_metadata
+    seal_case(a)
     art_path.parent.mkdir(parents=True, exist_ok=True)
     art_path.write_text(json.dumps(a, indent=1, default=str))
     return a

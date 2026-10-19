@@ -235,7 +235,11 @@ def intervals_cover(intervals: list[dict], need_from: str, need_through: str) ->
 
 
 def _family_status(obs: list[dict]) -> str:
-    contributing = [o for o in obs if o["status"] in ("ok", "empty") and o.get("coverage")]
+    contributing = [
+        o for o in obs
+        if o["status"] in ("ok", "empty") and o.get("coverage")
+        and not o.get("cik_facts")
+    ]
     failed = [o for o in obs if o["status"] == "failed"]
     if not contributing:
         return "FAILED" if failed else "UNKNOWN"
@@ -243,7 +247,11 @@ def _family_status(obs: list[dict]) -> str:
 
 
 def _family_coverage(obs: list[dict]) -> dict:
-    contributing = [o for o in obs if o["status"] in ("ok", "empty") and o.get("coverage")]
+    contributing = [
+        o for o in obs
+        if o["status"] in ("ok", "empty") and o.get("coverage")
+        and not o.get("cik_facts")
+    ]
     merged = merge_intervals([o["coverage"] for o in contributing])
     cov = {
         "status": _family_status(obs),

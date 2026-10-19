@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 from tradingagents.dataflows import provenance
 from tradingagents.dataflows.config import get_config
@@ -224,7 +225,8 @@ def _result_status(result) -> str:
     return "ok"
 
 
-def _observe_call(method: str, vendor: str, status: str, args, kwargs, error: str | None = None) -> None:
+def _observe_call(method: str, vendor: str, status: str, args, kwargs,
+                  call_id: str, error: str | None = None) -> None:
     """Passively record a routed call; never alters the returned value.
 
     The router knows only the REQUESTED window — whether the vendor actually
@@ -239,7 +241,8 @@ def _observe_call(method: str, vendor: str, status: str, args, kwargs, error: st
     kw = {"requested_from": frm, "requested_to": to}
     if error:
         kw["error"] = error[:200]
-    provenance.observe(family, vendor, method, status, **kw)
+    provenance.observe(family, vendor, method, status, layer="router",
+                       call_id=call_id, **kw)
 
 
 def route_to_vendor(method: str, *args, **kwargs):
@@ -273,29 +276,30 @@ def route_to_vendor(method: str, *args, **kwargs):
     last_unavailable: VendorUnavailableError | None = None
     failed: Exception | None = None     # a vendor that raised something untyped
     first_error: Exception | None = None
+    call_id = uuid.uuid4().hex
     for vendor in vendor_chain:
         vendor_impl = VENDOR_METHODS[method][vendor]
         impl_func = vendor_impl[0] if isinstance(vendor_impl, list) else vendor_impl
 
         try:
             result = impl_func(*args, **kwargs)
-            _observe_call(method, vendor, _result_status(result), args, kwargs)
+            _observe_call(method, vendor, _result_status(result), args, kwargs, call_id)
             return result
         except VendorUnavailableError as e:
             logger.warning("Vendor %r unavailable for %s: %s; trying next vendor.", vendor, method, e)
-            _observe_call(method, vendor, "failed", args, kwargs, error=repr(e))
+            _observe_call(method, vendor, "failed", args, kwargs, call_id, error=repr(e))
             # Kept so an all-unavailable chain can say the vendor was the
             # problem, rather than reporting nothing about the symbol.
             last_unavailable = e
             continue
         except VendorNotConfiguredError as e:
             logger.warning("Vendor %r not configured for %s; trying next vendor.", vendor, method)
-            _observe_call(method, vendor, "failed", args, kwargs, error=repr(e))
+            _observe_call(method, vendor, "failed", args, kwargs, call_id, error=repr(e))
             if first_error is None:
                 first_error = e  # Surface it if no other vendor can serve the call.
             continue
         except NoMarketDataError as e:
-            _observe_call(method, vendor, "empty", args, kwargs, error=repr(e))
+            _observe_call(method, vendor, "empty", args, kwargs, call_id, error=repr(e))
             last_no_data = e  # No data here; another configured vendor may have it
             continue
         except Exception as e:
@@ -303,7 +307,7 @@ def route_to_vendor(method: str, *args, **kwargs):
             # serve it, but never swallow silently: a broken primary must be
             # visible in the logs (#989), not hidden behind a fallback's verdict.
             logger.warning("Vendor %r failed for %s: %s", vendor, method, e)
-            _observe_call(method, vendor, "failed", args, kwargs, error=repr(e))
+            _observe_call(method, vendor, "failed", args, kwargs, call_id, error=repr(e))
             if first_error is None:
                 first_error = e
             failed = e

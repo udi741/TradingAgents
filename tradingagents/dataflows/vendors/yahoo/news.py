@@ -113,8 +113,8 @@ def get_news_yfinance(
         requested_from=start_date, requested_to=end_date,
         coverage=cov,
         items=[{"published_at": d["pub_date"].isoformat() if d["pub_date"] else None,
-                "id": provenance.item_id(data["link"] or data["title"]),
-                "publisher": data["publisher"]}
+                "id": provenance.item_id(d["link"] or d["title"]),
+                "publisher": d["publisher"], "title": d["title"]}
                for d in in_window_data],
         fetched_count=len(news),
     )

@@ -8,6 +8,8 @@ from pathlib import Path
 from unittest import mock
 
 from alpha_rnd import reuse_shadow
+from alpha_rnd.case_integrity import seal_case
+from alpha_rnd.savings_report import compare_metrics, render_report
 from evaluations.alpha_rnd_v1 import run_ta
 
 SESSION_14 = "2026-10-14"
@@ -61,7 +63,7 @@ def _case(session, provider_metadata=None, schema_version=None):
         artifact["provider_metadata"] = provider_metadata
     if schema_version is not None:
         artifact["schema_version"] = schema_version
-    return artifact
+    return seal_case(artifact)
 
 
 def _write_case(case_dir, session, artifact=None, name=None, contents=None):
@@ -191,6 +193,89 @@ class ReuseShadowTest(unittest.TestCase):
         record = self._record()
         self.assertEqual(record["shadow_mode"]["classification"], "FULL_REFRESH_REQUIRED")
         self.assertIn("PRIOR_CASE_CORRUPT", record["shadow_mode"]["reasons"])
+
+    def test_legacy_case_without_integrity_is_readable_but_not_reusable(self):
+        legacy = _case(SESSION_15, _metadata())
+        legacy.pop("case_integrity")
+        _write_case(self.case_dir, SESSION_15, legacy)
+        current = _case(SESSION_16, _metadata())
+        _write_case(self.case_dir, SESSION_16, current)
+
+        self.assertIsNotNone(reuse_shadow.resolve_prior_case(
+            "TEST", SESSION_16, self.case_dir)["prior_case"])
+        record = self._record()
+        self.assertEqual(record["shadow_mode"]["classification"], "FULL_REFRESH_REQUIRED")
+        self.assertIn("PRIOR_CASE_INTEGRITY_MISSING", record["shadow_mode"]["reasons"])
+
+    def test_current_case_integrity_mutation_forces_full_refresh(self):
+        _write_case(self.case_dir, SESSION_15, _case(SESSION_15, _metadata()))
+        current = _case(SESSION_16, _metadata())
+        current["provider_metadata"]["news"].append({"id": "tampered"})
+        _write_case(self.case_dir, SESSION_16, current)
+
+        record = self._record()
+        self.assertEqual(record["shadow_mode"]["classification"], "FULL_REFRESH_REQUIRED")
+        self.assertIn("CASE_INTEGRITY_INVALID", record["shadow_mode"]["reasons"])
+
+    def test_savings_math_is_measured_and_zero_denominators_are_safe(self):
+        result = compare_metrics(
+            {
+                "wall_clock": {"elapsed_ms": 1000},
+                "model_calls": {"total": 8},
+                "provider_calls": {
+                    "logical_data_calls": 4, "external_network_calls": 3,
+                    "external_network_quality": "PARTIAL",
+                },
+                "tokens": {
+                    "availability": "EXACT", "input_tokens": 100,
+                    "output_tokens": 50, "total_tokens": 150,
+                },
+            },
+            {
+                "wall_clock": {"elapsed_ms": 400},
+                "model_calls": {"total": 3},
+                "provider_calls": {
+                    "logical_data_calls": 2, "external_network_calls": 1,
+                    "external_network_quality": "PARTIAL",
+                },
+                "tokens": {
+                    "availability": "EXACT", "input_tokens": 40,
+                    "output_tokens": 20, "total_tokens": 60,
+                },
+            },
+        )
+        self.assertEqual(result["time_saved_ms"], 600)
+        self.assertEqual(result["time_saved_pct"], 60)
+        self.assertEqual(result["model_calls_avoided"], 5)
+        self.assertEqual(result["external_network_calls_avoided"], 2)
+        self.assertEqual(result["quality"]["external_network_calls_avoided"], "PARTIAL")
+        self.assertEqual(result["tokens"]["total_tokens"], 90)
+        self.assertIsNone(compare_metrics(
+            {"wall_clock": {"elapsed_ms": 0}}, {"wall_clock": {"elapsed_ms": 0}}
+        )["time_saved_pct"])
+
+    def test_no_optimized_metrics_means_no_realized_savings(self):
+        result = compare_metrics({}, None)
+        self.assertEqual(result["realized_savings"], "NOT_MEASURED")
+        self.assertEqual(result["quality"], "UNAVAILABLE")
+
+    def test_shadow_report_does_not_claim_realized_savings(self):
+        self.case_dir.mkdir()
+        self.shadow_dir.mkdir()
+        artifact = _case(SESSION_16)
+        artifact["analysis_metrics"] = {"wall_clock": {"elapsed_ms": 25}}
+        seal_case(artifact)
+        artifact["analysis_metrics"]["wall_clock"]["elapsed_ms"] = 999
+        (self.case_dir / "TEST.json").write_text(json.dumps(artifact))
+        (self.shadow_dir / "TEST.json").write_text(json.dumps({
+            "shadow_mode": {"classification": "FULL_REFRESH_REQUIRED",
+                            "reasons": ["INSUFFICIENT_PROVIDER_EVIDENCE"]},
+            "estimated_reuse": {"estimated_model_calls_avoidable": 4},
+        }))
+        report = render_report(self.case_dir, self.shadow_dir)
+        self.assertIn("REALIZED SAVINGS: NOT MEASURED", report)
+        self.assertIn("ESTIMATED / PROJECTED lower bound 4", report)
+        self.assertIn("UNAVAILABLE (0 measured runs)", report)
 
     def test_failed_prior_is_not_loaded_and_forces_full_refresh(self):
         _write_case(

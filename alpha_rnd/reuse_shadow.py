@@ -9,6 +9,8 @@ import re
 from datetime import UTC, date, datetime
 from pathlib import Path
 
+from alpha_rnd.case_integrity import verify_case
+
 ROOT = Path(__file__).resolve().parents[1]
 EV_DIR = ROOT / "evaluations" / "alpha_rnd_v1"
 CASE_DIR = EV_DIR / "case_artifacts"
@@ -166,6 +168,7 @@ def _prior_record(
         "schema_info": "legacy-unversioned" if schema_version is None else schema_version,
         "previously_known_stable_facts": stable_facts,
         "stable_facts_artifact_path": facts_path,
+        "integrity_verified": verify_case(artifact),
     }
 
 
@@ -680,8 +683,19 @@ def build_shadow_record(
     previous = resolved["artifact"]
     prior_path = Path(prior["artifact_path"]) if prior else None
     delta = _delta(ticker, session, previous, current, prior, facts_dir)
+    issues = list(resolved["issues"])
+    if not verify_case(current):
+        issues.append(
+            "CASE_INTEGRITY_INVALID" if "case_integrity" in current
+            else "CASE_INTEGRITY_MISSING"
+        )
+    if prior and not prior.get("integrity_verified"):
+        issues.append(
+            "PRIOR_CASE_INTEGRITY_INVALID" if "case_integrity" in previous
+            else "PRIOR_CASE_INTEGRITY_MISSING"
+        )
     shadow_mode = _classification(
-        prior, resolved["issues"], delta, session, max_age_days)
+        prior, issues, delta, session, max_age_days)
     estimates = _reuse_estimate(previous, current, prior_path)
     estimates["sec_facts_identical"] = delta["sec_facts_identical"]
     estimates["model_calls_safe_to_avoid_in_shadow_mode"] = (

@@ -4,9 +4,12 @@ import tempfile
 import types
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 from alpha_rnd import reuse_shadow
+from alpha_rnd.case_integrity import seal_case, verify_case
+from alpha_rnd.analysis_metrics import ModelCallMetrics, provider_call_metrics
 from evaluations.alpha_rnd_v1 import run_ta
 from tradingagents.dataflows import provenance
 from tradingagents.dataflows import router
@@ -67,7 +70,7 @@ def _case(session, provider_metadata=None):
     }
     if provider_metadata is not None:
         artifact["provider_metadata"] = provider_metadata
-    return artifact
+    return seal_case(artifact)
 
 
 class ShadowCoverageSchemaTest(unittest.TestCase):
@@ -487,6 +490,10 @@ class RunOneArtifactTest(unittest.TestCase):
             provenance.observe("news", "fake_vendor", "get_news", "ok",
                                requested_from="2026-10-09", requested_to=S16,
                                coverage={"from": "2026-10-09", "through": S16})
+            provenance.observe("cache", "sec_edgar", "cache:test", "ok",
+                               cache={"hit": True})
+            provenance.observe("cache", "sec_edgar", "cache:miss", "ok",
+                               cache={"hit": False})
             return (self._state(), "Hold")
 
         result, out_dir = self._run_one(propagate)
@@ -505,6 +512,11 @@ class RunOneArtifactTest(unittest.TestCase):
         for key in ("ticker", "decision_session", "signal", "final_state_hash"):
             self.assertIn(key, on_disk)
         self.assertEqual(on_disk["signal"], "Hold")
+        self.assertTrue(verify_case(on_disk))
+        self.assertGreaterEqual(on_disk["analysis_metrics"]["wall_clock"]["elapsed_ms"], 0)
+        self.assertEqual(on_disk["analysis_metrics"]["provider_calls"]["logical_data_calls"], 1)
+        self.assertEqual(on_disk["analysis_metrics"]["provider_calls"]["cache_hits"], 1)
+        self.assertEqual(on_disk["analysis_metrics"]["provider_calls"]["external_network_calls"], 1)
 
     def _state(self):
         return {
@@ -530,6 +542,94 @@ class RunOneArtifactTest(unittest.TestCase):
         self.assertEqual(result["signal"], "Hold")
         self.assertIn("provider_metadata", result)
         self.assertTrue(result["provider_metadata"]["instrumentation_errors"])
+
+
+class CaseIntegrityTest(unittest.TestCase):
+    def test_any_protected_field_change_invalidates_hash(self):
+        artifact = _case(S16, _metadata_v1())
+        self.assertTrue(verify_case(artifact))
+        for field, mutate in (
+            ("provider_metadata", lambda value: value["calls"].append({"method": "tamper"})),
+            ("final_trade_decision", lambda value: value),
+        ):
+            changed = json.loads(json.dumps(artifact))
+            if field == "final_trade_decision":
+                changed[field] += " changed"
+            else:
+                mutate(changed[field])
+            self.assertFalse(verify_case(changed))
+
+    def test_tampered_decision_invalidates_hash(self):
+        artifact = _case(S16, _metadata_v1())
+        artifact["final_trade_decision"] += " changed"
+        self.assertFalse(verify_case(artifact))
+
+    def test_historical_state_hash_is_covered_without_redefining_it(self):
+        artifact = _case(S16, _metadata_v1())
+        artifact["final_state_hash"] = "legacy-hash"
+        from alpha_rnd.case_integrity import seal_case
+        seal_case(artifact)
+        artifact["final_state_hash"] = "changed"
+        self.assertFalse(verify_case(artifact))
+
+
+class ModelMetricsTest(unittest.TestCase):
+    def test_router_fallback_attempts_are_one_logical_call(self):
+        result = provider_call_metrics([
+            {"layer": "router", "call_id": "same", "source": "primary",
+             "method": "get_news"},
+            {"layer": "router", "call_id": "same", "source": "fallback",
+             "method": "get_news"},
+            {"family": "cache", "cache": {"hit": True}},
+        ])
+        self.assertEqual(result["logical_data_calls"], 1)
+        self.assertEqual(result["provider_attempts"], 2)
+        self.assertEqual(result["cache_hits"], 1)
+        self.assertIsNone(result["external_network_calls"])
+
+    def test_missing_usage_is_unavailable_not_zero(self):
+        metrics = ModelCallMetrics({"quick": "medium", "deep": "high"})
+        metrics.on_llm_start({"kwargs": {"model_name": "medium"}}, [])
+        result = metrics.snapshot()
+        self.assertEqual(result["model_calls"]["quick"], 1)
+        self.assertEqual(result["tokens"]["availability"], "UNAVAILABLE")
+        self.assertIsNone(result["tokens"]["total_tokens"])
+
+    def test_zero_placeholder_usage_is_unavailable_not_measured(self):
+        metrics = ModelCallMetrics({"quick": "medium", "deep": "high"})
+        metrics.on_llm_start({"kwargs": {"model_name": "medium"}}, [])
+        response = SimpleNamespace(generations=[[
+            SimpleNamespace(message=SimpleNamespace(
+                usage_metadata=None,
+                response_metadata={
+                    "token_usage": {
+                        "prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0,
+                    },
+                },
+            ))
+        ]])
+        metrics.on_llm_end(response)
+        result = metrics.snapshot()
+        self.assertEqual(result["tokens"]["availability"], "UNAVAILABLE")
+        self.assertIsNone(result["tokens"]["input_tokens"])
+        self.assertIsNone(result["tokens"]["total_tokens"])
+
+    def test_exact_and_partial_response_usage_is_counted(self):
+        metrics = ModelCallMetrics({"quick": "medium", "deep": "high"})
+        metrics.on_llm_start({"kwargs": {"model_name": "medium"}}, [])
+        metrics.on_llm_start({"kwargs": {"model_name": "high"}}, [])
+        response = SimpleNamespace(generations=[[
+            SimpleNamespace(message=SimpleNamespace(
+                usage_metadata={"input_tokens": 11, "output_tokens": 7},
+                response_metadata={},
+            ))
+        ]])
+        metrics.on_llm_end(response)
+        self.assertEqual(metrics.snapshot()["tokens"]["availability"], "PARTIAL")
+        metrics.on_llm_end(response)
+        result = metrics.snapshot()
+        self.assertEqual(result["tokens"]["availability"], "EXACT")
+        self.assertEqual(result["tokens"]["total_tokens"], 36)
 
 
 if __name__ == "__main__":

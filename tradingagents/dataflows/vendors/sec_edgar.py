@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 
 _TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 _FACTS_URL = "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
+_SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik}.json"
 
 # A filing history only changes when something new is filed, so one fetch per
 # company per day serves every date a run asks about.
@@ -152,6 +153,42 @@ def cik_for(ticker: str) -> str | None:
         if entry.get("ticker", "").upper() == wanted:
             return f"{int(entry['cik_str']):010d}"
     return None
+
+
+def submissions_filings(ticker: str, prior_cutoff: str, current_session: str) -> dict:
+    prior_date, current_date = prior_cutoff[:10], current_session[:10]
+    cik = cik_for(ticker)
+    if cik is None:
+        return {"status": "UNKNOWN", "events": [], "reason": "not a US SEC filer"}
+    data = _fetch_json(_SUBMISSIONS_URL.format(cik=cik))
+    recent = data.get("filings", {}).get("recent", {})
+    dates = recent.get("filingDate", [])
+    forms = recent.get("form", [])
+    accessions = recent.get("accessionNumber", [])
+    documents = recent.get("primaryDocument", [])
+    descriptions = recent.get("primaryDocDescription", [])
+    if not dates or len(dates) != len(forms) or len(dates) != len(accessions):
+        return {"status": "UNKNOWN", "events": [], "reason": "incomplete SEC submissions index"}
+    if min(dates) > prior_date:
+        return {"status": "PARTIAL", "events": [], "reason": "SEC recent index does not span window"}
+    if any(day == prior_date for day in dates):
+        return {"status": "PARTIAL", "events": [], "reason": "cutoff-day filing time is unavailable"}
+    cache_path = Path(get_config()["data_cache_dir"]) / "sec_edgar" / f"submissions_{cik}.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    replace_file(cache_path, lambda temp: Path(temp).write_text(json.dumps(data), encoding="utf-8"))
+    events = []
+    for index, filed_at in enumerate(dates):
+        if prior_date < filed_at <= current_date:
+            accession = accessions[index]
+            events.append({
+                "form": forms[index],
+                "filed_at": filed_at,
+                "accession": accession,
+                "id": accession,
+                "primary_document": documents[index] if index < len(documents) else None,
+                "description": descriptions[index] if index < len(descriptions) else None,
+            })
+    return {"status": "COMPLETE", "events": events, "source": "sec_submissions"}
 
 
 def _span_index(fact: dict, spans: tuple[tuple[int, int], ...]) -> int | None:
