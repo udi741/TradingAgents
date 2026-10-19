@@ -337,6 +337,37 @@ class BackupRestore(unittest.TestCase):
         self.assertEqual(st["executed"], ["e1", "e2"])
         self.assertEqual(st["pending_open_fills"][0]["order_id"], "o1")
 
+    def test_trading_memory_roundtrip(self):
+        """trading_memory.md (ALPHA decision log, prompt-injected context)
+        must ride the backup and restore byte-for-byte."""
+        mem = (self.src / "TradingAgents-alpha-rnd" / "evaluations"
+               / "alpha_rnd_v1" / "memory" / "trading_memory.md")
+        mem.parent.mkdir(parents=True)
+        mem.write_bytes(b"[2026-10-15 | IOVA | Sell | pending]\n\n"
+                        b"DECISION:\nhold the line\n")
+        rc, o = self._backup()
+        self.assertEqual(rc, 0, o)
+        paths = [f["path"] for f in self._man()["files"]]
+        self.assertIn(
+            "ALPHA_DIR/evaluations/alpha_rnd_v1/memory/trading_memory.md",
+            paths)
+        rc, o = self._restore()
+        self.assertEqual(rc, 0, o)
+        self.assertEqual(
+            mem.read_bytes(),
+            (self.dst / "TradingAgents-alpha-rnd" / "evaluations"
+             / "alpha_rnd_v1" / "memory"
+             / "trading_memory.md").read_bytes())
+        self._assert_identical()
+
+    def test_backup_without_trading_memory_ok(self):
+        """Memory is OPERATIONAL, not REQUIRED: backups of layouts that
+        never produced a decision log must still validate."""
+        rc, o = self._backup()
+        self.assertEqual(rc, 0, o)
+        rc, o = self._restore()
+        self.assertEqual(rc, 0, o)
+
     def test_cockpit_continuity_roundtrip(self):
         """Audit IMPORTANT-1: funnel/intents/pool/case artifacts must ride
         the backup and survive restore with SOURCE mtimes (not restore-time

@@ -323,6 +323,8 @@ _BACKUP_SET = [
      "DECISION_EVIDENCE"),
     ("ALPHA_DIR", "evaluations/alpha_rnd_v1/intraday_trigger_evidence.json",
      "DECISION_EVIDENCE"),
+    ("ALPHA_DIR", "evaluations/alpha_rnd_v1/memory/trading_memory.md",
+     "OPERATIONAL"),
 ]
 _BACKUP_DIRS = [  # whole directories, same consistency rules
     ("ALPHA_DIR", "evaluations/alpha_rnd_v1/management_intents",
