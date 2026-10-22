@@ -158,6 +158,26 @@ def emit_once(st: dict, ev: dict, event_id: str) -> bool:
     return True
 
 
+def _queue_executed_notification(st: dict, text: str) -> None:
+    """Execution claims are queued on the state being mutated and emitted
+    only by _drain_notifications AFTER that state is durably saved. If the
+    save never happens (exception/crash/discarded tick), the notification
+    never fires — a fill claim can never precede its durable authority."""
+    st.setdefault("deferred_notifications", []).append(text)
+
+
+def _drain_notifications(st: dict) -> None:
+    """Pop queued execution notifications, persist the consumed queue,
+    then emit. A crash between save and emit can lose a real notification
+    (fail-safe) but can never create a false one."""
+    msgs = st.pop("deferred_notifications", None)
+    if not msgs:
+        return
+    save_state(st)
+    for m in msgs:
+        notify(m)
+
+
 def notify(text: str) -> None:
     stamp = now_utc().strftime("%Y-%m-%d %H:%MZ")
     block = f"\n===== {stamp} =====\n{text}\n"
@@ -389,7 +409,7 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
               "shares": shares,
               "cost": round(cost, 2), "cls": watch["cls"], "invalidation": watch["invalidation"]},
               f"paper_entry:{exec_id or ticker + ':' + now_utc().strftime('%Y-%m-%d')}")
-    notify(f"""ALPHA_RND PAPER ENTRY EXECUTED
+    _queue_executed_notification(st, f"""ALPHA_RND PAPER ENTRY EXECUTED
 
 {ticker}
 Price: ${price:.2f}
@@ -434,7 +454,9 @@ def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "",
     emit_once(st, {"ticker": ticker, "action": "PAPER_EXIT", "why": why,
               "price": price, "shares": sell, "proceeds": round(proceeds, 2)},
               f"paper_exit:{exec_id or ticker + ':' + why}")
-    notify(f"ALPHA_RND PAPER EXIT EXECUTED\n\n{ticker}\n{why}\nExit @ ${price:.2f}\nProceeds ${proceeds:,.2f}")
+    _queue_executed_notification(
+        st, f"ALPHA_RND PAPER EXIT EXECUTED\n\n{ticker}\n{why}\n"
+            f"Exit @ ${price:.2f}\nProceeds ${proceeds:,.2f}")
 
 
 def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
@@ -914,6 +936,7 @@ def _run_once_locked(st: dict, wl: dict) -> None:
         pass
     st["last_check_utc"] = now_utc().isoformat()
     save_state(st)
+    _drain_notifications(st)
 
 
 def status(wl: dict, st: dict) -> str:

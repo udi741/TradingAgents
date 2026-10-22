@@ -11,7 +11,10 @@ Canonical semantics preserved:
   (evaluations/.../management_actions.json):
       VALIDATED -> ENQUEUED -> FILLED -> EXECUTED
       plus CANCELLED_POSITION_CLOSED / MISSED / SUPERSEDED /
-      EXECUTED_REMAINDER_REJECTED
+      CANCELLED_BY_KILL_SWITCH / EXECUTED_REMAINDER_REJECTED.
+  All non-live statuses are TERMINAL: a missed, cancelled or superseded
+  intent is never re-enqueued. Only a NEW validated intent (new
+  action_id from a fresh reassessment) may create a new order.
 - Composite PARTIAL_EXIT + remainder stop: the remainder rule stays
   PENDING until the partial fill is observed and the authoritative
   remaining quantity is known; it is then exec-time revalidated and only
@@ -30,6 +33,15 @@ from alpha_rnd import mgmt_validate as mv
 ROOT = Path(__file__).resolve().parents[1]
 AR = ROOT / "alpha_rnd"
 ACTIONS_P = mgmt.EV / "management_actions.json"
+
+# Action statuses after which the SAME intent must never be executed or
+# re-enqueued. Fresh economics require a fresh reassessment -> new
+# action_id (see mgmt_validate._action_id), never resurrection of a
+# terminal one.
+TERMINAL_ACTION_STATUSES = frozenset({
+    "STALE_MANAGEMENT_DECISION", "SUPERSEDED",
+    "CANCELLED_POSITION_CLOSED", "CANCELLED_BY_KILL_SWITCH",
+    "MISSED_OR_CONSUMED_UNKNOWN", "EXECUTED_REMAINDER_REJECTED"})
 
 
 def _utc():
@@ -145,6 +157,10 @@ def execute(ticker: str, st: dict, wl: dict,
     prev = acts.get(aid)
     if prev and prev["status"] in ("ENQUEUED", "FILLED", "EXECUTED"):
         rec["result"] = "ALREADY_ENQUEUED"
+        _audit(rec)
+        return rec
+    if prev and prev["status"] in TERMINAL_ACTION_STATUSES:
+        rec["result"] = f"TERMINAL_ACTION:{prev['status']}"
         _audit(rec)
         return rec
     errs = revalidate(ticker, intent, st, wl)

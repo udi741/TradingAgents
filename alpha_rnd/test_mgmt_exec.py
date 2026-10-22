@@ -38,10 +38,12 @@ class E(unittest.TestCase):
         self.tmp = Path(tempfile.mkdtemp())
         self._saves = (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE,
                        mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P,
-                       monitor.NOTIFY, monitor.desktop_notify)
+                       monitor.NOTIFY, monitor.STATE,
+                       monitor.desktop_notify)
         # shadow/test runs must never write executed-sounding wording to the
         # live operator log or desktop — notify writes real state msgs
         monitor.NOTIFY = self.tmp / "notify.log"
+        monitor.STATE = self.tmp / "monitor_state.json"
         monitor.desktop_notify = lambda *a, **k: None
         mv.INTENT_DIR = self.tmp / "i"
         mgmt.MEVENTS = self.tmp / "e.jsonl"
@@ -70,7 +72,8 @@ class E(unittest.TestCase):
     def tearDown(self):
         (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE,
          mgmt.POLICY_P, mr.ANA_DIR, mx.ACTIONS_P,
-         monitor.NOTIFY, monitor.desktop_notify) = self._saves
+         monitor.NOTIFY, monitor.STATE,
+         monitor.desktop_notify) = self._saves
 
     def _enable(self):
         mgmt.POLICY_P = self.pol_on
@@ -137,8 +140,11 @@ class E(unittest.TestCase):
                       open(ROOT / "alpha_rnd/mgmt.py").read())
 
     def test_real_fill_still_says_executed(self):
-        # canonical fill wording preserved — do_exit on real authority
+        # canonical fill wording preserved — emitted only after the mutated
+        # state is durably saved and the deferred queue is drained
         monitor.do_exit(self.st, "PBF", 90.0, "test fill", shares=31)
+        monitor.save_state(self.st)
+        monitor._drain_notifications(self.st)
         txt = (self.tmp / "notify.log").read_text()
         self.assertIn("PAPER EXIT EXECUTED", txt)
         self.assertIn("PBF", txt)
@@ -322,3 +328,179 @@ class C2(unittest.TestCase):
         a = mx._actions()["mgmact_test1"]
         self.assertEqual(a["status"], "EXECUTED")
         self.assertEqual(st["positions"]["PBF"]["stop_rule"]["level"], 83.5)
+
+
+class C3(unittest.TestCase):
+    """Lifecycle-correction regressions (2026-10-22): missed/cancelled
+    intents are terminal, kill-switch cancellation is sticky, and EXECUTED
+    notifications only fire after durable persistence."""
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self._s = (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE, mgmt.POLICY_P,
+                   mr.ANA_DIR, mx.ACTIONS_P, monitor.NOTIFY, monitor.STATE,
+                   monitor.desktop_notify)
+        mv.INTENT_DIR = self.tmp/"i"; mgmt.MEVENTS = self.tmp/"e.jsonl"
+        mgmt.STATE = self.tmp/"ms.json"; mr.ANA_DIR = self.tmp/"ana"
+        mx.ACTIONS_P = self.tmp/"a.json"
+        monitor.NOTIFY = self.tmp/"notify.log"
+        monitor.STATE = self.tmp/"monitor_state.json"
+        monitor.desktop_notify = lambda *a, **k: None
+        mgmt.save_mgmt({"positions": {"PBF": {"latest_price": 86.99}}})
+        self.wl = {"open_positions": [{"ticker": "PBF", "invalidation":
+                                       {"type": "intraday_stop",
+                                        "level": 74.5}}]}
+        self.intent = dict(PBF_INTENT, decision_session="2026-10-16")
+
+    def tearDown(self):
+        (mv.INTENT_DIR, mgmt.MEVENTS, mgmt.STATE, mgmt.POLICY_P,
+         mr.ANA_DIR, mx.ACTIONS_P, monitor.NOTIFY, monitor.STATE,
+         monitor.desktop_notify) = self._s
+
+    def _policy(self, on: bool):
+        pol = json.loads((ROOT/"alpha_rnd/management_policy.json").read_text())
+        pol["execution"]["enabled"] = on
+        f = self.tmp/("p_on.json" if on else "p_off.json")
+        f.write_text(json.dumps(pol))
+        mgmt.POLICY_P = f
+
+    def _miss_order(self, st):
+        # resolve_pending's missed path drops the order without executing it
+        st["pending_open_exits"] = []
+
+    # 1/2/3: missed exit -> terminal -> never re-enqueued -> idempotent
+    def test_missed_exit_terminal_no_resurrect(self):
+        self._policy(True)
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        self.assertEqual(len(st["pending_open_exits"]), 1)
+        self._miss_order(st)
+        mx._tick_actions(st, self.wl)
+        self.assertEqual(mx._actions()["mgmact_test1"]["status"],
+                         "MISSED_OR_CONSUMED_UNKNOWN")
+        r = mx.execute("PBF", st, self.wl, intent=self.intent)
+        self.assertTrue(r["result"].startswith("TERMINAL_ACTION"))
+        self.assertEqual(st["pending_open_exits"], [])
+        # repeated ticks stay terminal and never recreate an order
+        for _ in range(3):
+            mx.run_exec_pass(st, self.wl)
+            self.assertEqual(st["pending_open_exits"], [])
+            self.assertEqual(mx._actions()["mgmact_test1"]["status"],
+                             "MISSED_OR_CONSUMED_UNKNOWN")
+        self.assertEqual(st["positions"]["PBF"]["shares"], 62)
+        self.assertEqual(st["executed"], [])
+
+    # 4: a genuinely fresh intent (new action_id) enqueues after a miss
+    def test_fresh_intent_after_missed_enqueues(self):
+        self._policy(True)
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        self._miss_order(st)
+        mx._tick_actions(st, self.wl)
+        fresh = dict(self.intent, action_id="mgmact_fresh1",
+                     management_decision_id="d2")
+        (mv.INTENT_DIR / "PBF").mkdir(parents=True, exist_ok=True)
+        (mv.INTENT_DIR / "PBF" / "d2.json").write_text(json.dumps(fresh))
+        r = mx.execute("PBF", st, self.wl, intent=fresh)
+        self.assertEqual(r["result"], "ENQUEUED_ADAPTIVE")
+        self.assertEqual(st["pending_open_exits"][0]["mgmt_action"],
+                         "mgmact_fresh1")
+
+    # 5/6: kill-switch cancellation is sticky; re-enabling does not resurrect
+    def test_kill_switch_cancel_sticky(self):
+        self._policy(True)
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        self.assertEqual(len(st["pending_open_exits"]), 1)
+        self._policy(False)
+        mx.run_exec_pass(st, self.wl)
+        self.assertEqual(mx._actions()["mgmact_test1"]["status"],
+                         "CANCELLED_BY_KILL_SWITCH")
+        self.assertEqual(st["pending_open_exits"], [])
+        # clearing the kill switch alone must not resurrect the intent
+        self._policy(True)
+        r = mx.execute("PBF", st, self.wl, intent=self.intent)
+        self.assertTrue(r["result"].startswith("TERMINAL_ACTION"))
+        self.assertEqual(st["pending_open_exits"], [])
+        mx.run_exec_pass(st, self.wl)
+        self.assertEqual(st["pending_open_exits"], [])
+
+    # 7: fresh intent after kill-switch cancellation enqueues normally
+    def test_fresh_intent_after_kill_switch_enqueues(self):
+        self._policy(True)
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        self._policy(False)
+        mx.run_exec_pass(st, self.wl)
+        self._policy(True)
+        fresh = dict(self.intent, action_id="mgmact_fresh2",
+                     management_decision_id="d3")
+        (mv.INTENT_DIR / "PBF").mkdir(parents=True, exist_ok=True)
+        (mv.INTENT_DIR / "PBF" / "d3.json").write_text(json.dumps(fresh))
+        r = mx.execute("PBF", st, self.wl, intent=fresh)
+        self.assertEqual(r["result"], "ENQUEUED_ADAPTIVE")
+        self.assertEqual(len(st["pending_open_exits"]), 1)
+
+    # 8: unpersisted exit emits NO executed notification
+    def test_unpersisted_exit_no_notification(self):
+        st = pbf_state()
+        monitor.do_exit(st, "PBF", 90.0, "fill", shares=31)
+        # no save, no drain — notification must not exist
+        self.assertFalse((self.tmp/"notify.log").exists())
+        # a discarded state carries the queue away with it
+        st2 = pbf_state()
+        self.assertNotIn("deferred_notifications", st2)
+
+    # 9: persisted fill emits exactly one EXECUTED notification
+    def test_persisted_fill_one_notification(self):
+        st = pbf_state()
+        monitor.do_exit(st, "PBF", 90.0, "fill", shares=31,
+                        exec_id="e1")
+        monitor.save_state(st)
+        monitor._drain_notifications(st)
+        txt = (self.tmp/"notify.log").read_text()
+        self.assertEqual(txt.count("PAPER EXIT EXECUTED"), 1)
+        # a second drain emits nothing
+        monitor._drain_notifications(st)
+        self.assertEqual((self.tmp/"notify.log").read_text()
+                         .count("PAPER EXIT EXECUTED"), 1)
+
+    # 10: same exec_id cannot fill/notify twice across retry
+    def test_no_duplicate_fill_across_retry(self):
+        st = pbf_state()
+        monitor.do_exit(st, "PBF", 90.0, "fill", shares=31,
+                        exec_id="e2")
+        monitor.do_exit(st, "PBF", 90.0, "fill", shares=31,
+                        exec_id="e2")  # retry after reload
+        monitor.save_state(st)
+        monitor._drain_notifications(st)
+        self.assertEqual(st["positions"]["PBF"]["shares"], 31)
+        self.assertEqual((self.tmp/"notify.log").read_text()
+                         .count("PAPER EXIT EXECUTED"), 1)
+
+    # 11: remainder protection stays pending without real partial fill
+    def test_remainder_not_active_without_fill(self):
+        self._policy(True)
+        st = pbf_state()
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        mx._tick_actions(st, self.wl)
+        self.assertEqual(st["positions"]["PBF"]["stop_rule"]["level"], 74.5)
+        self.assertEqual(mx._actions()["mgmact_test1"]["remainder_status"],
+                         "PENDING_FILL")
+
+    # 12: live-state fixture — stale intent resolves terminally, no fake fill
+    def test_stale_loop_fixture_resolves(self):
+        # reproduce production loop: enqueue -> order dropped as missed ->
+        # action must go terminal instead of being re-enqueued forever
+        self._policy(True)
+        st = pbf_state()
+        st["emitted_ids"] = ["missed:exit:PBF:2026-10-16:2026-10-19"]
+        mx.execute("PBF", st, self.wl, intent=self.intent)
+        for _ in range(3):
+            self._miss_order(st)          # resolve_pending drop
+            mx.run_exec_pass(st, self.wl)  # tick_actions + execute
+        self.assertEqual(mx._actions()["mgmact_test1"]["status"],
+                         "MISSED_OR_CONSUMED_UNKNOWN")
+        self.assertEqual(st["pending_open_exits"], [])
+        self.assertEqual(st["positions"]["PBF"]["shares"], 62)
+        self.assertEqual(st["executed"], [])
+        self.assertFalse((self.tmp/"notify.log").exists())
