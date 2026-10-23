@@ -25,6 +25,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from alpha_rnd import econ_contract
 from alpha_rnd import infra_status as inf
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,7 +57,26 @@ SCHEMA_HINT = """For EACH ticker emit one object:
  "size_frac":number|null,   // fraction of standard allocation if stated, else null
  "auto_execution_authorized":bool, // true ONLY if text gives an executable
                                    // intraday/limit instruction
- "ambiguity":str|null}      // why it cannot be published, if unclear
+ "ambiguity":str|null,      // why it cannot be published, if unclear
+ "economic_authority":null|{ // emit ONLY when the FINAL decision resolves
+   // to ONE authoritative long plan; superseded exploratory prose
+   // (alternative sizings/tranches/ranges) belongs in "resolves", not here
+   "schema_version":1,"ticker":str,"session":str,
+   "direction":"LONG"|"SHORT"|"NONE",
+   "entry":{"mode":"LIMIT_ZONE"|"NEXT_OPEN"|"CONDITIONAL"|"STOP_ENTRY",
+            "zone":[lo,hi]|null,"trigger_level":num|null,
+            "condition":str|null},
+   "sizing":{"initial_frac":num|null,"max_frac":num|null,
+             "tranches":[{"frac":num,"level":num|null,"condition":str}]},
+   "stop":{"type":"close_below"|"intraday_stop"|"price_below",
+           "level":num,"label":str|null},
+   "objective":{"target":num|null,"base_case_value_range":[lo,hi]|null,
+                "bull_case_value_range":[lo,hi]|null,
+                "expected_upside_pct":num|null,
+                "expected_reward_to_risk":num|null},
+   "success_criteria":str,"profit_realization_plan":str|null,
+   "horizon":str,"event_constraints":[str],"no_entry_conditions":[str],
+   "resolves":[str]}}       // prose conflicts this contract supersedes
 Rules: every number must appear in the source text; do not invent levels,
 stops, or targets; a Sell/Hold headline does NOT forbid a conditional
 WATCH_FOR_ENTRY if the text states a re-entry plan; REJECT/NO_WATCH only when
@@ -231,7 +251,12 @@ _EXECUTABLE_PARAM_KEYS = {
 
 def _machine_executable(i: dict) -> bool:
     """EXECUTABLE_WATCH == the production monitor can actually evaluate the
-    entry mechanically AND a machine-actionable post-entry risk plan exists."""
+    entry mechanically AND a machine-actionable post-entry risk plan exists.
+    When an economic_authority contract exists it must resolve to LONG —
+    a non-LONG or absent contract can never create executable authority."""
+    ec = i.get("economic_authority")
+    if ec is not None and str(ec.get("direction")).upper() != "LONG":
+        return False
     if i.get("watch_mode") not in ("AUTO_ENTRY", "DETERMINISTIC_CONFIRMATION"):
         return False
     p = i.get("params") or {}
@@ -317,7 +342,20 @@ def run(session: str) -> dict:
                         "user_action_required": False, "artifact": f"case_artifacts/{t}_{session}.json"}
             continue
         errs = validate(i, a)
+        # Canonical economic-authority contract: when present and valid it
+        # supersedes prose-level ambiguity — the structured contract is the
+        # authority the validator evaluates. An invalid/absent contract
+        # changes nothing (fail-closed errs stand).
+        ec_errs, resolved = econ_contract.validate(
+            i.get("economic_authority"), a, i, _nums_in_text(artifact_text(a)))
+        if resolved is not None:
+            errs = [e for e in errs if not e.startswith("ambiguous")]
+            i["economic_authority_resolved"] = resolved
+        errs = ec_errs + errs
         d = disposition(i, errs, held)
+        if d == "EXECUTABLE_WATCH" and resolved is not None and \
+                not econ_contract.has_authority(i, resolved):
+            d = "PUBLISHED_NON_EXECUTABLE"
         disps[t] = {"disposition": d, "violations": errs,
                     "executable": d == "EXECUTABLE_WATCH",
                     "user_action_required": False,
