@@ -58,6 +58,12 @@ SCHEMA_HINT = """For EACH ticker emit one object:
  "auto_execution_authorized":bool, // true ONLY if text gives an executable
                                    // intraday/limit instruction
  "ambiguity":str|null,      // why it cannot be published, if unclear
+ "ambiguities":[{"type":"SIZING_CONFLICT"|"TRANCHE_CONFLICT"|
+   "POSITION_CAP_CONFLICT"|"ENTRY_ZONE_CONFLICT"|"CATALYST_UNRESOLVED"|
+   "DIRECTION_CONFLICT"|"THESIS_CONTRADICTION"|"RISK_CONTRADICTION"|
+   "EVENT_OUTCOME_UNKNOWN"|"EVIDENCE_CONFLICT"|"UNKNOWN",
+   "detail":str}]|null,   // structured codes; use untyped "ambiguity"
+                          // for anything not cleanly classifiable
  "economic_authority":null|{ // emit ONLY when the FINAL decision resolves
    // to ONE authoritative long plan; superseded exploratory prose
    // (alternative sizings/tranches/ranges) belongs in "resolves", not here
@@ -76,7 +82,11 @@ SCHEMA_HINT = """For EACH ticker emit one object:
                 "expected_reward_to_risk":num|null},
    "success_criteria":str,"profit_realization_plan":str|null,
    "horizon":str,"event_constraints":[str],"no_entry_conditions":[str],
-   "resolves":[str]}}       // prose conflicts this contract supersedes
+   "resolves":["SIZING_CONFLICT"|"TRANCHE_CONFLICT"|
+   "POSITION_CAP_CONFLICT"|"ENTRY_ZONE_CONFLICT"]}}
+                          // enumerated codes only — the contract may
+                          // claim ONLY economic-prose conflicts it
+                          // actually resolves; anything else fails
 Rules: every number must appear in the source text; do not invent levels,
 stops, or targets; a Sell/Hold headline does NOT forbid a conditional
 WATCH_FOR_ENTRY if the text states a re-entry plan; REJECT/NO_WATCH only when
@@ -193,6 +203,10 @@ def validate(intent: dict, a: dict) -> list[str]:
         errs.append("bad watch_mode")
     if intent.get("ambiguity"):
         errs.append(f"ambiguous: {intent['ambiguity']}")
+    for amb in intent.get("ambiguities") or []:
+        code = str((amb or {}).get("type")).upper() \
+            if isinstance(amb, dict) and amb.get("type") else "UNKNOWN"
+        errs.append(f"ambiguous_type:{code}")
     src_nums = _nums_in_text(artifact_text(a))
     for v in _levels({k: intent.get(k) for k in ("params", "stop_level",
                                                "target")}):
@@ -349,7 +363,16 @@ def run(session: str) -> dict:
         ec_errs, resolved = econ_contract.validate(
             i.get("economic_authority"), a, i, _nums_in_text(artifact_text(a)))
         if resolved is not None:
-            errs = [e for e in errs if not e.startswith("ambiguous")]
+            # Suppress ONLY ambiguity types that are (a) contract-resolvable
+            # codes AND (b) explicitly claimed by the validated contract.
+            # Untyped prose ambiguity and every other code stay fail-closed.
+            resolved_types = {str(r).upper()
+                              for r in resolved.get("resolves") or []} & \
+                econ_contract.RESOLVABLE_AMBIGUITY_TYPES
+            def _suppressible(e):
+                return e.startswith("ambiguous_type:") and \
+                    e.split(":", 1)[1].upper() in resolved_types
+            errs = [e for e in errs if not _suppressible(e)]
             i["economic_authority_resolved"] = resolved
         errs = ec_errs + errs
         d = disposition(i, errs, held)

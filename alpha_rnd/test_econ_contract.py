@@ -23,12 +23,14 @@ def artifact(ticker="VSTM", signal="Overweight", session="2026-10-15",
 
 
 def intent(ticker="VSTM", signal_ok=True, contract=None, ambiguity=None,
-           cls="ACTIONABLE_NOW", mode="AUTO_ENTRY"):
+           ambiguities=None, cls="ACTIONABLE_NOW", mode="AUTO_ENTRY"):
     i = {"ticker": ticker, "classification": cls, "watch_mode": mode,
          "trigger": "limit buy zone 8.60-8.80", "params": {"zone": [8.6, 8.8]},
          "stop_level": 7.45, "target": 9.73, "horizon": "4-8 weeks",
          "auto_execution_authorized": True, "size_frac": 0.5,
          "ambiguity": ambiguity}
+    if ambiguities:
+        i["ambiguities"] = [{"type": t, "detail": t} for t in ambiguities]
     if contract is not None:
         i["economic_authority"] = contract
     return i
@@ -61,7 +63,11 @@ def run_validate(i, a):
         i.get("economic_authority"), a, i,
         syn._nums_in_text(syn.artifact_text(a)))
     if resolved is not None:
-        errs = [e for e in errs if not e.startswith("ambiguous")]
+        resolved_types = {str(r).upper() for r in resolved.get("resolves") or []} \
+            & ec.RESOLVABLE_AMBIGUITY_TYPES
+        errs = [e for e in errs
+                if not (e.startswith("ambiguous_type:") and
+                        e.split(":", 1)[1].upper() in resolved_types)]
     return ec_errs + errs, resolved
 
 
@@ -75,16 +81,87 @@ class ContractValidation(unittest.TestCase):
         self.assertEqual(res["direction"], "LONG")
 
     def test_prose_ambiguity_superseded_by_contract(self):
-        # A + regression 1/2 (VSTM/FIGS shape): sizing conflict in prose,
-        # resolved contract => ambiguity error dropped, nothing else fails
+        # regression 1 (VSTM shape): SIZING_CONFLICT typed ambiguity,
+        # contract explicitly resolves it => suppressed, nothing else fails
         a = artifact(text=VSTM_TEXT)
-        i = intent(contract=contract(resolves=["sizing 50-55k vs 70-75k"]),
-                   ambiguity="sizing conflict in source: exec summary commits "
-                             "~$50-55k vs ~$70-75k")
+        i = intent(contract=contract(resolves=["SIZING_CONFLICT"]),
+                   ambiguities=["SIZING_CONFLICT"])
         errs, res = run_validate(i, a)
-        self.assertNotIn("ambiguous", " ".join(errs))
-        self.assertFalse([e for e in errs if e.startswith("ECON_")])
+        self.assertEqual(errs, [])
         self.assertIsNotNone(res)
+
+    def test_tranche_and_zone_conflict_resolved(self):
+        # regressions 2-5: TRANCHE_CONFLICT + ENTRY_ZONE_CONFLICT resolved
+        a = artifact(text=VSTM_TEXT)
+        i = intent(contract=contract(
+            resolves=["TRANCHE_CONFLICT", "ENTRY_ZONE_CONFLICT"]),
+            ambiguities=["TRANCHE_CONFLICT", "ENTRY_ZONE_CONFLICT"])
+        errs, res = run_validate(i, a)
+        self.assertEqual(errs, [])
+        self.assertIsNotNone(res)
+
+    def test_nonresolvable_ambiguities_fail_closed(self):
+        # catalyst/direction/thesis/risk/event/evidence/unknown all fail
+        for amb in ("CATALYST_UNRESOLVED", "DIRECTION_CONFLICT",
+                    "THESIS_CONTRADICTION", "RISK_CONTRADICTION",
+                    "EVENT_OUTCOME_UNKNOWN", "EVIDENCE_CONFLICT", "UNKNOWN"):
+            a = artifact(text=VSTM_TEXT)
+            i = intent(contract=contract(resolves=["SIZING_CONFLICT"]),
+                       ambiguities=["SIZING_CONFLICT", amb])
+            errs, res = run_validate(i, a)
+            self.assertIsNotNone(res)
+            self.assertIn(f"ambiguous_type:{amb}", errs)
+            self.assertEqual(syn.disposition(i, errs, set()),
+                             "AMBIGUOUS_REJECTED")
+
+    def test_untyped_prose_ambiguity_never_suppressed(self):
+        # legacy free-form ambiguity string is not a code — stays fatal
+        a = artifact(text=VSTM_TEXT)
+        i = intent(contract=contract(resolves=["SIZING_CONFLICT"]),
+                   ambiguities=["SIZING_CONFLICT"],
+                   ambiguity="sizing conflict $50-55k vs $70-75k")
+        errs, res = run_validate(i, a)
+        self.assertTrue(any(e.startswith("ambiguous:") for e in errs))
+        self.assertEqual(syn.disposition(i, errs, set()),
+                         "AMBIGUOUS_REJECTED")
+
+    def test_mixed_sizing_plus_catalyst(self):
+        # sizing resolved, catalyst remains -> not executable
+        a = artifact(text=VSTM_TEXT)
+        i = intent(contract=contract(resolves=["SIZING_CONFLICT"]),
+                   ambiguities=["SIZING_CONFLICT", "CATALYST_UNRESOLVED"])
+        errs, res = run_validate(i, a)
+        self.assertNotIn("ambiguous_type:SIZING_CONFLICT", errs)
+        self.assertIn("ambiguous_type:CATALYST_UNRESOLVED", errs)
+        self.assertNotEqual(syn.disposition(i, errs, set()),
+                            "EXECUTABLE_WATCH")
+
+    def test_unsupported_resolves_claim_fails(self):
+        a = artifact(text=VSTM_TEXT)
+        c = contract(resolves=["CATALYST_UNRESOLVED"])
+        i = intent(contract=c, ambiguities=["CATALYST_UNRESOLVED"])
+        errs, res = run_validate(i, a)
+        self.assertIsNone(res)
+        self.assertTrue(any("ECON_RESOLVES_UNSUPPORTED" in e for e in errs))
+        self.assertIn("ambiguous_type:CATALYST_UNRESOLVED", errs)
+
+    def test_phantom_resolves_claim_fails(self):
+        # contract claims SIZING_CONFLICT that the intent does not carry
+        a = artifact(text=VSTM_TEXT)
+        i = intent(contract=contract(resolves=["SIZING_CONFLICT"]),
+                   ambiguities=["ENTRY_ZONE_CONFLICT"])
+        errs, res = run_validate(i, a)
+        self.assertIsNone(res)
+        self.assertTrue(any("ECON_RESOLVES_PHANTOM" in e for e in errs))
+        self.assertIn("ambiguous_type:ENTRY_ZONE_CONFLICT", errs)
+
+    def test_no_ambiguity_valid_contract_clean_path(self):
+        a = artifact(text=VSTM_TEXT)
+        i = intent(contract=contract())
+        errs, res = run_validate(i, a)
+        self.assertEqual(errs, [])
+        self.assertEqual(syn.disposition(i, errs, set()),
+                         "EXECUTABLE_WATCH")
 
     def test_anf_tranche_shape_resolved(self):
         # regression 3: 20/40/40 vs 40/35/25 — contract resolves one ladder
@@ -100,8 +177,9 @@ class ContractValidation(unittest.TestCase):
                                           {"frac": 0.035, "level": 133.0}]},
                      stop={"type": "close_below", "level": 129.0},
                      objective={"target": 165.0},
-                     resolves=["tranche 20/40/40 vs 40/35/25", "cap 10 vs 15"])
-        i = intent("ANF", contract=c, ambiguity="conflicting tranche ladders")
+                     resolves=["TRANCHE_CONFLICT", "POSITION_CAP_CONFLICT"])
+        i = intent("ANF", contract=c,
+                   ambiguities=["TRANCHE_CONFLICT", "POSITION_CAP_CONFLICT"])
         errs, res = run_validate(i, a)
         self.assertIsNotNone(res)
 
@@ -192,8 +270,8 @@ class ContractValidation(unittest.TestCase):
         # resolved contract + evaluable params + risk plan + auth =>
         # EXECUTABLE_WATCH survives (entry_gate still gates actual orders)
         a = artifact(text=VSTM_TEXT)
-        i = intent(contract=contract(),
-                   ambiguity="sizing conflict $50-55k vs $70-75k")
+        i = intent(contract=contract(resolves=["SIZING_CONFLICT"]),
+                   ambiguities=["SIZING_CONFLICT"])
         errs, res = run_validate(i, a)
         self.assertEqual(errs, [])
         self.assertEqual(syn.disposition(i, errs, set()),

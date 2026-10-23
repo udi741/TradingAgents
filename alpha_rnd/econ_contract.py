@@ -24,6 +24,40 @@ from alpha_rnd import success_plan
 
 SCHEMA_VERSION = 1
 
+# Structured ambiguity types a contract may resolve — economic-prose
+# conflicts ONLY. Everything else (catalyst/event/evidence/direction/
+# thesis/risk/unknown) stays fail-closed and can never be suppressed.
+RESOLVABLE_AMBIGUITY_TYPES = frozenset({
+    "SIZING_CONFLICT", "TRANCHE_CONFLICT",
+    "POSITION_CAP_CONFLICT", "ENTRY_ZONE_CONFLICT"})
+
+
+def _intent_ambiguity_types(intent: dict) -> set[str]:
+    """Structured ambiguity codes present on the intent (untyped prose in
+    `ambiguity` is not a code — it is never resolvable)."""
+    out = set()
+    for a in (intent or {}).get("ambiguities") or []:
+        t = (a or {}).get("type") if isinstance(a, dict) else None
+        if t:
+            out.add(str(t).upper())
+    return out
+
+
+def resolve_errors(contract: dict | None, intent: dict) -> list[str]:
+    """Fail-closed checks on the contract's `resolves` claims. A contract
+    may only claim explicitly resolvable types, and only types actually
+    present on the intent — phantom/unverifiable claims fail."""
+    errs = []
+    present = _intent_ambiguity_types(intent)
+    for r in (contract or {}).get("resolves") or []:
+        code = str(r).upper()
+        if code not in RESOLVABLE_AMBIGUITY_TYPES:
+            errs.append(f"ECON_RESOLVES_UNSUPPORTED:{r}")
+        elif code not in present:
+            errs.append(f"ECON_RESOLVES_PHANTOM:{code}")
+    return errs
+
+
 # Fraction fields inside a contract that must stay within (0, 1].
 _FRAC_MAX = 1.0
 
@@ -58,6 +92,7 @@ def validate(contract: dict | None, artifact: dict, intent: dict,
     errs = []
     if not isinstance(contract, dict):
         return ["ECON_CONTRACT_NOT_OBJECT"], None
+    errs += resolve_errors(contract, intent)
     # --- provenance -----------------------------------------------------
     sess = contract.get("session")
     if sess and artifact.get("decision_session") and \
