@@ -172,21 +172,25 @@ def _strategy_backtest(args):
     return 0
 
 
-def _grid_backtest(_args):
-    """Router to the existing core-library grid evaluator. It has its own
-    documented CLI (`tradingagents backtest ...`) and Python API; the front
-    door explains and points rather than duplicating its argument surface."""
-    print("GRID-BACKTEST — decision-quality sweep over ticker x date cells.\n"
-          "AI calls: YES (TradingAgentsGraph per cell)   providers: YES\n"
-          "cost: HIGH   MODEL_KNOWLEDGE_CONTAMINATION_RISK\n"
-          "Scores decisions vs benchmark; NOT a portfolio simulator "
-          "(no fills/cash by design).\n\n"
-          "CLI:  tradingagents backtest NVDA,AAPL --start 2026-06-01 "
-          "--end 2026-08-01 --every 7\n"
-          "API:  from tradingagents.backtest import iter_grid, "
-          "run_backtest, summarize\n"
-          "Docs: README.md 'Evaluating decisions over time'; "
-          "docs/BACKTESTING.md")
+def _grid_backtest(args):
+    """Genuinely routes to the existing typer `backtest` command in
+    cli/main.py (the registered `tradingagents` console script)."""
+    print("GRID-BACKTEST: AI calls YES, provider calls YES, cost HIGH, "
+          "MODEL_KNOWLEDGE_CONTAMINATION_RISK, decision scoring only — "
+          "not a portfolio simulator, not clean alpha evidence.",
+          file=sys.stderr)
+    import typer
+    from cli.main import app
+    try:
+        app(["backtest", *(args.args or [])], standalone_mode=False)
+    except SystemExit as e:
+        return e.code or 0
+    except typer.Exit as e:
+        return getattr(e, "exit_code", 1) or 0
+    except Exception as e:  # click UsageError/Abort in standalone_mode=False
+        if type(e).__module__.startswith("click"):
+            return getattr(e, "exit_code", 1) or 0
+        raise
     return 0
 
 

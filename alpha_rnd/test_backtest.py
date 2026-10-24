@@ -80,6 +80,40 @@ class FrontDoor(unittest.TestCase):
         from alpha_rnd import scenario_replay
         self.assertEqual(scenario_replay.MAX_SCENARIOS, 12)
 
+    def test_grid_backtest_routes_to_engine(self):
+        import cli.main as cm
+        captured = {}
+
+        class _R:
+            cells_run = skipped = 0
+            log_path, run_id = "x", "r"
+            failures = []
+            settlement_failures = []
+
+        def fake_run(names, dates, config, **kw):
+            captured.update(names=names, dates=list(dates), kw=kw)
+            return _R()
+
+        class _Sum:
+            def render(self):
+                return "summary"
+
+        with mock.patch.object(cm, "run_backtest", fake_run), \
+                mock.patch.object(cm, "summarize", lambda r: _Sum()):
+            rc, _, err = _run(["grid-backtest", "NVDA,AAPL",
+                               "--start", "2026-06-01", "--end", "2026-06-15",
+                               "--every", "7"])
+        self.assertEqual(rc, 0)
+        self.assertEqual(captured["names"], ["NVDA", "AAPL"])
+        self.assertIn("2026-06-01", captured["dates"])
+        self.assertIn("MODEL_KNOWLEDGE_CONTAMINATION_RISK", err)
+
+    def test_grid_backtest_help_safe(self):
+        # argparse-level help: exits 0 without touching the engine
+        with self.assertRaises(SystemExit) as cm:
+            bt.main(["grid-backtest", "--help"])
+        self.assertEqual(cm.exception.code, 0)
+
     def test_unknown_subcommand_exit_code(self):
         with mock.patch("alpha_rnd.backtest._targeted",
                         side_effect=SystemExit(2)):

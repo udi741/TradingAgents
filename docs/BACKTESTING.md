@@ -70,8 +70,10 @@ the instrument's regional benchmark, written to its own memory log.
 - MODEL_KNOWLEDGE_CONTAMINATION_RISK applies.
 - Not a portfolio simulator by design (no quantities, fills, cash).
 - Command: `tradingagents backtest NVDA,AAPL --start ... --end ... --every 7`
-  or the `run_backtest` Python API. Front-door pointer:
-  `python -m alpha_rnd.backtest grid-backtest`.
+  or the `run_backtest` Python API. The front door routes to the same
+  implementation: `python -m alpha_rnd.backtest grid-backtest NVDA,AAPL
+  --start ... --end ... --every 7` (arguments pass through to the existing
+  typer `backtest` command; the contamination warning prints first).
 
 ### strategy-backtest — composite, not a dedicated engine
 
