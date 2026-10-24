@@ -103,6 +103,25 @@ def _replay_triggers(w: dict, st: dict, df, sessions: list[str],
         sub = {w["ticker"]: df[df.index.strftime("%Y-%m-%d") <= sess]}
         _m.close_pass(st, wl, sub, sess)
         _m.settle_pending(st, wl, sub, sess)   # live=False: fills need open
+        # AUTO_ENTRY limit-zone touch: production fills intraday via
+        # intraday_pass on minute bars; on persisted daily bars the same
+        # rule is emulated with the session Low (fill at zone top verbatim).
+        p = w.get("params") or {}
+        if w.get("cls") == "AUTO_ENTRY" and p.get("zone") and \
+                w["ticker"] not in st["positions"] and \
+                w["ticker"] in sub and \
+                st["watch_status"].get(w["ticker"]) not in \
+                ("TRIGGERED", "EXPIRED", "KILLED", "REANALYSIS") \
+                and not _m._risk_blocked(st, w):
+            row = sub[w["ticker"]]
+            row = row[row.index.strftime("%Y-%m-%d") == sess]
+            if len(row) and float(row["Low"].iloc[0]) <= p["zone"][1]:
+                _m.do_fill(st, wl, w["ticker"], p["zone"][1],
+                           w["size_frac"])
+                if w["ticker"] in st["positions"]:
+                    trace["auto_entry_fill"] = trace.get(
+                        "auto_entry_fill") or sess
+                    trace["order_created"] = True
         # fill path: pending order resolves at next session's actual open
         if st["pending_open_fills"] and sess != later[-1]:
             nxt = later[later.index(sess) + 1]
@@ -160,8 +179,23 @@ def run_manifest(path: str, ev_dir: Path | None = None) -> dict:
             wspec = sc.get("watch") or {}
             md = _load_cache(ev_dir, sess)
             df = md.get(t)
-            if disp == "EXECUTABLE_WATCH" and wspec and df is not None:
-                w = {"ticker": t, "cls": i.get("watch_mode"),
+            if disp == "EXECUTABLE_WATCH" and df is not None:
+                proj = _ec.project_execution(
+                    i.get("economic_authority_resolved"))
+                if proj is not None:
+                    w = {"ticker": t, "session": sess,
+                         "artifact": f"case_artifacts/{t}_{sess}.json",
+                         "entry_convention": i.get("entry_convention")}
+                    w.update({k: proj[k] for k in
+                              ("cls", "trigger_type", "params", "size_frac",
+                               "invalidation", "stop_rule", "trigger",
+                               "target", "exit_rules")})
+                    w["horizon"] = "x"
+                elif not wspec:
+                    tr["result"] = "FAIL"; tr["stop"] = "no watch spec"
+                    out.append(tr); continue
+                else:
+                    w = {"ticker": t, "cls": i.get("watch_mode"),
                      "trigger_type": wspec.get("trigger_type"),
                      "params": wspec.get("params") or i.get("params") or {},
                      "size_frac": i.get("size_frac") or 0.5,

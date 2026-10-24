@@ -234,3 +234,70 @@ def has_authority(intent: dict, resolved: dict | None) -> bool:
     """True only when a validated LONG contract grants economic authority.
     REANALYZE watches and SHORT/NONE contracts never qualify."""
     return bool(resolved and resolved.get("direction") == "LONG")
+
+
+def project_execution(resolved: dict | None) -> dict | None:
+    """Deterministic projection of a VALID economic_authority into the
+    monitor's machine-readable watch representation.
+
+    Protocol translation only:
+    - runs ONLY on an already-validated contract (direction LONG);
+    - never invents, scales, or changes an economic value — every field is
+      copied verbatim from the contract;
+    - unsupported entry modes have no exact monitor equivalent today and
+      project to None (fail-closed -> PUBLISHED_NON_EXECUTABLE);
+    - additional tranches remain descriptive: the monitor executes the
+      opening tranche only.
+
+    Returns {"cls","trigger_type","params","size_frac","invalidation",
+             "stop_rule"} or None.
+    """
+    if not resolved or resolved.get("direction") != "LONG":
+        return None
+    entry = resolved.get("entry") or {}
+    mode = entry.get("mode")
+    zone = _zone(entry)
+    if mode != "LIMIT_ZONE" or zone is None:
+        return None
+    sizing = resolved.get("sizing") or {}
+    init = _num(sizing.get("initial_frac"))
+    if init is None:
+        return None
+    stop = resolved.get("stop") or {}
+    stype, slevel = stop.get("type"), _num(stop.get("level"))
+    if stype not in ("close_below", "intraday_stop", "price_below") \
+            or slevel is None:
+        return None
+    # Monitor protocol: watch["invalidation"] is a human-readable string
+    # (do_fill formats it); the TYPED risk rule lives in stop_rule/
+    # exit_rules. "price_below" has no dedicated evaluator — its mechanical
+    # meaning IS intraday touch-below-level, so it projects to
+    # "intraday_stop" (same level, verbatim). close_below stays close-based.
+    mapped_stop = "intraday_stop" if stype == "price_below" else stype
+    inv_label = stop.get("label") or f"{stype} {slevel}"
+    rule = {"type": mapped_stop, "level": slevel, "label": inv_label}
+    # Objective fields the monitor's entry success-plan gate reads — copied
+    # verbatim from the validated contract (plan = success_plan output).
+    plan = resolved.get("objective") or {}
+    params = {"zone": [zone[0], zone[1]],
+              "entry_price": zone[1]}
+    if plan.get("success_criteria"):
+        params["success_criteria"] = plan["success_criteria"]
+    if plan.get("profit_realization_plan"):
+        params["profit_realization_plan"] = plan["profit_realization_plan"]
+    target = plan.get("legacy_target") or plan.get("base_case_top")
+    return {"cls": "AUTO_ENTRY",
+            "trigger_type": "intraday_zone_touch",
+            "params": params,
+            "size_frac": init,
+            "invalidation": inv_label,
+            "stop_rule": dict(rule),
+            "exit_rules": [dict(rule)],
+            "target": target,
+            "trigger": entry.get("condition") or
+                f"limit zone {zone[0]}-{zone[1]}",
+            "horizon": resolved.get("horizon"),
+            "event_constraints": resolved.get("event_constraints") or [],
+            "no_entry_conditions":
+                resolved.get("no_entry_conditions") or [],
+            "source": "economic_authority"}

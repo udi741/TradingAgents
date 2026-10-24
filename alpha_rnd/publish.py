@@ -85,6 +85,25 @@ def publish(session: str) -> dict:
                 cls = ("REANALYZE_ON_TRIGGER"
                        if disps.get(t, {}).get("disposition") == "REANALYZE_ON_TRIGGER"
                        else i["watch_mode"])
+                # Canonical economics authority: a validated
+                # economic_authority contract projects the watch's execution
+                # fields; legacy intent params are narrative/compatibility
+                # only and can never override the contract.
+                from alpha_rnd import econ_contract as _ec
+                proj = _ec.project_execution(
+                    i.get("economic_authority_resolved"))
+                if proj is not None:
+                    w = {"ticker": t, "v": "auto", "artifact": f"{t}_{isess}.json",
+                         "session": isess, "published_session": session,
+                         "entry_convention": i.get("entry_convention"),
+                         "reevaluation": i.get("reevaluation"),
+                         "auto_execution_authorized": True}
+                    w.update({k: proj[k] for k in
+                              ("cls", "trigger_type", "params", "size_frac",
+                               "invalidation", "stop_rule", "trigger",
+                               "target", "exit_rules", "horizon", "source")})
+                    by_ticker[t] = w
+                    continue
                 by_ticker[t] = {
                     "ticker": t, "cls": cls, "v": "auto",
                     "trigger": i.get("trigger"),

@@ -125,6 +125,101 @@ def test_no_economic_field_repair():
     assert r2 is None and any("CONTRADICTS_SIGNAL" in e for e in errs2)
 
 
+def _resolved(mode="LIMIT_ZONE"):
+    c = dict(BASE_CONTRACT)
+    c["entry"] = {"mode": mode, "zone": [100.0, 105.0]}
+    errs, res = _validate(c, intent={"ambiguities": []})
+    assert res is not None, errs
+    return res
+
+
+def test_valid_contract_projects():
+    res = _resolved()
+    w = ec.project_execution(res)
+    assert w is not None
+    assert w["cls"] == "AUTO_ENTRY"
+    assert w["params"]["zone"] == [100.0, 105.0]
+    assert w["size_frac"] == 0.4
+    assert w["stop_rule"]["level"] == 95.0
+    assert w["stop_rule"]["type"] == "close_below"
+    assert w["exit_rules"][0]["type"] == "close_below"
+
+
+def test_projection_preserves_economics():
+    res = _resolved()
+    w = ec.project_execution(res)
+    s = res["sizing"]
+    assert w["params"]["zone"] == list(res["entry"]["zone"])
+    assert w["size_frac"] == s["initial_frac"]
+    assert w["stop_rule"]["level"] == res["stop"]["level"]
+
+
+def test_unsupported_mode_non_executable():
+    for mode in ("CONDITIONAL", "NEXT_OPEN", "STOP_ENTRY"):
+        res = _resolved(mode=mode)
+        assert ec.project_execution(res) is None
+
+
+def test_invalid_authority_never_projects():
+    c = dict(BASE_CONTRACT, sizing={"initial_frac": None, "tranches": []})
+    errs, res = _validate(c)
+    assert res is None
+    assert ec.project_execution(res) is None
+    # non-LONG
+    c2 = dict(BASE_CONTRACT, direction="SHORT")
+    _, res2 = _validate(c2)
+    assert ec.project_execution(res2) is None
+
+
+def test_legacy_no_authority_unchanged():
+    i = {"ticker": "XYZ", "classification": "WATCH_FOR_ENTRY",
+         "watch_mode": "AUTO_ENTRY", "auto_execution_authorized": True,
+         "params": {"zone": [100.0, 105.0]}, "stop_level": 95.0}
+    assert syn._machine_executable(i) is True
+    i2 = dict(i, params={"unrelated_key": 1})
+    assert syn._machine_executable(i2) is False
+
+
+def test_canonical_authority_overrides_params():
+    """A resolved contract decides executability; legacy params cannot
+    override it in either direction."""
+    i = {"ticker": "XYZ", "classification": "WATCH_FOR_ENTRY",
+         "watch_mode": "DETERMINISTIC_CONFIRMATION", "stop_level": 95.0,
+         "params": {"no_machine_keys": True},
+         "economic_authority_resolved": _resolved()}
+    assert syn._machine_executable(i) is True
+    i2 = dict(i, params={"zone": [1.0, 2.0], "pb_zone": [1.0, 2.0]},
+              economic_authority_resolved=_resolved(mode="CONDITIONAL"))
+    assert syn._machine_executable(i2) is False
+
+
+def test_percent_fraction_binding():
+    nums = syn._nums_in_text("add 35% now and 100% later")
+    assert 0.35 in nums and 1.0 in nums
+    n2 = syn._nums_in_text("one-third now, two-thirds later")
+    assert abs(1 / 3 - 0.3333) < 0.01 and any(abs(v - 1 / 3) < 1e-9 for v in n2)
+    assert any(abs(v - 2 / 3) < 1e-9 for v in n2)
+    n3 = syn._nums_in_text("completing the full allocation")
+    assert 1.0 in n3
+    n4 = syn._nums_in_text("the third tranche on a full daily close")
+    assert any(abs(v - 1 / 3) < 1e-9 for v in n4)
+
+
+def test_unsupported_number_still_rejected():
+    c = dict(BASE_CONTRACT)
+    c["sizing"] = {"initial_frac": 0.35, "max_frac": 1.0}
+    errs, res = _validate(c, src={100.0, 105.0, 95.0, 130.0, 1.0})
+    assert res is None
+    assert any("UNSUPPORTED_NUMBER:0.35" in e for e in errs)
+
+
+def test_machine_executable_via_projection():
+    i = {"ticker": "XYZ", "classification": "WATCH_FOR_ENTRY",
+         "watch_mode": "AUTO_ENTRY", "auto_execution_authorized": True,
+         "params": {}, "economic_authority_resolved": _resolved()}
+    assert syn._machine_executable(i) is True
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for f in fns:

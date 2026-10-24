@@ -113,6 +113,19 @@ RISK_CONTRADICTION, EVIDENCE_CONFLICT, UNKNOWN) or the evidence genuinely
 supports no single plan, do NOT emit a contract — stay non-executable.
 For a Sell/Underweight decision, economic_authority.direction is never LONG.
 
+When you DO emit economic_authority every field is mandatory — entry,
+sizing (initial_frac AND max_frac; tranches only for genuine later adds),
+stop, objective (target or base_case_value_range, both when stated),
+success_criteria, profit_realization_plan, horizon, event_constraints,
+no_entry_conditions, resolves. Missing economics make the contract invalid;
+never omit a field the text supports.
+
+AMBIGUITY HYGIENE: when economic_authority resolves the conflicts, record
+them ONLY as typed entries in "ambiguities" (plus matching "resolves").
+Do NOT also write free-form "ambiguity" prose restating the same resolved
+conflict — free-form ambiguity stays blocking. Reserve "ambiguity" for
+genuine non-resolvable uncertainty.
+
 Output a JSON array only."""
 
 
@@ -202,6 +215,12 @@ def _nums_in_text(text: str) -> set[float]:
         out.add(0.75)
     if re.search(r"\bquarter\b", re.sub(r"three[- ]quarter[s]?", "", low)):
         out.add(0.25)
+    if re.search(r"two[- ]thirds", low):
+        out.add(2 / 3)
+    if re.search(r"\bthird\b", re.sub(r"two[- ]thirds", "", low)):
+        out.add(1 / 3)
+    if re.search(r"\bfull[- ](standard[- ])?(allocation|position|size)\b", low):
+        out.add(1.0)
     return out
 
 
@@ -298,8 +317,16 @@ _EXECUTABLE_PARAM_KEYS = {
 def _machine_executable(i: dict) -> bool:
     """EXECUTABLE_WATCH == the production monitor can actually evaluate the
     entry mechanically AND a machine-actionable post-entry risk plan exists.
-    When an economic_authority contract exists it must resolve to LONG —
-    a non-LONG or absent contract can never create executable authority."""
+
+    When a VALIDATED economic_authority is present (economic_authority_resolved
+    set by the caller), it is the single economics authority: executability is
+    decided by econ_contract.project_execution, which projects the canonical
+    contract into the monitor representation without inventing economics.
+    Legacy intent.params then play no economic role. Intents without a
+    resolved contract keep the legacy param-key path."""
+    resolved = i.get("economic_authority_resolved")
+    if resolved is not None:
+        return econ_contract.project_execution(resolved) is not None
     ec = i.get("economic_authority")
     if ec is not None and str(ec.get("direction")).upper() != "LONG":
         return False
