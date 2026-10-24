@@ -150,3 +150,33 @@ approved or implemented.
 
 Never automatically reset Linux main, discard dirty state,
 or deploy research-selection changes without review.
+
+## 8. Evidence reconciliation — 2026-10-24 (Windows Devin)
+
+R5B corrected results (matured H5, recomputed):
+
+- 10-07: selected -0.05 vs excluded -3.84 (+3.79 diff)
+- 10-09: selected -11.54 vs excluded -7.48 (-4.06)
+- 10-12: selected -8.30 vs excluded -6.55 (-1.75)
+- Mean selected-minus-excluded: -0.67 pp (3 sessions); pooled
+  8-session audit: +0.10 pp. Neither shows selection value nor a
+  real cost of the 10-stock cap.
+- Excluded constructive AI calls (Buy/OW on unselected names):
+  10 names, mean R5 -5.14%, only LW +5.1 positive. Full-pool
+  research did NOT find missed winners.
+
+Verdict: coverage expansion unjustified; quota left at 10.
+Selection is not the demonstrated bottleneck.
+
+Constructive execution check (zero-inference, saved contracts on 71b83f2d):
+8/8 LIMIT_ZONE contracts -> EXEC + success_plan + risk_plan pass;
+ANF-16 CONDITIONAL correctly refused; IOVA-13 REANALYZE event-gate
+remains by design. Historical 9/10 AMBIGUOUS_REJECTED was an
+authoring/disposition-stage rate, not a projection defect.
+
+Remaining bottleneck: insufficient real-trade evidence. Pipeline
+mechanics verified; live contract-emission reliability + realized
+paper outcomes measurable only prospectively.
+
+Priorities for Linux: health check, prospective scorecard on
+fresh decisions, no broad architecture work.
