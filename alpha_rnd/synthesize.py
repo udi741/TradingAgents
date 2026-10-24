@@ -67,12 +67,20 @@ SCHEMA_HINT = """For EACH ticker emit one object:
  "economic_authority":null|{ // emit ONLY when the FINAL decision resolves
    // to ONE authoritative long plan; superseded exploratory prose
    // (alternative sizings/tranches/ranges) belongs in "resolves", not here
-   "schema_version":1,"ticker":str,"session":str,
-   "direction":"LONG"|"SHORT"|"NONE",
+   "schema_version":1,
+   // "ticker"/"session" are bound by the caller from the frozen artifact;
+   // you may omit them
+   "direction":"LONG"|"SHORT"|"NONE",   // must match the report's signal:
+   //   Sell/Underweight -> NEVER "LONG"; Buy/Overweight -> NEVER "SHORT";
+   //   use "NONE" (or omit the contract) when evidence supports no plan
    "entry":{"mode":"LIMIT_ZONE"|"NEXT_OPEN"|"CONDITIONAL"|"STOP_ENTRY",
             "zone":[lo,hi]|null,"trigger_level":num|null,
             "condition":str|null},
-   "sizing":{"initial_frac":num|null,"max_frac":num|null,
+   "sizing":{ // INVARIANT: initial_frac + SUM(tranches.frac) <= max_frac;
+   //   initial_frac is the OPENING allocation; tranches are ADDITIONAL later
+   //   allocations; NEVER restate the opening allocation inside "tranches".
+   //   Example VALID: initial_frac 0.40, tranches [0.35,0.25], max_frac 1.0
+    "initial_frac":num|null,"max_frac":num|null,
              "tranches":[{"frac":num,"level":num|null,"condition":str}]},
    "stop":{"type":"close_below"|"intraday_stop"|"price_below",
            "level":num,"label":str|null},
@@ -84,13 +92,28 @@ SCHEMA_HINT = """For EACH ticker emit one object:
    "horizon":str,"event_constraints":[str],"no_entry_conditions":[str],
    "resolves":["SIZING_CONFLICT"|"TRANCHE_CONFLICT"|
    "POSITION_CAP_CONFLICT"|"ENTRY_ZONE_CONFLICT"]}}
-                          // enumerated codes only — the contract may
-                          // claim ONLY economic-prose conflicts it
-                          // actually resolves; anything else fails
-Rules: every number must appear in the source text; do not invent levels,
+                          // may list ONLY codes that (a) appear in THIS
+                          // intent's own "ambiguities" list AND (b) the
+                          // contract genuinely resolves; never invent a
+                          // resolve — use [] when none apply
+Rules: every number must appear in the source text (word fractions count:
+"half"=0.5, "quarter"=0.25, "three quarters"=0.75); do not invent levels,
 stops, or targets; a Sell/Hold headline does NOT forbid a conditional
 WATCH_FOR_ENTRY if the text states a re-entry plan; REJECT/NO_WATCH only when
-the text contains no usable forward instruction. Output a JSON array only."""
+the text contains no usable forward instruction.
+
+WHEN TO EMIT economic_authority: for a constructive (Buy/Overweight) decision,
+if the only conflicts you flagged are SIZING_CONFLICT, TRANCHE_CONFLICT,
+POSITION_CAP_CONFLICT or ENTRY_ZONE_CONFLICT AND the text provides enough
+evidence to select ONE authoritative economic plan, you MUST emit a complete
+economic_authority — the contract is the canonical resolution of those
+conflicts. If any OTHER ambiguity type applies (EVENT_OUTCOME_UNKNOWN,
+CATALYST_UNRESOLVED, DIRECTION_CONFLICT, THESIS_CONTRADICTION,
+RISK_CONTRADICTION, EVIDENCE_CONFLICT, UNKNOWN) or the evidence genuinely
+supports no single plan, do NOT emit a contract — stay non-executable.
+For a Sell/Underweight decision, economic_authority.direction is never LONG.
+
+Output a JSON array only."""
 
 
 def artifact_text(a: dict) -> str:
@@ -128,7 +151,8 @@ def synthesize(arts: dict[str, dict]) -> list[dict]:
     """One bounded semantic call for the whole session."""
     chunks = []
     for t, a in sorted(arts.items()):
-        chunks.append(f"=== {t} ===\n{artifact_text(a)[:9000]}")
+        chunks.append(f"=== {t} ===\nsignal: {a.get('signal')}\n"
+                      f"{artifact_text(a)[:9000]}")
     msg = ("You translate frozen trading-analysis reports into operational "
            "watch specifications. You do NOT judge the stocks. Emit only what "
            "each report explicitly states.\n\n" + SCHEMA_HINT +
@@ -170,6 +194,14 @@ def _nums_in_text(text: str) -> set[float]:
     for m in re.finditer(r"(\d+\.?\d*)\s*[-–]\s*(\d+\.?\d*)\s*(M\b|million|K\b)", t, re.I):
         scale = 1_000_000 if m.group(3).lower().startswith(("m",)) else 1_000
         out.add(round(float(m.group(1)) * scale, 4))
+    # exact word fractions only — no fuzzy inference
+    low = t.lower()
+    if re.search(r"\bhalf\b", low):
+        out.add(0.5)
+    if re.search(r"three[- ]quarter", low):
+        out.add(0.75)
+    if re.search(r"\bquarter\b", re.sub(r"three[- ]quarter[s]?", "", low)):
+        out.add(0.25)
     return out
 
 

@@ -92,15 +92,14 @@ def validate(contract: dict | None, artifact: dict, intent: dict,
     errs = []
     if not isinstance(contract, dict):
         return ["ECON_CONTRACT_NOT_OBJECT"], None
+    # --- provenance: deterministic metadata is caller-owned -------------
+    # ticker/session are facts the caller knows exactly (the frozen artifact
+    # identity); the model authors economics only, so provenance is bound
+    # here rather than trusted to free-form reproduction.
+    contract = {**contract,
+                "ticker": artifact.get("ticker"),
+                "session": artifact.get("decision_session")}
     errs += resolve_errors(contract, intent)
-    # --- provenance -----------------------------------------------------
-    sess = contract.get("session")
-    if sess and artifact.get("decision_session") and \
-            sess != artifact["decision_session"]:
-        errs.append("ECON_PROVENANCE_STALE: contract session "
-                    f"{sess} != artifact {artifact['decision_session']}")
-    if contract.get("ticker") and contract["ticker"] != artifact.get("ticker"):
-        errs.append("ECON_TICKER_MISMATCH")
     # --- direction ------------------------------------------------------
     direction = str(contract.get("direction") or "").upper()
     if direction not in ("LONG", "SHORT", "NONE"):

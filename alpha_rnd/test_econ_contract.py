@@ -249,12 +249,16 @@ class ContractValidation(unittest.TestCase):
                               syn._nums_in_text(syn.artifact_text(a)))
         self.assertTrue(any("UNSUPPORTED_NUMBER:99.0" in e for e in errs))
 
-    def test_stale_provenance_fails(self):
+    def test_provenance_is_caller_owned(self):
+        # provenance (ticker/session) is deterministic metadata bound from the
+        # frozen artifact, not trusted to free-form model reproduction
         a = artifact(text=VSTM_TEXT)
-        c = contract(session="2026-10-01")
-        errs, _ = ec.validate(c, a, intent(contract=c),
-                              syn._nums_in_text(syn.artifact_text(a)))
-        self.assertTrue(any("PROVENANCE_STALE" in e for e in errs))
+        c = contract(session="2026-10-01", ticker="WRONG")
+        errs, res = ec.validate(c, a, intent(contract=c),
+                                syn._nums_in_text(syn.artifact_text(a)))
+        self.assertIsNotNone(res)
+        self.assertFalse(any("PROVENANCE" in e or "TICKER" in e
+                             for e in errs))
 
     def test_no_contract_unchanged(self):
         # I/J: absent contract => legacy behavior untouched, ambiguity kills
