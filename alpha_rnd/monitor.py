@@ -26,7 +26,7 @@ from pathlib import Path
 
 import re
 from contextlib import contextmanager
-import fcntl
+from alpha_rnd import oslock as fcntl
 import hashlib
 
 import pandas as pd

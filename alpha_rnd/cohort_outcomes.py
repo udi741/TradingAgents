@@ -14,7 +14,7 @@ Usage:
 Prices: canonical yfinance auto_adjust=True (split/dividend-adjusted),
 same convention as the discovery screener.
 """
-import fcntl
+from alpha_rnd import oslock as fcntl
 import json
 import sys
 import time

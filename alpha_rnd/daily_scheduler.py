@@ -14,7 +14,7 @@ Usage:
 
 from __future__ import annotations
 
-import fcntl
+from alpha_rnd import oslock as fcntl
 import importlib.util
 import json
 import os
