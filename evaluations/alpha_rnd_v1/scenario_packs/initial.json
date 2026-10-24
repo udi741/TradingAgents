@@ -1,0 +1,538 @@
+{
+ "scenarios": [
+  {
+   "id": "VSTM_2026-10-15",
+   "class": "POSITIVE_PATH",
+   "ticker": "VSTM",
+   "session": "2026-10-15",
+   "reason": "historical Overweight killed by sizing-prose ambiguity; contract resolves it",
+   "intent": {
+    "ambiguities": [
+     {
+      "type": "SIZING_CONFLICT",
+      "detail": "$50-55k vs $70-75k"
+     }
+    ],
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "VSTM",
+     "session": "2026-10-15",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       8.0,
+       8.8
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.5,
+      "max_frac": 0.5,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 8.0
+     },
+     "objective": {
+      "target": 9.0
+     },
+     "success_criteria": "breakout holds on volume",
+     "profit_realization_plan": "sell into strength toward 9.73",
+     "horizon": "4-8 weeks",
+     "event_constraints": [],
+     "no_entry_conditions": [],
+     "resolves": [
+      "SIZING_CONFLICT"
+     ]
+    },
+    "ambiguity": null,
+    "params": {
+     "zone": [
+      8.0,
+      8.8
+     ],
+     "closes_required": 1
+    },
+    "stop_level": 8.0,
+    "target": 9.0
+   },
+   "watch": {
+    "trigger_type": "multi_close_in_zone",
+    "params": {
+     "zone": [
+      8.0,
+      8.8
+     ],
+     "closes_required": 1
+    },
+    "stop_rule": {
+     "type": "intraday_stop",
+     "level": 8.0
+    }
+   },
+   "grant_authorization": true,
+   "expected": {
+    "disposition": "EXECUTABLE_WATCH",
+    "trigger": "reached",
+    "order": "created"
+   }
+  },
+  {
+   "id": "ANF_2026-10-16",
+   "class": "POSITIVE_PATH",
+   "ticker": "ANF",
+   "session": "2026-10-16",
+   "reason": "tranche ladder 20/40/40 vs 40/35/25 and 10% vs 15% cap conflict",
+   "intent": {
+    "ambiguities": [
+     {
+      "type": "TRANCHE_CONFLICT",
+      "detail": "ladders"
+     },
+     {
+      "type": "POSITION_CAP_CONFLICT",
+      "detail": "10 vs 15"
+     }
+    ],
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "ANF",
+     "session": "2026-10-16",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       145.0,
+       153.0
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.1,
+      "max_frac": 0.1,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 133.0
+     },
+     "objective": {
+      "target": 175.0
+     },
+     "success_criteria": "breakout continuation above 165",
+     "profit_realization_plan": "scale out at 165",
+     "horizon": "weeks",
+     "event_constraints": [],
+     "no_entry_conditions": [],
+     "resolves": [
+      "TRANCHE_CONFLICT",
+      "POSITION_CAP_CONFLICT"
+     ]
+    },
+    "ambiguity": null,
+    "params": {
+     "zone": [
+      145.0,
+      153.0
+     ],
+     "closes_required": 1
+    },
+    "stop_level": 133.0,
+    "target": 175.0
+   },
+   "expected": {
+    "disposition": "EXECUTABLE_WATCH"
+   }
+  },
+  {
+   "id": "ANF_2026-10-19",
+   "class": "POSITIVE_PATH",
+   "ticker": "ANF",
+   "session": "2026-10-19",
+   "reason": "starter 25-30% vs 40% prose conflict",
+   "intent": {
+    "ambiguities": [
+     {
+      "type": "SIZING_CONFLICT",
+      "detail": "starter %"
+     }
+    ],
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "ANF",
+     "session": "2026-10-19",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       153.0,
+       158.0
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.25,
+      "max_frac": 0.3,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 145.0
+     },
+     "objective": {
+      "target": 185.0
+     },
+     "success_criteria": "holds breakout",
+     "profit_realization_plan": "exit at objective",
+     "horizon": "weeks",
+     "event_constraints": [],
+     "no_entry_conditions": [],
+     "resolves": [
+      "SIZING_CONFLICT"
+     ]
+    },
+    "ambiguity": null,
+    "params": {
+     "zone": [
+      153.0,
+      158.0
+     ],
+     "closes_required": 1
+    },
+    "stop_level": 145.0,
+    "target": 185.0
+   },
+   "expected": {
+    "disposition": "EXECUTABLE_WATCH"
+   }
+  },
+  {
+   "id": "APPN_2026-10-21",
+   "class": "POSITIVE_PATH",
+   "ticker": "APPN",
+   "session": "2026-10-21",
+   "reason": "entry zone $42-43 vs $42-44 prose drift",
+   "intent": {
+    "ambiguities": [
+     {
+      "type": "ENTRY_ZONE_CONFLICT",
+      "detail": "42-43 vs 42-44"
+     }
+    ],
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "APPN",
+     "session": "2026-10-21",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       42.0,
+       44.0
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.035,
+      "max_frac": 0.05,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 41.75
+     },
+     "objective": {
+      "target": 50.0
+     },
+     "success_criteria": "10EMA holds",
+     "profit_realization_plan": "exit toward 50",
+     "horizon": "3-6 months",
+     "event_constraints": [
+      "Q3 earnings"
+     ],
+     "no_entry_conditions": [],
+     "resolves": [
+      "ENTRY_ZONE_CONFLICT"
+     ]
+    },
+    "ambiguity": null,
+    "params": {
+     "zone": [
+      42.0,
+      44.0
+     ],
+     "closes_required": 1
+    },
+    "stop_level": 41.75,
+    "target": 50.0
+   },
+   "expected": {
+    "disposition": "EXECUTABLE_WATCH"
+   }
+  },
+  {
+   "id": "MRNA_2026-10-15_SHORTLONG",
+   "class": "SAFETY_BLOCK",
+   "ticker": "MRNA",
+   "session": "2026-10-15",
+   "reason": "Sell signal must never become executable LONG",
+   "intent": {
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "MRNA",
+     "session": "2026-10-15",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       80.0,
+       82.0
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.05,
+      "max_frac": 0.05,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 75.0
+     },
+     "objective": {
+      "target": 90.0
+     },
+     "success_criteria": "x",
+     "profit_realization_plan": "x",
+     "horizon": "weeks",
+     "event_constraints": [],
+     "no_entry_conditions": [],
+     "resolves": []
+    },
+    "ambiguity": null
+   },
+   "expected": {
+    "disposition": "AMBIGUOUS_REJECTED",
+    "order": "none"
+   }
+  },
+  {
+   "id": "VSTM_2026-10-15_STALEWATCH",
+   "class": "SAFETY_BLOCK",
+   "ticker": "VSTM",
+   "session": "2026-10-15",
+   "reason": "no EXECUTABLE_WATCH revision published -> entry gate refuses",
+   "intent": {
+    "ambiguities": [
+     {
+      "type": "SIZING_CONFLICT",
+      "detail": "x"
+     }
+    ],
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "VSTM",
+     "session": "2026-10-15",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       8.0,
+       8.8
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.5,
+      "max_frac": 0.5,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 8.0
+     },
+     "objective": {
+      "target": 9.0
+     },
+     "success_criteria": "x",
+     "profit_realization_plan": "x",
+     "horizon": "4-8 weeks",
+     "event_constraints": [],
+     "no_entry_conditions": [],
+     "resolves": [
+      "SIZING_CONFLICT"
+     ]
+    },
+    "ambiguity": null,
+    "params": {
+     "zone": [
+      8.0,
+      8.8
+     ],
+     "closes_required": 1
+    },
+    "stop_level": 8.0,
+    "target": 9.0
+   },
+   "watch": {
+    "trigger_type": "multi_close_in_zone",
+    "params": {
+     "zone": [
+      8.0,
+      8.8
+     ],
+     "closes_required": 1
+    },
+    "stop_rule": {
+     "type": "intraday_stop",
+     "level": 8.0
+    }
+   },
+   "grant_authorization": false,
+   "expected": {
+    "disposition": "EXECUTABLE_WATCH",
+    "not_authorized": true,
+    "order": "none",
+    "trigger": "not_reached"
+   }
+  },
+  {
+   "id": "ANF_2026-10-19_RISKPLAN",
+   "class": "RISK_BLOCK",
+   "ticker": "ANF",
+   "session": "2026-10-19",
+   "reason": "trigger reached but no machine-actionable risk plan -> blocked",
+   "intent": {
+    "ambiguities": [
+     {
+      "type": "SIZING_CONFLICT",
+      "detail": "x"
+     }
+    ],
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "ANF",
+     "session": "2026-10-19",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       153.0,
+       158.0
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.25,
+      "max_frac": 0.3,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 145.0
+     },
+     "objective": {
+      "target": 185.0
+     },
+     "success_criteria": "x",
+     "profit_realization_plan": "x",
+     "horizon": "weeks",
+     "event_constraints": [],
+     "no_entry_conditions": [],
+     "resolves": [
+      "SIZING_CONFLICT"
+     ]
+    },
+    "ambiguity": null,
+    "params": {
+     "zone": [
+      153.0,
+      158.0
+     ],
+     "closes_required": 1
+    },
+    "stop_level": 145.0,
+    "target": 185.0
+   },
+   "watch": {
+    "trigger_type": "multi_close_in_zone",
+    "params": {
+     "zone": [
+      153.0,
+      158.0
+     ],
+     "closes_required": 1
+    },
+    "stop_rule": {},
+    "invalidation": ""
+   },
+   "grant_authorization": true,
+   "expected": {
+    "disposition": "EXECUTABLE_WATCH",
+    "order": "none",
+    "risk_blocked": true
+   }
+  },
+  {
+   "id": "VSTM_2026-10-15_CATALYST",
+   "class": "AMBIGUITY_NONRESOLVABLE",
+   "ticker": "VSTM",
+   "session": "2026-10-15",
+   "reason": "sizing resolved but unresolved catalyst stays fail-closed",
+   "intent": {
+    "ambiguities": [
+     {
+      "type": "SIZING_CONFLICT",
+      "detail": "x"
+     },
+     {
+      "type": "CATALYST_UNRESOLVED",
+      "detail": "x"
+     }
+    ],
+    "economic_authority": {
+     "schema_version": 1,
+     "ticker": "VSTM",
+     "session": "2026-10-15",
+     "direction": "LONG",
+     "entry": {
+      "mode": "LIMIT_ZONE",
+      "zone": [
+       8.0,
+       8.8
+      ]
+     },
+     "sizing": {
+      "initial_frac": 0.5,
+      "max_frac": 0.5,
+      "tranches": []
+     },
+     "stop": {
+      "type": "close_below",
+      "level": 8.0
+     },
+     "objective": {
+      "target": 9.0
+     },
+     "success_criteria": "x",
+     "profit_realization_plan": "x",
+     "horizon": "4-8 weeks",
+     "event_constraints": [],
+     "no_entry_conditions": [],
+     "resolves": [
+      "SIZING_CONFLICT"
+     ]
+    },
+    "ambiguity": null,
+    "params": {
+     "zone": [
+      8.0,
+      8.8
+     ],
+     "closes_required": 1
+    },
+    "stop_level": 8.0,
+    "target": 9.0
+   },
+   "expected": {
+    "disposition": "AMBIGUOUS_REJECTED",
+    "order": "none"
+   }
+  }
+ ]
+}
