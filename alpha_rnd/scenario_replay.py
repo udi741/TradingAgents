@@ -13,6 +13,9 @@ to a temp dir for the duration of the run.
 
 This proves framework behavior, not alpha: scenarios are hindsight-selected
 regression shapes.
+
+Canonical user entry point: python -m alpha_rnd.backtest
+(docs/BACKTESTING.md). Direct invocation still works.
 """
 import json
 import pickle

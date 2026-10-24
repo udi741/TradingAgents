@@ -18,6 +18,9 @@ frozen PIT inputs (universe_raw / market_cache / candidate_pool / SEC caches)
 
   python -m alpha_rnd.replay audit --as-of 2026-10-13
   python -m alpha_rnd.replay run --as-of 2026-10-13 --policy CURRENT_PRODUCTION
+
+Canonical user entry point: python -m alpha_rnd.backtest
+(docs/BACKTESTING.md). Direct invocation still works.
 """
 import hashlib
 import json

@@ -342,6 +342,21 @@ ta = TradingAgentsGraph(config=config)
 _, decision = ta.propagate("NVDA", "2026-09-01")
 ```
 
+## Backtesting & evaluation (ALPHA + core library)
+
+For any historical replay, regression, strategy-evaluation, or
+prospective-evaluation question, start with the canonical front door:
+
+```bash
+python -m alpha_rnd.backtest --help
+python -m alpha_rnd.backtest list
+```
+
+It routes to the right engine — targeted pipeline replay (no model calls),
+PIT research replay, composite strategy evaluation, grid decision sweep, or
+forward/prospective status — and states cost, contamination, and
+alpha-evidence limits for each. Full guide: `docs/BACKTESTING.md`.
+
 ## Evaluating decisions over time
 
 One run gives one decision, which cannot tell you whether the system decides well. `run_backtest` runs the same pipeline over a grid of tickers and dates, writes to a memory log of its own, and scores the decisions whose holding window has since traded.
