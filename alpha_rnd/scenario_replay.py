@@ -121,6 +121,7 @@ def _replay_triggers(w: dict, st: dict, df, sessions: list[str],
                 if w["ticker"] in st["positions"]:
                     trace["auto_entry_fill"] = trace.get(
                         "auto_entry_fill") or sess
+                    trace["triggered_at"] = trace["triggered_at"] or sess
                     trace["order_created"] = True
         # fill path: pending order resolves at next session's actual open
         if st["pending_open_fills"] and sess != later[-1]:

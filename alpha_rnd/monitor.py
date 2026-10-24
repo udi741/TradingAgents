@@ -290,6 +290,21 @@ def post_entry_risk_plan(watch: dict) -> dict | None:
     return None
 
 
+def _render_invalidation(inv) -> str:
+    """Render watch/position invalidation for logs/notifications. Strings
+    pass through unchanged; structured dict rules render as
+    '<type> <level> (<label>)'; None renders 'none'. Display only — never
+    changes economics, authorization, or stop behavior."""
+    if inv is None:
+        return "none"
+    if isinstance(inv, dict):
+        base = " ".join(str(x) for x in (inv.get("type"), inv.get("level"))
+                        if x is not None) or str(inv)
+        lbl = inv.get("label")
+        return f"{base} ({lbl})" if lbl else base
+    return str(inv)
+
+
 def _watch_rev(w: dict) -> str:
     """Immutable watch-revision identity for risk-block idempotency: tied to
     the frozen publication artifact + revision, not the wall clock."""
@@ -418,7 +433,7 @@ Class: {watch['cls']}
 
 Shares: {shares}
 Price: ${price:.2f}
-Stop: {watch['invalidation'][:80]}
+Stop: {_render_invalidation(watch['invalidation'])[:80]}
 Expected horizon: {watch['horizon']}""")
 
 

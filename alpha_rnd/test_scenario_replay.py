@@ -107,7 +107,9 @@ class ScenarioReplay(unittest.TestCase):
         self.assertFalse(r["replay"]["order_created"])
 
     def test_trigger_not_reached_passes(self):
-        s = _scenario(watch={"trigger_type": "close_breakout_vol",
+        s = _scenario(extra_intent={"economic_authority": None,
+                                    "ambiguities": None},
+                      watch={"trigger_type": "close_breakout_vol",
                              "params": {"bo_level": 99.0},
                              "stop_rule": {"type": "intraday_stop",
                                            "level": 9.0}},
