@@ -114,18 +114,22 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
             if l > zt:
                 i += 1
                 continue
-            # GAPFILT check (on the would-be fill day)
+            # Gate checks must use the PREVIOUS completed session: the
+            # fill is intraday at zt, so same-day close data is not yet
+            # known at fill time (look-ahead fix, exp 14).
+            pc = float(df["Close"].iloc[i - 1])
             if variant == "TREND200" and \
-                    not c > float(sma200.iloc[i]):
+                    not pc > float(sma200.iloc[i - 1]):
                 i += 1
                 continue
             if variant in ("GAPFILT", "SPYGATE"):
                 if variant == "GAPFILT" and \
-                        (ret.iloc[max(0, i - 4):i + 1] >= 0.08).any():
+                        (ret.iloc[max(0, i - 5):i] >= 0.08).any():
                     i += 1
                     continue
-                sp = spy_close.get(s)
-                if sp is not None and sp < spy_sma.get(s, 0):
+                ps_ = str(df.index[i - 1].date())
+                sp = spy_close.get(ps_)
+                if sp is not None and sp < spy_sma.get(ps_, 0):
                     i += 1
                     continue
             fill = zt
@@ -136,9 +140,10 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
                 i += 1
                 continue
             # TREND200 mirror for shorts: only short names already in
-            # downtrends (close < own 200-SMA on the fill day)
+            # downtrends — prior completed session, not same-day close
             if variant == "TREND200" and \
-                    not c < float(sma200.iloc[i]):
+                    not float(df["Close"].iloc[i - 1]) < \
+                    float(sma200.iloc[i - 1]):
                 i += 1
                 continue
             fill = zb

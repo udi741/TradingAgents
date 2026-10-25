@@ -180,3 +180,99 @@ over SPY comes from holding winners in trends; every defence that
 helps the losing regime taxes the winning one. Best combined profile
 so far: LONG-only, 2.5xATR stop; choose PROFIT vs plain by regime
 tolerance, not by a universal winner.
+
+## Corrections round (exp 14) — methodology fixes + corrected verdicts
+
+### 1. Look-ahead in gate filters (FIXED)
+`sim_period` fills intraday at the zone touch (`l <= zt`), but TREND200,
+GAPFILT and SPYGATE all evaluated the SAME-DAY close. All three now use
+the previous completed session (close/SMA at i-1; SPY at prior bar;
+GAPFILT window shifted to sessions i-5..i-1). Regression test
+`test_trend200_no_lookahead` locks the behavior.
+
+### 2. Seed-ordering reproducibility (FIXED, mission7 rerun)
+Builtin `hash()` is process-salted; replaced by md5-stable ordering.
+Mission7 rerun under stable ordering (original preserved in
+`results/mission7_presalt.json`):
+
+| Period | ORIG alpha | ATR25 alpha | ORIG seed range | ATR25 seed range |
+|---|---|---|---|---|
+| 2024 | -2.6 | +1.5 | [-2.6,+7.0] | [+1.5,+8.2] |
+| 2025 | -5.3 | -4.7 | [-10.6,-1.0] | [-10.1,-4.7] |
+| 2026YTD | +15.5 | +16.7 | [+10.8,+16.1] | [+10.4,+24.6] |
+
+Verdict unchanged in form (ATR25 > ORIG alpha in all 3; seed-min
+better in 2/3) but RECLASSIFIED below — this is a mechanical A/B
+comparison, not validated alpha.
+
+### 3. Mission8 rerun without look-ahead — VERDICT FLIPS
+Original leaked-gate result: REJECTED. Corrected prior-session gate
+(original preserved in `results/mission8_v1_lookahead.json`):
+
+| Period | ATR25 mean | TREND200 mean | TREND200 range |
+|---|---|---|---|
+| 2024 | +4.5 | +4.6 | [-1.7,+8.1] |
+| 2025 | -7.3 | -1.8 | [-3.4,+0.5] |
+| 2026YTD | +16.8 | +14.5 | [+10.4,+23.7] |
+
+Corrected gate admits fewer signals (48/92/70 rejected) and beats
+ATR25 on mean in 2024 AND 2025; 2025 seed-min -3.4 vs -10.1.
+Frozen rule -> **RETAINED**. Prior-session gating is stricter and
+more effective than the (leaked) same-day version. This remains a
+mechanical result, not deployable alpha.
+
+### 4. Mission9 rerun without look-ahead — still REJECTED
+Original preserved in `results/mission9_v1_lookahead.json`. Corrected:
+2024 mean -13.8 vs -11.8 ungated; 2025 mean -7.2 vs -10.5; 2026 mean
+-11.5 vs -9.8. min_wins=2 but mean_wins=1 -> REJECTED. Conclusion
+strengthened: gate helps the losing regime only; the short rule family
+stays closed (this rule's rejection does not preclude other short
+designs).
+
+### 5. Accounting verification (test_mech_regressions.py — 5 tests)
+All PASS: gate uses prior session; PROFIT leg shares sum to recorded
+shares; 1-share positions never trim and exit cleanly; portfolio cash/
+NAV reconciles to the cent on a known trade; all exit legs execute
+after their signal close. The earlier phantom-share defect (NAV
+inflation under PROFIT) is confirmed fixed — mission10's published
+numbers were already computed post-fix and are unchanged.
+
+### 6. Corrected economic conclusions (supersede earlier wording)
+- H3/ATR25 is an experimental improvement over a WEAK mechanical
+  baseline on biased data — not validated trading alpha.
+- Both universes carry survivorship bias (1824-name worse; the 503
+  snapshot still lacks removed members). Relative A/B conclusions can
+  also shift with universe choice; only the replicated direction of
+  the ATR25 effect is trustworthy, not its magnitude.
+- 2024/2025/2026YTD are design-adjacent periods, not untouched
+  out-of-sample validation.
+- Nothing in missions 6-10 demonstrates that TradingAgents' AI
+  research selects profitable investments.
+- The tested SHORT rule family's rejection is specific, not a claim
+  about short strategies in general.
+- MECHANICAL INVESTIGATION IS CLOSED: no further ATR/MA/profit-taking
+  parameter searches. None of these mechanical variants is deployable.
+
+## AI-authored decisions: first prospective score (mission11.json)
+
+The `alpha_paper_ledger` (frozen 2026-10-02/03, before outcomes) is
+the first causally-valid AI evidence: authored zones, invalidations
+and triggers — not a mechanical proxy. Six fills, all LONG, window
+2026-10-02 -> 2026-10-23, 10bps costs, $100k book:
+
+| Variant/control | net % | reading |
+|---|---|---|
+| AI as-recorded | -2.40 | realized -2,141 on 5 closed + PBF mark |
+| AI rules-only (no mgmt exits) | -3.15 | discretionary exits helped +0.75pp |
+| Same-names naive hold | -3.02 | AI mechanics added ~+0.6pp vs holding its picks |
+| Watchlist-naive (all 10 V2 names @ open 10/5) | -3.44 | selective triggers added ~+1.0pp vs buying all researched names |
+| SPY matched deployment | -0.46 | market beat every AI variant by ~2-3pp |
+
+Honest reading: AI-authored entry zones, invalidations and selective
+triggering added measurable value RELATIVE to naive controls on the
+same names, but the underlying selections were net-negative and the
+book underperformed SPY. Zero SHORT contracts were authored — no short
+evidence exists. n=6 over one 3-week window: exploratory evidence of
+execution value, no evidence yet of profitable selection. PBF was the
+only profitable thesis (+14% MFE) and closed under its authored stop
+(78) on 10/23, ending negative.
