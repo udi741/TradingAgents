@@ -15,7 +15,7 @@ from pathlib import Path
 import yfinance as yf
 
 sys.path.insert(0, str(Path(__file__).parent))
-sys.path.insert(0, "/home/udi/udi_provate/TradingAgents-contract")
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from alpha_rnd import decision_portfolio as dp
 
 EV = Path("/home/udi/udi_provate/TradingAgents/evaluations/alpha_rnd_v1")
