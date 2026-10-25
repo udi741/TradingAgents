@@ -3,9 +3,9 @@
 
 Source: free S&P500 constituent list (incl. 'Date added'). Membership
 rule: ticker eligible on dates >= its date_added. KNOWN LIMITATIONS:
-- index REMOVALS not captured: a removed member stays eligible until
-  today (survivorship remains for removed names — direction is usually
-  to overstate LONG results mildly).
+- index REMOVALS are not captured at all: constituents removed
+  before the snapshot are simply absent — survivorship bias REMAINS
+  (removes the added-later bias only; direction: overstates results).
 - not an index-membership strategy proof; it's a tradability filter.
 
 Run ORIG mechanical LONG + SHORT on this universe for the three periods.
