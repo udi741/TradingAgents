@@ -123,6 +123,30 @@ class PubTest(unittest.TestCase):
         ws = self._pub()
         self.assertEqual(ws["Y"]["artifact"], "Y_custom.json")
 
+    def test_predisposition_doc_blocks_bearish_geometry(self):
+        # legacy doc with no "dispositions": `validated` used to mint an
+        # executable watch unchecked; SHORT-shaped geometry must not pass.
+        self.gw.return_value = {"watches": [], "open_positions": []}
+        doc = {"session": "2026-10-07", "intents": {
+            "PCVX": {"ticker": "PCVX", "classification": "WATCH_FOR_ENTRY",
+                     "watch_mode": "DETERMINISTIC_CONFIRMATION",
+                     "trigger": "re-entry on 62-64 hold", "stop_level": 73.8,
+                     "params": {"reentry_zone": [62, 64], "reclaim": 68.6},
+                     "invalidation": "x", "size_frac": 0.5},
+            "GOOD": {"ticker": "GOOD", "classification": "WATCH_FOR_ENTRY",
+                     "watch_mode": "DETERMINISTIC_CONFIRMATION",
+                     "trigger": "close in zone", "stop_level": 55.0,
+                     "params": {"zone": [60, 62]},
+                     "invalidation": "close<55", "size_frac": 0.5}},
+            "validated": ["PCVX", "GOOD"], "review_required": []}
+        (self.ev / "publication_intents_2026-10-07.json").write_text(
+            json.dumps(doc))
+        ws = self._pub()
+        self.assertNotIn("PCVX", ws)
+        self.assertIn("GOOD", ws)
+
 
 if __name__ == "__main__":
+    unittest.main()
+
     unittest.main()

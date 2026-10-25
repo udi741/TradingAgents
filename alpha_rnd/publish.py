@@ -71,6 +71,15 @@ def publish(session: str) -> dict:
                 i = idoc["intents"][t]
                 if i.get("watch_mode") in (None, "NONE"):
                     continue
+                # Pre-disposition docs: `validated` bypassed the direction
+                # gate. A SHORT-shaped intent must not mint a LONG watch
+                # (PCVX/HESM defect class); fills stay gated downstream by
+                # authorized()/post_entry_risk_plan either way.
+                if not disps and i.get("watch_mode") in (
+                        "AUTO_ENTRY", "DETERMINISTIC_CONFIRMATION"):
+                    from alpha_rnd import synthesize as _sz
+                    if _sz._bearish_geometry(i):
+                        continue
                 # structured session first; filename is fallback only
                 isess = idoc.get("session") or \
                     intents_path.stem.rsplit("_", 1)[-1]

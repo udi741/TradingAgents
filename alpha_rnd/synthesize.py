@@ -323,6 +323,7 @@ _ENTRY_PARAM_KEYS = {
 
 
 def _entry_levels(p: dict) -> list[float]:
+    import math
     out = []
     for k, v in (p or {}).items():
         if k not in _ENTRY_PARAM_KEYS:
@@ -332,9 +333,11 @@ def _entry_levels(p: dict) -> list[float]:
             vals = vals[1:2] if len(vals) == 2 else []  # fill ref = zone top
         for x in vals:
             try:
-                out.append(float(x))
+                x = float(x)
             except (TypeError, ValueError):
-                pass
+                continue
+            if math.isfinite(x) and x > 0:
+                out.append(x)
     return out
 
 
@@ -349,12 +352,21 @@ def _bearish_geometry(i: dict) -> bool:
     p = i.get("params") or {}
     if any(str(k).startswith("short") for k in p):
         return True
-    try:
-        stop = float(i.get("stop_level"))
-    except (TypeError, ValueError):
+    stop = _stop_level(i)
+    if stop is None:
         return False
     levels = _entry_levels(p)
     return bool(levels) and stop >= min(levels)
+
+
+def _stop_level(i: dict) -> float | None:
+    """Finite positive numeric stop_level or None."""
+    import math
+    try:
+        stop = float(i.get("stop_level"))
+    except (TypeError, ValueError):
+        return None
+    return stop if math.isfinite(stop) and stop > 0 else None
 
 
 def _machine_executable(i: dict) -> bool:
@@ -379,6 +391,10 @@ def _machine_executable(i: dict) -> bool:
     if not _EXECUTABLE_PARAM_KEYS & set(p):
         return False
     if _bearish_geometry(i):
+        return False
+    # A present-but-unusable stop_level is not a risk plan: nonnumeric,
+    # nonpositive or nonfinite values would mint a phantom stop_rule.
+    if i.get("stop_level") is not None and _stop_level(i) is None:
         return False
     return _has_risk_plan(i)
 

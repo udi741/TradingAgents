@@ -78,6 +78,33 @@ class DirectionSafetyTest(unittest.TestCase):
             "objective": {"target": 70.0}, "horizon": "weeks"})
         self.assertTrue(sz._machine_executable(i))
 
+    def test_unusable_stop_levels_blocked(self):
+        # truthy but nonnumeric/nonpositive/nonfinite stop_level is not a
+        # risk plan — must not mint a phantom stop_rule via publish().
+        for bad in ("abc", 0, -5, float("nan"), float("inf")):
+            i = _intent(stop_level=bad)
+            self.assertFalse(sz._machine_executable(i), repr(bad))
+
+    def test_numeric_string_stop_ok(self):
+        self.assertTrue(sz._machine_executable(_intent(stop_level="55.9")))
+
+    def test_nonfinite_entry_levels_ignored(self):
+        i = _intent(params={"zone": [float("nan"), float("inf")],
+                            "reclaim": 70.0}, stop_level=65.0)
+        self.assertFalse(sz._bearish_geometry(i))  # 65 < reclaim 70 -> valid long
+        self.assertTrue(sz._machine_executable(i))
+
+    def test_zone_top_is_fill_ref(self):
+        # monitor fills zone touches at zone[1] only (do_fill(p['zone'][1]));
+        # a stop inside the zone but below the top is valid LONG geometry.
+        i = _intent(params={"zone": [62.0, 64.0]}, stop_level=63.0)
+        self.assertFalse(sz._bearish_geometry(i))
+        self.assertTrue(sz._machine_executable(i))
+        # but a stop at/above the zone top is SHORT geometry
+        i2 = _intent(params={"zone": [62.0, 64.0]}, stop_level=64.0)
+        self.assertTrue(sz._bearish_geometry(i2))
+        self.assertFalse(sz._machine_executable(i2))
+
 
 if __name__ == "__main__":
     unittest.main()
