@@ -75,3 +75,26 @@ this rejects THIS rule, not the possibility that some short strategy
 could work elsewhere. 2026YTD LONG +15.5% vs SPY +13.2% is a modest
 excess on differing exposure (partly-invested portfolio, not
 benchmark-equivalent).
+
+### H3 cross-universe validation (mission7.json — S&P500 snapshot universe)
+
+Pre-registered: if the 2.5xATR edge were a 1824-universe artifact, it
+would vanish on the mission6 universe (503 names, added-later bias
+removed; removed-member bias remains). LONG only, 10bps, seeds
+{alpha,1,7,13,42}.
+
+| Period | ORIG alpha | ATR25 alpha | ORIG seed range | ATR25 seed range |
+|---|---|---|---|---|
+| 2024 | -2.6 | +1.5 | [-2.6,+4.6] | [+1.5,+9.8] |
+| 2025 | -5.3 | -4.7 | [-6.5,+1.2] | [-9.1,-4.7] |
+| 2026YTD | +15.5 | +16.7 | [+8.3,+19.1] | [+11.0,+16.7] |
+
+Frozen rule outcome: ATR25 > ORIG alphabetically in all 3 periods;
+ATR25 seed-min > ORIG seed-min in 2/3 (2025 fails). Verdict:
+**RETAIN-VALIDATED (weak)** — the stop-width edge replicates across two
+different universe constructions, so it is unlikely a pure survivorship
+artifact. BUT both variants lose in the mixed 2025 regime: ATR25 widens
+winners' room, it does not create regime-independent alpha. The
+underlying LONG mechanics remain profitable only in trending 2026
+(+16.7% vs SPY +13.2%, partly-invested NAV). Still not deployable;
+next step remains a shadow-variant forward test.
