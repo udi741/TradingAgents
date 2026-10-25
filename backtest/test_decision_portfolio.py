@@ -64,6 +64,17 @@ class T(unittest.TestCase):
         dp.ingest_intent(b, i, "2025-01-01", d)
         self.assertEqual(len(b["pending"]), 1)
 
+    def test_no_fill_on_publication_day(self):
+        # a decision published on day D must not fill on day D's bar even
+        # if the low touched the zone — eligibility starts next session
+        d = Path(tempfile.mkdtemp())
+        b = dp._new_book()
+        dp.ingest_intent(b, intent(), "2025-01-01", d)
+        dp.step_day(b, "2025-01-01", {"SYN": bar(63, 64, 59, 63)}, d)
+        self.assertNotIn("SYN", b["positions"])   # zone was touched; still no fill
+        dp.step_day(b, "2025-01-02", {"SYN": bar(63, 64, 59, 63)}, d)
+        self.assertIn("SYN", b["positions"])      # next session -> fill
+
     def test_writes_only_own_dir(self):
         # contract: engine only ever writes under data_dir; no prod files
         import inspect

@@ -153,6 +153,8 @@ def step_day(book, session, bars_by_ticker, data_dir):
             book["pending"].remove(pe)
             _emit(data_dir, session, "EXPIRE", ticker=t, dir=pe["dir"])
             continue
+        if session <= pe["session"]:
+            continue  # decision not yet eligible: needs next session
         if b is None or len(book["positions"]) >= MAX_POS:
             continue
         o, h, l, c = (float(b[k]) for k in ("Open", "High", "Low", "Close"))

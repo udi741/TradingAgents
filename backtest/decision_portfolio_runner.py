@@ -24,26 +24,80 @@ DATA = Path.home() / "udi_provate" / "TradingAgents-decision-portfolio"
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--session", required=True)
+    ap.add_argument("--session")
+    ap.add_argument("--catchup", action="store_true",
+                    help="process every completed bar day after last_mark, "
+                         "ingesting publications as they appear")
+    ap.add_argument("--ev-dir", default=str(EV))
     ap.add_argument("--data-dir", default=str(DATA))
     args = ap.parse_args()
     d = Path(args.data_dir).expanduser()
+    ev = Path(args.ev_dir)
     book = dp.load_book(d)
+    import pandas as pd
+    today = str(__import__("datetime").date.today())
+    last_completed = str((pd.Timestamp(today)
+                          - pd.offsets.BDay(1)).date())
+    pubs = {}
+    for f in sorted(ev.glob("publication_intents_*.json")):
+        pubs[f.stem.rsplit("_", 1)[-1]] = f
+    if args.catchup:
+        # process each business day after last_mark through the latest
+        # COMPLETED bar: ingest that day's publications (decisions become
+        # fill-eligible next session) then advance the book one day.
+        days = [str(x.date()) for x in
+                pd.bdate_range(start=(book.get("last_mark") or "2026-01-01"),
+                               end=last_completed)][1:]
+        if not days:
+            print("nothing to catch up")
+            return
+        tickers = sorted({i.get("ticker")
+                          for f in pubs.values()
+                          for i in (json.loads(f.read_text())
+                                    .get("intents") or {}).values()
+                          if i.get("ticker")})
+        end = (pd.Timestamp(last_completed)
+               + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        bars = yf.download(tickers + ["SPY"], start="2026-09-01", end=end,
+                           group_by="ticker", progress=False,
+                           auto_adjust=True, threads=True)
+        for sess in days:
+            if sess in pubs:
+                doc = json.loads(pubs[sess].read_text())
+                for t, i in (doc.get("intents") or {}).items():
+                    dp.ingest_intent(book, i, sess, d)
+            day = {}
+            for t in tickers:
+                try:
+                    df = bars[t].dropna()
+                    row = df[df.index.strftime("%Y-%m-%d") == sess]
+                    if len(row):
+                        day[t] = row.iloc[0]
+                except Exception:
+                    pass
+            if not day:
+                continue  # non-trading or missing data: retryable skip
+            dp.step_day(book, sess, day, d)
+            book["last_mark"] = sess
+        dp.save_book(d, book)
+        print(f"catchup -> last_mark={book.get('last_mark')} "
+              f"nav={book['nav']:.2f} open={list(book['positions'])} "
+              f"closed={len(book['closed'])}")
+        return
+    if not args.session:
+        ap.error("--session or --catchup required")
     # ingest: every published intents doc up to session, new tickers only
-    for f in sorted(EV.glob("publication_intents_*.json")):
-        s = f.stem.rsplit("_", 1)[-1]
-        if s > args.session:
+    for s_, f in pubs.items():
+        if s_ > args.session:
             continue
         doc = json.loads(f.read_text())
         for t, i in (doc.get("intents") or {}).items():
-            dp.ingest_intent(book, i, s, d)
-    # bars: through session (inclusive, completed bars only)
+            dp.ingest_intent(book, i, s_, d)
     tickers = {p["ticker"] for p in book["pending"]} | set(book["positions"])
     if not tickers:
         dp.save_book(d, book)
         print("no pending/open positions")
         return
-    import pandas as pd
     end = (pd.Timestamp(args.session) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
     bars = yf.download(sorted(tickers), start="2026-09-01", end=end,
                        group_by="ticker", progress=False, auto_adjust=True)
@@ -57,6 +111,7 @@ def main():
         except Exception:
             pass
     dp.step_day(book, args.session, day, d)
+    book["last_mark"] = args.session
     dp.save_book(d, book)
     print(f"session={args.session} nav={book['nav']:.2f} "
           f"cash={book['cash']:.2f} open={list(book['positions'])} "
