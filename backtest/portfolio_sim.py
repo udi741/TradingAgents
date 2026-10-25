@@ -23,6 +23,10 @@ START = 100000.0
 OUT = Path(__file__).parent / "results"
 
 
+_DATES_CACHE = [None, []]
+_CLOSE_CACHE = {}
+
+
 def portfolio_run(candidates, bars, period_start, period_end,
                   order_seed=None, return_detail=False, priority_fn=None):
     """candidates: trade dicts with fill_date, legs (with dates).
@@ -32,9 +36,16 @@ def portfolio_run(candidates, bars, period_start, period_end,
     entries = defaultdict(list)
     for cd in candidates:
         entries[cd["fill_date"]].append(cd)
-    dates = sorted(d for d in
-                   {str(x.date()) for df in bars.values()
-                    for x in df.index} | set(entries)
+    if _DATES_CACHE[0] is None or len(_DATES_CACHE[1]) != len(bars):
+        _DATES_CACHE[0] = {str(x.date()) for df in bars.values()
+                           for x in df.index}
+        _DATES_CACHE[1] = [None] * len(bars)
+        _CLOSE_CACHE.clear()
+        for t, df in bars.items():
+            _CLOSE_CACHE[t] = dict(zip(
+                (str(x.date()) for x in df.index),
+                (float(v) for v in df["Close"])))
+    dates = sorted(d for d in _DATES_CACHE[0] | set(entries)
                    if d <= period_end)
     cash = START
     pos = {}      # ticker -> {"shares":..., "fill":..., "legs": [...], "cd":...}
@@ -87,12 +98,11 @@ def portfolio_run(candidates, bars, period_start, period_end,
         # mark
         mv = 0.0
         for t, p in pos.items():
-            df = bars.get(t)
+            cc = _CLOSE_CACHE.get(t)
             c = None
-            if df is not None:
-                row = df[df.index.strftime("%Y-%m-%d") <= s]
-                if len(row):
-                    c = float(row["Close"].iloc[-1])
+            if cc is not None:
+                dmark = max(d2 for d2 in cc if d2 <= s)
+                c = cc[dmark]
             mv += (c or p["fill"]) * p["shares"]
         nav_series[s] = cash + mv
         employed = max(employed, sum(p["shares"] * p["fill"]

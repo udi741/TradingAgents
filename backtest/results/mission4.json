@@ -1,0 +1,338 @@
+{
+ "ORIG_c10_2024": {
+  "variant": "ORIG",
+  "stop_mult": 2.0,
+  "cost_bps_side": 10.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    11.14,
+    8.51,
+    8.85
+   ],
+   "min": 8.51,
+   "max": 11.14,
+   "mean": 9.5
+  },
+  "alphabetical": {
+   "signals": 3687,
+   "admitted": 77,
+   "net_pct": 11.14,
+   "pf": 1.63,
+   "net_pnl": 10831.1,
+   "max_dd": 11305.49,
+   "expectancy": 140.7,
+   "end_nav": 111142.81
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ORIG_c15_2024": {
+  "variant": "ORIG",
+  "stop_mult": 2.0,
+  "cost_bps_side": 15.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    10.78,
+    8.18,
+    8.49
+   ],
+   "min": 8.18,
+   "max": 10.78,
+   "mean": 9.15
+  },
+  "alphabetical": {
+   "signals": 3687,
+   "admitted": 77,
+   "net_pct": 10.78,
+   "pf": 1.63,
+   "net_pnl": 10831.1,
+   "max_dd": 11484.55,
+   "expectancy": 140.7,
+   "end_nav": 110781.82
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ATR25_c10_2024": {
+  "variant": "ATR25",
+  "stop_mult": 2.5,
+  "cost_bps_side": 10.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    19.23,
+    15.24,
+    18.07
+   ],
+   "min": 15.24,
+   "max": 19.23,
+   "mean": 17.51
+  },
+  "alphabetical": {
+   "signals": 3522,
+   "admitted": 68,
+   "net_pct": 19.23,
+   "pf": 2.27,
+   "net_pnl": 19164.77,
+   "max_dd": 6855.58,
+   "expectancy": 281.8,
+   "end_nav": 119234.23
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ATR25_c15_2024": {
+  "variant": "ATR25",
+  "stop_mult": 2.5,
+  "cost_bps_side": 15.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    18.92,
+    14.95,
+    17.76
+   ],
+   "min": 14.95,
+   "max": 18.92,
+   "mean": 17.21
+  },
+  "alphabetical": {
+   "signals": 3522,
+   "admitted": 68,
+   "net_pct": 18.92,
+   "pf": 2.27,
+   "net_pnl": 19164.77,
+   "max_dd": 7006.26,
+   "expectancy": 281.8,
+   "end_nav": 118918.5
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ORIG_c10_2025": {
+  "variant": "ORIG",
+  "stop_mult": 2.0,
+  "cost_bps_side": 10.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    -8.28,
+    -4.88,
+    -5.69
+   ],
+   "min": -8.28,
+   "max": -4.88,
+   "mean": -6.28
+  },
+  "alphabetical": {
+   "signals": 3572,
+   "admitted": 89,
+   "net_pct": -8.28,
+   "pf": 0.72,
+   "net_pnl": -8470.3,
+   "max_dd": 19670.49,
+   "expectancy": -95.2,
+   "end_nav": 91715.28
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ORIG_c15_2025": {
+  "variant": "ORIG",
+  "stop_mult": 2.0,
+  "cost_bps_side": 15.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    -8.7,
+    -5.3,
+    -6.07
+   ],
+   "min": -8.7,
+   "max": -5.3,
+   "mean": -6.69
+  },
+  "alphabetical": {
+   "signals": 3572,
+   "admitted": 89,
+   "net_pct": -8.7,
+   "pf": 0.72,
+   "net_pnl": -8470.3,
+   "max_dd": 19912.92,
+   "expectancy": -95.2,
+   "end_nav": 91304.74
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ATR25_c10_2025": {
+  "variant": "ATR25",
+  "stop_mult": 2.5,
+  "cost_bps_side": 10.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    0.88,
+    -2.65,
+    -17.52
+   ],
+   "min": -17.52,
+   "max": 0.88,
+   "mean": -6.43
+  },
+  "alphabetical": {
+   "signals": 3459,
+   "admitted": 72,
+   "net_pct": 0.88,
+   "pf": 1.05,
+   "net_pnl": 1113.61,
+   "max_dd": 15243.26,
+   "expectancy": 15.5,
+   "end_nav": 100877.29
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ATR25_c15_2025": {
+  "variant": "ATR25",
+  "stop_mult": 2.5,
+  "cost_bps_side": 15.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    0.55,
+    -2.99,
+    -17.88
+   ],
+   "min": -17.88,
+   "max": 0.55,
+   "mean": -6.77
+  },
+  "alphabetical": {
+   "signals": 3459,
+   "admitted": 72,
+   "net_pct": 0.55,
+   "pf": 1.05,
+   "net_pnl": 1113.61,
+   "max_dd": 15345.44,
+   "expectancy": 15.5,
+   "end_nav": 100547.46
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ORIG_c10_2026YTD": {
+  "variant": "ORIG",
+  "stop_mult": 2.0,
+  "cost_bps_side": 10.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    26.95,
+    33.52,
+    35.35
+   ],
+   "min": 26.95,
+   "max": 35.35,
+   "mean": 31.94
+  },
+  "alphabetical": {
+   "signals": 3438,
+   "admitted": 57,
+   "net_pct": 26.95,
+   "pf": 3.0,
+   "net_pnl": 26917.3,
+   "max_dd": 8167.04,
+   "expectancy": 472.2,
+   "end_nav": 126952.51
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ORIG_c15_2026YTD": {
+  "variant": "ORIG",
+  "stop_mult": 2.0,
+  "cost_bps_side": 15.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    26.67,
+    33.29,
+    35.09
+   ],
+   "min": 26.67,
+   "max": 35.09,
+   "mean": 31.68
+  },
+  "alphabetical": {
+   "signals": 3438,
+   "admitted": 57,
+   "net_pct": 26.67,
+   "pf": 3.0,
+   "net_pnl": 26917.3,
+   "max_dd": 8339.4,
+   "expectancy": 472.2,
+   "end_nav": 126667.8
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ATR25_c10_2026YTD": {
+  "variant": "ATR25",
+  "stop_mult": 2.5,
+  "cost_bps_side": 10.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    32.29,
+    29.31,
+    31.83
+   ],
+   "min": 29.31,
+   "max": 32.29,
+   "mean": 31.14
+  },
+  "alphabetical": {
+   "signals": 3306,
+   "admitted": 48,
+   "net_pct": 32.29,
+   "pf": 4.23,
+   "net_pnl": 32257.85,
+   "max_dd": 8052.37,
+   "expectancy": 672.0,
+   "end_nav": 132287.08
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ },
+ "ATR25_c15_2026YTD": {
+  "variant": "ATR25",
+  "stop_mult": 2.5,
+  "cost_bps_side": 15.0,
+  "nav_pct_seeds": {
+   "nav_pct": [
+    32.04,
+    29.09,
+    31.59
+   ],
+   "min": 29.09,
+   "max": 32.04,
+   "mean": 30.91
+  },
+  "alphabetical": {
+   "signals": 3306,
+   "admitted": 48,
+   "net_pct": 32.04,
+   "pf": 4.23,
+   "net_pnl": 32257.85,
+   "max_dd": 8147.2,
+   "expectancy": 672.0,
+   "end_nav": 132044.82
+  },
+  "top3_winners_pct_of_gains": null,
+  "n_winners": 0,
+  "n_closed": 0
+ }
+}
