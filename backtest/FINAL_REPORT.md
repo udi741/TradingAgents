@@ -50,3 +50,20 @@ value under identical execution. Caveats: one regime, ~3 weeks, the
 set measures "names chosen for deep research" (discovery ranking + quota)
 not authored trade decisions; AI authored contracts were only evaluated
 on 6 names earlier (2 LONG, both small losses/open marks).
+
+### Improved historical dataset + evaluation (mission6.json)
+
+**Dataset:** free S&P500 constituents + `Date added` → per-day eligibility
+= index-listed since add-date. Removes "recently added member" hindsight;
+index REMOVALS unpriced → residual survivorship (documented; direction:
+slightly overstates LONGs). Manifest: mission6.py, 503 priced names.
+
+| Period | LONG | SHORT | SPY |
+|---|---|---|---|
+| 2024 | -2.6% (81t, PF 0.80) | -7.8% (72t, PF 0.85) | +25.6% |
+| 2025 | -5.3% (82t, PF 0.75) | -7.7% (79t, PF 0.64) | +18.0% |
+| 2026YTD | +15.5% (44t, PF 3.5) | -12.2% (59t, PF 0.90) | +13.2% |
+
+vs the survivor-biased 1824-universe (LONG +11.1/-8.3/+27.0): better
+universe accounting shrank the apparent edge again — the "alpha" was
+largely universe selection. SHORT loses in all regimes on BOTH universes.
