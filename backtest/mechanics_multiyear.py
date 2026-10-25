@@ -71,7 +71,7 @@ def universe(ev):
 
 
 def sim_period(df, spy_close, spy_sma, dates, direction, variant,
-               elig=None):
+               elig=None, stop_mult=2.0):
     """Walk a ticker's bars within [dates]; return trade dicts."""
     hi60 = df["Close"].rolling(60).max()
     lo60 = df["Close"].rolling(60).min()
@@ -113,8 +113,9 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
                 i += 1
                 continue
             # GAPFILT check (on the would-be fill day)
-            if variant == "GAPFILT":
-                if (ret.iloc[max(0, i - 4):i + 1] >= 0.08).any():
+            if variant in ("GAPFILT", "SPYGATE"):
+                if variant == "GAPFILT" and \
+                        (ret.iloc[max(0, i - 4):i + 1] >= 0.08).any():
                     i += 1
                     continue
                 sp = spy_close.get(s)
@@ -122,14 +123,14 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
                     i += 1
                     continue
             fill = zt
-            stop = fill - 2 * a
+            stop = fill - stop_mult * a
         else:
             zb = ref * 1.03
             if h < zb:
                 i += 1
                 continue
             fill = zb
-            stop = fill + 2 * a
+            stop = fill + stop_mult * a
         # manage
         sh = int(NOTIONAL / fill)
         if sh < 1:

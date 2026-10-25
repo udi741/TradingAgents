@@ -7,3 +7,5 @@
 | 2 | mirrored retest SHORT profitable | same | e67477d8 | done | -8.7/-5.9/-6.8 all periods | REJECTED |
 | 3 | deep-rank top10 > ranks11-28 | Oct pools | e67477d8 | done | top10 -3,691 vs rest -1,749 | rank not protective |
 | 4 | pending | — | — | — | — | — |
+| 5 | H2 SPY>20SMA entry gate improves | 1824 elig (survivor-biased) | HEAD | done | +5.8/-7.1/+33.4 vs base +11.1/-8.3/+27.0 | REJECTED (no consistent gain) |
+| 6 | H3 2.5·ATR stop vs 2.0·ATR | same | HEAD | done | **+19.2/+0.9/+32.3** PF 2.27/1.05/4.23 all 3 periods vs base | RETAINED-H3 (candidate; survivor-biased) |
