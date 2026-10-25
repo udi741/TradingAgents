@@ -146,3 +146,37 @@ other periods. Verdict: **REJECTED** (min/mean wins 1/3 each).
 Cumulative evidence: this short rule family (breakdown + retest entry,
 close_above_stop exit) is rejected under every tested configuration —
 ungated on two universes and downtrend-gated. Stop iterating it.
+
+### PROFIT exit variant + two accounting fixes (mission10.json)
+
+Pre-registered: trim 50% at first close >= +8%, trail remainder at
+peak_close-8pp; entry/stop identical to ATR25 (2.5xATR), LONG, 10bps.
+
+Two bugs found and fixed BEFORE trusting results:
+1. `sim_period` recorded `shares` AFTER the management loop — under
+   PROFIT trims the recorded size was the remainder, so portfolio_run
+   debited cost on N shares but credited exits on all legs -> phantom
+   free shares inflated NAV ~3-10x. Per-trade `pnl` was always correct
+   (computed from legs); only the NAV path and `ret_pct` denominator
+   were wrong. Fix: record original size `sh0`; `ret_pct` uses `sh0`.
+2. PROFIT trim on a 1-share position sold the only share and left a
+   zero-size trailing position -> ZeroDivisionError. Fix: trim only
+   when shares > 1.
+
+Corrected results (stable seeds, means over {a,1,7,13,42}):
+
+| Period | ATR25 mean | PROFIT mean | ATR25 range | PROFIT range |
+|---|---|---|---|---|
+| 2024 | +4.5 | +6.8 | [+1.5,+8.2] | [+4.6,+9.1] |
+| 2025 | -7.3 | -1.7 | [-10.1,-4.7] | [-3.6,-0.3] |
+| 2026YTD | +16.8 | +8.6 | [+10.4,+24.6] | [+3.6,+17.5] |
+
+Verdict: **RETAINED** (mean+min better in 2/3 periods). Interpretation:
+PROFIT is the DEFENSIVE profile — better in chop (2025) and flat years
+(2024), costs ~8pp in trending 2026 by capping winners. Compounded
+across all three periods the two profiles are roughly equal (~+13-14%)
+but PROFIT has much lower dispersion. The strategy's excess return
+over SPY comes from holding winners in trends; every defence that
+helps the losing regime taxes the winning one. Best combined profile
+so far: LONG-only, 2.5xATR stop; choose PROFIT vs plain by regime
+tolerance, not by a universal winner.

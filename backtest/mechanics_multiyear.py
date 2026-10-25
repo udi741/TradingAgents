@@ -149,6 +149,8 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
             i += 1
             continue
         watch_until, arm_day = -1, -1  # consume the armed signal
+        sh0 = sh  # original size; sh mutates under PROFIT trims and the
+        # recorded "shares" must match total leg shares for cash accounting
         legs, peak, state = [], fill, "OPEN"
         j = i
         while j < len(df) and j - i <= MAX_HOLD:
@@ -164,7 +166,8 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
                         nxp = float(df.iloc[j + 1]["Open"]) \
                             if j + 1 < len(df) else bc
                         legs.append((sh, nxp, "close_below_stop", str(df.iloc[j + 1].name.date()) if j + 1 < len(df) else sj)); state = "DONE"; break
-                    if variant == "PROFIT" and bc >= fill * 1.08:
+                    if variant == "PROFIT" and sh > 1 \
+                            and bc >= fill * 1.08:
                         half = sh // 2 or 1
                         nxp = float(df.iloc[j + 1]["Open"]) \
                             if j + 1 < len(df) else bc
@@ -196,15 +199,15 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
                       for s_, xp, *_ in legs) \
                 - sh * fill * 0.02 / 365 * held_days
         trades.append({"fill_date": s, "fill": round(fill, 2),
-                       "stop": round(stop, 2), "shares": sh,
+                       "stop": round(stop, 2), "shares": sh0,
                        "legs": [(a_, round(p_, 2), w, xd) for a_, p_, w, xd in legs],
                        "pnl": round(pnl, 2),
                        "ret_pct": round(sum(s_ * (xp - fill) for s_, xp, *_
-                                            in legs) / (trades and 1 or 1) /
-                                        (sh * fill) * 100, 2)
+                                            in legs) /
+                                        (sh0 * fill) * 100, 2)
                        if direction == "LONG" else
                        round(sum(s_ * (fill - xp) for s_, xp, *_ in legs)
-                             / (sh * fill) * 100, 2)})
+                             / (sh0 * fill) * 100, 2)})
         i = j + 1  # next signal only after exit (one position per ticker)
     return trades
 

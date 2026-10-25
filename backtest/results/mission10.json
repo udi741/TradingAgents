@@ -1,0 +1,102 @@
+{
+ "ATR25_2024": {
+  "nav_pct_by_seed": {
+   "None": 1.5,
+   "1": 4.9,
+   "7": 3.68,
+   "13": 8.16,
+   "42": 4.21
+  },
+  "seed_min": 1.5,
+  "seed_max": 8.16,
+  "seed_mean": 4.49,
+  "signals": 1207,
+  "admitted": 74,
+  "pf_alpha": 1.09,
+  "max_dd_alpha": 5107.01
+ },
+ "PROFIT_2024": {
+  "nav_pct_by_seed": {
+   "None": 6.89,
+   "1": 8.17,
+   "7": 5.44,
+   "13": 9.05,
+   "42": 4.63
+  },
+  "seed_min": 4.63,
+  "seed_max": 9.05,
+  "seed_mean": 6.84,
+  "signals": 1226,
+  "admitted": 79,
+  "pf_alpha": 1.51,
+  "max_dd_alpha": 4260.61
+ },
+ "ATR25_2025": {
+  "nav_pct_by_seed": {
+   "None": -4.7,
+   "1": -8.45,
+   "7": -8.12,
+   "13": -10.11,
+   "42": -4.99
+  },
+  "seed_min": -10.11,
+  "seed_max": -4.7,
+  "seed_mean": -7.27,
+  "signals": 1041,
+  "admitted": 74,
+  "pf_alpha": 0.75,
+  "max_dd_alpha": 12828.39
+ },
+ "PROFIT_2025": {
+  "nav_pct_by_seed": {
+   "None": -0.28,
+   "1": -3.57,
+   "7": -0.38,
+   "13": -1.51,
+   "42": -2.71
+  },
+  "seed_min": -3.57,
+  "seed_max": -0.28,
+  "seed_mean": -1.69,
+  "signals": 1069,
+  "admitted": 85,
+  "pf_alpha": 0.98,
+  "max_dd_alpha": 8116.03
+ },
+ "ATR25_2026YTD": {
+  "nav_pct_by_seed": {
+   "None": 16.66,
+   "1": 14.57,
+   "7": 17.89,
+   "13": 10.38,
+   "42": 24.64
+  },
+  "seed_min": 10.38,
+  "seed_max": 24.64,
+  "seed_mean": 16.83,
+  "signals": 933,
+  "admitted": 41,
+  "pf_alpha": 3.88,
+  "max_dd_alpha": 5873.66
+ },
+ "PROFIT_2026YTD": {
+  "nav_pct_by_seed": {
+   "None": 5.84,
+   "1": 3.56,
+   "7": 17.47,
+   "13": 10.87,
+   "42": 5.38
+  },
+  "seed_min": 3.56,
+  "seed_max": 17.47,
+  "seed_mean": 8.62,
+  "signals": 998,
+  "admitted": 61,
+  "pf_alpha": 1.56,
+  "max_dd_alpha": 4010.93
+ },
+ "_verdict": {
+  "mean_wins": 2,
+  "min_wins": 2
+ }
+}
