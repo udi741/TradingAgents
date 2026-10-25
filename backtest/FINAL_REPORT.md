@@ -125,3 +125,24 @@ slightly hurt 2024 — entries below the 200-SMA include early base
 breakouts that became big winners. Verdict: **REJECTED** as a
 standalone variant (frozen rule: mean better in only 1/3 periods).
 Regime-loss mitigation remains the open problem.
+
+### Downtrend-gated SHORT retest (mission9.json — 200SMA mirror gate)
+
+Pre-registered mirror of mission8: if anti-trend entries fail for
+longs, shorting names NOT in downtrends should also fail; gating fills
+to close < own 200-SMA should improve the rejected SHORT_ORIG. Both
+arms 2.0xATR, 10bps + 2%/yr borrow, stable seeds.
+
+| Period | SHORT_ORIG mean | SHORT_T200 mean | T200 range |
+|---|---|---|---|
+| 2024 | -11.8 | -16.0 | [-19.1,-14.4] |
+| 2025 | -10.5 | -9.2 | [-13.8,-4.9] |
+| 2026YTD | -9.8 | -10.3 | [-14.6,-4.9] |
+
+Gate rejects ~25-33% of signals. It made 2024 materially WORSE (the
+200-SMA gate admits only deeply-fallen names whose bounce-retests
+recover — exactly the names that mean-revert up) and did not fix the
+other periods. Verdict: **REJECTED** (min/mean wins 1/3 each).
+Cumulative evidence: this short rule family (breakdown + retest entry,
+close_above_stop exit) is rejected under every tested configuration —
+ungated on two universes and downtrend-gated. Stop iterating it.

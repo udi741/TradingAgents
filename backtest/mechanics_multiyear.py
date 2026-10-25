@@ -135,6 +135,12 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
             if h < zb:
                 i += 1
                 continue
+            # TREND200 mirror for shorts: only short names already in
+            # downtrends (close < own 200-SMA on the fill day)
+            if variant == "TREND200" and \
+                    not c < float(sma200.iloc[i]):
+                i += 1
+                continue
             fill = zb
             stop = fill + stop_mult * a
         # manage

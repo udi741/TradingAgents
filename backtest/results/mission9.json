@@ -1,0 +1,107 @@
+{
+ "SHORT_ORIG_2024": {
+  "nav_pct_by_seed": {
+   "None": -7.82,
+   "1": -15.71,
+   "7": -13.25,
+   "13": -12.04,
+   "42": -10.37
+  },
+  "seed_min": -15.71,
+  "seed_max": -7.82,
+  "seed_mean": -11.84,
+  "signals": 665,
+  "admitted": 72,
+  "pf_alpha": 0.85,
+  "max_dd_alpha": 15141.18
+ },
+ "SHORT_T200_2024": {
+  "nav_pct_by_seed": {
+   "None": -14.44,
+   "1": -19.13,
+   "7": -15.47,
+   "13": -14.95,
+   "42": -15.97
+  },
+  "seed_min": -19.13,
+  "seed_max": -14.44,
+  "seed_mean": -15.99,
+  "signals": 442,
+  "admitted": 82,
+  "pf_alpha": 0.5,
+  "max_dd_alpha": 17699.06
+ },
+ "SHORT_ORIG_2025": {
+  "nav_pct_by_seed": {
+   "None": -7.73,
+   "1": -13.71,
+   "7": -11.04,
+   "13": -9.82,
+   "42": -10.5
+  },
+  "seed_min": -13.71,
+  "seed_max": -7.73,
+  "seed_mean": -10.56,
+  "signals": 1011,
+  "admitted": 79,
+  "pf_alpha": 0.64,
+  "max_dd_alpha": 15469.95
+ },
+ "SHORT_T200_2025": {
+  "nav_pct_by_seed": {
+   "None": -8.45,
+   "1": -4.91,
+   "7": -13.75,
+   "13": -11.82,
+   "42": -7.26
+  },
+  "seed_min": -13.75,
+  "seed_max": -4.91,
+  "seed_mean": -9.24,
+  "signals": 807,
+  "admitted": 78,
+  "pf_alpha": 0.61,
+  "max_dd_alpha": 14199.54
+ },
+ "SHORT_ORIG_2026YTD": {
+  "nav_pct_by_seed": {
+   "None": -12.16,
+   "1": -8.2,
+   "7": -15.87,
+   "13": -5.39,
+   "42": -7.78
+  },
+  "seed_min": -15.87,
+  "seed_max": -5.39,
+  "seed_mean": -9.88,
+  "signals": 709,
+  "admitted": 59,
+  "pf_alpha": 0.9,
+  "max_dd_alpha": 16340.13
+ },
+ "SHORT_T200_2026YTD": {
+  "nav_pct_by_seed": {
+   "None": -11.36,
+   "1": -13.57,
+   "7": -14.57,
+   "13": -4.94,
+   "42": -7.09
+  },
+  "seed_min": -14.57,
+  "seed_max": -4.94,
+  "seed_mean": -10.31,
+  "signals": 548,
+  "admitted": 60,
+  "pf_alpha": 0.89,
+  "max_dd_alpha": 13199.25
+ },
+ "_verdict": {
+  "min_wins": 1,
+  "mean_wins": 1,
+  "gate_rejects": {
+   "2024": 223,
+   "2025": 204,
+   "2026YTD": 161
+  }
+ }
+}
