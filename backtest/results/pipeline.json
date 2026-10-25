@@ -1,0 +1,1325 @@
+{
+ "counts": {
+  "researched": 224,
+  "valid_long": 12,
+  "valid_short": 4,
+  "no_trade": 208
+ },
+ "blockers": {
+  "MISSING_ENTRY": 158,
+  "MISSING_TARGET": 100,
+  "MISSING_SIZE_FRAC": 89,
+  "MISSING_STOP": 27,
+  "STOP_NOT_ABOVE_ENTRY": 2,
+  "MISSING_HORIZON": 11,
+  "TARGET_NOT_ABOVE_ENTRY": 6
+ },
+ "long_stats": {
+  "n": 9,
+  "wins": 5,
+  "win_rate": 0.556,
+  "gross_pnl": 61.1,
+  "avg_win": 113.59,
+  "avg_loss": -126.72,
+  "expectancy": 6.79,
+  "profit_factor": 1.12
+ },
+ "short_stats": {
+  "n": 2,
+  "wins": 2,
+  "win_rate": 1.0,
+  "gross_pnl": 502.06,
+  "avg_win": 251.03,
+  "avg_loss": null,
+  "expectancy": 251.03,
+  "profit_factor": null
+ },
+ "long_trades": [
+  {
+   "ticker": "ACN",
+   "session": "2026-10-01",
+   "status": "CLOSED",
+   "direction": "LONG",
+   "entry_date": "2026-10-02",
+   "entry_px": 205.0,
+   "exit_date": "2026-10-06",
+   "exit_px": 193.8747,
+   "exit_reason": "close_below_next_open",
+   "shares": 8,
+   "stop": 193.5,
+   "stop_type": "close_below",
+   "target": 250.0,
+   "pnl": -92.19,
+   "borrow_cost": 0.0,
+   "ret_pct": -5.43,
+   "mfe_pct": 3.23,
+   "mae_pct": -6.23,
+   "days_held": 4,
+   "target_hit": false
+  },
+  {
+   "ticker": "PBF",
+   "session": "2026-10-01",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-02",
+   "entry_px": 80.0,
+   "exit_date": "2026-10-23",
+   "exit_px": 76.17,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 31,
+   "stop": 74.5,
+   "stop_type": "close_below",
+   "target": 90.0,
+   "pnl": -123.57,
+   "borrow_cost": 0.0,
+   "ret_pct": -4.79,
+   "mfe_pct": 15.57,
+   "mae_pct": -5.44,
+   "days_held": 21,
+   "target_hit": true
+  },
+  {
+   "ticker": "IOVA",
+   "session": "2026-10-13",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-16",
+   "entry_px": 13.7,
+   "exit_date": "2026-10-23",
+   "exit_px": 14.09,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 182,
+   "stop": 12.4,
+   "stop_type": "close_below",
+   "target": 17.5,
+   "pnl": 65.92,
+   "borrow_cost": 0.0,
+   "ret_pct": 2.85,
+   "mfe_pct": 12.19,
+   "mae_pct": -1.31,
+   "days_held": 7,
+   "target_hit": false
+  },
+  {
+   "ticker": "ANF",
+   "session": "2026-10-19",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-21",
+   "entry_px": 161.06,
+   "exit_date": "2026-10-23",
+   "exit_px": 155.82,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 31,
+   "stop": 144.5,
+   "stop_type": "close_below",
+   "target": 185.0,
+   "pnl": -172.26,
+   "borrow_cost": 0.0,
+   "ret_pct": -3.25,
+   "mfe_pct": 0.94,
+   "mae_pct": -5.17,
+   "days_held": 2,
+   "target_hit": false
+  },
+  {
+   "ticker": "HTFL",
+   "session": "2026-10-20",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-22",
+   "entry_px": 55.01,
+   "exit_date": "2026-10-23",
+   "exit_px": 56.71,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 29,
+   "stop": 47.75,
+   "stop_type": "close_below",
+   "target": 64.0,
+   "pnl": 46.06,
+   "borrow_cost": 0.0,
+   "ret_pct": 3.09,
+   "mfe_pct": 4.96,
+   "mae_pct": -1.02,
+   "days_held": 1,
+   "target_hit": false
+  },
+  {
+   "ticker": "APPN",
+   "session": "2026-10-21",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-23",
+   "entry_px": 50.66,
+   "exit_date": "2026-10-23",
+   "exit_px": 52.35,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 74,
+   "stop": 41.75,
+   "stop_type": "close_below",
+   "target": 50.0,
+   "pnl": 117.44,
+   "borrow_cost": 0.0,
+   "ret_pct": 3.34,
+   "mfe_pct": 6.83,
+   "mae_pct": 0.0,
+   "days_held": 0,
+   "target_hit": true
+  },
+  {
+   "ticker": "MGNI",
+   "session": "2026-10-12",
+   "status": "CLOSED",
+   "direction": "LONG",
+   "entry_date": "2026-10-14",
+   "entry_px": 24.8,
+   "exit_date": "2026-10-15",
+   "exit_px": 23.66,
+   "exit_reason": "close_below_next_open",
+   "shares": 100,
+   "stop": 24.08,
+   "stop_type": "close_below",
+   "target": 28.0,
+   "pnl": -118.85,
+   "borrow_cost": 0.0,
+   "ret_pct": -4.6,
+   "mfe_pct": 1.37,
+   "mae_pct": -4.72,
+   "days_held": 1,
+   "target_hit": false
+  },
+  {
+   "ticker": "SEZL",
+   "session": "2026-10-12",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-13",
+   "entry_px": 127.0,
+   "exit_date": "2026-10-23",
+   "exit_px": 132.12,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 19,
+   "stop": 117.0,
+   "stop_type": "close_below",
+   "target": 160.0,
+   "pnl": 92.36,
+   "borrow_cost": 0.0,
+   "ret_pct": 4.03,
+   "mfe_pct": 11.02,
+   "mae_pct": -6.08,
+   "days_held": 10,
+   "target_hit": false
+  },
+  {
+   "ticker": "TEAM",
+   "session": "2026-10-12",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-14",
+   "entry_px": 206.66,
+   "exit_date": "2026-10-23",
+   "exit_px": 227.61,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 12,
+   "stop": 190.0,
+   "stop_type": "close_below",
+   "target": 225.0,
+   "pnl": 246.19,
+   "borrow_cost": 0.0,
+   "ret_pct": 10.14,
+   "mfe_pct": 11.27,
+   "mae_pct": -2.47,
+   "days_held": 9,
+   "target_hit": true
+  }
+ ],
+ "short_trades": [
+  {
+   "ticker": "PCVX",
+   "session": "2026-10-07",
+   "status": "OPEN",
+   "direction": "SHORT",
+   "entry_date": "2026-10-08",
+   "entry_px": 64.0,
+   "exit_date": "2026-10-23",
+   "exit_px": 60.43,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 39,
+   "stop": 73.8,
+   "stop_type": "close_below",
+   "target": 59.5,
+   "pnl": 132.33,
+   "borrow_cost": 2.05,
+   "ret_pct": 5.58,
+   "mfe_pct": 6.19,
+   "mae_pct": -12.2,
+   "days_held": 15,
+   "target_hit": true
+  },
+  {
+   "ticker": "TWST",
+   "session": "2026-10-07",
+   "status": "OPEN",
+   "direction": "SHORT",
+   "entry_date": "2026-10-09",
+   "entry_px": 165.0,
+   "exit_date": "2026-10-23",
+   "exit_px": 139.92,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 15,
+   "stop": 176.5,
+   "stop_type": "intraday_stop",
+   "target": 141.0,
+   "pnl": 369.73,
+   "borrow_cost": 1.9,
+   "ret_pct": 15.2,
+   "mfe_pct": 26.26,
+   "mae_pct": -2.33,
+   "days_held": 14,
+   "target_hit": true
+  }
+ ],
+ "no_trade_reasons": [
+  {
+   "t": "APPS",
+   "sess": "2026-10-01",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "AVTR",
+   "sess": "2026-10-01",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "BMNR",
+   "sess": "2026-10-01",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-01",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-01",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-01",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-01",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "SDGR",
+   "sess": "2026-10-01",
+   "reason": "STOP_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "ASST",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_HORIZON"
+  },
+  {
+   "t": "AXGN",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET"
+  },
+  {
+   "t": "HHH",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "KOD",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PAYC",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "PGEN",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "SYNA",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TWST",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TXG",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "XNCR",
+   "sess": "2026-10-02",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "ASST",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PGEN",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "PTC",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "SDGR",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-07",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "AMPL",
+   "sess": "2026-10-09",
+   "reason": "TARGET_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "HAE",
+   "sess": "2026-10-09",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "P",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PENG",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET"
+  },
+  {
+   "t": "PTC",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "SDGR",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "FRO",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET"
+  },
+  {
+   "t": "HAE",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-12",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "P",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "PENG",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "PGEN",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "AMPL",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-13",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "HAE",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "HPE",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "P",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PD",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "PENG",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-13",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "APPN",
+   "sess": "2026-10-14",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "CAI",
+   "sess": "2026-10-14",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_HORIZON;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "HAE",
+   "sess": "2026-10-14",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "HTFL",
+   "sess": "2026-10-14",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-14",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-14",
+   "reason": "MISSING_STOP;MISSING_TARGET"
+  },
+  {
+   "t": "PD",
+   "sess": "2026-10-14",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "PRCH",
+   "sess": "2026-10-14",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-14",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "CCC",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_HORIZON;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "FIGS",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "HTFL",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_HORIZON;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MGNI",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-15",
+   "reason": "MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PD",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "RNG",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "VSTM",
+   "sess": "2026-10-15",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "ANF",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "FIGS",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "PD",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "PSNL",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_HORIZON;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "RNG",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET"
+  },
+  {
+   "t": "VEEV",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "ZBRA",
+   "sess": "2026-10-16",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-19",
+   "reason": "MISSING_ENTRY;MISSING_STOP"
+  },
+  {
+   "t": "ESTC",
+   "sess": "2026-10-19",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "FIGS",
+   "sess": "2026-10-19",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "HTFL",
+   "sess": "2026-10-19",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-19",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-19",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PD",
+   "sess": "2026-10-19",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PSNL",
+   "sess": "2026-10-19",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-19",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "APPN",
+   "sess": "2026-10-20",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "BRZE",
+   "sess": "2026-10-20",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "FIGS",
+   "sess": "2026-10-20",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-20",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-20",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PAYC",
+   "sess": "2026-10-20",
+   "reason": "TARGET_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-20",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "VEEV",
+   "sess": "2026-10-20",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "VSTM",
+   "sess": "2026-10-20",
+   "reason": "TARGET_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "BRZE",
+   "sess": "2026-10-21",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-21",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "HTFL",
+   "sess": "2026-10-21",
+   "reason": "MISSING_STOP"
+  },
+  {
+   "t": "INSW",
+   "sess": "2026-10-21",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-21",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-21",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "RGLD",
+   "sess": "2026-10-21",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-21",
+   "reason": "STOP_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "VSTM",
+   "sess": "2026-10-21",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "APPN",
+   "sess": "2026-10-22",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "BRZE",
+   "sess": "2026-10-22",
+   "reason": "MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "GRAL",
+   "sess": "2026-10-22",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "HTFL",
+   "sess": "2026-10-22",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-22",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-22",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "NTSK",
+   "sess": "2026-10-22",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-22",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "VLO",
+   "sess": "2026-10-22",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "AMPL",
+   "sess": "2026-10-23",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "APPN",
+   "sess": "2026-10-23",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "BRZE",
+   "sess": "2026-10-23",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "HTFL",
+   "sess": "2026-10-23",
+   "reason": "MISSING_STOP"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-23",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-23",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "NTSK",
+   "sess": "2026-10-23",
+   "reason": "TARGET_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-23",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "VLO",
+   "sess": "2026-10-23",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "ABCL",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "AMPL",
+   "sess": "2026-10-07",
+   "reason": "MISSING_HORIZON;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "ASST",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "CTVA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "ETON",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "FLY",
+   "sess": "2026-10-07",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "HAE",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "IQV",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "MANH",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "NKTR",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_HORIZON;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "NTAP",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "OPCH",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PENG",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "PGEN",
+   "sess": "2026-10-07",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "PTC",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_STOP"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "QUBT",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "RXO",
+   "sess": "2026-10-07",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "SDGR",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "SYNA",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "UMAC",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "XNCR",
+   "sess": "2026-10-07",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "AMPL",
+   "sess": "2026-10-09",
+   "reason": "TARGET_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "BIO",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "ETON",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "HAE",
+   "sess": "2026-10-09",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "HALO",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "HESM",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "IQV",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "KOD",
+   "sess": "2026-10-09",
+   "reason": "MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "OPCH",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "P",
+   "sess": "2026-10-09",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PCVX",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "PENG",
+   "sess": "2026-10-09",
+   "reason": "MISSING_STOP;MISSING_TARGET"
+  },
+  {
+   "t": "PGEN",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "PTC",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "QUBT",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "RXO",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "SDGR",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TEAM",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TWST",
+   "sess": "2026-10-09",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "TXG",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_HORIZON"
+  },
+  {
+   "t": "UMAC",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_STOP;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "VST",
+   "sess": "2026-10-09",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "XNCR",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "XP",
+   "sess": "2026-10-09",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "CDNA",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "ECO",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "ETON",
+   "sess": "2026-10-12",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "FLY",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "FRO",
+   "sess": "2026-10-12",
+   "reason": "MISSING_STOP;MISSING_TARGET"
+  },
+  {
+   "t": "HAE",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "HPE",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "IESC",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "IOVA",
+   "sess": "2026-10-12",
+   "reason": "MISSING_TARGET"
+  },
+  {
+   "t": "KOD",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "LW",
+   "sess": "2026-10-12",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "MRNA",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY"
+  },
+  {
+   "t": "OPCH",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_HORIZON"
+  },
+  {
+   "t": "P",
+   "sess": "2026-10-12",
+   "reason": "MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PENG",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "PGEN",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "QMCO",
+   "sess": "2026-10-12",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "QUBT",
+   "sess": "2026-10-12",
+   "reason": "MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "REPL",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "STZ",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "UMAC",
+   "sess": "2026-10-12",
+   "reason": "TARGET_NOT_ABOVE_ENTRY"
+  },
+  {
+   "t": "WDAY",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET"
+  },
+  {
+   "t": "XNCR",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_HORIZON;MISSING_SIZE_FRAC"
+  },
+  {
+   "t": "XP",
+   "sess": "2026-10-12",
+   "reason": "MISSING_ENTRY;MISSING_TARGET;MISSING_HORIZON;MISSING_SIZE_FRAC"
+  }
+ ]
+}

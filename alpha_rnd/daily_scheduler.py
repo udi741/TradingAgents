@@ -43,7 +43,12 @@ BRIDGE_MODELS_URL = "http://127.0.0.1:8765/v1/models"
 # The accepted config lives in that unit; schedulers only consume :8765.
 BRIDGE_ACTIVITY_WINDOW_S = 900  # busy if log touched within 15 min
 
-DEEP_QUOTA = 10
+# Research budget: candidates sent to deep analysis per session.
+# ALPHA_RESEARCH_BUDGET may raise it experimentally up to ~30; production
+# default stays 10. Spending is capped because each candidate is one
+# bounded TA pipeline run (~$1-3); the cap keeps worst-case ≈ $90/session.
+DEEP_QUOTA = min(max(int(os.environ.get("ALPHA_RESEARCH_BUDGET", "10")), 1),
+                 30)
 PY = sys.executable
 # Per-stage subprocess bounds. The same numbers bound staleness: a run whose
 # last durable progress is older than its stage timeout + slack is STALLED.
