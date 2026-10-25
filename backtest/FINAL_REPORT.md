@@ -53,10 +53,12 @@ on 6 names earlier (2 LONG, both small losses/open marks).
 
 ### Improved historical dataset + evaluation (mission6.json)
 
-**Dataset:** free S&P500 constituents + `Date added` → per-day eligibility
-= index-listed since add-date. Removes "recently added member" hindsight;
-index REMOVALS unpriced → residual survivorship (documented; direction:
-slightly overstates LONGs). Manifest: mission6.py, 503 priced names.
+**Dataset:** CURRENT S&P500 constituents (snapshot) + `Date added`
+eligibility gate. This is NOT a complete point-in-time universe:
+constituents removed before the snapshot are entirely absent, so
+survivorship bias REMAINS (the added-later bias is removed; the
+removed-member bias is not). Removed members do NOT remain eligible —
+they were never present in the source data. 503 priced names.
 
 | Period | LONG | SHORT | SPY |
 |---|---|---|---|
@@ -64,6 +66,12 @@ slightly overstates LONGs). Manifest: mission6.py, 503 priced names.
 | 2025 | -5.3% (82t, PF 0.75) | -7.7% (79t, PF 0.64) | +18.0% |
 | 2026YTD | +15.5% (44t, PF 3.5) | -12.2% (59t, PF 0.90) | +13.2% |
 
-vs the survivor-biased 1824-universe (LONG +11.1/-8.3/+27.0): better
-universe accounting shrank the apparent edge again — the "alpha" was
-largely universe selection. SHORT loses in all regimes on BOTH universes.
+vs the survivor-biased 1824-universe (LONG +11.1/-8.3/+27.0): returns
+shrank, but the universes differ in size, sector mix and stock
+characteristics — the delta cannot be attributed to survivorship alone.
+The mechanical retest-with-stop SHORT rule lost in all three periods
+under both universe constructions (3 periods x 2 overlapping universes);
+this rejects THIS rule, not the possibility that some short strategy
+could work elsewhere. 2026YTD LONG +15.5% vs SPY +13.2% is a modest
+excess on differing exposure (partly-invested portfolio, not
+benchmark-equivalent).
