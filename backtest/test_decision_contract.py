@@ -37,7 +37,7 @@ class T(unittest.TestCase):
         self.assertIn("NO_TRADE_WITHOUT_REASON",
                       dc.validate({"direction": "NO_TRADE"}))
     def test_missing_terms_rejected(self):
-        for miss in ("stop", "target", "entry", "size_frac"):
+        for miss in ("stop", "target", "entry"):
             c = base(**{miss: None})
             self.assertTrue(dc.validate(c), miss)
     def test_synthetic_short_authored(self):

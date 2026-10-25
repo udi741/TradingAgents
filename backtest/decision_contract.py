@@ -36,50 +36,9 @@ def _zone(v):
 
 
 def validate(c: dict) -> list[str]:
-    """Return rejection reasons ([] = valid). NO_TRADE needs only a
-    reason; everything else validated fully."""
-    if c.get("direction") == "NO_TRADE":
-        return [] if c.get("reason") else ["NO_TRADE_WITHOUT_REASON"]
-    errs = [f"MISSING_{k.upper()}" for k in REQUIRED if c.get(k) is None]
-    if errs:
-        return errs
-    d = c["direction"]
-    if d not in ("LONG", "SHORT"):
-        return ["BAD_DIRECTION"]
-    e = c["entry"]
-    if e.get("type") not in ENTRY_TYPES:
-        return ["BAD_ENTRY_TYPE"]
-    zone, lvl = _zone(e.get("zone")), _f(e.get("level"))
-    if not zone and not lvl:
-        return ["NO_ENTRY_PRICE"]
-    ref = zone[1] if zone else lvl  # LONG fill ref = zone top
-    stop, tgt = _f(c.get("stop")), _f(c.get("target"))
-    if not stop:
-        return ["BAD_STOP"]
-    if not tgt:
-        return ["BAD_TARGET"]
-    if d == "LONG":
-        if stop >= ref:
-            return ["STOP_NOT_BELOW_ENTRY"]   # LONG geometry
-        if tgt <= ref:
-            return ["TARGET_NOT_ABOVE_ENTRY"]
-        rr = (tgt - ref) / (ref - stop)
-    else:
-        ref = zone[0] if zone else lvl  # SHORT fill ref = zone bottom
-        if stop <= ref:
-            return ["STOP_NOT_ABOVE_ENTRY"]   # SHORT geometry
-        if tgt >= ref:
-            return ["TARGET_NOT_BELOW_ENTRY"]
-        rr = (ref - tgt) / (stop - ref)
-        if not c.get("paper_only", True):
-            return ["SHORT_MUST_BE_PAPER_ONLY"]
-    sf = c.get("size_frac")
-    if not (isinstance(sf, (int, float)) and 0 < sf <= 1):
-        return ["BAD_SIZE_FRAC"]
-    c["reward_risk"] = round(rr, 3)
-    if rr <= 0:
-        return ["NON_POSITIVE_RR"]
-    return []
+    """Delegate to the canonical validator in alpha_rnd.decision."""
+    from alpha_rnd.decision import validate as _v
+    return _v(c)
 
 
 def author(intent: dict, signal: str | None, is_short: bool,
@@ -89,7 +48,8 @@ def author(intent: dict, signal: str | None, is_short: bool,
     p = intent.get("params") or {}
     entry = None
     for k in ("zone", "entry_zone", "zone1", "pb_zone", "retest_zone",
-              "reentry_zone", "probe_zone"):
+              "reentry_zone", "probe_zone", "primary_retest_zone",
+              "deeper_entry_zone", "listed_entry_zone"):
         z = _zone(p.get(k))
         if z:
             entry = {"type": "limit_zone", "zone": z,
@@ -101,7 +61,7 @@ def author(intent: dict, signal: str | None, is_short: bool,
                  "activation": "high bounces into zone"}
     if entry is None:
         for k in ("reclaim", "bo_level", "alt_level", "entry",
-                  "entry_price"):
+                  "entry_price", "listed_entry", "resting_entry"):
             lv = _f(p.get(k))
             if lv:
                 entry = {"type": "close_above" if not is_short else

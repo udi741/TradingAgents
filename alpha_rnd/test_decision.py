@@ -41,11 +41,18 @@ class T(unittest.TestCase):
         self.assertEqual(c["direction"], "NO_TRADE")
         self.assertIn("STOP_NOT_ABOVE_ENTRY", c["reason"])
 
-    def test_missing_terms_no_trade(self):
+    def test_missing_sizing_gets_computed_size(self):
+        # sizing is the risk engine's job: missing AI size is NOT a
+        # NO_TRADE — permissible frac is derived from stop distance
         bad = dict(EA_LONG, sizing={})
         c = dec.from_economic_authority(bad, "s", "X")
+        self.assertEqual(c["direction"], "LONG")
+        self.assertGreater(c["permissible_size_frac"], 0)
+    def test_missing_terms_no_trade(self):
+        bad = dict(EA_LONG, stop={"type": "close_below", "level": None})
+        c = dec.from_economic_authority(bad, "s", "X")
         self.assertEqual(c["direction"], "NO_TRADE")
-        self.assertIn("MISSING_", c["reason"])
+        self.assertIn("MISSING_STOP", c["reason"])
 
     def test_from_intent_prefers_contract(self):
         i = {"ticker": "X", "economic_authority_resolved": EA_LONG}

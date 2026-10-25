@@ -54,3 +54,28 @@ Branch `exp/decision-contract` (`TradingAgents-contract`, origin/main
    `_machine_executable`.
 3. SHORT path is data-model only — no monitor/watch semantics exist for
    it (paper sim objects only).
+
+## Real-model eval (run, bounded: 1 call, 189s, est. ≈$1-2 ≤ $5 cap)
+
+Six saved artifacts re-translated with the new schema (IOVA/PCVX/ABCL had
+no case_artifacts at those dates; batch = ACN, AMPL, ANF, CDNA, IOVA, TWST).
+Raw outputs: `results/eval_model/raw_intents.json`.
+
+| Ticker | Signal | AI-authored | Validated | Terms | Paper sim |
+|---|---|---|---|---|---|
+| ACN | Overweight | **LONG** | LONG | zone[203,205] stop193.5 tgt250 sz.178 rr3.9 | filled 205→193.87, **-46** |
+| ANF | Buy | **LONG** | LONG* | zone[153,158] stop144.5 tgt185 sz.117 rr2.0 | filled 158, open **-7** |
+| AMPL | Sell | NO_TRADE | NO_TRADE | "zero exposure; no complete short plan" | — |
+| CDNA | Sell | NO_TRADE | NO_TRADE | "avoid entry ≠ short; no bear plan" | — |
+| IOVA | Sell | NO_TRADE | NO_TRADE | "zero exposure pre-binary; no short plan" | — |
+| TWST | Underweight | NO_TRADE | NO_TRADE | "reduce existing long, not a short" | — |
+
+\*ANF required adapter keys `listed_entry`/`primary_retest_zone` (stated
+levels the parser missed — key list extended, validation unchanged).
+
+Findings: the model correctly refuses to fabricate — all four Sell/
+Underweight cases are explicit NO_TRADEs with sound reasons (Sell ≠ short).
+2 valid LONG contracts authored; both filled in causal paper sim (-46, -7
+open — retrospective, not prospective alpha). No valid SHORT was authored
+because no source text contained a genuine short plan — honest, not a gap.
+Sizing now computed deterministically (1% risk budget / stop distance).

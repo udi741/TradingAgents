@@ -1,0 +1,116 @@
+{
+ "ACN": {
+  "dir": "LONG",
+  "ai": {
+   "direction": "LONG",
+   "no_trade_reason": null
+  },
+  "entry": {
+   "type": "limit_zone",
+   "zone": [
+    203.0,
+    205.0
+   ],
+   "activation": "low touches zone top"
+  },
+  "stop": 193.5,
+  "tgt": 250,
+  "rr": 3.913,
+  "sz": 0.1783,
+  "sim": {
+   "ticker": "ACN",
+   "session": "2026-10-01",
+   "status": "CLOSED",
+   "direction": "LONG",
+   "entry_date": "2026-10-02",
+   "entry_px": 205.0,
+   "exit_date": "2026-10-06",
+   "exit_px": 193.8747,
+   "exit_reason": "close_below_next_open",
+   "shares": 4,
+   "stop": 193.5,
+   "stop_type": "close_below",
+   "target": 250.0,
+   "pnl": -46.1,
+   "borrow_cost": 0.0,
+   "ret_pct": -5.43,
+   "mfe_pct": 3.23,
+   "mae_pct": -6.23,
+   "days_held": 4,
+   "target_hit": false
+  }
+ },
+ "AMPL": {
+  "dir": "NO_TRADE",
+  "reason": "MISSING_ENTRY",
+  "ai": {
+   "direction": "NO_TRADE",
+   "no_trade_reason": "The report directs zero current exposure; the bear branch is conditional but lacks a complete short entry, stop-above-entry, and cover objective."
+  }
+ },
+ "ANF": {
+  "dir": "LONG",
+  "ai": {
+   "direction": "LONG",
+   "no_trade_reason": null
+  },
+  "entry": {
+   "type": "limit_zone",
+   "zone": [
+    153.0,
+    158.0
+   ],
+   "activation": "low touches zone top"
+  },
+  "stop": 144.5,
+  "tgt": 185,
+  "rr": 2.0,
+  "sz": 0.117,
+  "sim": {
+   "ticker": "ANF",
+   "session": "2026-10-19",
+   "status": "OPEN",
+   "direction": "LONG",
+   "entry_date": "2026-10-23",
+   "entry_px": 158.0,
+   "exit_date": "2026-10-23",
+   "exit_px": 155.82,
+   "exit_reason": "OPEN_MARK_END_OF_DATA",
+   "shares": 3,
+   "stop": 144.5,
+   "stop_type": "close_below",
+   "target": 185.0,
+   "pnl": -7.48,
+   "borrow_cost": 0.0,
+   "ret_pct": -1.38,
+   "mfe_pct": 1.85,
+   "mae_pct": -3.34,
+   "days_held": 0,
+   "target_hit": false
+  }
+ },
+ "CDNA": {
+  "dir": "NO_TRADE",
+  "reason": "MISSING_ENTRY;MISSING_TARGET",
+  "ai": {
+   "direction": "NO_TRADE",
+   "no_trade_reason": "The Sell explicitly means avoid entry at 70.74 rather than short; no long entry is active until a stated pullback or breakout trigger fires."
+  }
+ },
+ "IOVA": {
+  "dir": "NO_TRADE",
+  "reason": "MISSING_ENTRY;MISSING_TARGET",
+  "ai": {
+   "direction": "NO_TRADE",
+   "no_trade_reason": "The report mandates zero exposure ahead of the binary readout; it provides conditional long re-entry rules but no bearish short plan."
+  }
+ },
+ "TWST": {
+  "dir": "NO_TRADE",
+  "reason": "MISSING_ENTRY;MISSING_TARGET",
+  "ai": {
+   "direction": "NO_TRADE",
+   "no_trade_reason": "The instruction is to reduce an existing long position, not to enter a short; no short entry, stop above entry, or cover objective is stated."
+  }
+ }
+}

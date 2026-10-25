@@ -16,7 +16,7 @@ ENTRY_TYPES = {"limit_zone", "limit_level", "close_above", "close_below",
 SHORT_BORROW_BPS_PER_DAY = 0.02 / 365  # ~2%/yr financing assumption
 
 REQUIRED = ("direction", "entry", "stop", "target", "horizon",
-            "size_frac", "provenance")
+            "provenance")
 
 
 def _f(x):
@@ -73,12 +73,35 @@ def validate(c: dict) -> list[str]:
             return ["SHORT_MUST_BE_PAPER_ONLY"]
         rr = (ref - tgt) / (stop - ref)
     sf = c.get("size_frac")
-    if not (isinstance(sf, (int, float)) and 0 < sf <= 1):
+    if sf is not None and not (isinstance(sf, (int, float))
+                               and 0 < sf <= 1):
         return ["BAD_SIZE_FRAC"]
+    # missing AI-authored size is not a rejection: the risk engine derives
+    # the permissible allocation from stop distance + risk budget
+    c["permissible_size_frac"] = permissible_size(
+        c, risk_budget_frac=0.01)
+    if c["permissible_size_frac"] <= 0:
+        return ["NO_PERMISSIBLE_SIZE"]
     c["reward_risk"] = round(rr, 3)
     if rr <= 0:
         return ["NON_POSITIVE_RR"]
     return []
+
+
+def permissible_size(c: dict, risk_budget_frac: float = 0.01) -> float:
+    """Deterministic sizing: frac = risk_budget / stop_distance, capped 1.0.
+    risk_budget_frac = portfolio fraction risked per trade (default 1%)."""
+    d = c["direction"]
+    e = c["entry"]
+    zone, lvl = _zone(e.get("zone")), _f(e.get("level") or
+                                        e.get("trigger_level"))
+    ref = (zone[1] if zone else lvl) if d == "LONG" else \
+        (zone[0] if zone else lvl)
+    stop = _f(c.get("stop"))
+    if not ref or not stop or ref == stop:
+        return 0.0
+    dist = abs(ref - stop) / ref
+    return round(min(1.0, risk_budget_frac / dist), 4)
 
 
 def from_economic_authority(contract: dict, session: str,
