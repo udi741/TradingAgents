@@ -76,6 +76,8 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
     hi60 = df["Close"].rolling(60).max()
     lo60 = df["Close"].rolling(60).min()
     atr = (df["High"] - df["Low"]).rolling(14).mean()
+    sma200 = df["Close"].rolling(200).mean() if variant == "TREND200" \
+        else None
     ret = df["Close"].pct_change().abs()
     trades = []
     watch_until = -1
@@ -113,6 +115,10 @@ def sim_period(df, spy_close, spy_sma, dates, direction, variant,
                 i += 1
                 continue
             # GAPFILT check (on the would-be fill day)
+            if variant == "TREND200" and \
+                    not c > float(sma200.iloc[i]):
+                i += 1
+                continue
             if variant in ("GAPFILT", "SPYGATE"):
                 if variant == "GAPFILT" and \
                         (ret.iloc[max(0, i - 4):i + 1] >= 0.08).any():

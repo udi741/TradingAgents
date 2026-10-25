@@ -98,3 +98,30 @@ winners' room, it does not create regime-independent alpha. The
 underlying LONG mechanics remain profitable only in trending 2026
 (+16.7% vs SPY +13.2%, partly-invested NAV). Still not deployable;
 next step remains a shadow-variant forward test.
+
+### Methodology fix (mission8)
+
+`portfolio_run` seeded orderings used Python `hash()`, which is salted
+per process — the seed values reported in missions 4/7 were valid
+distribution samples but not reproducible. Replaced with md5-based
+stable ordering. Seed-level numbers across pre-fix and post-fix runs
+are not comparable; alphabetical (seed=None) results are unaffected.
+
+### Per-stock 200SMA trend gate (mission8.json — S&P500 snapshot universe)
+
+Pre-registered: does requiring fill-day close > ticker's own 200-SMA
+fix the 2025 mixed-regime losses without wrecking trending-period
+returns? Both arms stop=2.5xATR, LONG, 10bps, stable seeds {a,1,7,13,42}.
+
+| Period | ATR25 mean | TREND200 mean | ATR25 range | TREND200 range |
+|---|---|---|---|---|
+| 2024 | +4.6 | +4.0 | [+1.5,+8.2] | [-0.1,+10.5] |
+| 2025 | -7.2 | -3.6 | [-10.1,-4.7] | [-6.8,-0.6] |
+| 2026YTD | +16.9 | +13.1 | [+10.4,+24.6] | [+10.1,+23.0] |
+
+Gate rejects ~7-13% of signals (67/132/91 per period). It worked as
+designed in 2025 (halved the losses) but cost ~4pp mean in 2026 and
+slightly hurt 2024 — entries below the 200-SMA include early base
+breakouts that became big winners. Verdict: **REJECTED** as a
+standalone variant (frozen rule: mean better in only 1/3 periods).
+Regime-loss mitigation remains the open problem.

@@ -5,6 +5,7 @@ Enforces: $100k start, <=$5k/position, <=10 simultaneous positions, no
 borrowing/leverage, chronological admission (same-day ties by ticker),
 no entry when cash insufficient. NAV marked daily at closes.
 """
+import hashlib
 import json
 import sys
 from collections import defaultdict
@@ -72,8 +73,11 @@ def portfolio_run(candidates, bars, period_start, period_end,
         # process entries for today (tie-break: ticker, or seed-shuffled)
         day_entries = entries.get(s, [])
         if order_seed is not None:
-            day_entries = sorted(day_entries,
-                                 key=lambda c: hash((c["ticker"], order_seed)))
+            # stable hash (md5): builtin hash() is salted per process,
+            # so seeded orderings were not reproducible before this fix
+            day_entries = sorted(day_entries, key=lambda c: int(
+                hashlib.md5(f'{order_seed}:{c["ticker"]}'.encode())
+                .hexdigest(), 16))
         elif priority_fn is not None:
             day_entries = sorted(day_entries,
                                  key=lambda c: (priority_fn(c), c["ticker"]))
