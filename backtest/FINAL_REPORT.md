@@ -33,3 +33,20 @@ untested. Next test: seeded ordering sensitivity + 15bps costs on H3.
 portfolio_run rebuilt a 1.7M-date union + per-position strftime scans per
 call (O(36x) waste across the grid) — fixed with shared date/close caches;
 runs now 0.1s after ~4s cold. mission4 completed in ~5min after fix.
+
+### AI selection vs mechanical controls (mission5.json, Oct-2026 window)
+
+Mechanical retest on identical rules, different universes:
+
+| Universe | n names | Signals | P&L | PF |
+|---|---|---|---|---|
+| AI-researched | 50 | 27 | **-3,938** | 0.47 |
+| Full discovered pool | 132 | 49 | -2,187 | 0.65 |
+| Random 50-name subsets | 5 seeds | — | +138/-351/+122/-2,928/-4,438 | 1.03/0.93/1.04/0.53/0.25 |
+
+The AI-researched set produced **worse mechanical outcomes than 4 of 5
+random equal-size subsets** in October. Selection coverage did not add
+value under identical execution. Caveats: one regime, ~3 weeks, the
+set measures "names chosen for deep research" (discovery ranking + quota)
+not authored trade decisions; AI authored contracts were only evaluated
+on 6 names earlier (2 LONG, both small losses/open marks).

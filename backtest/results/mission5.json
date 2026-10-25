@@ -1,0 +1,495 @@
+{
+ "researched": {
+  "start": 100000.0,
+  "end_nav": 96065.35,
+  "net_pnl": -3938.36,
+  "net_pct": -3.93,
+  "max_dd": 7438.28,
+  "signals": 27,
+  "admitted": 18,
+  "rejected": 9,
+  "reject_reasons": {
+   "no_slot": 9
+  },
+  "winners": 6,
+  "losers": 12,
+  "pf": 0.47,
+  "expectancy": -218.8,
+  "max_capital": 49616.51,
+  "admitted_trades": [
+   {
+    "ticker": "KOD",
+    "in": "2026-10-02",
+    "px": 91.96,
+    "pnl": -243.3,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CDNA",
+    "in": "2026-10-06",
+    "px": 65.14,
+    "pnl": 299.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "GRAL",
+    "in": "2026-10-06",
+    "px": 138.96,
+    "pnl": -233.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "SDGR",
+    "in": "2026-10-06",
+    "px": 30.12,
+    "pnl": -1215.36,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TWST",
+    "in": "2026-10-06",
+    "px": 187.44,
+    "pnl": -912.42,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TXG",
+    "in": "2026-10-06",
+    "px": 90.69,
+    "pnl": -954.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HTFL",
+    "in": "2026-10-07",
+    "px": 49.23,
+    "pnl": 745.03,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "QMCO",
+    "in": "2026-10-07",
+    "px": 31.87,
+    "pnl": -1470.86,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HPE",
+    "in": "2026-10-12",
+    "px": 69.93,
+    "pnl": -720.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VSTM",
+    "in": "2026-10-12",
+    "px": 8.12,
+    "pnl": 1170.31,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "INSW",
+    "in": "2026-10-14",
+    "px": 120.49,
+    "pnl": -409.37,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "NTSK",
+    "in": "2026-10-14",
+    "px": 20.13,
+    "pnl": 1017.6,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "FRO",
+    "in": "2026-10-15",
+    "px": 54.57,
+    "pnl": -411.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "PBF",
+    "in": "2026-10-15",
+    "px": 86.66,
+    "pnl": -607.2,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "ASST",
+    "in": "2026-10-22",
+    "px": 29.42,
+    "pnl": -85.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CAI",
+    "in": "2026-10-22",
+    "px": 31.3,
+    "pnl": 100.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "IOVA",
+    "in": "2026-10-22",
+    "px": 14.38,
+    "pnl": -108.91,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HAE",
+    "in": "2026-10-23",
+    "px": 115.89,
+    "pnl": 102.76,
+    "dir": "LONG"
+   }
+  ]
+ },
+ "full_pool": {
+  "start": 100000.0,
+  "end_nav": 97822.65,
+  "net_pnl": -2187.16,
+  "net_pct": -2.18,
+  "max_dd": 5672.23,
+  "signals": 49,
+  "admitted": 19,
+  "rejected": 30,
+  "reject_reasons": {
+   "no_slot": 30
+  },
+  "winners": 7,
+  "losers": 12,
+  "pf": 0.65,
+  "expectancy": -115.1,
+  "max_capital": 49502.36,
+  "admitted_trades": [
+   {
+    "ticker": "KOD",
+    "in": "2026-10-02",
+    "px": 91.96,
+    "pnl": -243.3,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VICR",
+    "in": "2026-10-05",
+    "px": 299.33,
+    "pnl": -510.87,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CDNA",
+    "in": "2026-10-06",
+    "px": 65.14,
+    "pnl": 299.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "GRAL",
+    "in": "2026-10-06",
+    "px": 138.96,
+    "pnl": -233.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "NTRA",
+    "in": "2026-10-06",
+    "px": 402.08,
+    "pnl": 12.72,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "SDGR",
+    "in": "2026-10-06",
+    "px": 30.12,
+    "pnl": -1215.36,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TWST",
+    "in": "2026-10-06",
+    "px": 187.44,
+    "pnl": -912.42,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TXG",
+    "in": "2026-10-06",
+    "px": 90.69,
+    "pnl": -954.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HTFL",
+    "in": "2026-10-07",
+    "px": 49.23,
+    "pnl": 745.03,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "MTRN",
+    "in": "2026-10-07",
+    "px": 302.8,
+    "pnl": -329.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "AMN",
+    "in": "2026-10-08",
+    "px": 35.53,
+    "pnl": 1735.35,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CTVA",
+    "in": "2026-10-09",
+    "px": 13.49,
+    "pnl": -395.4,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HPE",
+    "in": "2026-10-12",
+    "px": 69.93,
+    "pnl": -720.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VSTM",
+    "in": "2026-10-12",
+    "px": 8.12,
+    "pnl": 1170.31,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "FRO",
+    "in": "2026-10-15",
+    "px": 54.57,
+    "pnl": -411.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CBRL",
+    "in": "2026-10-20",
+    "px": 66.9,
+    "pnl": 46.22,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "BH",
+    "in": "2026-10-21",
+    "px": 421.02,
+    "pnl": -282.11,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HAE",
+    "in": "2026-10-23",
+    "px": 115.89,
+    "pnl": 102.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "PCVX",
+    "in": "2026-10-23",
+    "px": 61.4,
+    "pnl": -88.52,
+    "dir": "LONG"
+   }
+  ]
+ },
+ "union": {
+  "start": 100000.0,
+  "end_nav": 97822.65,
+  "net_pnl": -2187.16,
+  "net_pct": -2.18,
+  "max_dd": 5672.23,
+  "signals": 50,
+  "admitted": 19,
+  "rejected": 31,
+  "reject_reasons": {
+   "no_slot": 31
+  },
+  "winners": 7,
+  "losers": 12,
+  "pf": 0.65,
+  "expectancy": -115.1,
+  "max_capital": 49502.36,
+  "admitted_trades": [
+   {
+    "ticker": "KOD",
+    "in": "2026-10-02",
+    "px": 91.96,
+    "pnl": -243.3,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VICR",
+    "in": "2026-10-05",
+    "px": 299.33,
+    "pnl": -510.87,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CDNA",
+    "in": "2026-10-06",
+    "px": 65.14,
+    "pnl": 299.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "GRAL",
+    "in": "2026-10-06",
+    "px": 138.96,
+    "pnl": -233.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "NTRA",
+    "in": "2026-10-06",
+    "px": 402.08,
+    "pnl": 12.72,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "SDGR",
+    "in": "2026-10-06",
+    "px": 30.12,
+    "pnl": -1215.36,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TWST",
+    "in": "2026-10-06",
+    "px": 187.44,
+    "pnl": -912.42,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TXG",
+    "in": "2026-10-06",
+    "px": 90.69,
+    "pnl": -954.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HTFL",
+    "in": "2026-10-07",
+    "px": 49.23,
+    "pnl": 745.03,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "MTRN",
+    "in": "2026-10-07",
+    "px": 302.8,
+    "pnl": -329.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "AMN",
+    "in": "2026-10-08",
+    "px": 35.53,
+    "pnl": 1735.35,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CTVA",
+    "in": "2026-10-09",
+    "px": 13.49,
+    "pnl": -395.4,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HPE",
+    "in": "2026-10-12",
+    "px": 69.93,
+    "pnl": -720.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VSTM",
+    "in": "2026-10-12",
+    "px": 8.12,
+    "pnl": 1170.31,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "FRO",
+    "in": "2026-10-15",
+    "px": 54.57,
+    "pnl": -411.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CBRL",
+    "in": "2026-10-20",
+    "px": 66.9,
+    "pnl": 46.22,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "BH",
+    "in": "2026-10-21",
+    "px": 421.02,
+    "pnl": -282.11,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HAE",
+    "in": "2026-10-23",
+    "px": 115.89,
+    "pnl": 102.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "PCVX",
+    "in": "2026-10-23",
+    "px": 61.4,
+    "pnl": -88.52,
+    "dir": "LONG"
+   }
+  ]
+ },
+ "random_subsets": [
+  {
+   "seed": 1,
+   "net_pnl": 137.62,
+   "net_pct": 0.14,
+   "admitted": 15,
+   "pf": 1.03
+  },
+  {
+   "seed": 7,
+   "net_pnl": -350.78,
+   "net_pct": -0.35,
+   "admitted": 15,
+   "pf": 0.93
+  },
+  {
+   "seed": 13,
+   "net_pnl": 121.7,
+   "net_pct": 0.12,
+   "admitted": 12,
+   "pf": 1.04
+  },
+  {
+   "seed": 42,
+   "net_pnl": -2928.45,
+   "net_pct": -2.92,
+   "admitted": 19,
+   "pf": 0.53
+  },
+  {
+   "seed": 99,
+   "net_pnl": -4437.59,
+   "net_pct": -4.43,
+   "admitted": 15,
+   "pf": 0.25
+  }
+ ],
+ "universe_sizes": {
+  "researched": 50,
+  "pool": 132
+ }
+}

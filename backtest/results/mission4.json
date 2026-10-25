@@ -6,12 +6,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     11.14,
-    8.51,
-    8.85
+    7.22,
+    11.44
    ],
-   "min": 8.51,
-   "max": 11.14,
-   "mean": 9.5
+   "min": 7.22,
+   "max": 11.44,
+   "mean": 9.93
   },
   "alphabetical": {
    "signals": 3687,
@@ -34,12 +34,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     10.78,
-    8.18,
-    8.49
+    6.85,
+    11.1
    ],
-   "min": 8.18,
-   "max": 10.78,
-   "mean": 9.15
+   "min": 6.85,
+   "max": 11.1,
+   "mean": 9.58
   },
   "alphabetical": {
    "signals": 3687,
@@ -62,12 +62,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     19.23,
-    15.24,
-    18.07
+    12.4,
+    2.74
    ],
-   "min": 15.24,
+   "min": 2.74,
    "max": 19.23,
-   "mean": 17.51
+   "mean": 11.46
   },
   "alphabetical": {
    "signals": 3522,
@@ -90,12 +90,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     18.92,
-    14.95,
-    17.76
+    12.08,
+    2.4
    ],
-   "min": 14.95,
+   "min": 2.4,
    "max": 18.92,
-   "mean": 17.21
+   "mean": 11.13
   },
   "alphabetical": {
    "signals": 3522,
@@ -118,12 +118,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     -8.28,
-    -4.88,
-    -5.69
+    -12.76,
+    -3.67
    ],
-   "min": -8.28,
-   "max": -4.88,
-   "mean": -6.28
+   "min": -12.76,
+   "max": -3.67,
+   "mean": -8.24
   },
   "alphabetical": {
    "signals": 3572,
@@ -146,12 +146,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     -8.7,
-    -5.3,
-    -6.07
+    -13.16,
+    -4.05
    ],
-   "min": -8.7,
-   "max": -5.3,
-   "mean": -6.69
+   "min": -13.16,
+   "max": -4.05,
+   "mean": -8.64
   },
   "alphabetical": {
    "signals": 3572,
@@ -174,12 +174,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     0.88,
-    -2.65,
-    -17.52
+    -11.52,
+    -7.49
    ],
-   "min": -17.52,
+   "min": -11.52,
    "max": 0.88,
-   "mean": -6.43
+   "mean": -6.04
   },
   "alphabetical": {
    "signals": 3459,
@@ -202,12 +202,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     0.55,
-    -2.99,
-    -17.88
+    -11.89,
+    -7.83
    ],
-   "min": -17.88,
+   "min": -11.89,
    "max": 0.55,
-   "mean": -6.77
+   "mean": -6.39
   },
   "alphabetical": {
    "signals": 3459,
@@ -230,12 +230,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     26.95,
-    33.52,
-    35.35
+    32.91,
+    30.09
    ],
    "min": 26.95,
-   "max": 35.35,
-   "mean": 31.94
+   "max": 32.91,
+   "mean": 29.98
   },
   "alphabetical": {
    "signals": 3438,
@@ -258,12 +258,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     26.67,
-    33.29,
-    35.09
+    32.66,
+    29.85
    ],
    "min": 26.67,
-   "max": 35.09,
-   "mean": 31.68
+   "max": 32.66,
+   "mean": 29.73
   },
   "alphabetical": {
    "signals": 3438,
@@ -286,12 +286,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     32.29,
-    29.31,
-    31.83
+    30.77,
+    31.33
    ],
-   "min": 29.31,
+   "min": 30.77,
    "max": 32.29,
-   "mean": 31.14
+   "mean": 31.46
   },
   "alphabetical": {
    "signals": 3306,
@@ -314,12 +314,12 @@
   "nav_pct_seeds": {
    "nav_pct": [
     32.04,
-    29.09,
-    31.59
+    30.54,
+    31.1
    ],
-   "min": 29.09,
+   "min": 30.54,
    "max": 32.04,
-   "mean": 30.91
+   "mean": 31.23
   },
   "alphabetical": {
    "signals": 3306,

@@ -10,3 +10,4 @@
 | 5 | H2 SPY>20SMA entry gate improves | 1824 elig (survivor-biased) | HEAD | done | +5.8/-7.1/+33.4 vs base +11.1/-8.3/+27.0 | REJECTED (no consistent gain) |
 | 6 | H3 2.5·ATR stop vs 2.0·ATR | same | HEAD | done | **+19.2/+0.9/+32.3** PF 2.27/1.05/4.23 all 3 periods vs base | RETAINED-H3 (candidate; survivor-biased) |
 | 7 | H3 robustness: seeds x costs grid | 1824 elig (survivor-biased) | HEAD | done | 15bps cost: -0.3pp everywhere; seeds 2025 flip to -17.5% | RETAIN AS UNVALIDATED (see note) |
+| 8 | AI-researched names beat random/mechanical controls (Oct, identical rules) | 50 researched vs 132 pool vs 5 random subsets | HEAD | done | researched -3,938 PF0.47; pool -2,187; randoms +138/-351/+122/-2,928/-4,438 | AI selection did NOT outperform; worst-quintile of random |
