@@ -105,3 +105,60 @@ days and authored contracts.
 - Falsifiers: forward AI-priority book underperforming alphabetical by
   >5pp over ~40 contested days; authorized LONGs losing >2% NAV/quarter;
   authored-contract win rate below ~40%.
+
+## NEW WORK COMPLETED DURING THIS MISSION
+
+Three new experiments executed on the corrected timing engine +
+1,824-ticker eligible universe (residual survivorship bias disclosed;
+cache md5 b25fe6abe3c115e65670ba2eedc01c79). Results:
+`backtest/results/mission2.json`, runner `backtest/mission2.py`.
+
+### A — LONG holding-period discipline (60d vs 20d cap)
+
+| Period | 60-session | 20-session |
+|---|---|---|
+| 2024 | +11.1% (77t, PF 1.63) | **+24.1% (162t, PF 1.91)** |
+| 2025 | -8.3% (89t, PF 0.72) | **+5.8% (163t, PF 1.21)** |
+| 2026YTD | +27.0% (57t, PF 3.00) | +4.8% (125t, PF 1.19) |
+
+20d cap trades ~2x more often (frees capital faster → more admitted
+signals). It improves 2024/2025 substantially but gives back 2026's
+trend-driven gains — a time-decay discipline helps in choppy years,
+hurts in trending ones. Not a free win; regime-dependent. Retained as
+candidate hypothesis H1 (needs forward test, not deployable).
+
+### B — SHORT on full eligible universe (corrected timing, first run
+of the SHORT mechanics on the unbiased-ish universe)
+
+| Period | NAV% | PF | Net P&L |
+|---|---|---|---|
+| 2024 | -8.7% | 0.75 | -5,595 |
+| 2025 | -5.9% | 0.92 | -1,758 |
+| 2026YTD | -6.8% | 0.68 | -6,597 |
+
+SHORT mechanics lose in every regime on the broad universe — confirms
+the biased-universe result. **Rejected definitively.**
+
+### C — Quota economics (deep-rank split, Oct window)
+
+| Pool | Signals | Admitted | Net P&L | PF |
+|---|---|---|---|---|
+| Top-10 (deep-ranked) | 26 | 17 | -3,691 | 0.40 |
+| Rank 11-28 (quota-excluded) | 34 | 20 | -1,749 | 0.75 |
+| All | 49 | 19 | -2,187 | 0.65 |
+
+Quota-excluded candidates performed *better* than the top-10 in Oct
+(mechanically) — the deep-score ranking is not protective, merely
+arbitrary within this window. Mechanical ≠ AI value: these are
+deterministic retest fills, not AI-authored decisions; it measures
+what additional research *could* cover, not what it would earn.
+
+### Verdicts
+
+- A (horizon): mixed, regime-dependent → hypothesis retained for
+  forward test only, not deployable.
+- B (shorts): **NO-GO** — loses across all three regimes.
+- C (quota): rank beyond 10 is not worse → quota expansion is
+  defensible mechanically, but mechanical ≠ AI value; recommend
+  keeping 10 with conditional quality-driven expansion (already
+  configurable via ALPHA_RESEARCH_BUDGET).
