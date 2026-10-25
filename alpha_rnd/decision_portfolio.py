@@ -62,9 +62,13 @@ def _emit(d, session, type_, **kw):
                 + "\n")
 
 
-def ingest_intent(book, intent, session, data_dir):
-    """Record a validated decision; register pending entry when valid."""
+def ingest_intent(book, intent, session, data_dir, observed_on=None):
+    """Record a validated decision; register pending entry when valid.
+    `session` = publication session (provenance); `observed_on` = the day
+    the engine first saw the artifact — eligibility starts the NEXT
+    session after observation (late publications can never backfill)."""
     authored = intent.get("decision")
+    obs = observed_on or session
     c = dec.from_intent(
         intent, (intent.get("provenance") or {}).get("signal"),
         bool(authored and authored.get("direction") == "SHORT"),
@@ -78,14 +82,25 @@ def ingest_intent(book, intent, session, data_dir):
               decision="NO_TRADE", reason=c["reason"],
               authored=bool(authored))
         return c["reason"]
-    size = c.get("size_frac") or c.get("permissible_size_frac") or 0.0
-    notional = min(POS_NOTIONAL * size if size <= 1 else POS_NOTIONAL,
-                   POS_NOTIONAL)  # frac scales the standard slot
+    # sizing: notional = min(CAP, NAV*RISK / stop_dist_pct) — whichever
+    # limit binds. AI size_frac scales the CAP, never exceeds it.
+    if c.get("size_frac"):
+        notional = min(POS_NOTIONAL * c["size_frac"], POS_NOTIONAL)
+    else:
+        e = c["entry"]
+        zone = dec._zone(e.get("zone"))
+        lvl = dec._f(e.get("level") or e.get("trigger_level"))
+        ref = (zone[1] if zone else lvl) if c["direction"] == "LONG" else \
+            (zone[0] if zone else lvl)
+        dist = abs(ref - c["stop"]) / ref if ref else 0
+        notional = min(POS_NOTIONAL,
+                       book["nav"] * RISK_BUDGET_FRAC / dist) if dist else 0.0
     book["pending"].append(
         {"ticker": intent.get("ticker"), "dir": c["direction"],
          "entry": c["entry"], "stop": c["stop"], "target": c["target"],
          "horizon": c.get("horizon"), "rr": c.get("reward_risk"),
-         "notional": notional, "session": session,
+         "notional": notional, "session": obs,
+         "published_session": session,
          "deadline_sessions": MAX_WAIT_SESSIONS, "waited": 0})
     _emit(data_dir, session, "INGEST", ticker=intent.get("ticker"),
           decision=c["direction"], entry=c["entry"], stop=c["stop"],

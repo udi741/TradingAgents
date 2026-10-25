@@ -75,6 +75,23 @@ class T(unittest.TestCase):
         dp.step_day(b, "2025-01-02", {"SYN": bar(63, 64, 59, 63)}, d)
         self.assertIn("SYN", b["positions"])      # next session -> fill
 
+    def test_late_publication_observed_on(self):
+        # Monday pub appears Wednesday: eligibility starts AFTER observed
+        # day, never retroactively from Monday. Prior marks stay intact.
+        d = Path(tempfile.mkdtemp())
+        b = dp._new_book()
+        b["last_mark"] = "2025-01-08"  # Wed already marked
+        dp.ingest_intent(b, intent(), "2025-01-06", d,
+                         observed_on="2025-01-08")
+        pe = b["pending"][0]
+        self.assertEqual(pe["published_session"], "2025-01-06")
+        self.assertEqual(pe["session"], "2025-01-08")  # observed date drives
+        # Wednesday's own bar cannot fill it (needs next session)
+        dp.step_day(b, "2025-01-08", {"SYN": bar(63, 64, 59, 63)}, d)
+        self.assertNotIn("SYN", b["positions"])
+        dp.step_day(b, "2025-01-09", {"SYN": bar(63, 64, 59, 63)}, d)
+        self.assertIn("SYN", b["positions"])
+
     def test_writes_only_own_dir(self):
         # contract: engine only ever writes under data_dir; no prod files
         import inspect

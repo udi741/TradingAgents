@@ -61,11 +61,15 @@ def main():
         bars = yf.download(tickers + ["SPY"], start="2026-09-01", end=end,
                            group_by="ticker", progress=False,
                            auto_adjust=True, threads=True)
+        # ingest EVERY published doc not yet ingested, with the
+        # observation date = today: late publications are discovered
+        # regardless of last_mark and become eligible only from the next
+        # session after first observation (no retroactive eligibility).
+        for sess_pub, f in sorted(pubs.items()):
+            doc = json.loads(f.read_text())
+            for t, i in (doc.get("intents") or {}).items():
+                dp.ingest_intent(book, i, sess_pub, d, observed_on=today)
         for sess in days:
-            if sess in pubs:
-                doc = json.loads(pubs[sess].read_text())
-                for t, i in (doc.get("intents") or {}).items():
-                    dp.ingest_intent(book, i, sess, d)
             day = {}
             for t in tickers:
                 try:
@@ -75,8 +79,11 @@ def main():
                         day[t] = row.iloc[0]
                 except Exception:
                     pass
-            if not day:
-                continue  # non-trading or missing data: retryable skip
+            if "SPY" not in day:
+                # no index bar: genuine market holiday (not missing data) —
+                # skip the day without stalling; a ticker-only gap still
+                # marks remaining names.
+                continue
             dp.step_day(book, sess, day, d)
             book["last_mark"] = sess
         dp.save_book(d, book)
@@ -92,7 +99,7 @@ def main():
             continue
         doc = json.loads(f.read_text())
         for t, i in (doc.get("intents") or {}).items():
-            dp.ingest_intent(book, i, s_, d)
+            dp.ingest_intent(book, i, s_, d, observed_on=args.session)
     tickers = {p["ticker"] for p in book["pending"]} | set(book["positions"])
     if not tickers:
         dp.save_book(d, book)
