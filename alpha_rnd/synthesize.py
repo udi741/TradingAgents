@@ -57,6 +57,11 @@ SCHEMA_HINT = """For EACH ticker emit one object:
  "size_frac":number|null,   // fraction of standard allocation if stated, else null
  "auto_execution_authorized":bool, // true ONLY if text gives an executable
                                    // intraday/limit instruction
+ "decision":{"direction":"LONG"|"SHORT"|"NO_TRADE",
+             "no_trade_reason":str|null}, // MANDATORY. LONG = bullish plan
+     // with entry+stop+target in text; SHORT = genuine bearish plan with
+     // entry, stop ABOVE entry, cover objective; NO_TRADE = anything else —
+     // never equate a Buy/Sell headline with an executable direction
  "ambiguity":str|null,      // why it cannot be published, if unclear
  "ambiguities":[{"type":"SIZING_CONFLICT"|"TRANCHE_CONFLICT"|
    "POSITION_CAP_CONFLICT"|"ENTRY_ZONE_CONFLICT"|"CATALYST_UNRESOLVED"|
@@ -495,6 +500,9 @@ def run(session: str) -> dict:
             errs = [e for e in errs if not _suppressible(e)]
             i["economic_authority_resolved"] = resolved
         errs = ec_errs + errs
+        from alpha_rnd import decision as _dec
+        i["decision"] = _dec.from_intent(
+            i, a.get("signal"), _bearish_geometry(i), session)
         d = disposition(i, errs, held)
         if d == "EXECUTABLE_WATCH" and resolved is not None and \
                 not econ_contract.has_authority(i, resolved):
