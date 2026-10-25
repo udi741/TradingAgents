@@ -1,0 +1,182 @@
+{
+ "2024": {
+  "alpha_order": {
+   "end_nav": 105828.04,
+   "net_pct": 5.83,
+   "admitted": 80,
+   "net_pnl": 6219.55,
+   "max_dd": 10704.4,
+   "pf": 1.33,
+   "reject_reasons": {
+    "no_slot": 3604
+   }
+  },
+  "seed_navs": {
+   "1": {
+    "end_nav": 117786.06,
+    "net_pct": 17.79,
+    "admitted": 64,
+    "net_pnl": 17922.95,
+    "max_dd": 6226.36,
+    "pf": 2.65
+   },
+   "7": {
+    "end_nav": 100934.33,
+    "net_pct": 0.93,
+    "admitted": 80,
+    "net_pnl": 421.76,
+    "max_dd": 9069.84,
+    "pf": 1.02
+   },
+   "13": {
+    "end_nav": 108425.1,
+    "net_pct": 8.43,
+    "admitted": 78,
+    "net_pnl": 8092.49,
+    "max_dd": 8953.84,
+    "pf": 1.49
+   },
+   "42": {
+    "end_nav": 108225.39,
+    "net_pct": 8.23,
+    "admitted": 76,
+    "net_pnl": 8043.22,
+    "max_dd": 9044.35,
+    "pf": 1.48
+   },
+   "99": {
+    "end_nav": 112651.45,
+    "net_pct": 12.65,
+    "admitted": 66,
+    "net_pnl": 12539.14,
+    "max_dd": 8478.87,
+    "pf": 2.02
+   }
+  },
+  "nav_range": [
+   0.93,
+   17.79
+  ],
+  "signals": 3684
+ },
+ "2025": {
+  "alpha_order": {
+   "end_nav": 110680.84,
+   "net_pct": 10.68,
+   "admitted": 74,
+   "net_pnl": 11583.12,
+   "max_dd": 15485.77,
+   "pf": 1.54,
+   "reject_reasons": {
+    "no_slot": 3531
+   }
+  },
+  "seed_navs": {
+   "1": {
+    "end_nav": 101453.99,
+    "net_pct": 1.45,
+    "admitted": 67,
+    "net_pnl": 1832.44,
+    "max_dd": 14486.52,
+    "pf": 1.1
+   },
+   "7": {
+    "end_nav": 100540.14,
+    "net_pct": 0.54,
+    "admitted": 79,
+    "net_pnl": 1106.24,
+    "max_dd": 19498.21,
+    "pf": 1.04
+   },
+   "13": {
+    "end_nav": 92477.3,
+    "net_pct": -7.52,
+    "admitted": 76,
+    "net_pnl": -6493.04,
+    "max_dd": 19082.77,
+    "pf": 0.74
+   },
+   "42": {
+    "end_nav": 92581.54,
+    "net_pct": -7.42,
+    "admitted": 84,
+    "net_pnl": -6438.65,
+    "max_dd": 18932.88,
+    "pf": 0.78
+   },
+   "99": {
+    "end_nav": 100294.45,
+    "net_pct": 0.29,
+    "admitted": 75,
+    "net_pnl": 1145.85,
+    "max_dd": 21942.89,
+    "pf": 1.05
+   }
+  },
+  "nav_range": [
+   -7.52,
+   1.45
+  ],
+  "signals": 3605
+ },
+ "2026YTD": {
+  "alpha_order": {
+   "end_nav": 120942.49,
+   "net_pct": 20.94,
+   "admitted": 66,
+   "net_pnl": 20890.53,
+   "max_dd": 8443.2,
+   "pf": 2.38,
+   "reject_reasons": {
+    "no_slot": 3371
+   }
+  },
+  "seed_navs": {
+   "1": {
+    "end_nav": 118704.25,
+    "net_pct": 18.7,
+    "admitted": 63,
+    "net_pnl": 18654.05,
+    "max_dd": 7002.31,
+    "pf": 2.6
+   },
+   "7": {
+    "end_nav": 125273.18,
+    "net_pct": 25.27,
+    "admitted": 58,
+    "net_pnl": 25221.29,
+    "max_dd": 8053.35,
+    "pf": 3.06
+   },
+   "13": {
+    "end_nav": 115806.35,
+    "net_pct": 15.81,
+    "admitted": 59,
+    "net_pnl": 15755.8,
+    "max_dd": 10377.57,
+    "pf": 2.68
+   },
+   "42": {
+    "end_nav": 121421.17,
+    "net_pct": 21.42,
+    "admitted": 56,
+    "net_pnl": 21369.56,
+    "max_dd": 11431.52,
+    "pf": 3.41
+   },
+   "99": {
+    "end_nav": 109032.27,
+    "net_pct": 9.03,
+    "admitted": 58,
+    "net_pnl": 8982.7,
+    "max_dd": 9601.26,
+    "pf": 1.93
+   }
+  },
+  "nav_range": [
+   9.03,
+   25.27
+  ],
+  "signals": 3437
+ }
+}

@@ -1,0 +1,700 @@
+{
+ "mechanical_alpha": {
+  "start": 100000.0,
+  "end_nav": 95842.4,
+  "net_pnl": -4167.25,
+  "net_pct": -4.16,
+  "max_dd": 6519.47,
+  "signals": 48,
+  "admitted": 20,
+  "rejected": 28,
+  "reject_reasons": {
+   "no_slot": 28
+  },
+  "winners": 6,
+  "losers": 14,
+  "pf": 0.41,
+  "expectancy": -208.4,
+  "max_capital": 49488.69,
+  "admitted_trades": [
+   {
+    "ticker": "KOD",
+    "in": "2026-10-02",
+    "px": 91.96,
+    "pnl": -243.3,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VICR",
+    "in": "2026-10-05",
+    "px": 299.33,
+    "pnl": -510.87,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CDNA",
+    "in": "2026-10-06",
+    "px": 65.14,
+    "pnl": 299.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "GRAL",
+    "in": "2026-10-06",
+    "px": 138.96,
+    "pnl": -233.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "NTRA",
+    "in": "2026-10-06",
+    "px": 402.08,
+    "pnl": 12.72,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "SDGR",
+    "in": "2026-10-06",
+    "px": 30.12,
+    "pnl": -1215.36,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TWST",
+    "in": "2026-10-06",
+    "px": 187.44,
+    "pnl": -912.42,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TXG",
+    "in": "2026-10-06",
+    "px": 90.69,
+    "pnl": -954.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HTFL",
+    "in": "2026-10-07",
+    "px": 49.23,
+    "pnl": 745.03,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "MTRN",
+    "in": "2026-10-07",
+    "px": 302.8,
+    "pnl": -329.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "AMN",
+    "in": "2026-10-08",
+    "px": 35.53,
+    "pnl": 1735.35,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CTVA",
+    "in": "2026-10-09",
+    "px": 13.49,
+    "pnl": -395.4,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HPE",
+    "in": "2026-10-12",
+    "px": 69.93,
+    "pnl": -720.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "S",
+    "in": "2026-10-13",
+    "px": 25.03,
+    "pnl": -541.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "FRO",
+    "in": "2026-10-15",
+    "px": 54.57,
+    "pnl": -411.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VLO",
+    "in": "2026-10-15",
+    "px": 442.77,
+    "pnl": -267.83,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CBRL",
+    "in": "2026-10-20",
+    "px": 66.9,
+    "pnl": 46.22,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "BH",
+    "in": "2026-10-21",
+    "px": 421.02,
+    "pnl": -282.11,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HAE",
+    "in": "2026-10-23",
+    "px": 115.89,
+    "pnl": 102.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "PCVX",
+    "in": "2026-10-23",
+    "px": 61.4,
+    "pnl": -88.52,
+    "dir": "LONG"
+   }
+  ]
+ },
+ "ai_rating": {
+  "start": 100000.0,
+  "end_nav": 95244.95,
+  "net_pnl": -4766.23,
+  "net_pct": -4.76,
+  "max_dd": 7116.91,
+  "signals": 48,
+  "admitted": 19,
+  "rejected": 29,
+  "reject_reasons": {
+   "no_slot": 29
+  },
+  "winners": 6,
+  "losers": 13,
+  "pf": 0.38,
+  "expectancy": -250.9,
+  "max_capital": 49479.44,
+  "admitted_trades": [
+   {
+    "ticker": "KOD",
+    "in": "2026-10-02",
+    "px": 91.96,
+    "pnl": -243.3,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VICR",
+    "in": "2026-10-05",
+    "px": 299.33,
+    "pnl": -510.87,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CDNA",
+    "in": "2026-10-06",
+    "px": 65.14,
+    "pnl": 299.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "SDGR",
+    "in": "2026-10-06",
+    "px": 30.12,
+    "pnl": -1215.36,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TWST",
+    "in": "2026-10-06",
+    "px": 187.44,
+    "pnl": -912.42,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TXG",
+    "in": "2026-10-06",
+    "px": 90.69,
+    "pnl": -954.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "GRAL",
+    "in": "2026-10-06",
+    "px": 138.96,
+    "pnl": -233.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "NTRA",
+    "in": "2026-10-06",
+    "px": 402.08,
+    "pnl": 12.72,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "QMCO",
+    "in": "2026-10-07",
+    "px": 31.87,
+    "pnl": -1470.86,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HTFL",
+    "in": "2026-10-07",
+    "px": 49.23,
+    "pnl": 745.03,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "AMN",
+    "in": "2026-10-08",
+    "px": 35.53,
+    "pnl": 1735.35,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CTVA",
+    "in": "2026-10-09",
+    "px": 13.49,
+    "pnl": -395.4,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HPE",
+    "in": "2026-10-12",
+    "px": 69.93,
+    "pnl": -720.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "FRO",
+    "in": "2026-10-15",
+    "px": 54.57,
+    "pnl": -411.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VLO",
+    "in": "2026-10-15",
+    "px": 442.77,
+    "pnl": -267.83,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CBRL",
+    "in": "2026-10-20",
+    "px": 66.9,
+    "pnl": 46.22,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "BH",
+    "in": "2026-10-21",
+    "px": 421.02,
+    "pnl": -282.11,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HAE",
+    "in": "2026-10-23",
+    "px": 115.89,
+    "pnl": 102.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "PCVX",
+    "in": "2026-10-23",
+    "px": 61.4,
+    "pnl": -88.52,
+    "dir": "LONG"
+   }
+  ]
+ },
+ "shuffle_s1": {
+  "start": 100000.0,
+  "end_nav": 94192.42,
+  "net_pnl": -5818.05,
+  "net_pct": -5.81,
+  "max_dd": 8009.2,
+  "signals": 48,
+  "admitted": 19,
+  "rejected": 29,
+  "reject_reasons": {
+   "no_slot": 29
+  },
+  "winners": 6,
+  "losers": 13,
+  "pf": 0.24,
+  "expectancy": -306.2,
+  "max_capital": 49283.52,
+  "admitted_trades": [
+   {
+    "ticker": "KOD",
+    "in": "2026-10-02",
+    "px": 91.96,
+    "pnl": -243.3,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VICR",
+    "in": "2026-10-05",
+    "px": 299.33,
+    "pnl": -510.87,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "NTRA",
+    "in": "2026-10-06",
+    "px": 402.08,
+    "pnl": 12.72,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CDNA",
+    "in": "2026-10-06",
+    "px": 65.14,
+    "pnl": 299.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TXG",
+    "in": "2026-10-06",
+    "px": 90.69,
+    "pnl": -954.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "GRAL",
+    "in": "2026-10-06",
+    "px": 138.96,
+    "pnl": -233.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TWST",
+    "in": "2026-10-06",
+    "px": 187.44,
+    "pnl": -912.42,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "SDGR",
+    "in": "2026-10-06",
+    "px": 30.12,
+    "pnl": -1215.36,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "QLYS",
+    "in": "2026-10-07",
+    "px": 192.72,
+    "pnl": 589.27,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HTFL",
+    "in": "2026-10-07",
+    "px": 49.23,
+    "pnl": 745.03,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "MXL",
+    "in": "2026-10-08",
+    "px": 102.75,
+    "pnl": -1376.6,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CTVA",
+    "in": "2026-10-09",
+    "px": 13.49,
+    "pnl": -395.4,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HPE",
+    "in": "2026-10-12",
+    "px": 69.93,
+    "pnl": -720.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VLO",
+    "in": "2026-10-15",
+    "px": 442.77,
+    "pnl": -267.83,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "FRO",
+    "in": "2026-10-15",
+    "px": 54.57,
+    "pnl": -411.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CBRL",
+    "in": "2026-10-20",
+    "px": 66.9,
+    "pnl": 46.22,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "BH",
+    "in": "2026-10-21",
+    "px": 421.02,
+    "pnl": -282.11,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "PCVX",
+    "in": "2026-10-23",
+    "px": 61.4,
+    "pnl": -88.52,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HAE",
+    "in": "2026-10-23",
+    "px": 115.89,
+    "pnl": 102.76,
+    "dir": "LONG"
+   }
+  ]
+ },
+ "shuffle_s7": {
+  "start": 100000.0,
+  "end_nav": 91046.46,
+  "net_pnl": -8965.45,
+  "net_pct": -8.95,
+  "max_dd": 9829.11,
+  "signals": 48,
+  "admitted": 21,
+  "rejected": 27,
+  "reject_reasons": {
+   "no_slot": 27
+  },
+  "winners": 5,
+  "losers": 16,
+  "pf": 0.06,
+  "expectancy": -426.9,
+  "max_capital": 49433.76,
+  "admitted_trades": [
+   {
+    "ticker": "KOD",
+    "in": "2026-10-02",
+    "px": 91.96,
+    "pnl": -243.3,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VICR",
+    "in": "2026-10-05",
+    "px": 299.33,
+    "pnl": -510.87,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CDNA",
+    "in": "2026-10-06",
+    "px": 65.14,
+    "pnl": 299.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TXG",
+    "in": "2026-10-06",
+    "px": 90.69,
+    "pnl": -954.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "NTRA",
+    "in": "2026-10-06",
+    "px": 402.08,
+    "pnl": 12.72,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "SDGR",
+    "in": "2026-10-06",
+    "px": 30.12,
+    "pnl": -1215.36,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "GRAL",
+    "in": "2026-10-06",
+    "px": 138.96,
+    "pnl": -233.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "TWST",
+    "in": "2026-10-06",
+    "px": 187.44,
+    "pnl": -912.42,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "QMCO",
+    "in": "2026-10-07",
+    "px": 31.87,
+    "pnl": -1470.86,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "MTRN",
+    "in": "2026-10-07",
+    "px": 302.8,
+    "pnl": -329.93,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "MXL",
+    "in": "2026-10-08",
+    "px": 102.75,
+    "pnl": -1376.6,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CTVA",
+    "in": "2026-10-09",
+    "px": 13.49,
+    "pnl": -395.4,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HPE",
+    "in": "2026-10-12",
+    "px": 69.93,
+    "pnl": -720.45,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "XP",
+    "in": "2026-10-13",
+    "px": 31.25,
+    "pnl": -143.91,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "VLO",
+    "in": "2026-10-15",
+    "px": 442.77,
+    "pnl": -267.83,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "ZBRA",
+    "in": "2026-10-15",
+    "px": 375.56,
+    "pnl": 131.6,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "FRO",
+    "in": "2026-10-15",
+    "px": 54.57,
+    "pnl": -411.95,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "CBRL",
+    "in": "2026-10-20",
+    "px": 66.9,
+    "pnl": 46.22,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "BH",
+    "in": "2026-10-21",
+    "px": 421.02,
+    "pnl": -282.11,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "HAE",
+    "in": "2026-10-23",
+    "px": 115.89,
+    "pnl": 102.76,
+    "dir": "LONG"
+   },
+   {
+    "ticker": "PCVX",
+    "in": "2026-10-23",
+    "px": 61.4,
+    "pnl": -88.52,
+    "dir": "LONG"
+   }
+  ]
+ },
+ "_meta": {
+  "contested_days": {
+   "2026-10-08": [
+    "AMN",
+    "LIND",
+    "MXL",
+    "PI"
+   ],
+   "2026-10-16": [
+    "AMPL",
+    "APPN",
+    "MRNA",
+    "PD",
+    "RNG",
+    "RSKD"
+   ],
+   "2026-10-22": [
+    "ASST",
+    "CAI",
+    "IOVA",
+    "TBBB"
+   ],
+   "2026-10-06": [
+    "CDNA",
+    "GRAL",
+    "NTRA",
+    "SDGR",
+    "TWST",
+    "TXG"
+   ],
+   "2026-10-14": [
+    "CLF",
+    "ECO",
+    "HNGE",
+    "INSW",
+    "NTAP",
+    "NTNX",
+    "NTSK",
+    "P",
+    "PENG",
+    "SNPS"
+   ],
+   "2026-10-15": [
+    "FRO",
+    "VLO",
+    "ZBRA"
+   ],
+   "2026-10-23": [
+    "HAE",
+    "PCVX"
+   ],
+   "2026-10-07": [
+    "HTFL",
+    "MTRN",
+    "QLYS",
+    "QMCO",
+    "SMTC"
+   ],
+   "2026-10-13": [
+    "S",
+    "XP"
+   ]
+  },
+  "candidate_fills": 48
+ }
+}
