@@ -314,6 +314,49 @@ _EXECUTABLE_PARAM_KEYS = {
     "alt_level", "veto_level"}
 
 
+# Params the monitor treats as ENTRY levels (zone top / trigger level).
+# kill/veto/gate keys are exits or conditions, never entries.
+_ENTRY_PARAM_KEYS = {
+    "zone", "zone1", "zone2", "pb_zone", "retest_zone", "probe_zone",
+    "entry_zone", "reentry_zone", "reclaim", "bo_level", "alt_level",
+    "levels", "entry", "entry_price"}
+
+
+def _entry_levels(p: dict) -> list[float]:
+    out = []
+    for k, v in (p or {}).items():
+        if k not in _ENTRY_PARAM_KEYS:
+            continue
+        vals = v if isinstance(v, (list, tuple)) else [v]
+        if k.endswith("zone") or k in ("zone1", "zone2"):
+            vals = vals[1:2] if len(vals) == 2 else []  # fill ref = zone top
+        for x in vals:
+            try:
+                out.append(float(x))
+            except (TypeError, ValueError):
+                pass
+    return out
+
+
+def _bearish_geometry(i: dict) -> bool:
+    """Fail-closed direction guard for the legacy (contract-less) path.
+
+    A LONG watch is only executable if its stop sits below the levels at
+    which it can actually fill. A stop at/above the lowest entry level is a
+    SHORT-shaped plan (PCVX 2026-10-07: stop 73.8 vs entry zone 62-64), and
+    explicit short_* params are short-only (HESM 2026-10-12). Neither may
+    become an executable LONG watch — the framework has no short path."""
+    p = i.get("params") or {}
+    if any(str(k).startswith("short") for k in p):
+        return True
+    try:
+        stop = float(i.get("stop_level"))
+    except (TypeError, ValueError):
+        return False
+    levels = _entry_levels(p)
+    return bool(levels) and stop >= min(levels)
+
+
 def _machine_executable(i: dict) -> bool:
     """EXECUTABLE_WATCH == the production monitor can actually evaluate the
     entry mechanically AND a machine-actionable post-entry risk plan exists.
@@ -334,6 +377,8 @@ def _machine_executable(i: dict) -> bool:
         return False
     p = i.get("params") or {}
     if not _EXECUTABLE_PARAM_KEYS & set(p):
+        return False
+    if _bearish_geometry(i):
         return False
     return _has_risk_plan(i)
 
