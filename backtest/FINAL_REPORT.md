@@ -371,3 +371,87 @@ Concrete improvements justified:
 - Keep selective-trigger vs watchlist-buy discipline: measured +1pp.
 - Next evidence milestone: C12 exits mature 10/30-11/18 (4 positions);
   ALPHA PBF pending exit at next open; rescore this table then.
+
+## Selection research (mission13.json + mission13_dataset.json)
+
+Population: 227 timestamped deep analyses — 142 ALPHA production
+artifacts (10/session, 10/01-10/23), 54 R5B full-pool replays
+(deduped), 31 C12 weekly decisions — joined to decision-time-only
+features (PM/trader/RM ratings, pool labels, rsi, fundamental_facts
+PIT-safe YoY growth) and next-open outcomes (H1/H5, SPY excess; H20
+not yet mature for any October session).
+
+### What separated winners from losers (descriptive, all analyzed names)
+
+| Feature split | better group | gap (mean H5 excess) |
+|---|---|---|
+| FUNDAMENTAL_ACCELERATION label | labeled | -2.37 vs -5.15 (+2.8pp) |
+| rsi_14 < 70 vs >= 70 | < 70 | -1.97 vs -4.75 (+2.8pp) |
+| fund_support (rev+NI yoy >0) | supported | -2.46 vs -3.51 (+1.1pp) |
+| consensus (pm+trader bull, rm not bear) | consensus | -1.19 vs -3.23 (+2.0pp) |
+| production top-10 vs ranks 11-28 | top-10 | +0.6 vs -3.2 (10/07); -10.3 vs -5.5 (10/09); -6.9 vs -5.2 (10/12) |
+
+PM "Overweight" on production-selected names: +3.7 mean excess (n=7,
+71% positive) — the only rating bucket with positive selection value,
+but too small to rely on. PM "Buy" on the same names: -2.3 (n=3).
+
+### Pre-registered rules FAILED (bull cohort, n~20)
+
+| Rule | n | mean H5 excess |
+|---|---|---|
+| BASELINE all bull signals | 20 | -0.91 |
+| R_FUND (rev+NI yoy >0) | 13 | -1.98 |
+| R_CONS (full consensus) | 19 | -1.19 |
+| R_ACCEL (accel label) | 16 | -1.84 |
+| R_FUND+CONS | 12 | -2.50 |
+
+No fundamental/consensus/label filter rescued the bull cohort — every
+subset was flat-to-worse. The October tape discounted all signal-level
+screening; bull picks were noise (-0.9 mean, 35% positive).
+
+### LONG vs bearish separately
+
+Sell-rated cohort (n=109, ALPHA+R5B): mean -3.37, median -1.96,
+39% fell >5% — real left skew on average. BUT per-session means flip
+positive in rebound weeks (+7.4 on 10/14, +4.7 on 10/16): the bearish
+signal is regime-dependent and cannot be used as a standalone short
+signal without a timing layer the framework does not have. C12
+Sell/Underweight calls: 56% correct — coin flip. No authored short
+contract has ever existed; "Sell" remains a no-entry vote, not a short
+recommendation. Evidence for a profitable short policy: INSUFFICIENT.
+
+### Coverage question (10 vs 20-30 deep runs)
+
+R5B ran the full 28-name pool on 3 sessions. Ranks 11-28 produced only
+2-5 additional bull-rated names per session at aggregate NEGATIVE
+outcomes; production top-10 beat them in 1/3 sessions and was roughly
+equal in the other 2. Marginal cost ~+2h inference/session (mean run
+417s) for coin-flip-quality extra picks. Verdict: expand coverage
+NO — the top-10 gate is not the binding constraint.
+
+### Selection weaknesses identified (evidence)
+
+1. Bull-rated picks have no demonstrated edge in the only window with
+   full coverage (mean excess -0.9, ~35% positive).
+2. The PM rating ladder is inverted vs intuition: Overweight > Buy
+   — conviction labels are not calibrated.
+3. Strongest negative-outcome names shared: pre-profit story stocks
+   + dissent or binary setups — but filters built on that intuition
+   did not validate on the larger sample.
+4. Sell ratings identify laggards only in falling weeks — not a
+   short signal.
+5. Operational: STALE_TA_AT_ENTRY recurs in postmortems — decisions
+   were issued on analysis older than the entry session.
+
+### Conclusion (explicit, per mission)
+
+Evidence is INSUFFICIENT to justify a new selection policy: every
+pre-registered improvement failed on the largest timestamped sample
+available, and no defensible rule emerges without outcome-fitting.
+The honest supported claims: (a) keep the production top-10 gate —
+deep coverage beyond it does not pay; (b) prefer fundamental-
+acceleration-labeled names when ranking within the pool (descriptive
+separation only); (c) do NOT expand to shorts or looser entry rules.
+Next real evidence arrives with C12 maturities (10/30-11/18) and each
+new weekly cycle; until n of scored bull decisions grows, selection
+quality cannot be measured better than this.
