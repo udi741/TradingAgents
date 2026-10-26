@@ -1,0 +1,377 @@
+{
+ "window": [
+  "2026-09-25",
+  "2026-10-23"
+ ],
+ "alpha": {
+  "trades": [
+   {
+    "ticker": "PGEN",
+    "entry_px": 8.2,
+    "shares": 609,
+    "entry_utc": "2026-10-05T14:39:42.449541+00:00",
+    "cls": "AUTO_ENTRY",
+    "basis": 4998.79,
+    "sold": 609,
+    "open_sh": 0,
+    "realized_pnl": -259.42,
+    "unrealized_pnl": 0.0,
+    "exit_evidence": [
+     {
+      "px": 7.789999961853027,
+      "sh": 609,
+      "why": "INTEGRITY_CORRECTIVE_EXIT_AFTER_MISSED_HARD_STOP",
+      "utc": "2026-10-06T14:18:54.458026+00:00"
+     }
+    ]
+   },
+   {
+    "ticker": "SDGR",
+    "entry_px": 31.0,
+    "shares": 161,
+    "entry_utc": "2026-10-06T14:18:37.269400+00:00",
+    "cls": "DETERMINISTIC_CONFIRMATION",
+    "basis": 4995.99,
+    "sold": 161,
+    "open_sh": 0,
+    "realized_pnl": -638.84,
+    "unrealized_pnl": 0.0,
+    "exit_evidence": [
+     {
+      "px": 27.809999465942383,
+      "sh": 100,
+      "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~100 of 161 at next open; residual stop close<$27.29",
+      "utc": "2026-10-07T13:31:05.380413+00:00"
+     },
+     {
+      "px": 25.90999984741211,
+      "sh": 61,
+      "why": "mgmt review: tightened stop just below $27.29",
+      "utc": "2026-10-13T13:32:04.406962+00:00"
+     }
+    ]
+   },
+   {
+    "ticker": "TWST",
+    "entry_px": 209.5500030517578,
+    "shares": 11,
+    "entry_utc": "2026-10-06T14:18:54.441540+00:00",
+    "cls": "DETERMINISTIC_CONFIRMATION",
+    "basis": 2307.36,
+    "sold": 11,
+    "open_sh": 0,
+    "realized_pnl": -557.89,
+    "unrealized_pnl": 0.0,
+    "exit_evidence": [
+     {
+      "px": 158.25999450683594,
+      "sh": 4,
+      "why": "MGMT_REVIEW_2026-10-06: Underweight \u2014 sell ~4 of 11 at next open; residual hard exit on close<164",
+      "utc": "2026-10-07T13:31:05.372225+00:00"
+     },
+     {
+      "px": 159.74000549316406,
+      "sh": 7,
+      "why": "mgmt review: hard exit on any close below $164",
+      "utc": "2026-10-12T19:16:53.817584+00:00"
+     }
+    ]
+   },
+   {
+    "ticker": "PBF",
+    "entry_px": 80.0,
+    "shares": 62,
+    "entry_utc": "2026-10-02",
+    "cls": "V1_LEDGER",
+    "basis": 4960.0,
+    "sold": 0,
+    "open_sh": 62,
+    "realized_pnl": 0,
+    "unrealized_pnl": -237.46,
+    "exit_evidence": []
+   },
+   {
+    "ticker": "ACN",
+    "entry_px": 205.0,
+    "shares": 24,
+    "entry_utc": "2026-10-02",
+    "cls": "V1_LEDGER",
+    "basis": 4920.0,
+    "sold": 24,
+    "open_sh": 0,
+    "realized_pnl": -239.17,
+    "unrealized_pnl": 0.0,
+    "exit_evidence": [
+     {
+      "px": 195.22999572753906,
+      "sh": 24,
+      "why": "close<194.0",
+      "utc": "2026-10-07T13:31:05.354523+00:00"
+     }
+    ]
+   },
+   {
+    "ticker": "APPS",
+    "entry_px": 11.3,
+    "shares": 442,
+    "entry_utc": "2026-10-02",
+    "cls": "V1_LEDGER",
+    "basis": 4994.6,
+    "sold": 442,
+    "open_sh": 0,
+    "realized_pnl": -445.67,
+    "unrealized_pnl": 0.0,
+    "exit_evidence": [
+     {
+      "px": 10.302000045776367,
+      "sh": 442,
+      "why": "gap-through open below stop 10.42",
+      "utc": "2026-10-07T13:32:04.769456+00:00"
+     }
+    ]
+   }
+  ],
+  "cash": 92899.01,
+  "nav": 97621.55,
+  "net_pct": -2.38,
+  "realized": -2140.99,
+  "unrealized": -237.46,
+  "ledger_nav_1023": 97621.55,
+  "controls": {
+   "naive_same_names_pct": -2.97,
+   "spy_matched_pct": -0.49,
+   "watchlist_naive_pct": -3.44,
+   "deployed": 27176.74,
+   "alpha_per_deployed_pct": -8.75,
+   "naive_per_deployed_pct": -10.93
+  }
+ },
+ "c12": {
+  "open_positions": [
+   {
+    "ticker": "HPE",
+    "decision": "2026-10-02",
+    "entry_session": "2026-10-05",
+    "entry": 66.88,
+    "shares": 74.760769,
+    "mark": 56.689998626708984,
+    "unrealized_net": -771.05,
+    "ret_pct": -15.24,
+    "spy_pct": -1.26,
+    "excess_pp": -13.97
+   },
+   {
+    "ticker": "NTAP",
+    "decision": "2026-10-02",
+    "entry_session": "2026-10-05",
+    "entry": 216.43,
+    "shares": 23.102159,
+    "mark": 215.47999572753906,
+    "unrealized_net": -31.93,
+    "ret_pct": -0.44,
+    "spy_pct": -1.26,
+    "excess_pp": 0.82
+   },
+   {
+    "ticker": "PLTR",
+    "decision": "2026-10-09",
+    "entry_session": "2026-10-12",
+    "entry": 201.475,
+    "shares": 24.816974,
+    "mark": 196.75,
+    "unrealized_net": -127.14,
+    "ret_pct": -2.35,
+    "spy_pct": -2.42,
+    "excess_pp": 0.07
+   },
+   {
+    "ticker": "COP",
+    "decision": "2026-10-16",
+    "entry_session": "2026-10-19",
+    "entry": 142.69,
+    "shares": 35.040997,
+    "mark": 150.8000030517578,
+    "unrealized_net": 273.9,
+    "ret_pct": 5.68,
+    "spy_pct": -0.95,
+    "excess_pp": 6.63
+   }
+  ],
+  "closed_trades": 0,
+  "noentry_decisions": [
+   {
+    "ticker": "MRNA",
+    "session": "2026-09-25",
+    "pm": "Sell",
+    "fwd_pct": 0.61,
+    "spy_fwd_pct": -1.48
+   },
+   {
+    "ticker": "P",
+    "session": "2026-09-25",
+    "pm": "Sell",
+    "fwd_pct": -2.12,
+    "spy_fwd_pct": -1.48
+   },
+   {
+    "ticker": "AMD",
+    "session": "2026-09-25",
+    "pm": "Hold",
+    "fwd_pct": -18.05,
+    "spy_fwd_pct": -1.48
+   },
+   {
+    "ticker": "VLO",
+    "session": "2026-09-25",
+    "pm": "Sell",
+    "fwd_pct": 8.29,
+    "spy_fwd_pct": -1.48
+   },
+   {
+    "ticker": "ILMN",
+    "session": "2026-09-25",
+    "pm": "Sell",
+    "fwd_pct": -0.21,
+    "spy_fwd_pct": -1.48
+   },
+   {
+    "ticker": "MPC",
+    "session": "2026-09-25",
+    "pm": "Sell",
+    "fwd_pct": 16.19,
+    "spy_fwd_pct": -1.48
+   },
+   {
+    "ticker": "RVTY",
+    "session": "2026-09-25",
+    "pm": "Sell",
+    "fwd_pct": 5.12,
+    "spy_fwd_pct": -1.48
+   },
+   {
+    "ticker": "P",
+    "session": "2026-10-02",
+    "pm": "Sell",
+    "fwd_pct": -12.0,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "PANW",
+    "session": "2026-10-02",
+    "pm": "Sell",
+    "fwd_pct": -5.63,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "TER",
+    "session": "2026-10-02",
+    "pm": "Sell",
+    "fwd_pct": -31.22,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "MRNA",
+    "session": "2026-10-02",
+    "pm": "Hold",
+    "fwd_pct": 5.31,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "LITE",
+    "session": "2026-10-02",
+    "pm": "Sell",
+    "fwd_pct": -30.33,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "CRWD",
+    "session": "2026-10-02",
+    "pm": "Hold",
+    "fwd_pct": -4.62,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "ILMN",
+    "session": "2026-10-02",
+    "pm": "Sell",
+    "fwd_pct": -1.33,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "AMD",
+    "session": "2026-10-02",
+    "pm": "Hold",
+    "fwd_pct": -18.48,
+    "spy_fwd_pct": -1.26
+   },
+   {
+    "ticker": "HPE",
+    "session": "2026-10-09",
+    "pm": "Sell",
+    "fwd_pct": -22.83,
+    "spy_fwd_pct": -2.39
+   },
+   {
+    "ticker": "P",
+    "session": "2026-10-09",
+    "pm": "Underweight",
+    "fwd_pct": -20.17,
+    "spy_fwd_pct": -2.39
+   },
+   {
+    "ticker": "ILMN",
+    "session": "2026-10-09",
+    "pm": "Sell",
+    "fwd_pct": -3.15,
+    "spy_fwd_pct": -2.39
+   },
+   {
+    "ticker": "MRNA",
+    "session": "2026-10-16",
+    "pm": "Sell",
+    "fwd_pct": -8.22,
+    "spy_fwd_pct": -0.43
+   },
+   {
+    "ticker": "MPC",
+    "session": "2026-10-16",
+    "pm": "Hold",
+    "fwd_pct": -4.36,
+    "spy_fwd_pct": -0.43
+   },
+   {
+    "ticker": "APA",
+    "session": "2026-10-16",
+    "pm": "Hold",
+    "fwd_pct": 6.13,
+    "spy_fwd_pct": -0.43
+   },
+   {
+    "ticker": "APA",
+    "session": "2026-10-23",
+    "pm": "Sell",
+    "fwd_pct": 0.0,
+    "spy_fwd_pct": 0.0
+   },
+   {
+    "ticker": "FDS",
+    "session": "2026-10-23",
+    "pm": "Underweight",
+    "fwd_pct": 0.0,
+    "spy_fwd_pct": 0.0
+   },
+   {
+    "ticker": "PTC",
+    "session": "2026-10-23",
+    "pm": "Sell",
+    "fwd_pct": 0.0,
+    "spy_fwd_pct": 0.0
+   }
+  ],
+  "sell_calls_beating_spy": "10/18",
+  "note": "20-session holds; all 4 entries still open; exits mature ~2026-10-30..11-18. 9/25 entries non-scoreable (late)."
+ },
+ "asst_hypothetical": {
+  "note": "ASST triggered 10/14, blocked by RISK_PLAN_REQUIRED (unexecuted). Hypothetical only, not a trade."
+ }
+}

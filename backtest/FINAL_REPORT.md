@@ -276,3 +276,98 @@ evidence exists. n=6 over one 3-week window: exploratory evidence of
 execution value, no evidence yet of profitable selection. PBF was the
 only profitable thesis (+14% MFE) and closed under its authored stop
 (78) on 10/23, ending negative.
+
+## Consolidated AI-decision evidence (mission12.json) — FINAL
+
+### Reconciliation of the ALPHA paper book (supersedes mission11 v1)
+
+v1 errors: PGEN fill was $8.20 not $8.21; PBF was reported as exited
+under its $78 rule — it is OPEN (the close<78 trigger only CONFIRMED on
+10/23; exit executes at the next open — unexecuted as of 10/23 close);
+exit legs needed the postmortem `non_economic` flags to exclude
+duplicate-incident rows (ACN @195.00, SDGR @25.69); V1 entry bases are
+feeless, V2 `PAPER_ENTRY` costs include the fee. Reconciled book now
+reproduces canonical r7b1 to the cent: realized **-2,140.99**, cash
+92,899.01, NAV(10/23) **97,621.55 (-2.38%)**.
+
+Population (only ACTUAL executions): 6 fills, all LONG —
+PBF 62@80 open; ACN 24@205->195.23 (authored close<194);
+APPS 442@11.30->10.30 (gap through 10.42 stop);
+PGEN 609@8.20->7.79 (corrective exit after monitor MISSED the 7.75
+stop); SDGR 161@31.00->27.81/25.91 (discretionary mgmt reviews);
+TWST 11@209.55->158.26/159.74 (mgmt reviews).
+Excluded: ASST trigger 10/14 blocked by RISK_PLAN_REQUIRED (unexecuted);
+PBF 10/16 partial-exit intents were shadow_only (unexecuted);
+E1 shadow marks are counterfactual diagnostics (not trades).
+
+| Book/control (10/02-10/23, identical 10bps costs) | net % |
+|---|---|
+| AI as-recorded | -2.38 |
+| Same-names naive hold | -2.97 |
+| V2 watchlist-naive (10 names, 10/05 open) | -3.44 |
+| SPY matched | -0.49 |
+| per $ deployed: AI -8.75% vs naive -10.93% | |
+
+### C12_PROSPECTIVE (read-only, its own 20-session hold policy)
+
+Scoreable cycles 10/02-10/23: 4 ENTRY fills, all OPEN (exits mature
+10/30-11/18, none closed yet): HPE -15.2% vs SPY -1.3% (excess -14.0pp);
+NTAP -0.4% (+0.8pp); PLTR -2.4% (+0.1pp); COP +5.7% (+6.6pp).
+0 completed lifecycles. 2026-09-25 entries non-scoreable (late) —
+excluded. 18 scoreable Sell/Underweight NO_ENTRY calls: 10/18 (56%)
+underperformed SPY forward — coin-flip accuracy with large variance
+(correct: TER -31%, LITE -30%, HPE -23% avoided on 10/9; wrong: MPC
++16%, VLO +8%, RVTY +5% called Sell). C12 NAV 99,383 (-0.62%, 10/25).
+
+### Answers to the five questions
+
+1. Stock selection: CONTRADICTED so far — 6/6 ALPHA picks underwater at
+   horizon; C12 2/4 entries beat SPY (HPE dominates negatively); C12
+   avoid calls 56% correct ≈ chance.
+2. LONG/SHORT direction: UNSUPPORTED — zero authored shorts in either
+   book; all executed risk was long into a falling tape.
+3. Entry timing: WEAK POSITIVE — zone-limit discipline beat holding the
+   same names (+0.6pp book, +2.2pp per $ deployed) and beat buying the
+   whole watchlist (+1.1pp); E1 shadow marks showed +1.7/+2.8pp day-1
+   discipline deltas.
+4. Management/exits: MIXED — mgmt reviews (SDGR/TWST) cut losses
+   (+0.75pp vs rules-only); but ACN's authored close<194 stop exited at
+   195 and the stock sits at 249 (+21%) — the invalidation was
+   structurally wrong. PGEN's stop was correct but the monitor missed
+   it (operational bug, not judgment).
+5. Portfolio economics after costs: NEGATIVE — ALPHA -2.38%, C12
+   -0.62%, both behind SPY-matched (-0.49% / flat windows).
+
+### Verdict
+
+NO credible evidence of profitable AI investment decisions yet. What is
+supported: authored execution mechanics (zone entries, selective
+triggering vs blanket watchlist buys, discretionary management reviews)
+add small positive value RELATIVE to naive alternatives — roughly
++0.6-2.2pp. What is contradicted: profitable selection — every
+concrete long pick in the only prospective window lost money or
+underperformed SPY. What is unsupported: short-side ability (never
+authored), and any claim of alpha (n=10 executions, one regime,
+~3 weeks).
+
+Weaknesses found in the AI decisions (evidence-based):
+- Long-only bias in a falling window; no hedge/short capability used.
+- Some authored stops sat at levels the market immediately broke
+  (ACN 194 vs 200-SMA rationale — exited at 195, stock +21% later);
+  invalidations need structure-level justification, not round numbers.
+- Operational integrity: missed stop (PGEN), duplicate exits, missed
+  exit review (PBF 10/16-19) — monitor bugs cost real P&L.
+- Trigger-without-exit-plan existed (ASST) — correctly blocked by the
+  new RISK_PLAN_REQUIRED gate; validates that control.
+- C12 Sell calls have coin-flip accuracy; strong Sell calls caught
+  TER/LITE crashes but sold winners MPC/VLO/RVTY.
+
+Concrete improvements justified:
+- Enforce (already-gated) machine-actionable exit plans pre-entry; add
+  monitor self-tests for stop evaluation coverage (PGEN-class bug).
+- For close<level invalidations, require the authored level to reference
+  a named structure (SMA/shelf) and a scheduled re-evaluation —
+  ACN's stop lacked both.
+- Keep selective-trigger vs watchlist-buy discipline: measured +1pp.
+- Next evidence milestone: C12 exits mature 10/30-11/18 (4 positions);
+  ALPHA PBF pending exit at next open; rescore this table then.
