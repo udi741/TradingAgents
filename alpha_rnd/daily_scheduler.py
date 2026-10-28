@@ -246,7 +246,8 @@ def deep_allocation(session: str) -> list[str]:
     orchestration only, no strategy logic duplicated here."""
     pool = (_j(EV_DIR / f"candidate_pool_frozen_{session}.json", {}) or {}) \
         .get("candidates") or []
-    return _load_discovery().select_deep_candidates(pool, quota=DEEP_QUOTA)
+    return _load_discovery().select_deep_candidates(
+        pool, quota=_load_discovery().research_quota(session))
 
 
 def bridge_status() -> str:

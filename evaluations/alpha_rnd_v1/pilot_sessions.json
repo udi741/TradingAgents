@@ -1,0 +1,6 @@
+{
+ "kind": "ALPHA 20-stock research pilot — self-limiting, session-scoped",
+ "authorization": "three sessions at quota 20; all other sessions quota 10",
+ "sessions": {"2026-10-29": 20, "2026-10-30": 20, "2026-11-02": 20},
+ "note": "removing a date or finishing the three sessions automatically restores quota 10; no cron or env change required"
+}
