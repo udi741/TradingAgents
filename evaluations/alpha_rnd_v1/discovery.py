@@ -44,8 +44,31 @@ MIN_HISTORY = 252
 # same env the scheduler reads — the frozen pool records this value and
 # deep_allocation selects from it. ALPHA_RESEARCH_BUDGET may raise it
 # experimentally up to 30; production default stays 10.
-DEEP_QUOTA = min(max(int(os.environ.get("ALPHA_RESEARCH_BUDGET", "10")), 1),
-                 30)
+DEFAULT_QUOTA = 10
+
+
+def research_quota(session: str) -> int:
+    """Session-scoped research budget, resolved once per session.
+
+    Priority: explicit ALPHA_RESEARCH_BUDGET env > self-limiting pilot list
+    (pilot_sessions.json, keyed by session date — bounded sessions only,
+    auto-reverts to the default with no cleanup) > DEFAULT_QUOTA.
+    """
+    env = os.environ.get("ALPHA_RESEARCH_BUDGET")
+    if env:
+        return min(max(int(env), 1), 30)
+    try:
+        pilot = json.loads(
+            (Path(__file__).parent / "pilot_sessions.json").read_text())
+        q = (pilot.get("sessions") or {}).get(session)
+        if q:
+            return min(max(int(q), 1), 30)
+    except Exception:
+        pass
+    return DEFAULT_QUOTA
+
+
+DEEP_QUOTA = research_quota(None)
 
 WIKI_SOURCES = [
     ("sp500", "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", "Symbol"),
@@ -458,7 +481,7 @@ def compute_result(session: str, tickers: list[str], md: dict,
         "eligible_features": eligible_features(laneA, laneB, laneC,
                                                rs_leaders, catalyst, fund,
                                                feats, {c["ticker"] for c in pool}),
-        "deep_quota": DEEP_QUOTA,
+        "deep_quota": research_quota(session),
         "artifact_sha256": None,
     }
     # annotate deep-selection rank/score (order unchanged)
