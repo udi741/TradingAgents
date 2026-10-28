@@ -554,3 +554,41 @@ in the alpha_rnd.daily_scheduler cron line; keep the built-in
 next session: summary event should show session_health=OK and
 dispositions split across REANALYZE/EXECUTABLE/NO_TRADE — zero or
 few AMBIGUOUS_REJECTED; any all-failed scan emits AUTHORING_FAILED.
+
+## GO/NO-GO — ALPHA production repair (final)
+
+1. Remaining 5 ambiguous cases: NOT RESOLVABLE without inventing
+   economics. RESOLVABLE_AMBIGUITY_TYPES covers sizing/zone conflicts
+   only when a valid contract claims them; none of the five authored a
+   contract — the model could not pick authoritative numbers from
+   contradictory report sections. Correct outcome = stay rejected.
+   The improvement is classification honesty, not acceptance rate.
+2. Corrected Oct-27 dispositions: 4 REANALYZE_ON_TRIGGER, 1
+   PUBLISHED_NON_EXECUTABLE (paper SHORT), 5 AMBIGUOUS_REJECTED.
+3. Downstream safety verified: _machine_executable=False for all 4
+   REANALYZE + resolved SHORT (never authorizes); NTSK/TEAM would-be
+   executables stay blocked by their genuine conflicts; LONG gates
+   (has_authority + project_execution) unchanged; fabricated numbers
+   fail closed; no positions/watches/cron touched. 55 tests pass.
+4. Reporting: publication summary now carries
+   session_health=AUTHORING_FAILED when every output fails; per-ticker
+   violations already enumerate exact reasons; telegram_relay is
+   delivery-only — it will surface the flag when reading
+   scheduler_events (no relay change needed, none made).
+5. Research budget: ALPHA_RESEARCH_BUDGET (1..30) exists; quota is a
+   RUN cap, not a dollar cap — the bridge has no monetary metering.
+   Enforceable alternative: worst-case $3/run bound (10=$30, 20=$60,
+   30=$84/session) + research_budget.py dry-run selection by the
+   existing deep_score rule. NOT a hard dollar ceiling — stated
+   plainly, not claimed.
+6. Deployment plan (not executed): commit 3404d5d4 carries only
+   lab-side changes (synthesize.py disposition, scheduler summary
+   field, tests, research_budget.py). Deploy = cherry-pick those 4
+   files into the production checkout's alpha_rnd/, run
+   `python -m alpha_rnd.test_oct27_dispositions` there, then set
+   ALPHA_RESEARCH_BUDGET=20 in the cron env for one controlled session.
+   Rollback = revert the two source files; no state migration exists.
+7. RECOMMENDATION: GO for the authoring repair deployment and ONE
+   controlled 20-stock session — after approval of the ~$60
+   worst-case inference spend. The repair changes classification
+   honesty and reporting, not trading behavior; risk is low.
