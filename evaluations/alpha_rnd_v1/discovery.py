@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 import time
 import urllib.request
@@ -39,7 +40,12 @@ SEC_UA = {"User-Agent": "ResearchAgent admin@openai.com", "Accept-Encoding": "id
 MIN_PRICE = 5.0
 MIN_MEDIAN_DV20 = 20_000_000
 MIN_HISTORY = 252
-DEEP_QUOTA = 10  # must match daily_scheduler.DEEP_QUOTA
+# Single source of truth for the requested research budget. Must read the
+# same env the scheduler reads — the frozen pool records this value and
+# deep_allocation selects from it. ALPHA_RESEARCH_BUDGET may raise it
+# experimentally up to 30; production default stays 10.
+DEEP_QUOTA = min(max(int(os.environ.get("ALPHA_RESEARCH_BUDGET", "10")), 1),
+                 30)
 
 WIKI_SOURCES = [
     ("sp500", "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", "Symbol"),
