@@ -423,9 +423,14 @@ def disposition(intent: dict | None, errs: list[str], held: set[str]) -> str:
     if cls in ("REJECT", "NO_WATCH"):
         return "NO_ACTION"
     if cls == "REANALYZE_ON_TRIGGER" or intent.get("watch_mode") == "REANALYZE_ON_TRIGGER":
-        if errs:
-            pass  # falls through to error mapping below
-        else:
+        # A reanalyze classification IS the ambiguity-aware wait class:
+        # model-declared ambiguities (pending binary events, unresolved
+        # catalysts) are its content, not authoring defects. Only hard
+        # structural errors (ticker mismatch, contradictions, unsupported
+        # numbers) still fail closed.
+        hard = [e for e in errs
+                if not e.startswith(("ambiguous_type:", "ambiguous:"))]
+        if not hard:
             return "REANALYZE_ON_TRIGGER"
     if not errs:
         return "EXECUTABLE_WATCH" if _machine_executable(intent) \
@@ -504,7 +509,12 @@ def run(session: str) -> dict:
         i["decision"] = _dec.from_intent(
             i, a.get("signal"), _bearish_geometry(i), session)
         d = disposition(i, errs, held)
-        if d == "EXECUTABLE_WATCH" and resolved is not None and \
+        if resolved is not None and \
+                resolved.get("direction") == "SHORT":
+            # a valid SHORT contract is a paper-simulation object, never
+            # ambiguous prose — publish as non-executable research
+            d = "PUBLISHED_NON_EXECUTABLE"
+        elif d == "EXECUTABLE_WATCH" and resolved is not None and \
                 not econ_contract.has_authority(i, resolved):
             d = "PUBLISHED_NON_EXECUTABLE"
         disps[t] = {"disposition": d, "violations": errs,

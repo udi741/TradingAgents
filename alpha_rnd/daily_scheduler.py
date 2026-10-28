@@ -598,9 +598,14 @@ def _run_cycle(session: str) -> None:
         # Normal ambiguity is a fail-closed classification, not an emergency:
         # exactly one informational summary, never ACTION_REQUIRED.
         if _publication_summary_new(session, counts, analysis):
+            # a run where EVERY researched output failed authoring or
+            # validation is not a green scan — flag it explicitly
+            failed = {"AMBIGUOUS_REJECTED", "ANALYSIS_STATUS"}
+            all_failed = counts and set(counts) <= failed
             event("ALPHA_PUBLICATION_SUMMARY", session=session,
                   dispositions=counts, **_analysis_fields(analysis),
               detail={t: d["disposition"] for t, d in disps.items()},
+              session_health="AUTHORING_FAILED" if all_failed else "OK",
               user_action_required="none")
     elif reviews:
         # pre-disposition docs only (legacy path; should not occur)
