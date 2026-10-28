@@ -498,3 +498,59 @@ quality cannot be measured better than this.
 
 Final verdict stands: no validated profitable AI selection policy;
 nothing deployable.
+
+## Oct-27 production diagnosis + pipeline fix (this commit)
+
+### Why 10/10 were AMBIGUOUS_REJECTED
+
+Root cause in `synthesize.disposition()`: any validation error
+containing "ambiguous"/"unsupported" mapped to AMBIGUOUS_REJECTED —
+including `REANALYZE_ON_TRIGGER` intents, where model-declared
+ambiguity (pending earnings/FDA, unverified catalyst) IS the
+legitimate class. The ambiguity declarations are real content
+contradictions inside the TA reports, not parse failures.
+
+| Ticker | signal | model declared | corrected disposition | was it a defect? |
+|---|---|---|---|---|
+| AMPL | Sell | ENTRY_ZONE_CONFLICT (Q3 binary) | REANALYZE_ON_TRIGGER | mislabeled, economically justified wait |
+| BRZE | Sell | sizing 5-6% vs 5-8%, catalyst, unsupported frac | AMBIGUOUS_REJECTED | genuine NO_TRADE (contradictions) |
+| XNCR | Overweight | stop discrepancy 24.95 vs 25.20; LONG decision authored | AMBIGUOUS_REJECTED | genuine NO_TRADE (conflicting stops) |
+| IOVA | Sell | catalyst unverified | REANALYZE_ON_TRIGGER | mislabeled |
+| MRNA | Sell | sizing conflict; SHORT econ contract authored | PUBLISHED_NON_EXECUTABLE (paper-short) | mislabeled; SHORT has no production path |
+| HTFL | Sell | sizing 1.25% vs 2.5%, event | AMBIGUOUS_REJECTED | genuine NO_TRADE |
+| GRAL | Sell | FDA+earnings binary | REANALYZE_ON_TRIGGER | mislabeled |
+| TEAM | Sell | entry zone 196-200 vs 208-210, target<=entry | AMBIGUOUS_REJECTED | genuine NO_TRADE |
+| CAI | Hold | earnings binary | REANALYZE_ON_TRIGGER | mislabeled |
+| NTSK | Sell | sizing conflict | AMBIGUOUS_REJECTED | genuine NO_TRADE |
+
+Fixes in `synthesize.py`: (a) REANALYZE class ignores declared-ambiguity
+errors (hard structural errors still fail closed); (b) a resolved
+SHORT contract -> PUBLISHED_NON_EXECUTABLE paper-research instead of
+ambiguous. In `daily_scheduler.py`: publication summary now carries
+`session_health=AUTHORING_FAILED` when every output fails — a fully
+failed scan can no longer masquerade as a green run.
+Regression test `alpha_rnd/test_oct27_dispositions.py` replays all 10
+real artifacts: 4 REANALYZE, 1 paper-short, 5 justified rejects,
+plus a fabricated-number fail-closed check. All PASS.
+
+### The 10-stock limit
+
+`DEEP_QUOTA = clamp(ALPHA_RESEARCH_BUDGET, 1, 30)`, default 10;
+the cron job does not set it. Oct-27 pool = 28 candidates ranked by
+deep_score; top-10 selected. Cost model: 1 TA run/candidate,
+~417s mean duration, worst-case ~$3/run.
+
+| Quota | added runs | worst-case $/session | wallclock @4-way |
+|---|---|---|---|
+| 10 (current) | — | $30 | ~17min |
+| 20 | +10 | $60 | ~35min |
+| 30 (hard cap) | +18* | $84 | ~49min |
+*pool had only 28. Tool: `python -m alpha_rnd.research_budget [pool]`
+selects by the EXISTING deep_score rule — merit-ranked, not slot-fill.
+
+Deployment (needs approval, not done): set `ALPHA_RESEARCH_BUDGET=20`
+in the alpha_rnd.daily_scheduler cron line; keep the built-in
+<=30 cap as the daily spending ceiling (~$84 worst case). Verify
+next session: summary event should show session_health=OK and
+dispositions split across REANALYZE/EXECUTABLE/NO_TRADE — zero or
+few AMBIGUOUS_REJECTED; any all-failed scan emits AUTHORING_FAILED.
