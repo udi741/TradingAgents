@@ -339,6 +339,14 @@ def _risk_blocked(st: dict, w: dict) -> bool:
         and st.get("risk_blocked", {}).get(w["ticker"]) == _watch_rev(w)
 
 
+def _event_unverified(w: dict) -> list[str]:
+    """Declared event/catalyst prerequisites that no machine-readable check
+    can verify. Free-text conditions never gate automatic entry: any such
+    prerequisite blocks AUTO_ENTRY until it is absent or machine-encoded."""
+    return [str(x) for x in (w.get("event_constraints") or [])] + \
+        [str(x) for x in (w.get("no_entry_conditions") or [])]
+
+
 def _exec_check(st: dict, exec_id: str) -> bool:
     """Exactly-once guard, phase 1: True if fresh (not yet recorded)."""
     if exec_id in st.setdefault("executed", []):
@@ -361,6 +369,19 @@ def do_fill(st: dict, wl: dict, ticker: str, price: float, frac: float, ev_type=
         emit_once(st, {"ticker": ticker, "action": "NO_ACTION",
                   "why": "entry_not_authorized: fill refused"},
                   f"entry_gate_fill:{ticker}:{_watch_rev(watch)}")
+        return
+    if watch["cls"] != "REANALYZE_ON_TRIGGER" and _event_unverified(watch):
+        emit_once(st, {"ticker": ticker, "action": "NO_ACTION",
+                  "why": f"event_prerequisite_unverified "
+                         f"{_event_unverified(watch)[:2]} — fill refused"},
+                  f"event_gate_fill:{ticker}:{_watch_rev(watch)}")
+        return
+    ceil = ((watch.get("params") or {}).get("max_entry_price"))
+    if watch["cls"] != "REANALYZE_ON_TRIGGER" and ceil is not None \
+            and price > ceil:
+        emit_once(st, {"ticker": ticker, "action": "NO_ACTION",
+                  "why": f"max_entry_price: fill {price} > {ceil} — refused"},
+                  f"price_gate_fill:{ticker}:{_watch_rev(watch)}")
         return
     if ticker in st["positions"]:
         emit(st, {"ticker": ticker, "action": "NO_ACTION", "why": "already_open"})
@@ -474,6 +495,26 @@ def do_exit(st: dict, ticker: str, price: float, why: str, how: str = "",
             f"Exit @ ${price:.2f}\nProceeds ${proceeds:,.2f}")
 
 
+def _gap_blocked(st: dict, od: dict, px: float, is_exit: bool) -> bool:
+    """Entry gap guard: a pending next-open ENTRY is cancelled (consumed,
+    never refires) when the actual open gaps more than `max_gap_pct` past
+    the confirming close. Exits and unguarded orders are unaffected."""
+    if is_exit or not od.get("gap_ref") or not od.get("max_gap_pct"):
+        return False
+    if px <= od["gap_ref"] * (1 + od["max_gap_pct"]):
+        return False
+    if emit_once(st, {"ticker": od["ticker"], "action": "NO_ACTION",
+                 "why": f"gap_guard: open {px} gaps "
+                        f">{od['max_gap_pct'] * 100:.0f}% past confirming "
+                        f"close {od['gap_ref']} — entry cancelled"},
+                 f"gap_block:{od['order_id']}"):
+        notify(f"ALPHA_RND ENTRY CANCELLED — GAP GUARD\n\n{od['ticker']}\n"
+               f"Open {px} gapped past confirm {od['gap_ref']} "
+               f"(max {od['max_gap_pct'] * 100:.0f}%).\nNOT BOUGHT.")
+    _exec_commit(st, od["order_id"])
+    return True
+
+
 def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
                     current_session_date: str, live: bool = True,
                     intraday: dict[str, pd.DataFrame] | None = None) -> None:
@@ -507,6 +548,8 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
                         str(idf.index[0].date()) == current_session_date \
                         and current_session_date > od["confirm_session"]:
                     px = float(idf["Open"].iloc[0])
+                    if _gap_blocked(st, od, px, is_exit):
+                        continue
                     if _exec_check(st, od["order_id"]):
                         if is_exit:
                             do_exit(st, t, px, od["why"], shares=od.get("shares"))
@@ -526,6 +569,8 @@ def resolve_pending(st: dict, wl: dict, daily: dict[str, pd.DataFrame],
                     notify(f"ALPHA_RND MISSED EXECUTION\n\n{t}\nTarget open {target} already passed (machine off at open?).\nManual review required — no retroactive fill.")
                 continue
             px = float(df[df.index.strftime("%Y-%m-%d") == target]["Open"].iloc[0])
+            if _gap_blocked(st, od, px, is_exit):
+                continue
             if _exec_check(st, od["order_id"]):
                 if is_exit:
                     do_exit(st, t, px, od["why"], shares=od.get("shares"))
@@ -585,6 +630,12 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                       "why": "entry_not_authorized: watch revision is not the latest EXECUTABLE_WATCH decision"},
                       f"entry_gate:{t}:{_watch_rev(w)}")
             continue
+        if w["cls"] != "REANALYZE_ON_TRIGGER" and _event_unverified(w):
+            emit_once(st, {"ticker": t, "action": "NO_ACTION",
+                      "why": f"event_prerequisite_unverified "
+                             f"{_event_unverified(w)[:2]}"},
+                      f"event_block:{t}:{_watch_rev(w)}")
+            continue
         if session > EXPIRY:
             _set_watch_status(st, w, "EXPIRED")
             emit_once(st, {"ticker": t, "action": "WATCH_EXPIRED", "session": session},
@@ -606,7 +657,8 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                 "orderly_pullback_close": ("pb_zone",),
                 "reclaim_2step": ("reclaim", "hold"),
                 "gapfill_probe": ("kill", "probe_zone"),
-                "event_gated_multi_close": ("gate_date", "level")}
+                "event_gated_multi_close": ("gate_date", "level"),
+                "confirmed_close_above": ("trigger_level",)}
         _missing = [f"{tt_}:{k}" for tt_, ks in _REQ.items() if tt_ in tt
                     for k in ks if k not in p]
         if _missing:
@@ -641,24 +693,47 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                            "No machine-actionable post-entry risk plan.\n"
                            "Status: NOT BOUGHT. USER ACTION: NONE")
                 else:
-                    st["pending_open_fills"].append({"ticker": t, "frac": w["size_frac"],
-                                                     "why": how, "confirm_session": session})
+                    od = {"ticker": t, "frac": w["size_frac"],
+                          "why": how, "confirm_session": session}
+                    # gap guard: entry at next open is cancelled when the
+                    # open gaps too far past the confirming close
+                    if p.get("max_gap_pct"):
+                        od["gap_ref"], od["max_gap_pct"] = \
+                            c, p["max_gap_pct"]
+                    st["pending_open_fills"].append(od)
                     emit_once(st, {"ticker": t, "action": "CONFIRMED_PENDING_NEXT_OPEN_ENTRY",
                               "how": how, "session": session},
                               f"entry_confirmed:{t}:{session}:{how[:24]}")
                     notify(f"ALPHA_RND ENTRY CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{how}\nClass: {w['cls']}\nEnters at next regular-session open.")
 
+        # machine-encoded no-entry constraint: close through kill_level
+        # expires the setup entirely (thesis invalidation)
+        if p.get("kill_level") is not None and c < p["kill_level"]:
+            _set_watch_status(st, w, "KILLED")
+            emit_once(st, {"ticker": t, "action": "NO_ACTION",
+                      "why": f"kill_level: close {c}<{p['kill_level']}"},
+                      f"kill:{t}:{_watch_rev(w)}")
+            continue
         # mechanical evaluators
         if "confirmed_close_above" in tt:
             lvl = p.get("trigger_level")
-            # entry requires a COMPLETED session close above the authored
-            # level — an intraday touch never confirms; the standard
-            # triggered() path then enters at the next eligible open
-            if lvl is not None and len(df) >= 2:
-                last = df.iloc[-2]
-                if float(last["Close"]) > lvl:
-                    triggered(
-                        f"confirmed close {float(last['Close'])}>{lvl}")
+            # entry requires a COMPLETED-session close past the authored
+            # level. df's last row IS the just-closed session (fetch_daily
+            # end is exclusive of the in-progress session); an intraday
+            # touch never confirms; the standard triggered() path then
+            # enters at the next eligible open. A confirmation window
+            # bounds how long the setup stays alive.
+            n_seen = prog["n_sessions"] = prog.get("n_sessions", 0) + 1
+            win = p.get("confirm_within_sessions")
+            if win is not None and n_seen > win:
+                _set_watch_status(st, w, "EXPIRED")
+                emit_once(st, {"ticker": t, "action": "WATCH_EXPIRED",
+                          "session": session,
+                          "why": f"confirmation window {win} sessions elapsed "
+                                 "without a confirming close"},
+                          f"confirm_expired:{t}:{_watch_rev(w)}")
+            elif lvl is not None and c > lvl:
+                triggered(f"confirmed close {c}>{lvl}")
         if "multi_close_in_zone" in tt:
             z = p["zone"]; n = p.get("closes_required", 2)
             in_zone = ((df["Close"] >= z[0]) & (df["Close"] <= z[1]))
@@ -798,6 +873,12 @@ def intraday_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame]) -> int:
         if now_utc().strftime("%Y-%m-%d") > EXPIRY:
             continue
         if w["cls"] != "REANALYZE_ON_TRIGGER" and not authorized(w):
+            continue
+        if w["cls"] != "REANALYZE_ON_TRIGGER" and _event_unverified(w):
+            emit_once(st, {"ticker": t, "action": "NO_ACTION",
+                      "why": f"event_prerequisite_unverified "
+                             f"{_event_unverified(w)[:2]}"},
+                      f"event_block:{t}:{_watch_rev(w)}")
             continue
         df = data.get(t)
         if df is None:

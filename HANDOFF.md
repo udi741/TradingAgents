@@ -1,6 +1,13 @@
-# TradingAgents — Handoff (as of 2026-11-04)
+# TradingAgents — Handoff (as of 2026-11-04, post-mission)
 
 One document. Read this first. Everything else links from here.
+
+> **Mission outcome (this branch, post-21a75fec): POLICY_DERIVED economic
+> construction implemented + evaluated → NO-GO for new entry
+> authorization.** Mechanism verified end-to-end (+1 executable/230,
+> that trade lost −$36.21); bottleneck is constructive-signal supply
+> (~1.3% of intents), not construction mechanics. Full report:
+> `POLICY_CONSTRUCTION_REPORT_2026-11-04.md`. Production untouched.
 
 ## What is running RIGHT NOW (production, ~/udi_provate/TradingAgents, main@4ab2440f)
 
@@ -45,9 +52,11 @@ One document. Read this first. Everything else links from here.
 | Evidence-class integrity | 4ab2440f | prod | yes | yes | running |
 | entry_feasibility fields | 9547370b | **lab only** | no | yes (6/6) | n/a (diagnostic) |
 | alternate_plans schema+select_plan | 4f5a63cb,fb74a320,8c3a4b4b | **lab only** | no | yes | NO — see A/B below |
-| confirmed_close_above trigger | 8c3a4b4b | **lab only** | no | partial | no |
-| econ_contract.repair | 761e1989,e5c8fe7c | **lab only** | no | yes | yes→0/12 (see below) |
+| confirmed_close_above trigger | 8c3a4b4b+mission | **lab only** | no | **yes** (off-by-one fixed, gap guard, confirm window) | simulated only |
+| econ_contract.repair | 761e1989,e5c8fe7c+mission | **lab only** | no | yes — was DEAD CODE for LONG (`resolved is not None` gate); now fires | yes→0/12 (see below) |
 | Prompt numeric-binding fix | 9f04a428 | **lab only** | no | yes | tested in A/B → insufficient |
+| POLICY_DERIVED construction | mission | **lab only** | no | yes (50 checks) | replay 230: +1 exec, −$36; Phase-5: 0 unsafe |
+| Event-prerequisite enforcement | mission | **lab only** | no | yes | 3 cases correctly gated; RHI constraints now encoded (were silently dropped at publish) |
 
 ## Established findings (evidence, not hypotheses)
 
@@ -74,6 +83,13 @@ can't fix incoherence. **Before reconsidering deployment**: ≥1 bounded
 synthesis run where ≥30% constructive cases yield VALID contracts and
 alternates pass validation at ≥80%. Not yet met.
 
+Post-mission addendum: POLICY_DERIVED construction removes the
+number-authoring dependency entirely — the new constraint is eligibility
+supply (constructive signal + no judgment-level ambiguity ≈1.3% of 230
+intents) and missing economic evidence for continuation entries (1
+activation, stopped −$36.21). Deployment bar is now ECONOMIC, not
+mechanical.
+
 ## Runbook (verified commands)
 
 ```bash
@@ -90,9 +106,14 @@ python3 -c "import json;lg=json.load(open('../research-results-archive/entry_sha
 # tests (lab worktree)
 cd ~/udi_provate/TradingAgents-contract
 PYTHONPATH=.:backtest python3 backtest/test_entry_feasibility.py
-PYTHONPATH=.:backtest python3 backtest/test_authoring_prompt.py
+PYTHONPATH=.:backtest python3 alpha_rnd/test_authoring_prompt.py
 PYTHONPATH=.:backtest python3 backtest/test_entry_shadow.py
+PYTHONPATH=. python3 alpha_rnd/test_econ_policy.py          # 50 checks
+PYTHONPATH=.:backtest python3 backtest/decision_reconstruction.py --econ  # free replay
 # NOTE: alpha_rnd/test_monitor.py has PRE-EXISTING collection error (KeyError 'ZZZ')
+# NOTE: alpha_rnd/test_delta_probe.py fails on py3.10 (needs >=3.11) AND on
+#   py3.12 with 'tradingagents.dataflows has no attribute router' — env issue,
+#   pre-existing, unrelated to this work.
 
 # COSTS MONEY — do not run casually:
 #   alpha_rnd.daily_scheduler --run (TA deep research ~$3/name)

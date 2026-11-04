@@ -80,12 +80,17 @@ def _zone(e):
 
 
 def validate(contract: dict | None, artifact: dict, intent: dict,
-             src_nums: set) -> tuple[list[str], dict | None]:
+             src_nums: set, policy_terms: set | None = None) -> tuple[list[str], dict | None]:
     """Validate the authoritative contract. Returns (errors, resolved).
 
     resolved is a normalized contract only when errors is empty.
     src_nums is the artifact's evidence-binding number set
     (synthesize._nums_in_text).
+
+    policy_terms: numbers computed by econ_policy (POLICY_DERIVED). They are
+    exempt from source binding but pass every other fail-closed gate; each
+    contract number's provenance is recorded on the resolved contract so a
+    policy number can never be mistaken for an authored one.
     """
     if contract is None:
         return [], None
@@ -180,9 +185,17 @@ def validate(contract: dict | None, artifact: dict, intent: dict,
     if not contract.get("horizon"):
         errs.append("ECON_NO_HORIZON")
     # --- evidence binding: every contract number exists in source text ---
+    # Numbers matched by policy_terms are POLICY_DERIVED — exempt from
+    # binding, still subject to every geometry/risk gate above.
+    provenance = {}
     for v in _contract_numbers(contract):
-        if not any(abs(v - s) <= max(0.005 * abs(s), 0.01)
-                   for s in src_nums):
+        if any(abs(v - s) <= max(0.005 * abs(s), 0.01)
+               for s in src_nums):
+            provenance[repr(v)] = "SOURCE_AUTHORED"
+        elif policy_terms and any(abs(v - p) <= max(0.005 * abs(p), 0.01)
+                                  for p in policy_terms):
+            provenance[repr(v)] = "POLICY_DERIVED"
+        else:
             errs.append(f"ECON_UNSUPPORTED_NUMBER:{v}")
     if errs:
         return errs, None
@@ -192,7 +205,11 @@ def validate(contract: dict | None, artifact: dict, intent: dict,
                 "event_constraints": contract.get("event_constraints") or [],
                 "no_entry_conditions":
                     contract.get("no_entry_conditions") or [],
-                "resolves": contract.get("resolves") or []}
+                "resolves": contract.get("resolves") or [],
+                "number_provenance": provenance,
+                "policy_version": (contract.get("policy_version")
+                                   if policy_terms else None),
+                "constructed_by": contract.get("constructed_by")}
 
 
 def _contract_numbers(c: dict) -> list[float]:
@@ -236,6 +253,55 @@ def has_authority(intent: dict, resolved: dict | None) -> bool:
     return bool(resolved and resolved.get("direction") == "LONG")
 
 
+def _encode_constraint(s, params: dict) -> bool:
+    """Strict machine encoding of one free-text constraint. Only exact,
+    unambiguous price/date forms encode; anything else is unverifiable.
+    Encoded constraints become enforced params (max_entry_price refuses a
+    fill above the level; kill_level expires the watch on a close below).
+    Conflicting encodings of the same param are unverifiable."""
+    s = str(s)
+    m = re.search(r"close\s+below\s*\$?(\d+(?:\.\d+)?)", s, re.I)
+    if m:
+        v = float(m.group(1))
+        if params.get("kill_level") not in (None, v):
+            return False
+        params["kill_level"] = v
+        return True
+    m = re.search(r"(?:above|over|past)\s*\$?(\d+(?:\.\d+)?)", s, re.I)
+    if m and re.search(r"chase|chasing|entry|enter|buy", s, re.I):
+        v = float(m.group(1))
+        if params.get("max_entry_price") not in (None, v):
+            return False
+        params["max_entry_price"] = v
+        return True
+    return False
+
+
+def _partition_constraints(resolved: dict, params: dict) -> list[str]:
+    """Route declared constraints into enforceable machine form.
+
+    - `exit on/if ...` event constraints are POST-ENTRY management
+      instructions, not entry prerequisites: they become observational
+      annotations (the management layer is shadow/notification level), and
+      never block entry authorization.
+    - every other event constraint and every no_entry condition must encode
+      to a machine param (price ceiling / kill level) or it stays
+      UNVERIFIED — and the caller blocks automatic execution on it.
+    """
+    remaining = []
+    for s in resolved.get("event_constraints") or []:
+        if re.match(r"\s*exit\s+(on|if)\b", str(s), re.I):
+            params.setdefault("exit_constraints_observational",
+                              []).append(str(s))
+            continue
+        if not _encode_constraint(s, params):
+            remaining.append(str(s))
+    for s in resolved.get("no_entry_conditions") or []:
+        if not _encode_constraint(s, params):
+            remaining.append(str(s))
+    return remaining
+
+
 def project_execution(resolved: dict | None) -> dict | None:
     """Deterministic projection of a VALID economic_authority into the
     monitor's machine-readable watch representation.
@@ -261,11 +327,17 @@ def project_execution(resolved: dict | None) -> dict | None:
     # confirmed-close continuation: requires a completed-session close past
     # the authored level; monitor enters next eligible session, never on an
     # intraday touch. Gap guard and expiry carried verbatim from contract.
+    prov = {k: resolved.get(k) for k in
+            ("number_provenance", "policy_version", "constructed_by")
+            if resolved.get(k) is not None}
     if mode in ("STOP_ENTRY", "CONDITIONAL") and trig is not None:
         params2 = {"trigger_level": trig,
                    "entry_style": "confirmed_close_above"}
         if entry.get("condition"):
             params2["entry_condition"] = entry["condition"]
+        for k in ("max_gap_pct", "confirm_within_sessions"):
+            if _num(entry.get(k)) is not None:
+                params2[k] = _num(entry[k])
         sizing0 = resolved.get("sizing") or {}
         init0 = _num(sizing0.get("initial_frac"))
         stop0 = resolved.get("stop") or {}
@@ -281,6 +353,7 @@ def project_execution(resolved: dict | None) -> dict | None:
             params2["success_criteria"] = plan0["success_criteria"]
         if plan0.get("profit_realization_plan"):
             params2["profit_realization_plan"] =                 plan0["profit_realization_plan"]
+        remaining0 = _partition_constraints(resolved, params2)
         return {"cls": "AUTO_ENTRY",
                 "trigger_type": "confirmed_close_above",
                 "params": params2,
@@ -289,7 +362,15 @@ def project_execution(resolved: dict | None) -> dict | None:
                 "stop_rule": rule0,
                 "exit_rules": [rule0],
                 "target": plan0.get("legacy_target")
-                          or plan0.get("base_case_top")}
+                          or plan0.get("base_case_top"),
+                "trigger": entry.get("condition") or
+                    f"confirmed close above {trig}",
+                "horizon": resolved.get("horizon"),
+                "event_constraints": remaining0,
+                "no_entry_conditions": [],
+                "source": resolved.get("constructed_by") or
+                    "economic_authority",
+                **prov}
     if mode != "LIMIT_ZONE" or zone is None:
         return None
     sizing = resolved.get("sizing") or {}
@@ -318,6 +399,7 @@ def project_execution(resolved: dict | None) -> dict | None:
         params["success_criteria"] = plan["success_criteria"]
     if plan.get("profit_realization_plan"):
         params["profit_realization_plan"] = plan["profit_realization_plan"]
+    remaining = _partition_constraints(resolved, params)
     target = plan.get("legacy_target") or plan.get("base_case_top")
     return {"cls": "AUTO_ENTRY",
             "trigger_type": "intraday_zone_touch",
@@ -330,10 +412,10 @@ def project_execution(resolved: dict | None) -> dict | None:
             "trigger": entry.get("condition") or
                 f"limit zone {zone[0]}-{zone[1]}",
             "horizon": resolved.get("horizon"),
-            "event_constraints": resolved.get("event_constraints") or [],
-            "no_entry_conditions":
-                resolved.get("no_entry_conditions") or [],
-            "source": "economic_authority"}
+            "event_constraints": remaining,
+            "no_entry_conditions": [],
+            "source": resolved.get("constructed_by") or "economic_authority",
+            **prov}
 
 
 def repair(resolved: dict | None, arts: dict, intent: dict, nums: list[float]) -> tuple[dict | None, list[str]]:

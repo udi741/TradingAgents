@@ -1,0 +1,325 @@
+{
+ "calls": 2,
+ "sessions": [
+  {
+   "session": "2026-10-16",
+   "invocations": 1,
+   "call_seconds": 199.7,
+   "tickers": [
+    "ANF",
+    "FIGS",
+    "IOVA",
+    "MRNA",
+    "PD",
+    "PSNL",
+    "RNG",
+    "TEAM",
+    "VEEV",
+    "ZBRA"
+   ],
+   "results": [
+    {
+     "ticker": "ANF",
+     "signal": "Overweight",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+     "violations": [],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "FIGS",
+     "signal": "Overweight",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+     "violations": [],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "IOVA",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "REANALYZE_ON_TRIGGER",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+      "ambiguous_type:SIZING_CONFLICT"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "MRNA",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "REANALYZE_ON_TRIGGER",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+      "ambiguous_type:SIZING_CONFLICT",
+      "ambiguous_type:RISK_CONTRADICTION"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "PD",
+     "signal": "Sell",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "AMBIGUOUS_REJECTED",
+     "violations": [
+      "ambiguous_type:CATALYST_UNRESOLVED",
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "PSNL",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "REANALYZE_ON_TRIGGER",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "RNG",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "REANALYZE_ON_TRIGGER",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "TEAM",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "AMBIGUOUS_REJECTED",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+      "ambiguous_type:CATALYST_UNRESOLVED",
+      "unsupported size_frac 0.0"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "VEEV",
+     "signal": "Sell",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "AMBIGUOUS_REJECTED",
+     "violations": [
+      "ambiguous_type:SIZING_CONFLICT",
+      "ambiguous_type:TRANCHE_CONFLICT"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "ZBRA",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVIDENCE_CONFLICT",
+      "ambiguous_type:SIZING_CONFLICT"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    }
+   ]
+  },
+  {
+   "session": "2026-10-23",
+   "invocations": 1,
+   "call_seconds": 134.4,
+   "tickers": [
+    "AMPL",
+    "APPN",
+    "BRZE",
+    "HAS",
+    "HTFL",
+    "IOVA",
+    "MRNA",
+    "NTSK",
+    "TEAM",
+    "VLO"
+   ],
+   "results": [
+    {
+     "ticker": "AMPL",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "REANALYZE_ON_TRIGGER",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "APPN",
+     "signal": "Sell",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+     "new_disposition": "AMBIGUOUS_REJECTED",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "BRZE",
+     "signal": "Hold",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:CATALYST_UNRESOLVED"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "HAS",
+     "signal": "Overweight",
+     "fresh_classification": "ACTIONABLE_NOW",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+     "violations": [],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "HTFL",
+     "signal": "Sell",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "AMBIGUOUS_REJECTED",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "IOVA",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "MRNA",
+     "signal": "Sell",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "NTSK",
+     "signal": "Sell",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "AMBIGUOUS_REJECTED",
+     "violations": [
+      "ambiguous_type:SIZING_CONFLICT"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "TEAM",
+     "signal": "Underweight",
+     "fresh_classification": "REANALYZE_ON_TRIGGER",
+     "old_disposition": "AMBIGUOUS_REJECTED",
+     "new_disposition": "REANALYZE_ON_TRIGGER",
+     "violations": [
+      "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    },
+    {
+     "ticker": "VLO",
+     "signal": "Sell",
+     "fresh_classification": "WATCH_FOR_ENTRY",
+     "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+     "new_disposition": "AMBIGUOUS_REJECTED",
+     "violations": [
+      "ambiguous_type:CATALYST_UNRESOLVED"
+     ],
+     "policy_constructed": false,
+     "policy_rejected": null,
+     "trigger_type": null,
+     "provenance": null
+    }
+   ]
+  }
+ ]
+}

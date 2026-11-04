@@ -227,6 +227,9 @@ def from_economic_authority(contract: dict, session: str,
          "provenance": {"session": session, "ticker": ticker,
                         "signal": signal, "source": "economic_authority"},
          "costs_bps_per_side": 10, "paper_only": True}
+    for k in ("number_provenance", "policy_version", "constructed_by"):
+        if contract.get(k) is not None:
+            c[k] = contract[k]
     if d == "SHORT":
         c["borrow_bps_per_day"] = SHORT_BORROW_BPS_PER_DAY
         c["exit_mode"] = "buy_to_cover"

@@ -110,7 +110,11 @@ def publish(session: str) -> dict:
                     w.update({k: proj[k] for k in
                               ("cls", "trigger_type", "params", "size_frac",
                                "invalidation", "stop_rule", "trigger",
-                               "target", "exit_rules", "horizon", "source")})
+                               "target", "exit_rules", "horizon", "source",
+                               "event_constraints", "no_entry_conditions",
+                               "number_provenance", "policy_version",
+                               "constructed_by")
+                              if k in proj})
                     by_ticker[t] = w
                     continue
                 by_ticker[t] = {

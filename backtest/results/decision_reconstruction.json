@@ -1,0 +1,5633 @@
+{
+ "generated": "2026-11-04T09:00:28.539381+00:00",
+ "records": [
+  {
+   "session": "2026-10-01",
+   "ticker": "ACN",
+   "signal": "Overweight",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: First-tranche size stated as 2% of portfolio in executive summary vs ~3% in position sizing"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "APPS",
+   "signal": "Hold",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Conflicting entry zones: $11.0-$11.3 in executive summary vs $9.50-$10.50 in reasoning/strategic actions; cannot publish a single zone"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "AVTR",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Internal framing conflict: executive summary prescribes a new quarter-size short for a flat book while position sizing/strategic actions describe trimming an existing long to ~50%",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "BMNR",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: All entry paths gated on NAV/filings data not present in the report; no purely price-deterministic trigger is authorized",
+    "unsupported number 11600000000.0"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "CDNA",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Sizing conflict (~30% tranche in executive summary vs ~50-60% in position sizing) and the $55-56 reload is deleted in the summary but retained in strategic actions",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Re-entry risk cap stated as 1.5-2% of portfolio in executive summary vs ~2.5-3% (~50% of standard dollar risk) in position sizing"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Sizing conflict: ~65 shares / ~$950 risk (~1%) in executive summary vs ~130 shares / ~$2,000 (~2%) in position sizing",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "PBF",
+   "signal": "Overweight",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Stop conflict: $74.50 in executive summary vs $75.50 in reasoning/position sizing"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "QMCO",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-01",
+   "ticker": "SDGR",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Re-entry cap stated as ~2-3% of portfolio and also as under half a standard allocation \u2014 same ceiling expressed two ways",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "ASST",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Text states two re-entry triggers: the trader-plan decisive close above $32.10 plus Bitcoin breakout, which the debate explicitly rejected and replaced with the post-Oct-13 sustained-above-$35 condition; the amended trigger is used here."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "AXGN",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "HHH",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "KOD",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: The report itself flags the stated $71.50 stop as fictional against a gap event; retained as stated, but the text says position size, not the stop, is the real risk control."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "PAYC",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "PGEN",
+   "signal": "Buy",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Sizing conflict inside the report: Executive Summary totals ~7.5% of portfolio (~$7,500) while Position Sizing states half a standard allocation (~10%, ~$10,000); both figures are stated and neither is reconciled."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "SYNA",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "TWST",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "TXG",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-02",
+   "ticker": "XNCR",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "RESEARCH_ONLY",
+   "new_executable": false,
+   "new_violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "unsupported size_frac 0.65"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "ASST",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: the 29.3-29.4 sell-limit with 5-session expiry is stated only for residual/hypothetical exposure; no position is held, so it is not an executable order"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "CDNA",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: sizing stated as ~2% of portfolio in the executive summary/thesis but ~3% in the position-sizing section; stated price target 59.0 coincides with the buy zone and refers to the downside/entry area, not upside"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: two distinct trigger paths (technical vs disclosure-driven) with different sizing logic; no single stop price is stated for the re-entry",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "PGEN",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "PTC",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: re-entry requires verifying absence of adverse news, which is a judgment call not reducible to a mechanical price trigger; arb allocation size is not quantified"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "QMCO",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: size stated as ~1-1.5% of portfolio in the executive summary but ~2.5% in the position-sizing section; the trader's 28.3 stop is explicitly rejected in favor of ~25.8; stated 23.1 target is a downside objective, not an upside target for the conditional long"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "SDGR",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: report's entry price 28.5 and stop 30.7 describe an exit/trim scenario for a hypothetical holder, not the stated re-entry plan; no stop price is specified for the conditional re-entry"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-07",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: two alternative trigger paths (breakout vs defended retest); unresolved valuation, insider, and news data gaps justify reduced sizing",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Price Target field (14.65) restates the conditional entry level, not an upside target; no explicit upside target stated"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "HAE",
+   "signal": "Hold",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Stop Loss field states 111.5 while executive summary sets hard invalidation at a close below 111.66; both appear in text, 111.66 used as the operative close-based invalidation. Entry additionally gated on verifying earnings calendar/EDGAR since the news/macro data layer was dark",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "IOVA",
+   "signal": "Overweight",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Position sizing is internally inconsistent: executive summary starter $1,250-$1,500 vs position-sizing section ~$2,500 (2.5%) now; total cap stated as both 4-5% and 5-7%. Final-tranche breakout level stated as both $15.30 and $14.94-15.30. The $12.90 add is conditional on stabilization, so only the starter and $13.30 add are unconditionally executable"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "MRNA",
+   "signal": "Underweight",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Entry bid is conditional on the pullback arriving on declining volume; existing-holder guidance (trim 30-50% into strength) coexists with the flat-position plan. Stops unreliable given $15 ATR and documented 60%+ overnight repricings \u2014 size is the only control",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "P",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Entry requires a stabilization session on declining sell volume \u2014 confirmation-gated, and the report explicitly forbids a standing limit at 142.5. Stop Loss field (133.5) is acknowledged as unreliable: honest risk is 12-15 points given demonstrated gap risk (Sep 18 73M-share event)"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "PENG",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: No explicit stop or target stated; entry zones are conditional triggers, not order levels. Stops acknowledged as unreliable given gap risk"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "PTC",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: The only forward instruction is an optional token sleeve plus milestone-based reassessment \u2014 no standard entry/exit setup. Data quality thin (30-message sentiment sample, uncorroborated 'deal cancelled' rumor). A conditional half-sized short below $192 on expanding volume is flagged but rejected as a current action"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "QMCO",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Triggers exist in both directions (long re-entry above $31 on confirmation; downside re-evaluation below $28.30 gated on borrow verification and filings checks) \u2014 not a single publishable directional watch. Stop Loss field (28.3) is the exit line for existing holders, while the re-entry stop is stated as a zone (~$28.97-$28.30)",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "SDGR",
+   "signal": "Sell",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Stop Loss field states 26.37 but the report itself rebuts it (sits above the entry zone, useless against gap-through); operative invalidation is the stated daily close below ~$22.2. Strategic actions add a 'stabilizes' qualifier to fills while the executive summary states plain limit orders; whichever is used, all orders expire pre-earnings and carried size must accept a gap to $22.6",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-09",
+   "ticker": "TEAM",
+   "signal": "Hold",
+   "old_disposition": null,
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Tranche sizes conflict between sections: executive summary re-weights to 1.5%/2% with ~3.5% cap while the position-sizing field states ~2.5%/~2.5% reaching ~5%; the executive summary's smaller sizing is the adopted synthesis. Only the first tranche is unconditionally executable \u2014 the second requires the pullback to arrive without a >5M-share distribution break, and the $172.50 stop is stated but explicitly flagged as unfillable in a gap",
+    "auto entry contradicts TA signal Hold"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "CDNA",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "FRO",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "HAE",
+   "signal": "Buy",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: first-tranche size inconsistent: ~$20-22K (~20% of cash) in summary vs ~$33K (~1/3 of standard allocation) in position sizing"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: first-tranche size inconsistent: ~$20-22K (~20% of cash) in summary vs ~$33K (~1/3 of standard allocation) in position sizing"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: stated Stop Loss 225.5 applies to the rejected short side / holder management, not the long re-entry plan (whose stop is below $183); stated Price Target 186 is a downside target while the starter plan targets $225",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: stated Stop Loss 225.5 applies to the rejected short side / holder management, not the long re-entry plan (whose stop is below $183); stated Price Target 186 is a downside target while the starter plan targets $225",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "P",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: initial tranche stated as ~2.5% (~$2,500) in final summary vs ~5% (~$5,000) in position sizing field; only the first tranche is a plain limit \u2014 later tranches need demonstrated hold / cash-flow confirmation",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: initial tranche stated as ~2.5% (~$2,500) in final summary vs ~5% (~$5,000) in position sizing field; only the first tranche is a plain limit \u2014 later tranches need demonstrated hold / cash-flow confirmation",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "PENG",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: stop for staged entries is ATR-relative (~1.5x ATR below fills), not a fixed price; $67/$59 levels govern existing-share protection, not the new tranches",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: stop for staged entries is ATR-relative (~1.5x ATR below fills), not a fixed price; $67/$59 levels govern existing-share protection, not the new tranches",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "PGEN",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "QMCO",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-12",
+   "ticker": "TEAM",
+   "signal": "Overweight",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "EXECUTABLE_WATCH",
+   "new_executable": true,
+   "new_violations": [],
+   "policy_constructed": true,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 5,
+   "n_source_terms": 1,
+   "trigger_type": "confirmed_close_above",
+   "unverified_events": [],
+   "decision": "LONG",
+   "sim": {
+    "result": "stopped",
+    "entry_px": 206.7633,
+    "exit_px": 195.11,
+    "shares": 3,
+    "fill_day": "2026-10-14",
+    "exit_day": "2026-10-30",
+    "pnl": -36.21
+   },
+   "spy_ret_pct": -1.8
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: The secondary token-short plan on a sustained $13.33 break has no concrete size or execution instruction."
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: The secondary token-short plan on a sustained $13.33 break has no concrete size or execution instruction."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "CDNA",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "HAE",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "HPE",
+   "signal": "Sell",
+   "old_disposition": "RESEARCH_ONLY",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "new_disposition": "RESEARCH_ONLY",
+   "new_executable": false,
+   "new_violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "IOVA",
+   "signal": "Buy",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: The alternative second-tranche condition says several sessions above $12.92 without defining the session count.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: The alternative second-tranche condition says several sessions above $12.92 without defining the session count.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "P",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Starter size is stated only as a 25%-33% range of intended size, not as a single fraction."
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Starter size is stated only as a 25%-33% range of intended size, not as a single fraction."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "PD",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Sizing is described both as quarter-size (~$25k) and as no more than one-third of standard allocation (~$33k).",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Sizing is described both as quarter-size (~$25k) and as no more than one-third of standard allocation (~$33k).",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "PENG",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: The stated $73.40 stop applies to any established position but is above the $70-$72.61 first-entry zone, so its application to a new pullback fill is unclear."
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: The stated $73.40 stop applies to any established position but is above the $70-$72.61 first-entry zone, so its application to a new pullback fill is unclear."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-13",
+   "ticker": "QMCO",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "APPN",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: re-entry requires both a fundamental catalyst and technical confirmation; not a purely mechanical trigger"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: re-entry requires both a fundamental catalyst and technical confirmation; not a purely mechanical trigger"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "CAI",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: report mixes trim-to-half instruction (assumes held position) with flat-account directive; the pullback entry requires orderly-tape judgment"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: report mixes trim-to-half instruction (assumes held position) with flat-account directive; the pullback entry requires orderly-tape judgment"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "HAE",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: starter size stated as a <=20-25% range; 'decisively above on volume' retains judgment in the confirmation"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: starter size stated as a <=20-25% range; 'decisively above on volume' retains judgment in the confirmation"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: exec summary caps the conditional short at ~2-2.5% of portfolio while position sizing allows ~5%; smaller operative cap used; the retest-failure branch needs volume judgment"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: exec summary caps the conditional short at ~2-2.5% of portfolio while position sizing allows ~5%; smaller operative cap used; the retest-failure branch needs volume judgment"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: three re-entry zones stated across sections ($12.50-13.30 flush probe, $13.30-13.80 shelf hold, $11-12 gap-down); all gated on post-event data quality"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: three re-entry zones stated across sections ($12.50-13.30 flush probe, $13.30-13.80 shelf hold, $11-12 gap-down); all gated on post-event data quality"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "P",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: report mixes held-position trim language ($140.66 exit, $133-134 re-add) with the flat-account tactical short; exec-summary short plan treated as operative; stated sizing is ~3% notional vs ~2% total risk",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: report mixes held-position trim language ($140.66 exit, $133-134 re-add) with the flat-account tactical short; exec-summary short plan treated as operative; stated sizing is ~3% notional vs ~2% total risk",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "SHORT"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "PD",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: probe size stated as a quarter-to-half range; entry requires demonstrated stabilization on contracting volume \u2014 a judgment gate, not purely mechanical"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: probe size stated as a quarter-to-half range; entry requires demonstrated stabilization on contracting volume \u2014 a judgment gate, not purely mechanical"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "PRCH",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: the report's $17.90 stop-loss field belongs to the rejected aggressive plan; the operative short stop is above $16.88"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: the report's $17.90 stop-loss field belongs to the rejected aggressive plan; the operative short stop is above $16.88"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-14",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: first tranche is a mechanical zone fill, but the second tranche and the macro halving condition require judgment ('demonstrated strength', 'rate-hike bets accelerating')",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: first tranche is a mechanical zone fill, but the second tranche and the macro halving condition require judgment ('demonstrated strength', 'rate-hike bets accelerating')",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "CCC",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Internal conflict: the synthesis 'rejects the reflexive 7.40 re-entry tripwire' while Position Sizing retains a gap below ~7.40 as a reassessment condition; treated as reassessment-only, not an entry trigger"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Internal conflict: the synthesis 'rejects the reflexive 7.40 re-entry tripwire' while Position Sizing retains a gap below ~7.40 as a reassessment condition; treated as reassessment-only, not an entry trigger"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "FIGS",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Full standard allocation on rebuild applies only if Q3 confirms growth; third (largest) tranche trigger 'confirmed fade exhaustion' is qualitative, not a deterministic level"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Full standard allocation on rebuild applies only if Q3 confirms growth; third (largest) tranche trigger 'confirmed fade exhaustion' is qualitative, not a deterministic level"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Report's Entry Price field states 52.5, which sits inside the $46-$53 range the plan explicitly forbids adding in; not used as an entry. 'High-volume' and 'stabilizing' qualifiers are not objectively defined."
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Report's Entry Price field states 52.5, which sits inside the $46-$53 range the plan explicitly forbids adding in; not used as an entry. 'High-volume' and 'stabilizing' qualifiers are not objectively defined."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Two triggers carry different stated sizes (pullback = full size, breakout = half size); no single size_frac applies. 'Volume-confirmed' breakout is not quantified."
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Two triggers carry different stated sizes (pullback = full size, breakout = half size); no single size_frac applies. 'Volume-confirmed' breakout is not quantified."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "MGNI",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Pullback leg requires discretionary 'momentum stabilization' judgment, so only the breakout leg is fully deterministic; sizing given as ~1% book risk, not an allocation fraction"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Pullback leg requires discretionary 'momentum stabilization' judgment, so only the breakout leg is fully deterministic; sizing given as ~1% book risk, not an allocation fraction"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Exec summary sizes the pullback order at 25-30% of standard while Position Sizing cites 40-50%; used the exec summary's smaller synthesized sizing. MACD-histogram gate requires confirmation at fill time, so not a clean resting order.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Exec summary sizes the pullback order at 25-30% of standard while Position Sizing cites 40-50%; used the exec summary's smaller synthesized sizing. MACD-histogram gate requires confirmation at fill time, so not a clean resting order.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "PD",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "RNG",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Short leg is 'revisit' language, not a committed trade; stop 75.20 and target 71.88 apply to that hypothetical short only. Report's Stop Loss field shows 73.13 but it functions as a breakdown trigger, not a stop."
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Short leg is 'revisit' language, not a committed trade; stop 75.20 and target 71.88 apply to that hypothetical short only. Report's Stop Loss field shows 73.13 but it functions as a breakdown trigger, not a stop."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Entry orders carry a qualitative gate (MACD positive, 50-day closing hold) so they are conditional, not unconditional resting limits"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Entry orders carry a qualitative gate (MACD positive, 50-day closing hold) so they are conditional, not unconditional resting limits"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-15",
+   "ticker": "VSTM",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Sizing conflict in source: exec summary commits ~$50-55k (~half a standard allocation) while Position Sizing/Strategic Actions total ~$70-75k (two-thirds to three-quarters); exec summary figures used"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Sizing conflict in source: exec summary commits ~$50-55k (~half a standard allocation) while Position Sizing/Strategic Actions total ~$70-75k (two-thirds to three-quarters); exec summary figures used"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "ANF",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: conflicting tranche ladders (20/40/40 in exec summary vs 40/35/25 in reasoning/sizing) and conflicting full-size caps (~10% vs ~15% of the $100k portfolio)"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: conflicting tranche ladders (20/40/40 in exec summary vs 40/35/25 in reasoning/sizing) and conflicting full-size caps (~10% vs ~15% of the $100k portfolio)"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "FIGS",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: conflicting sizing: exec summary caps ~3% total pre-earnings plus ~2% post-earnings reserve, position sizing allows up to ~5% of portfolio, and strategic actions express tranches as ~25-33% fractions of a standard allocation"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: conflicting sizing: exec summary caps ~3% total pre-earnings plus ~2% post-earnings reserve, position sizing allows up to ~5% of portfolio, and strategic actions express tranches as ~25-33% fractions of a standard allocation"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "PD",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: earnings date is unconfirmed \u2014 'exit before the print' must be verified against the actual calendar",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: earnings date is unconfirmed \u2014 'exit before the print' must be verified against the actual calendar",
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "PSNL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "RNG",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: the report's stated Entry Price 216 / Stop 203 belong to a short explicitly rejected as unfillable and ~1:1 \u2014 excluded from this watch"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: the report's stated Entry Price 216 / Stop 203 belong to a short explicitly rejected as unfillable and ~1:1 \u2014 excluded from this watch"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "VEEV",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: first-tranche size conflict: ~25-35% of a standard allocation (~$10,000) in the exec summary vs ~50% (~$15,000-20,000) in position sizing"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: first-tranche size conflict: ~25-35% of a standard allocation (~$10,000) in the exec summary vs ~50% (~$15,000-20,000) in position sizing"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-16",
+   "ticker": "ZBRA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: entry size stated only as a range ('a quarter to a third of the cash'); size_frac set to the lower bound"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: entry size stated only as a range ('a quarter to a third of the cash'); size_frac set to the lower bound"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "ANF",
+   "signal": "Buy",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: starter tranche stated as both ~25-30% of intended allocation (~$7,500-9,000) and ~40% (~$12,000)"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: starter tranche stated as both ~25-30% of intended allocation (~$7,500-9,000) and ~40% (~$12,000)"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "CDNA",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "ESTC",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "FIGS",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: auto-execution applies only to the $17.5-$18.6 limit ladder; the $20.31 breakout tranche requires a confirmed close on elevated volume and is not a resting order",
+    "auto entry contradicts TA signal Hold"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: auto-execution applies only to the $17.5-$18.6 limit ladder; the $20.31 breakout tranche requires a confirmed close on elevated volume and is not a resting order",
+    "auto entry contradicts TA signal Hold"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: trigger size stated as both ~2.5-3% and ~2.5-5% of portfolio; the $47 limit is conditioned on an orderly, headline-free tape, so it cannot rest unconditionally"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: trigger size stated as both ~2.5-3% and ~2.5-5% of portfolio; the $47 limit is conditioned on an orderly, headline-free tape, so it cannot rest unconditionally"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: starter size stated only as a range (one-third to one-half of intended size); bearish asymmetry rests on a single $11 analyst target via a thin StockTwits sample"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: starter size stated only as a range (one-third to one-half of intended size); bearish asymmetry rests on a single $11 analyst target via a thin StockTwits sample"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: the August +170% repricing has no identified catalyst in the data; any trigger requires external verification before entry"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: the August +170% repricing has no identified catalyst in the data; any trigger requires external verification before entry"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "PD",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: initial tranche stated only as a range (~a third to half of intended size); entry is additionally gated on an externally-verified earnings date not present in the report"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: initial tranche stated only as a range (~a third to half of intended size); entry is additionally gated on an externally-verified earnings date not present in the report"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "PSNL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: direction is short while the report's sizing field (2% of portfolio) conflicts with the adopted 1.0-1.25% gap-adjusted size; the report also carries long-position trim instructions \u2014 the watch spec encodes the short plan",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: direction is short while the report's sizing field (2% of portfolio) conflicts with the adopted 1.0-1.25% gap-adjusted size; the report also carries long-position trim instructions \u2014 the watch spec encodes the short plan",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-19",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "APPN",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: 'Nothing gets added before the Q3 print' may gate even the laddered bids; safest reading: fills allowed, no further adds pre-print. Secondary tranche near $38 sits at the invalidation level.",
+    "auto entry contradicts TA signal Hold"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: 'Nothing gets added before the Q3 print' may gate even the laddered bids; safest reading: fills allowed, no further adds pre-print. Secondary tranche near $38 sits at the invalidation level.",
+    "auto entry contradicts TA signal Hold"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "BRZE",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "FIGS",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Two triggers carry different sizes (pullback = standard allocation; breakout = one-third) and the report mandates confirming earnings date/8-Ks before firing.",
+    "unsupported number 0.33",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Two triggers carry different sizes (pullback = standard allocation; breakout = one-third) and the report mandates confirming earnings date/8-Ks before firing.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "HTFL",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Committed cap stated as ~4% ($4,000) in executive summary vs standard ~5% allocation in sizing section; $47.75 treated as sizing reference, not reliable floor (gap risk in ~5% ATR name).",
+    "unsupported number 0.33",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Committed cap stated as ~4% ($4,000) in executive summary vs standard ~5% allocation in sizing section; $47.75 treated as sizing reference, not reliable floor (gap risk in ~5% ATR name).",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Formal stop field ($15.40) belongs to the rejected short thesis, not the long re-entry; operative long stop is $12.90. Starter size stated as % of portfolio, not fraction of standard allocation."
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Formal stop field ($15.40) belongs to the rejected short thesis, not the long re-entry; operative long stop is $12.90. Starter size stated as % of portfolio, not fraction of standard allocation."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Rebuild condition mixes a price zone with unverifiable-today catalyst verification; mechanical re-add at $221 was explicitly rejected as knife-catching.",
+    "unsupported number 0.33"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Rebuild condition mixes a price zone with unverifiable-today catalyst verification; mechanical re-add at $221 was explicitly rejected as knife-catching."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "PAYC",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Trigger validity depends on the path (earnings vs non-earnings pullback), so a bare limit order cannot encode it."
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Trigger validity depends on the path (earnings vs non-earnings pullback), so a bare limit order cannot encode it."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "TEAM",
+   "signal": "Underweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: The 208-210 limit is executable but expires at an earnings date the report admits is unverified; formal stop field (202.0) conflicts with the stated ~209 first-crack and ~187 thesis-break levels.",
+    "unsupported number 0.25"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: The 208-210 limit is executable but expires at an earnings date the report admits is unverified; formal stop field (202.0) conflicts with the stated ~209 first-crack and ~187 thesis-break levels."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "VEEV",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Formal fields ($318.67 entry / $322 stop) describe the rejected at-market trade; operative long re-entry uses $286-296/$272-276 zones with ~$290 invalidation. Meaningful size also gated on withheld-multiples/insider/FRED data gaps."
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Formal fields ($318.67 entry / $322 stop) describe the rejected at-market trade; operative long re-entry uses $286-296/$272-276 zones with ~$290 invalidation. Meaningful size also gated on withheld-multiples/insider/FRED data gaps."
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-20",
+   "ticker": "VSTM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: Entry requires the level to hold several sessions \u2014 a bare limit fill does not satisfy the condition; sizing note 'half-normal' vs 'quarter-size' is internally loose.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: Entry requires the level to hold several sessions \u2014 a bare limit fill does not satisfy the condition; sizing note 'half-normal' vs 'quarter-size' is internally loose.",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "APPN",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: entry zone stated as $42\u201343 in the summary and $42\u201344 in reasoning/sizing"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: entry zone stated as $42\u201343 in the summary and $42\u201344 in reasoning/sizing"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "BRZE",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: re-entry stub stated as 1\u20132% in thesis vs ~2\u20133% max in position sizing; trigger stated as ~$44 vs pullback toward the $41 breakout zone"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: re-entry stub stated as 1\u20132% in thesis vs ~2\u20133% max in position sizing; trigger stated as ~$44 vs pullback toward the $41 breakout zone"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "CDNA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: the 40\u201350% standard-allocation sizing applies only to short-biased exposure after the $50 trigger; the primary options trade carries no price-level stop",
+    "auto entry without authorization",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: the 40\u201350% standard-allocation sizing applies only to short-biased exposure after the $50 trigger; the primary options trade carries no price-level stop",
+    "auto entry without authorization",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "INSW",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "RGLD",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: re-entry cap stated as \u226412.5% of standard allocation in the summary vs \u226425% in strategic actions/position sizing \u2014 the smaller, final figure used"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: re-entry cap stated as \u226412.5% of standard allocation in the summary vs \u226425% in strategic actions/position sizing \u2014 the smaller, final figure used"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: re-entry size stated as ~$15,000 (small end of band) in the summary vs ~$25,000\u201330,000 (25\u201330% of standard) in position sizing"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: re-entry size stated as ~$15,000 (small end of band) in the summary vs ~$25,000\u201330,000 (25\u201330% of standard) in position sizing"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-21",
+   "ticker": "VSTM",
+   "signal": "Hold",
+   "old_disposition": "RESEARCH_ONLY",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "auto entry contradicts TA signal Hold"
+   ],
+   "new_disposition": "RESEARCH_ONLY",
+   "new_executable": false,
+   "new_violations": [
+    "auto entry contradicts TA signal Hold"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: size stated as 25-33% of the cash sleeve; gap risk in thin tape makes resting limits unreliable"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: size stated as 25-33% of the cash sleeve; gap risk in thin tape makes resting limits unreliable"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "APPN",
+   "signal": "Hold",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "BRZE",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: size stated as ~5% of portfolio value (initial max), not as a fraction of standard allocation; 42.9 stop acknowledged as unreliable against gaps",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: size stated as ~5% of portfolio value (initial max), not as a fraction of standard allocation; 42.9 stop acknowledged as unreliable against gaps",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "GRAL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: re-entry is event/verification-gated rather than a price level"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: re-entry is event/verification-gated rather than a price level"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: starter sized ~one-third of intended allocation, pre-sized so a gap through 50.7 costs ~1% of portfolio; $64 Piper target unverified",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: starter sized ~one-third of intended allocation, pre-sized so a gap through 50.7 costs ~1% of portfolio; $64 Piper target unverified",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: re-entry explicitly not a price level alone \u2014 requires verified fundamentals plus tape condition"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: re-entry explicitly not a price level alone \u2014 requires verified fundamentals plus tape condition"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: no equity entry instruction currently active \u2014 participation is options-only and conditional; sizing stated as one-quarter to one-third of standard allocation for residual exposure"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: no equity entry instruction currently active \u2014 participation is options-only and conditional; sizing stated as one-quarter to one-third of standard allocation for residual exposure"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "NTSK",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: exec summary overrides trader sizing to ~2-2.5% of portfolio (~$2,000-2,500) versus the earlier ~1/3 tranche; valuation and insider data cells are blank"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: exec summary overrides trader sizing to ~2-2.5% of portfolio (~$2,000-2,500) versus the earlier ~1/3 tranche; valuation and insider data cells are blank"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: sizing stated as % of portfolio (2-3% per entry, ~5% total cap), not fraction of standard allocation; the $210-215 zone was explicitly cut as a standalone pre-earnings buy despite appearing in older staged plans"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: sizing stated as % of portfolio (2-3% per entry, ~5% total cap), not fraction of standard allocation; the $210-215 zone was explicitly cut as a standalone pre-earnings buy despite appearing in older staged plans"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-22",
+   "ticker": "VLO",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: the ~2.5% tactical short is conditional on the mandate permitting short exposure; otherwise hold 100% cash \u2014 auto execution not authorized"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: the ~2.5% tactical short is conditional on the mandate permitting short exposure; otherwise hold 100% cash \u2014 auto execution not authorized"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "APPN",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "BRZE",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: stops acknowledged soft due to discontinuous, gap-prone trading; catalyst for existing gap unidentified"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: stops acknowledged soft due to discontinuous, gap-prone trading; catalyst for existing gap unidentified"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "HAS",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: sizing stated two ways: one-third initial tranche vs ~half a standard allocation on first dip toward ~$112; cap is one standard allocation either way"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: sizing stated two ways: one-third initial tranche vs ~half a standard allocation on first dip toward ~$112; cap is one standard allocation either way"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: stated price target of 51.0 sits below current price (retest/invalidation zone, not upside target)"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: stated price target of 51.0 sits below current price (retest/invalidation zone, not upside target)"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: event timing, filings, and quoted technical levels not independently verified \u2014 supplied reports only"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: event timing, filings, and quoted technical levels not independently verified \u2014 supplied reports only"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: stop is expressed as a zone (~1.5-2 ATR below ~200 or breakout bar's low), not a fixed price"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: stop is expressed as a zone (~1.5-2 ATR below ~200 or breakout bar's low), not a fixed price"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "NTSK",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: sizing stated as quarter-size in executive summary but ~0.5x rebuild in position-sizing section; valuation multiples and insider data unavailable"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: sizing stated as quarter-size in executive summary but ~0.5x rebuild in position-sizing section; valuation multiples and insider data unavailable"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "TEAM",
+   "signal": "Underweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: stated stop of 235.0 applies to fade/short framing, while the momentum-tranche stop is ~209 and the invalidation level is 203 \u2014 three distinct risk levels in one plan"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: stated stop of 235.0 applies to fade/short framing, while the momentum-tranche stop is ~209 and the invalidation level is 203 \u2014 three distinct risk levels in one plan"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-23",
+   "ticker": "VLO",
+   "signal": "Sell",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": "RESEARCH_ONLY",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "new_disposition": "RESEARCH_ONLY",
+   "new_executable": false,
+   "new_violations": [
+    "auto entry contradicts TA signal Sell"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "BRZE",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "CAI",
+   "signal": "Overweight",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": true,
+   "old_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 9,
+   "trigger_type": "intraday_zone_touch",
+   "unverified_events": [
+    "Binary earnings event is imminent; remaining tranches wait for post-earnings confirmation.",
+    "Check EDGAR and the IR page before the print for filings missed by the vendor feed, especially the ~$28M/quarter operating-to-net-income drag and ~$133M investing outflow.",
+    "No first tranche if price is not holding the 10 EMA (~$31.3).",
+    "Do not average down below $30.2 before earnings.",
+    "Do not add through $33.50 without expanding volume.",
+    "No adds after a daily close below the 50 SMA (~$28) pre-earnings or a post-earnings breakdown through $26.8."
+   ],
+   "decision": "LONG",
+   "sim": {
+    "result": "NO_FILL"
+   }
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "GRAL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous: The report prefers a defined-risk put/put-spread but also allows an equity short, and stated sizing differs (2-3% vs 3-5%), so the precise instrument and size cannot be auto-published.",
+    "ambiguous_type:SIZING_CONFLICT",
+    "auto entry without authorization",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous: The report prefers a defined-risk put/put-spread but also allows an equity short, and stated sizing differs (2-3% vs 3-5%), so the precise instrument and size cannot be auto-published.",
+    "ambiguous_type:SIZING_CONFLICT",
+    "auto entry without authorization",
+    "auto entry contradicts TA signal Sell",
+    "ACTIONABLE_NOW contradicts TA signal",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "SHORT"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "NTSK",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "SGRY",
+   "signal": "Sell",
+   "old_disposition": "NO_ACTION",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "NO_ACTION",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-26",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "BRZE",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "unsupported size_frac 0.055",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "unsupported size_frac 0.055",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "CAI",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "GRAL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": true,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "unsupported size_frac 0.15"
+   ],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "unsupported size_frac 0.15"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "NTSK",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-27",
+   "ticker": "XNCR",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "AMPL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "APPN",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "BHVN",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "BRZE",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "CAI",
+   "signal": "Hold",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "CART",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "CRL",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.17",
+    "ECON_UNSUPPORTED_NUMBER:0.27",
+    "ECON_UNSUPPORTED_NUMBER:0.13",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "unsupported size_frac 0.67"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.17",
+    "ECON_UNSUPPORTED_NUMBER:0.27",
+    "ECON_UNSUPPORTED_NUMBER:0.13",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "unsupported size_frac 0.67"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "CRS",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVIDENCE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVIDENCE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "GRAL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "IOVA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "NTSK",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "PSX",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:EVIDENCE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:EVIDENCE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "QLYS",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "RHI",
+   "signal": "Overweight",
+   "old_disposition": "EXECUTABLE_WATCH",
+   "old_executable": true,
+   "old_contract_resolved": true,
+   "old_violations": [],
+   "new_disposition": "EXECUTABLE_WATCH",
+   "new_executable": true,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 7,
+   "trigger_type": "intraday_zone_touch",
+   "unverified_events": [],
+   "decision": "LONG",
+   "sim": {
+    "result": "OPEN",
+    "entry_px": 41.971,
+    "exit_px": 43.73,
+    "shares": 59,
+    "fill_day": "2026-10-29",
+    "exit_day": "2026-11-03",
+    "pnl": 98.83
+   },
+   "spy_ret_pct": -1.95
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "RRC",
+   "signal": "Hold",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "SGRY",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "TEAM",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-28",
+   "ticker": "XNCR",
+   "signal": "Hold",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:EVIDENCE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:EVIDENCE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "APPN",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "AVTR",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:RISK_CONTRADICTION"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:RISK_CONTRADICTION"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "CDNA",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "CVI",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "FIGS",
+   "signal": "Underweight",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "FIVN",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "GKOS",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_ZONE_INVALID",
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.23",
+    "ECON_UNSUPPORTED_NUMBER:0.7",
+    "ECON_UNSUPPORTED_NUMBER:0.23",
+    "ECON_UNSUPPORTED_NUMBER:0.24",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT",
+    "unsupported size_frac 0.7"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_ZONE_INVALID",
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.23",
+    "ECON_UNSUPPORTED_NUMBER:0.7",
+    "ECON_UNSUPPORTED_NUMBER:0.23",
+    "ECON_UNSUPPORTED_NUMBER:0.24",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT",
+    "unsupported size_frac 0.7"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "GRAL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "unsupported size_frac 0.0"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "unsupported size_frac 0.0"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "GTLB",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "HOG",
+   "signal": "Overweight",
+   "old_disposition": "RESEARCH_ONLY",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range"
+   ],
+   "new_disposition": "RESEARCH_ONLY",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "LNG",
+   "signal": "Buy",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "MRNA",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:RISK_CONTRADICTION",
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:RISK_CONTRADICTION",
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "NTSK",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:RISK_CONTRADICTION"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:RISK_CONTRADICTION"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "PTEN",
+   "signal": "Hold",
+   "old_disposition": "RISK_PLAN_REQUIRED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "auto entry contradicts TA signal Hold",
+    "AUTO_ENTRY without stated stop"
+   ],
+   "new_disposition": "RISK_PLAN_REQUIRED",
+   "new_executable": false,
+   "new_violations": [
+    "auto entry contradicts TA signal Hold",
+    "AUTO_ENTRY without stated stop"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "REPL",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_UNSUPPORTED_NUMBER:0.6",
+    "ECON_UNSUPPORTED_NUMBER:0.12",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT",
+    "unsupported size_frac 0.6"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "unsupported size_frac 0.6"
+   ],
+   "policy_constructed": true,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 3,
+   "n_source_terms": 4,
+   "trigger_type": "intraday_zone_touch",
+   "unverified_events": [
+    "Same-day EDGAR/press check must show no adverse filing in the trailing 30 days.",
+    "RP1 resubmission or PDUFA confirmation is positive.",
+    "Launch account or prescriber confirmation is positive.",
+    "A new equity raise or CRL-related delay is negative.",
+    "Do not buy the $17.61 print.",
+    "Do not deploy if the filing check reveals an adverse filing."
+   ],
+   "decision": "LONG",
+   "sim": {
+    "result": "NO_FILL"
+   }
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "RPD",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "SGRY",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "TENB",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-10-30",
+   "ticker": "XNCR",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "ADT",
+   "signal": "Overweight",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "ALNY",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "AXGN",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:UNKNOWN",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:UNKNOWN",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "BRZE",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "CDNA",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_UNSUPPORTED_NUMBER:0.75",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": true,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 2,
+   "n_source_terms": 5,
+   "trigger_type": "intraday_zone_touch",
+   "unverified_events": [
+    "The 10-Q must clarify the recurring earnings base and the Q1/Q2 non-operating anomalies.",
+    "Verified valuation multiples are required before any upgrade toward Buy.",
+    "A 10-Q revealing a divested segment or Form 4 selling into the spike removes CDNA from the list.",
+    "Do not chase approximately $85.88.",
+    "No adds above $88.",
+    "Do not release the final third before 10-Q confirmation or a successful $80 retest-and-bounce."
+   ],
+   "decision": "LONG",
+   "sim": {
+    "result": "NO_FILL"
+   }
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "CVI",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "GKOS",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.7",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing profit_realization_plan",
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.7",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "ambiguous_type:POSITION_CAP_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "GTLB",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "HAFN",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:UNKNOWN",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:UNKNOWN",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "HOG",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "KOD",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "MANH",
+   "signal": "Hold",
+   "old_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [],
+   "new_disposition": "PUBLISHED_NON_EXECUTABLE",
+   "new_executable": false,
+   "new_violations": [],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "unsupported number 11.0"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "unsupported number 11.0"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "PSX",
+   "signal": "Underweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "SHORT"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "REPL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "SG",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "SLN",
+   "signal": "Underweight",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "SHORT"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "SM",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-02",
+   "ticker": "TDOC",
+   "signal": "Hold",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:UNKNOWN"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "LONG"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "ADT",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:SIZING_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "CDNA",
+   "signal": "Hold",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "EXEL",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.03",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ECON_UNSUPPORTED_NUMBER:0.03",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "HTFL",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "MANH",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:TRANCHE_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "MRNA",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN",
+    "ambiguous_type:CATALYST_UNRESOLVED"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "NRIX",
+   "signal": "Sell",
+   "old_disposition": "REANALYZE_ON_TRIGGER",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "new_disposition": "REANALYZE_ON_TRIGGER",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:EVENT_OUTCOME_UNKNOWN"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "PD",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "PRCH",
+   "signal": "Overweight",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ECON_SUCCESS_PLAN:missing/unparsable base_case_value_range",
+    "ambiguous_type:SIZING_CONFLICT",
+    "ambiguous_type:ENTRY_ZONE_CONFLICT",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  },
+  {
+   "session": "2026-11-03",
+   "ticker": "REPL",
+   "signal": "Sell",
+   "old_disposition": "AMBIGUOUS_REJECTED",
+   "old_executable": false,
+   "old_contract_resolved": false,
+   "old_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "new_disposition": "AMBIGUOUS_REJECTED",
+   "new_executable": false,
+   "new_violations": [
+    "ambiguous_type:CATALYST_UNRESOLVED",
+    "event/news-gated trigger must be REANALYZE_ON_TRIGGER"
+   ],
+   "policy_constructed": false,
+   "policy_rejected": null,
+   "policy_non_executable": null,
+   "n_policy_terms": 0,
+   "n_source_terms": 0,
+   "trigger_type": null,
+   "unverified_events": null,
+   "decision": "NO_TRADE"
+  }
+ ]
+}

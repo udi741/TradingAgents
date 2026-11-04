@@ -452,8 +452,18 @@ def disposition(intent: dict | None, errs: list[str], held: set[str]) -> str:
         if not hard:
             return "REANALYZE_ON_TRIGGER"
     if not errs:
-        return "EXECUTABLE_WATCH" if _machine_executable(intent) \
-            else "PUBLISHED_NON_EXECUTABLE"
+        if _machine_executable(intent):
+            # A validated contract whose entry prerequisites cannot be
+            # machine-verified is never authorized: unencoded event or
+            # no-entry conditions demote it to non-executable research.
+            resolved = intent.get("economic_authority_resolved")
+            if resolved is not None:
+                proj = econ_contract.project_execution(resolved)
+                if proj is not None and (proj.get("event_constraints")
+                                         or proj.get("no_entry_conditions")):
+                    return "PUBLISHED_NON_EXECUTABLE"
+            return "EXECUTABLE_WATCH"
+        return "PUBLISHED_NON_EXECUTABLE"
     if intent.get("ticker") in held:
         return "OPEN_POSITION_MANAGEMENT"
     text = " ".join(errs).lower()
@@ -464,6 +474,92 @@ def disposition(intent: dict | None, errs: list[str], held: set[str]) -> str:
     if not _has_risk_plan(intent):
         return "RISK_PLAN_REQUIRED"
     return "RESEARCH_ONLY"
+
+
+def evaluate_intent(i: dict, a: dict, session: str, held: set,
+                    bars=None) -> dict:
+    """Per-intent deterministic evaluation — the single code path used by
+    both live synthesis and the frozen-artifact replay harness.
+
+    validate -> economic_authority contract validate -> evidence-bound
+    repair -> POLICY_DERIVED construct -> ambiguity suppression ->
+    decision -> disposition. Mutates `i` (decision, resolved contract,
+    policy fields); returns the disposition record."""
+    # Re-evaluation must start clean: stale resolved/policy fields from a
+    # prior run would leak into _machine_executable via the caller.
+    for k in ("economic_authority_resolved", "policy_constructed",
+              "policy_provenance", "policy_rejected",
+              "policy_non_executable", "repair_notes"):
+        i.pop(k, None)
+    errs = validate(i, a)
+    # Canonical economic-authority contract: when present and valid it
+    # supersedes prose-level ambiguity — the structured contract is the
+    # authority the validator evaluates. An invalid/absent contract
+    # changes nothing (fail-closed errs stand).
+    src = _nums_in_text(artifact_text(a))
+    ec_errs, resolved = econ_contract.validate(
+        i.get("economic_authority"), a, i, src)
+    if ec_errs and i.get("economic_authority") is not None:
+        # evidence-bound repair: strip unbound numbers/invented tranches,
+        # fill missing terms only from bound source text, then re-check.
+        repaired, notes = econ_contract.repair(
+            i.get("economic_authority"), a, i, src)
+        ec2, resolved2 = econ_contract.validate(repaired, a, i, src)
+        if not ec2:
+            resolved, ec_errs = resolved2, []
+            i["repair_notes"] = notes
+    if resolved is None:
+        # POLICY_DERIVED construction: the AI's judgment is used, its
+        # numbers are not. Only constructive intents whose failure is
+        # economic (unbound/incoherent authored economics) qualify; the
+        # constructed contract passes the same validator with the
+        # policy-number exemption, then flows through the identical
+        # authority/projection/disposition path.
+        from alpha_rnd import econ_policy as _ep
+        _ok, _why = _ep.eligible(i, a)
+        if _ok:
+            _pc, _prov, _reason = _ep.construct(i, a, src, bars=bars)
+            if _pc is not None:
+                _ec3, _r3 = econ_contract.validate(
+                    _pc, a, i, src,
+                    policy_terms=_ep.policy_terms(_pc, _prov))
+                if not _ec3:
+                    resolved = _r3
+                    ec_errs = []
+                    i["policy_constructed"] = True
+                    i["policy_provenance"] = _prov
+                else:
+                    i["policy_rejected"] = _ec3
+            else:
+                i["policy_non_executable"] = _reason
+    if resolved is not None:
+        # Suppress ONLY ambiguity types that are (a) contract-resolvable
+        # codes AND (b) explicitly claimed by the validated contract.
+        # Untyped prose ambiguity and every other code stay fail-closed.
+        resolved_types = {str(r).upper()
+                          for r in resolved.get("resolves") or []} & \
+            econ_contract.RESOLVABLE_AMBIGUITY_TYPES
+        errs = [e for e in errs if not (
+            e.startswith("ambiguous_type:")
+            and e.split(":", 1)[1].upper() in resolved_types)]
+        i["economic_authority_resolved"] = resolved
+    errs = ec_errs + errs
+    from alpha_rnd import decision as _dec
+    i["decision"] = _dec.from_intent(
+        i, a.get("signal"), _bearish_geometry(i), session)
+    d = disposition(i, errs, held)
+    if resolved is not None and resolved.get("direction") == "SHORT":
+        # a valid SHORT contract is a paper-simulation object, never
+        # ambiguous prose — publish as non-executable research
+        d = "PUBLISHED_NON_EXECUTABLE"
+    elif d == "EXECUTABLE_WATCH" and resolved is not None and \
+            not econ_contract.has_authority(i, resolved):
+        d = "PUBLISHED_NON_EXECUTABLE"
+    t = i.get("ticker")
+    return {"disposition": d, "violations": errs,
+            "executable": d == "EXECUTABLE_WATCH",
+            "user_action_required": False,
+            "artifact": f"case_artifacts/{t}_{session}.json"}
 
 
 def run(session: str) -> dict:
@@ -504,58 +600,13 @@ def run(session: str) -> dict:
                         "violations": ["translator output omitted ticker"], "executable": False,
                         "user_action_required": False, "artifact": f"case_artifacts/{t}_{session}.json"}
             continue
-        errs = validate(i, a)
-        # Canonical economic-authority contract: when present and valid it
-        # supersedes prose-level ambiguity — the structured contract is the
-        # authority the validator evaluates. An invalid/absent contract
-        # changes nothing (fail-closed errs stand).
-        ec_errs, resolved = econ_contract.validate(
-            i.get("economic_authority"), a, i, _nums_in_text(artifact_text(a)))
-        if ec_errs and resolved is not None:
-            # evidence-bound repair: strip unbound numbers/invented tranches,
-            # fill missing terms only from bound source text, then re-check.
-            repaired, notes = econ_contract.repair(
-                i.get("economic_authority"), a, i,
-                _nums_in_text(artifact_text(a)))
-            ec2, resolved2 = econ_contract.validate(
-                repaired, a, i, _nums_in_text(artifact_text(a)))
-            if not ec2:
-                resolved, ec_errs = resolved2, []
-                i["repair_notes"] = notes
-        if resolved is not None:
-            # Suppress ONLY ambiguity types that are (a) contract-resolvable
-            # codes AND (b) explicitly claimed by the validated contract.
-            # Untyped prose ambiguity and every other code stay fail-closed.
-            resolved_types = {str(r).upper()
-                              for r in resolved.get("resolves") or []} & \
-                econ_contract.RESOLVABLE_AMBIGUITY_TYPES
-            def _suppressible(e):
-                return e.startswith("ambiguous_type:") and \
-                    e.split(":", 1)[1].upper() in resolved_types
-            errs = [e for e in errs if not _suppressible(e)]
-            i["economic_authority_resolved"] = resolved
-        errs = ec_errs + errs
-        from alpha_rnd import decision as _dec
-        i["decision"] = _dec.from_intent(
-            i, a.get("signal"), _bearish_geometry(i), session)
-        d = disposition(i, errs, held)
-        if resolved is not None and \
-                resolved.get("direction") == "SHORT":
-            # a valid SHORT contract is a paper-simulation object, never
-            # ambiguous prose — publish as non-executable research
-            d = "PUBLISHED_NON_EXECUTABLE"
-        elif d == "EXECUTABLE_WATCH" and resolved is not None and \
-                not econ_contract.has_authority(i, resolved):
-            d = "PUBLISHED_NON_EXECUTABLE"
-        disps[t] = {"disposition": d, "violations": errs,
-                    "executable": d == "EXECUTABLE_WATCH",
-                    "user_action_required": False,
-                    "artifact": f"case_artifacts/{t}_{session}.json"}
-        if errs:
+        outcome = evaluate_intent(i, a, session, held)
+        disps[t] = outcome
+        if outcome["violations"]:
             reviews.append({"ticker": t, "session": session,
-                            "disposition": d,
-                            "violations": errs,
-                            "artifact": f"case_artifacts/{t}_{session}.json"})
+                            "disposition": outcome["disposition"],
+                            "violations": outcome["violations"],
+                            "artifact": outcome["artifact"]})
         else:
             results[t] = i
     doc = {"session": session,
