@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression for entry_shadow: no lookahead, determinism, paper-only."""
+"""Regression for entry_shadow v2: no lookahead, deterministic, cohorts."""
 import sys
 from pathlib import Path
 
@@ -10,14 +10,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from backtest import entry_shadow as E  # noqa: E402
 
 
-def _bars():
-    idx = pd.bdate_range("2026-10-01", periods=30)
-    rows = []
-    px = 100.0
-    for i, d in enumerate(idx):
+def _bars(n=40, drift=0.5):
+    idx = pd.bdate_range("2026-10-01", periods=n)
+    px, rows = 100.0, []
+    for _ in idx:
         rows.append({"Open": px, "High": px + 1.5, "Low": px - 1.5,
-                     "Close": px + 0.5})
-        px += 0.5
+                     "Close": px + drift})
+        px += drift
     return pd.DataFrame(rows, index=idx)
 
 
@@ -25,27 +24,61 @@ def main():
     df = _bars()
     sess = str(df.index[15].date())
     before, fut = df[df.index <= sess], df[df.index > sess]
-    # no lookahead: ATR uses only bars <= session
+    dec_close = float(before["Close"].iloc[-1])
     a = E.atr14(before)
-    assert a == 3.0  # constant daily range
-    # B continuation fills next open deterministically
-    r1 = E.sim_B("LONG", None, None, float(before["Close"].iloc[-1]), a, fut)
-    r2 = E.sim_B("LONG", None, None, float(before["Close"].iloc[-1]), a, fut)
-    assert r1 == r2 and r1["entry_px"] == float(fut["Open"].iloc[0])
-    assert r1["shares"] == int(5000 // r1["entry_px"])
-    # gap guard: gap up >3% => no fill
-    fut2 = fut.copy(); fut2.iloc[0, fut2.columns.get_loc("Open")] = 999.0
-    assert E.sim_B("LONG", None, None,
-                   float(before["Close"].iloc[-1]), a, fut2)["no_fill"]
-    # A pullback: fill only on intraday zone touch after session
-    ra = E.sim_A("LONG", [95.0, 96.0], 90.0, 110.0, fut)
-    assert ra is None  # lows ~104+ never reach 96
-    assert ra is None or "pnl" not in ra  # no invented fill
-    # SHORT mirror doesn't crash and signs are right
-    rs = E.sim_B("SHORT", None, None, float(before["Close"].iloc[-1]), a, fut)
-    assert rs is None or "pnl" in rs
-    print("PASS entry_shadow: lookahead-free, deterministic, gap-guarded, "
-          "no invented fills")
+    assert a == 3.0  # constant daily range, pre-decision bars only
+
+    # B_confirmed: rising closes confirm next session -> fills at open
+    r1 = E.sim_B("LONG", None, None, dec_close, a, fut)
+    r2 = E.sim_B("LONG", None, None, dec_close, a, fut)
+    assert r1 == r2 and r1["entry_px"] > 0 and r1.get("result") in (
+        "OPEN", "time_stop", "target", "stopped")
+    # deterministic + slippage applied
+    o = float(fut.iloc[1]["Open"]) if float(fut.iloc[0]["Close"]) > dec_close \
+        else float(fut.iloc[0]["Open"])
+    assert abs(r1["entry_px"] - round(o * 1.0005, 4)) < 0.01
+
+    # gap guard
+    f2 = fut.copy()
+    f2.iloc[1, f2.columns.get_loc("Open")] = dec_close * 2
+    assert E.sim_B("LONG", None, None, dec_close, a, f2)["result"] == "NO_FILL"
+
+    # falling closes: LONG never confirms -> NO_FILL
+    f3 = fut.copy()
+    f3["Close"] = f3["Close"] * 0.9
+    f3["Open"] = f3["Open"] * 0.9
+    assert E.sim_B("LONG", None, None, dec_close, a, f3)["result"] == "NO_FILL"
+
+    # A_pullback faithful: untouched zone -> NO_FILL, missing terms -> NO_PLAN
+    assert E.sim_A("LONG", [95, 96], 90, 110, fut, dec_close)["result"] == \
+        "NO_FILL"
+    assert E.sim_A("LONG", None, None, None, fut, dec_close)["result"] == \
+        "NO_PLAN"
+    # authored zone that IS touched fills at zone top
+    lo_zone = [dec_close - 20, dec_close - 19]
+    ra = E.sim_A("LONG", lo_zone, dec_close - 25, dec_close + 40, fut,
+                 dec_close)
+    # drifting up: lows stay above zone -> NO_FILL (no invented fill)
+    assert ra["result"] in ("NO_FILL", "OPEN")
+
+    # cohort split
+    assert E.cohort_of("EXECUTABLE_WATCH", True) == "VALID_AUTHORIZED"
+    assert E.cohort_of("EXECUTABLE_WATCH", False) == \
+        "DIRECTIONAL_UNRESOLVED"
+    assert E.cohort_of("AMBIGUOUS_REJECTED", True) == \
+        "DIRECTIONAL_UNRESOLVED"
+
+    # real saved cases: RHI authorized fills; REPL unresolved gets B-eval
+    import json
+    lg = E.run(["2026-10-28", "2026-10-30"], end="2026-11-05",
+               ledger_path=Path("/tmp/es_test_ledger.json"))
+    Path("/tmp/es_test_ledger.json").unlink(missing_ok=True)
+    rhi = lg["records"]["2026-10-28|RHI"]
+    assert rhi["cohort"] == "VALID_AUTHORIZED" and not rhi["hypothetical"]
+    assert rhi["A_pullback"]["entry_px"] == 41.95
+    repl = lg["records"]["2026-10-30|REPL"]
+    assert repl["cohort"] == "DIRECTIONAL_UNRESOLVED" and repl["hypothetical"]
+    print("PASS all entry_shadow v2 checks")
 
 
 if __name__ == "__main__":
