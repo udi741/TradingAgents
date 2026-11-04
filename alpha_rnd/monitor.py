@@ -649,6 +649,16 @@ def close_pass(st: dict, wl: dict, daily: dict[str, pd.DataFrame], session: str)
                     notify(f"ALPHA_RND ENTRY CONFIRMED — PENDING NEXT OPEN\n\n{t}\n{how}\nClass: {w['cls']}\nEnters at next regular-session open.")
 
         # mechanical evaluators
+        if "confirmed_close_above" in tt:
+            lvl = p.get("trigger_level")
+            # entry requires a COMPLETED session close above the authored
+            # level — an intraday touch never confirms; the standard
+            # triggered() path then enters at the next eligible open
+            if lvl is not None and len(df) >= 2:
+                last = df.iloc[-2]
+                if float(last["Close"]) > lvl:
+                    triggered(
+                        f"confirmed close {float(last['Close'])}>{lvl}")
         if "multi_close_in_zone" in tt:
             z = p["zone"]; n = p.get("closes_required", 2)
             in_zone = ((df["Close"] >= z[0]) & (df["Close"] <= z[1]))

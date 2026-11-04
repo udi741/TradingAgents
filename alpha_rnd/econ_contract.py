@@ -257,6 +257,39 @@ def project_execution(resolved: dict | None) -> dict | None:
     entry = resolved.get("entry") or {}
     mode = entry.get("mode")
     zone = _zone(entry)
+    trig = _num(entry.get("trigger_level") or entry.get("level"))
+    # confirmed-close continuation: requires a completed-session close past
+    # the authored level; monitor enters next eligible session, never on an
+    # intraday touch. Gap guard and expiry carried verbatim from contract.
+    if mode in ("STOP_ENTRY", "CONDITIONAL") and trig is not None:
+        params2 = {"trigger_level": trig,
+                   "entry_style": "confirmed_close_above"}
+        if entry.get("condition"):
+            params2["entry_condition"] = entry["condition"]
+        sizing0 = resolved.get("sizing") or {}
+        init0 = _num(sizing0.get("initial_frac"))
+        stop0 = resolved.get("stop") or {}
+        stype0, slevel0 = stop0.get("type"), _num(stop0.get("level"))
+        if init0 is None or stype0 not in ("close_below", "intraday_stop",
+                                          "price_below") or slevel0 is None:
+            return None
+        mapped0 = "intraday_stop" if stype0 == "price_below" else stype0
+        rule0 = {"type": mapped0, "level": slevel0,
+                 "label": stop0.get("label") or f"{stype0} {slevel0}"}
+        plan0 = resolved.get("objective") or {}
+        if plan0.get("success_criteria"):
+            params2["success_criteria"] = plan0["success_criteria"]
+        if plan0.get("profit_realization_plan"):
+            params2["profit_realization_plan"] =                 plan0["profit_realization_plan"]
+        return {"cls": "AUTO_ENTRY",
+                "trigger_type": "confirmed_close_above",
+                "params": params2,
+                "size_frac": init0,
+                "invalidation": rule0["label"],
+                "stop_rule": rule0,
+                "exit_rules": [rule0],
+                "target": plan0.get("legacy_target")
+                          or plan0.get("base_case_top")}
     if mode != "LIMIT_ZONE" or zone is None:
         return None
     sizing = resolved.get("sizing") or {}

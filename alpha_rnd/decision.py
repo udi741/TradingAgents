@@ -171,7 +171,13 @@ def select_plan(contract: dict, session: str, ticker: str,
     if not scored:
         return {"direction": "NO_TRADE", "reason": "NO_VALID_PLAN",
                 "provenance": {"session": session, "ticker": ticker}}
-    # economics first (reward_risk desc), feasibility breaks ties
+    # authored primary is the intended trade — it stands while valid.
+    # Alternates are evaluated only when the primary is invalid; then the
+    # best-RR alternate wins, feasibility breaking ties. Never silently
+    # replace a valid intended trade for a nominally-better RR.
+    prim = [x for x in scored if x[1] is None]
+    if prim:
+        return prim[0][2]
     scored.sort(key=lambda x: (-(x[2].get("reward_risk") or 0),
                                x[0], x[1] is None))
     return scored[0][2]
