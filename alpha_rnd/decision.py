@@ -88,6 +88,60 @@ def validate(c: dict) -> list[str]:
     return []
 
 
+def entry_feasibility(c: dict, ref_price: float | None) -> dict:
+    """Decision-time entry evaluation — classifies the authored entry type
+    and whether its terms are plausibly reachable, using ONLY the price
+    known at decision time. Never invents levels.
+
+    pullback:    authored fill sits below market (LONG) — requires a dip;
+                 'near' when <=3% below ref, 'deep_stale' beyond it.
+    continuation: authored trigger sits above market (LONG) — needs the
+                 breakout/confirm to occur first (conditional by nature).
+    market:      entry at/through current price — reachable now.
+    """
+    d = c.get("direction")
+    e = c.get("entry") or {}
+    zone, lvl = _zone(e.get("zone")), _f(e.get("level") or
+                                        e.get("trigger_level"))
+    out = {"entry_type": None, "entry_feasibility": "unspecified",
+           "ref_price": ref_price}
+    if not zone and not lvl:
+        return out
+    anchor = (zone[1] if zone else lvl) if d == "LONG" else         (zone[0] if zone else lvl)
+    if anchor is None:
+        return out
+    if ref_price is None:
+        out["entry_type"] = "pullback" if zone else "conditional"
+        out["entry_feasibility"] = "unpriced"
+        return out
+    if zone and zone[0] <= ref_price <= zone[1]:
+        out["entry_type"] = "pullback"
+        out["entry_feasibility"] = "near"
+        out["entry_distance_pct"] = 0.0
+        return out
+    if d == "SHORT":
+        if anchor >= ref_price:
+            out["entry_type"] = "pullback"      # bounce-entry: needs rally
+            dist = (anchor - ref_price) / ref_price
+            out["entry_feasibility"] =                 "near" if dist <= 0.03 else "deep_stale"
+        else:
+            out["entry_type"] = "continuation"
+            out["entry_feasibility"] = "conditional_breakdown"
+        out["entry_distance_pct"] = round(
+            100 * abs(anchor - ref_price) / ref_price, 2)
+        return out
+    if anchor >= ref_price:
+        out["entry_type"] = "continuation"
+        out["entry_feasibility"] =             "conditional_breakout" if anchor > ref_price else "market"
+    else:
+        out["entry_type"] = "pullback"
+        dist = (ref_price - anchor) / ref_price
+        out["entry_feasibility"] = "near" if dist <= 0.03 else             "deep_stale"
+    out["entry_distance_pct"] = round(
+        100 * abs(anchor - ref_price) / ref_price, 2)
+    return out
+
+
 def permissible_size(c: dict, risk_budget_frac: float = 0.01) -> float:
     """Deterministic sizing: frac = risk_budget / stop_distance, capped 1.0.
     risk_budget_frac = portfolio fraction risked per trade (default 1%)."""
@@ -105,7 +159,8 @@ def permissible_size(c: dict, risk_budget_frac: float = 0.01) -> float:
 
 
 def from_economic_authority(contract: dict, session: str,
-                            ticker: str, signal=None) -> dict:
+                            ticker: str, signal=None,
+                            ref_price: float | None = None) -> dict:
     """Adapt the canonical economic_authority contract to a decision."""
     d = contract.get("direction")
     if d in (None, "NONE"):
@@ -138,7 +193,9 @@ def from_economic_authority(contract: dict, session: str,
     if errs:
         return {"direction": "NO_TRADE", "reason": ";".join(errs),
                 "provenance": c["provenance"], "attempted": d,
-                "_rejected_contract": c}
+                "_rejected_contract": c,
+                **entry_feasibility(c, ref_price)}
+    c.update(entry_feasibility(c, ref_price))
     return c
 
 
@@ -148,7 +205,9 @@ def from_intent(intent: dict, signal, is_short: bool, session: str) -> dict:
     ea = intent.get("economic_authority_resolved") or \
         intent.get("economic_authority")
     if ea:
+        ref = _f((intent.get("params") or {}).get("current_price"))
         return from_economic_authority(ea, session,
-                                       intent.get("ticker"), signal)
+                                       intent.get("ticker"), signal,
+                                       ref_price=ref)
     from backtest.decision_contract import author  # legacy adapter
     return author(intent, signal, is_short, session)
