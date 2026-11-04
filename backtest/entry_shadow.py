@@ -40,6 +40,8 @@ import json
 import sys
 from pathlib import Path
 
+import datetime
+
 import pandas as pd
 import yfinance as yf
 
@@ -47,6 +49,7 @@ EV = Path("/home/udi/udi_provate/TradingAgents/evaluations/alpha_rnd_v1")
 OUT = Path("/home/udi/udi_provate/research-results-archive")
 LEDGER = OUT / "entry_shadow_ledger.json"
 NOTIONAL, MAX_POS, MAX_EXPO = 5000.0, 10, 50000.0
+RISK_BUDGET = 250.0          # $ risk per position (0.25% of $100k book)
 SLIP, FEE = 0.0005, 0.001
 GAP_GUARD, CONFIRM_WIN, TIME_STOP = 1.03, 5, 20
 ATR_N, ATR_K, RR = 14, 1.5, 2.0
@@ -72,12 +75,12 @@ def atr14(b):
     return m if m > 0 else None
 
 
-def sim_A(dr, z, stop, tgt, fut, dec_close):
-    """Faithful authored-pullback sim. None => NO_PLAN."""
+def sim_A(dr, z, stop, tgt, fut, dec_close, open_expo=0.0):
+    """Faithful authored-pullback sim; authored risk governs size."""
     if not (z and stop):
         return {"result": "NO_PLAN"}
     ztop = z[1] if dr == "LONG" else z[0]
-    sh = int(NOTIONAL // ztop)
+    sh = _size(ztop, abs(ztop - stop), open_expo)
     if not sh:
         return {"result": "NO_PLAN"}
     for d, r in fut.iterrows():
@@ -113,8 +116,8 @@ def _manage_A(dr, px, sh, stop, tgt, rest, fill_day):
     return _r(st, last, px, sh, fees, rest.index[-1], fill_day)
 
 
-def sim_B(dr, stop, tgt, dec_close, a14, fut):
-    """Confirmed continuation. None => NO_PLAN (no derivable risk)."""
+def sim_B(dr, stop, tgt, dec_close, a14, fut, open_expo=0.0):
+    """Confirmed continuation; synthetic ATR risk, labeled separately."""
     if a14 is None or fut.empty:
         return {"result": "NO_PLAN"}
     conf = None
@@ -140,7 +143,7 @@ def sim_B(dr, stop, tgt, dec_close, a14, fut):
         return {"result": "NO_PLAN"}
     t = tgt if (tgt and (tgt > px) == (dr == "LONG")) else \
         (px + RR * (px - s) if dr == "LONG" else px - RR * (s - px))
-    sh = int(NOTIONAL // px)
+    sh = _size(px, abs(px - s), open_expo)
     if not sh:
         return {"result": "NO_PLAN"}
     rest = fut.loc[fut.index >= eday]
@@ -168,6 +171,16 @@ def _manage_B(dr, px, sh, stop, tgt, rest, fill_day):
     last = float(rest["Close"].iloc[-1])
     st = "time_stop" if len(rest) >= TIME_STOP else "OPEN"
     return _r(st, last, px, sh, fees, rest.index[-1], fill_day)
+
+
+def _size(px, stop_dist, open_expo):
+    """Risk-based shares: min(notional cap, risk-budget cap, exposure left).
+    Zero/negative-risk plans -> 0 (caller treats as NO_PLAN)."""
+    if stop_dist <= 0 or px <= 0:
+        return 0
+    room = max(MAX_EXPO - open_expo, 0.0)
+    return max(min(int(NOTIONAL // px), int(RISK_BUDGET // stop_dist),
+                   int(room // px)), 0)
 
 
 def _r(status, x, px, sh, fees, d, fill_day):
@@ -215,17 +228,52 @@ def run(sessions, end=None, ledger_path=LEDGER):
                 "dec_close": dec_close, "zone": z, "stop": stop,
                 "target": tgt, "hypothetical": coh != "VALID_AUTHORIZED"})
             # recompute only non-closed legs (idempotent for closed)
+            expo = {"A_pullback": _open_expo(recs, "A_pullback"),
+                    "B_confirmed": _open_expo(recs, "B_confirmed")}
             for leg, fn in (("A_pullback",
-                             lambda: sim_A(dr, z, stop, tgt, fut, dec_close)),
+                             lambda: sim_A(dr, z, stop, tgt, fut, dec_close,
+                                          expo["A_pullback"])),
                             ("B_confirmed",
                              lambda: sim_B(dr, stop, tgt, dec_close, a14,
-                                          fut))):
+                                          fut, expo["B_confirmed"]))):
                 cur = rec.get(leg)
                 if cur and cur.get("result") not in ("OPEN", None):
                     continue  # closed/terminal -> keep
                 rec[leg] = fn()
+    ledger["last_mark"] = datetime.datetime.now(
+        datetime.timezone.utc).isoformat()
     ledger_path.write_text(json.dumps(ledger, indent=1))
     return ledger
+
+
+def update(end=None, ledger_path=LEDGER):
+    """Daily lifecycle: register any new published decisions, re-mark every
+    OPEN leg forward with the latest bars, leave terminals untouched.
+    Idempotent and resumable; safe on days with no new research.
+    At most once per UTC day unless `end` is given (backfill/test mode)."""
+    if end is None and ledger_path.exists():
+        try:
+            lm = json.loads(ledger_path.read_text()).get("last_mark") or ""
+            if lm[:10] == datetime.datetime.now(
+                    datetime.timezone.utc).date().isoformat():
+                return json.loads(ledger_path.read_text())
+        except Exception:
+            pass
+    sessions = sorted(
+        p.stem.replace("publication_intents_", "")
+        for p in EV.glob("publication_intents_*.json"))
+    return run(sessions, end=end, ledger_path=ledger_path)
+
+
+def _open_expo(recs, leg):
+    """Open-position notional under one approach (synthetic risk labeled
+    separately from authored risk by caller)."""
+    tot = 0.0
+    for r in recs.values():
+        v = r.get(leg) or {}
+        if v.get("result") == "OPEN":
+            tot += (v.get("entry_px") or 0) * (v.get("shares") or 0)
+    return tot
 
 
 def summary(ledger):
@@ -239,8 +287,11 @@ def summary(ledger):
 
 
 if __name__ == "__main__":
-    sess = sys.argv[1:] or ["2026-10-28", "2026-10-30", "2026-11-02",
-                            "2026-11-03"]
-    lg = run(sess)
+    if len(sys.argv) > 1 and sys.argv[1] == "update":
+        lg = update()
+    else:
+        sess = sys.argv[1:] or ["2026-10-28", "2026-10-30", "2026-11-02",
+                                "2026-11-03"]
+        lg = run(sess)
     for row in summary(lg):
         print("%s %-5s %-22s %-13s %-10s %s" % row)

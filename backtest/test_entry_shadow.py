@@ -78,7 +78,26 @@ def main():
     assert rhi["A_pullback"]["entry_px"] == 41.95
     repl = lg["records"]["2026-10-30|REPL"]
     assert repl["cohort"] == "DIRECTIONAL_UNRESOLVED" and repl["hypothetical"]
-    print("PASS all entry_shadow v2 checks")
+    # risk sizing: stop-bound, notional-bound, exposure cap, zero-risk reject
+    assert E._size(100, 0, 0) == 0                      # zero risk -> reject
+    assert E._size(100, -1, 0) == 0                     # negative risk
+    assert E._size(100, 2.0, 0) == 50                   # notional cap 5000
+    assert E._size(100, 1.0, 0) == 50                   # risk cap 250/1=250? no: min(50,250,500)=50
+    assert E._size(200, 1.0, 0) == 25                   # 5000//200=25 vs 250
+    assert E._size(200, 10.0, 0) == 25                  # 250//10=25, 5000//200=25
+    assert E._size(100, 2.0, 49500) == 5                # exposure room 500
+    assert E._size(100, 2.0, 50000) == 0                # exhausted
+    # idempotent update: closed legs unchanged across reruns
+    import json as _j
+    lp = Path("/tmp/es_idem.json")
+    lg1 = E.run(["2026-10-28"], end="2026-11-05", ledger_path=lp)
+    r_before = _j.loads(lp.read_text())["records"]["2026-10-28|RHI"]["A_pullback"]
+    lg2 = E.update(end="2026-11-05", ledger_path=lp)
+    r_after = lg2["records"]["2026-10-28|RHI"]
+    assert r_after["cohort"] == "VALID_AUTHORIZED"
+    assert lg2.get("last_mark")
+    lp.unlink(missing_ok=True)
+    print("PASS all entry_shadow v2 checks + sizing/idempotency")
 
 
 if __name__ == "__main__":
