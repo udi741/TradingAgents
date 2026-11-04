@@ -95,6 +95,13 @@ SCHEMA_HINT = """For EACH ticker emit one object:
                 "expected_reward_to_risk":num|null},
    "success_criteria":str,"profit_realization_plan":str|null,
    "horizon":str,"event_constraints":[str],"no_entry_conditions":[str],
+   "alternate_plans":[ // OPTIONAL: additional complete plans, same fields,
+     // each tagged "entry_style":"pullback"|"continuation"|"conditional"
+     // when the evidence genuinely supports a second defensible entry
+     // (e.g. zone missed market but breakout-confirm is also justified).
+     // Emit only what the text supports; never pad with weaker plans.
+    {"entry_style":str,"entry":{...},"sizing":{...},"stop":{...},
+     "objective":{...},"horizon":str}],
    "resolves":["SIZING_CONFLICT"|"TRANCHE_CONFLICT"|
    "POSITION_CAP_CONFLICT"|"ENTRY_ZONE_CONFLICT"]}}
                           // may list ONLY codes that (a) appear in THIS

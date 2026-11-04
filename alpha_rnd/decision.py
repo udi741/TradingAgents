@@ -142,6 +142,37 @@ def entry_feasibility(c: dict, ref_price: float | None) -> dict:
     return out
 
 
+def select_plan(contract: dict, session: str, ticker: str,
+                signal=None, ref_price: float | None = None) -> dict:
+    """Pre-authorization plan evaluation. Validates the primary contract and
+    each authored alternate; returns the best COHERENT decision, or NO_TRADE
+    when none survive. Never invents levels — alternates must be authored
+    and evidence-bound by the model (validator enforces binding elsewhere).
+
+    Preference order (deterministic): a valid plan whose entry is nearest
+    the decision-time market ('near' pullback or conditional within 5%),
+    else any other valid plan, else the first valid plan when ref is unknown.
+    """
+    candidates = [contract] + list(contract.get("alternate_plans") or [])
+    scored = []
+    for cand in candidates:
+        c = from_economic_authority(cand, session, ticker, signal,
+                                    ref_price=ref_price)
+        if c.get("direction") == "NO_TRADE":
+            continue
+        fe = c.get("entry_feasibility")
+        rank = {"near": 0, "market": 0,
+                "conditional_breakout": 1, "conditional_breakdown": 1,
+                "deep_stale": 2, "unpriced": 3,
+                "unspecified": 4}.get(fe, 5)
+        scored.append((rank, cand.get("entry_style"), c))
+    if not scored:
+        return {"direction": "NO_TRADE", "reason": "NO_VALID_PLAN",
+                "provenance": {"session": session, "ticker": ticker}}
+    scored.sort(key=lambda x: (x[0], x[1] is None))
+    return scored[0][2]
+
+
 def permissible_size(c: dict, risk_budget_frac: float = 0.01) -> float:
     """Deterministic sizing: frac = risk_budget / stop_distance, capped 1.0.
     risk_budget_frac = portfolio fraction risked per trade (default 1%)."""
