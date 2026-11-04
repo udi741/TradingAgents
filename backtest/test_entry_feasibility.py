@@ -95,3 +95,23 @@ def test_select_plan():
 
 
 test_select_plan()
+
+def test_repair():
+    import sys
+    from pathlib import Path as _P
+    sys.path.insert(0, str(_P(__file__).resolve().parents[1] / "backtest"))
+    from alpha_rnd import econ_contract as EC
+    # drops unbound sizing, keeps bound, never repairs signal contradiction
+    c = {"direction": "LONG", "sizing": {"initial_frac": 0.67, "max_frac": 1.0},
+         "tranches": [{"frac": 0.5}, {"frac": 0.12}],
+         "objective": {}}
+    r, notes = EC.repair(c, {"investment_plan": "profit target 25"},
+                         {}, [0.5, 25.0])
+    assert r["sizing"].get("initial_frac") is None  # 0.67 unbound -> dropped
+    assert r["tranches"] == [{"frac": 0.5}]         # invented tranche dropped
+    assert r["objective"].get("profit_realization_plan")
+    assert EC.repair(None, {}, {}, []) == (None, ["no_contract"])
+    print("PASS repair: unbound numbers dropped, invented tranches removed, no_contract preserved")
+
+
+test_repair()

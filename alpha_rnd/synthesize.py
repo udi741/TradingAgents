@@ -511,6 +511,17 @@ def run(session: str) -> dict:
         # changes nothing (fail-closed errs stand).
         ec_errs, resolved = econ_contract.validate(
             i.get("economic_authority"), a, i, _nums_in_text(artifact_text(a)))
+        if ec_errs and resolved is not None:
+            # evidence-bound repair: strip unbound numbers/invented tranches,
+            # fill missing terms only from bound source text, then re-check.
+            repaired, notes = econ_contract.repair(
+                i.get("economic_authority"), a, i,
+                _nums_in_text(artifact_text(a)))
+            ec2, resolved2 = econ_contract.validate(
+                repaired, a, i, _nums_in_text(artifact_text(a)))
+            if not ec2:
+                resolved, ec_errs = resolved2, []
+                i["repair_notes"] = notes
         if resolved is not None:
             # Suppress ONLY ambiguity types that are (a) contract-resolvable
             # codes AND (b) explicitly claimed by the validated contract.

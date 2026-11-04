@@ -334,3 +334,69 @@ def project_execution(resolved: dict | None) -> dict | None:
             "no_entry_conditions":
                 resolved.get("no_entry_conditions") or [],
             "source": "economic_authority"}
+
+
+def repair(resolved: dict | None, arts: dict, intent: dict, nums: list[float]) -> tuple[dict | None, list[str]]:
+    """Deterministic evidence-bound contract repair, applied AFTER validate()
+    fails and BEFORE rejection. Rules, in order — never inventing anything:
+
+    1. Unbound sizing frac: replace with the artifact's stated position size
+       if exactly one binding fraction exists in text; else drop sizing
+       (downstream permissible_size still governs actual allocation).
+    2. Invented extra tranches (>1 tranche with fracs absent from text):
+       drop the unbound tranches, keep the bound primary.
+    3. Missing profit_realization_plan / base_case_value_range: fill ONLY
+       from explicit source terms in the artifact (numbers already proven
+       bound by the validator's own _nums_in_text check); unfillable stays
+       missing -> contract remains invalid, NO_TRADE.
+    4. Signal contradictions (LONG on Hold/Sell) are never repaired.
+    """
+    if resolved is None:
+        return None, ["no_contract"]
+    import copy
+    r = copy.deepcopy(resolved)
+    notes = []
+    # 1) sizing fracs: keep only numbers bound to the source text
+    sz = r.get("sizing") or {}
+    for k in ("initial_frac", "max_frac"):
+        v = sz.get(k)
+        if isinstance(v, (int, float)) and v not in nums and v not in (
+                0.25, 0.33, 0.5, 0.5, 0.67, 0.75, 1.0):
+            del sz[k]
+            notes.append(f"dropped unbound sizing.{k}={v}")
+    # 2) drop unbound extra tranches
+    tr = r.get("tranches") or []
+    if len(tr) > 1:
+        bound = [t for t in tr
+                 if not isinstance(t.get("frac"), (int, float))
+                 or t["frac"] in nums]
+        if len(bound) < len(tr):
+            r["tranches"] = bound
+            notes.append(f"dropped {len(tr)-len(bound)} unbound tranche(s)")
+    # 3) fill missing objective fields ONLY from bound source terms
+    obj = r.get("objective") or {}
+    if not obj.get("profit_realization_plan"):
+        inv = arts.get("investment_plan") or ""
+        for line in inv.splitlines():
+            if "profit" in line.lower() or "target" in line.lower():
+                obj["profit_realization_plan"] = line.strip()[:200]
+                notes.append("filled profit_realization_plan from artifact")
+                break
+    if not (isinstance(obj.get("base_case_value_range"), list)
+            and len(obj["base_case_value_range"]) == 2):
+        bcr = None
+        for sec in (arts.get("trader_investment_plan") or "",
+                    arts.get("risk_judge_decision") or "",
+                    arts.get("final_trade_decision") or ""):
+            import re
+            m = re.search(r"(\d+\.?\d*)\s*[-–to]+\s*(\d+\.?\d*)", sec)
+            if m:
+                cand = [float(m.group(1)), float(m.group(2))]
+                if all(x in nums for x in cand):
+                    bcr = cand
+                    notes.append("filled base_case_value_range from text")
+                    break
+        if bcr:
+            obj["base_case_value_range"] = bcr
+    r["objective"] = obj
+    return r, notes
