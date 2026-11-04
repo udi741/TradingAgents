@@ -97,7 +97,19 @@ def main():
     assert r_after["cohort"] == "VALID_AUTHORIZED"
     assert lg2.get("last_mark")
     lp.unlink(missing_ok=True)
-    print("PASS all entry_shadow v2 checks + sizing/idempotency")
+    # evidence classification
+    assert E.evidence_class("2026-10-30T09:00:00+00:00", "2026-11-04T08:00:00+00:00") == "REPLAY"
+    assert E.evidence_class(None, "2026-11-05T00:00:00+00:00") == "UNVERIFIED"
+    assert E.evidence_class("2026-11-05T09:00:00+00:00", "2026-11-05T09:30:00+00:00") == "PROSPECTIVE"
+    assert E.evidence_class("2026-11-05T09:00:00+00:00", None) == "UNVERIFIED"
+    # migrate: seeds all become REPLAY with provenance fields
+    lp2 = Path("/tmp/es_migrate.json")
+    lg3 = E.run(["2026-10-28","2026-10-30"], end="2026-11-05", ledger_path=lp2)
+    for k,r in lg3["records"].items():
+        assert r["evidence_class"] == "REPLAY", (k, r["evidence_class"])
+        assert r.get("published_at") and r.get("registered_at")
+    lp2.unlink(missing_ok=True)
+    print("PASS all checks incl evidence_class + migration")
 
 
 if __name__ == "__main__":
