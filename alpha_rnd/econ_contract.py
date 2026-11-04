@@ -360,8 +360,7 @@ def repair(resolved: dict | None, arts: dict, intent: dict, nums: list[float]) -
     sz = r.get("sizing") or {}
     for k in ("initial_frac", "max_frac"):
         v = sz.get(k)
-        if isinstance(v, (int, float)) and v not in nums and v not in (
-                0.25, 0.33, 0.5, 0.5, 0.67, 0.75, 1.0):
+        if isinstance(v, (int, float)) and v not in nums:
             del sz[k]
             notes.append(f"dropped unbound sizing.{k}={v}")
     # 2) drop unbound extra tranches
