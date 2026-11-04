@@ -106,6 +106,18 @@ Rules: every number must appear in the source text (word fractions count:
 stops, or targets; a Sell/Hold headline does NOT forbid a conditional
 WATCH_FOR_ENTRY if the text states a re-entry plan; REJECT/NO_WATCH only when
 the text contains no usable forward instruction.
+NUMERIC BINDING SELF-CHECK (mandatory before emitting): for every number you
+write — zone bound, trigger, stop, target, frac, tranche level — find the
+verbatim figure in the source text. If the text states a RANGE of sizes or
+levels (e.g. "5-8%", "quarter to third size", "196-200 vs 208-210"), do NOT
+average, split, or pick a midpoint: that is a conflict — record it as a typed
+ambiguity, and omit the contract field rather than emit an unbound number.
+If ANY required contract number cannot be bound verbatim, emit NO
+economic_authority at all rather than an approximate one.
+FIELD COMPLETENESS: when the text discusses a profit-realization plan or a
+base/bull case value range anywhere (exec summary, trader plan, risk judge),
+copy it into objective/success fields — do not leave mandatory fields empty
+when the text supplies them.
 
 WHEN TO EMIT economic_authority: for a constructive (Buy/Overweight) decision,
 if the only conflicts you flagged are SIZING_CONFLICT, TRANCHE_CONFLICT,
