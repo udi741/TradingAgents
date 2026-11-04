@@ -149,9 +149,11 @@ def select_plan(contract: dict, session: str, ticker: str,
     when none survive. Never invents levels — alternates must be authored
     and evidence-bound by the model (validator enforces binding elsewhere).
 
-    Preference order (deterministic): a valid plan whose entry is nearest
-    the decision-time market ('near' pullback or conditional within 5%),
-    else any other valid plan, else the first valid plan when ref is unknown.
+    Selection (deterministic): the plan with the best ECONOMICS wins —
+    higher authored reward_risk first; entry feasibility only breaks ties
+    (a closer but economically inferior plan does not defeat a sounder
+    one). When reward_risk is unavailable, feasibility is the fallback
+    ordering. Feasibility is never a gate.
     """
     candidates = [contract] + list(contract.get("alternate_plans") or [])
     scored = []
@@ -169,7 +171,9 @@ def select_plan(contract: dict, session: str, ticker: str,
     if not scored:
         return {"direction": "NO_TRADE", "reason": "NO_VALID_PLAN",
                 "provenance": {"session": session, "ticker": ticker}}
-    scored.sort(key=lambda x: (x[0], x[1] is None))
+    # economics first (reward_risk desc), feasibility breaks ties
+    scored.sort(key=lambda x: (-(x[2].get("reward_risk") or 0),
+                               x[0], x[1] is None))
     return scored[0][2]
 
 

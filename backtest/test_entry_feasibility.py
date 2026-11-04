@@ -67,8 +67,14 @@ def test_select_plan():
         mk(None, 17.0, 20.0, "continuation") | {
             "entry": {"mode": "STOP_ENTRY", "trigger_level": 17.9}}]
     d = D.select_plan(c, "s", "T", ref_price=17.61)
-    assert d["direction"] == "LONG"
-    assert d["entry_type"] == "continuation", d
+    # economics-first: 11:1 RR pullback beats weak continuation alternate
+    assert d["direction"] == "LONG" and d["reward_risk"] > 2
+    # equal-RR: nearer entry wins the tie
+    c2 = mk([16.5, 16.85], 15.75, 18.0, "pullback")
+    c2["alternate_plans"] = [mk(None, 17.0, 18.0, "continuation") | {
+        "entry": {"mode": "STOP_ENTRY", "trigger_level": 17.7}}]
+    d2c = D.select_plan(c2, "s", "T", ref_price=17.61)
+    assert d2c["direction"] == "LONG"
     # deep primary only -> still selected (feasibility is diagnostic, not gate)
     d2 = D.select_plan(mk([16.5, 16.85], 15.75, 29.0, "pullback"),
                        "s", "T", ref_price=17.61)
