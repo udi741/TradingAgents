@@ -48,6 +48,10 @@ import yfinance as yf
 EV = Path("/home/udi/udi_provate/TradingAgents/evaluations/alpha_rnd_v1")
 OUT = Path("/home/udi/udi_provate/research-results-archive")
 LEDGER = OUT / "entry_shadow_ledger.json"
+# Observer activation: production deploy commit 24bf422e commit timestamp
+# (2026-11-04T08:48:39+02:00 = 06:48:39Z); corroborated by first ledger
+# last_mark 06:48:55Z. Decisions published strictly before this are REPLAY.
+ACTIVATED_AT = "2026-11-04T06:48:39+00:00"
 NOTIONAL, MAX_POS, MAX_EXPO = 5000.0, 10, 50000.0
 RISK_BUDGET = 250.0          # $ risk per position (0.25% of $100k book)
 SLIP, FEE = 0.0005, 0.001
@@ -190,6 +194,18 @@ def _r(status, x, px, sh, fees, d, fill_day):
             "pnl": round((x - px) * sh - fees, 2)}
 
 
+def evidence_class(published_at, registered_at):
+    """REPLAY: published before observer activation, or seeded from earlier
+    artifacts. PROSPECTIVE: published after activation AND registered before
+    future outcomes. UNVERIFIED: missing timestamps -> excluded from
+    prospective stats."""
+    if not published_at:
+        return "UNVERIFIED"
+    if str(published_at) < ACTIVATED_AT:
+        return "REPLAY"
+    return "PROSPECTIVE" if registered_at else "UNVERIFIED"
+
+
 def cohort_of(disp, contract_ok):
     if disp == "EXECUTABLE_WATCH" and contract_ok:
         return "VALID_AUTHORIZED"
@@ -222,11 +238,19 @@ def run(sessions, end=None, ledger_path=LEDGER):
             dec_close = float(before["Close"].iloc[-1])
             a14 = atr14(before)
             key = f"{s}|{t}"
+            now_iso = datetime.datetime.now(
+                datetime.timezone.utc).isoformat()
+            pub_at = doc.get("synthesized_at")
             rec = recs.setdefault(key, {
                 "session": s, "ticker": t, "direction": dr,
                 "cohort": coh, "disposition": disp["disposition"],
                 "dec_close": dec_close, "zone": z, "stop": stop,
-                "target": tgt, "hypothetical": coh != "VALID_AUTHORIZED"})
+                "target": tgt, "hypothetical": coh != "VALID_AUTHORIZED",
+                "published_at": pub_at, "registered_at": now_iso})
+            rec.setdefault("published_at", pub_at)
+            rec.setdefault("registered_at", now_iso)
+            rec["evidence_class"] = evidence_class(
+                rec.get("published_at"), rec.get("registered_at"))
             # recompute only non-closed legs (idempotent for closed)
             expo = {"A_pullback": _open_expo(recs, "A_pullback"),
                     "B_confirmed": _open_expo(recs, "B_confirmed")}
@@ -251,18 +275,22 @@ def update(end=None, ledger_path=LEDGER):
     OPEN leg forward with the latest bars, leave terminals untouched.
     Idempotent and resumable; safe on days with no new research.
     At most once per UTC day unless `end` is given (backfill/test mode)."""
-    if end is None and ledger_path.exists():
-        try:
-            lm = json.loads(ledger_path.read_text()).get("last_mark") or ""
-            if lm[:10] == datetime.datetime.now(
-                    datetime.timezone.utc).date().isoformat():
-                return json.loads(ledger_path.read_text())
-        except Exception:
-            pass
-    sessions = sorted(
+    sessions_all = sorted(
         p.stem.replace("publication_intents_", "")
         for p in EV.glob("publication_intents_*.json"))
-    return run(sessions, end=end, ledger_path=ledger_path)
+    if end is None and ledger_path.exists():
+        try:
+            prior = json.loads(ledger_path.read_text())
+            lm = prior.get("last_mark") or ""
+            have = {k.split("|")[0] for k in (prior.get("records") or {})}
+            new_sessions = [x for x in sessions_all if x not in have]
+            # skip the daily mark only when nothing new was published today
+            if not new_sessions and lm[:10] == datetime.datetime.now(
+                    datetime.timezone.utc).date().isoformat():
+                return prior
+        except Exception:
+            pass
+    return run(sessions_all, end=end, ledger_path=ledger_path)
 
 
 def _open_expo(recs, leg):
