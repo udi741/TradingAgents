@@ -633,6 +633,13 @@ def _run_cycle(session: str) -> None:
                         session], cwd=ROOT, env=env, timeout=300)
     except Exception:
         pass
+    # entry-shadow observer: passive paper-only measurement, never fatal,
+    # writes only to the research archive (no orders, no production state)
+    try:
+        subprocess.run([PY, "backtest/entry_shadow.py", "update"],
+                       cwd=ROOT, env=env, timeout=600)
+    except Exception:
+        pass
     if analysis["retry_pending"]:  # partial: publish what is valid, stay retryable
         _finish_run(session, "ERROR")
         _alert_analysis(session, analysis)
@@ -656,6 +663,15 @@ def check() -> None:
         except BlockingIOError:
             return  # another checker tick in flight
         session = last_completed_session()
+        # passive entry-shadow daily mark: at most once/UTC day internally,
+        # writes only to the research archive, never fatal, no orders
+        try:
+            subprocess.run([PY, "backtest/entry_shadow.py", "update"],
+                           cwd=ROOT, env={**os.environ,
+                                        "PYTHONPATH": str(ROOT)},
+                           timeout=600)
+        except Exception:
+            pass
         st = _j(SCHED_STATE, {}) or {}
         # Watchdog: a tracked run must resolve to a terminal state or be
         # reaped INTERRUPTED — never silently orphaned after suspend/kill.
